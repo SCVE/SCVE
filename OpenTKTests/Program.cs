@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -19,6 +20,9 @@ namespace OpenTKTests
 
         private static unsafe void Main(string[] args)
         {
+            
+            
+            
             GLFW.SetErrorCallback(ErrorCallback);
 
             if (!GLFW.Init())

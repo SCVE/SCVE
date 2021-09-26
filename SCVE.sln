@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTKTests", "OpenTKTests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAudioTests", "SharpAudioTests\SharpAudioTests.csproj", "{CFF7A288-BEB1-4211-ABD8-0CE0A73DB635}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeTests", "NativeTests\NativeTests.csproj", "{B493F9CC-5BD7-42F2-AB9F-18B908A1FC62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{CFF7A288-BEB1-4211-ABD8-0CE0A73DB635}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFF7A288-BEB1-4211-ABD8-0CE0A73DB635}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFF7A288-BEB1-4211-ABD8-0CE0A73DB635}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B493F9CC-5BD7-42F2-AB9F-18B908A1FC62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B493F9CC-5BD7-42F2-AB9F-18B908A1FC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B493F9CC-5BD7-42F2-AB9F-18B908A1FC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B493F9CC-5BD7-42F2-AB9F-18B908A1FC62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
