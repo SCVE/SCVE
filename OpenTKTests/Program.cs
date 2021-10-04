@@ -1,28 +1,17 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using ErrorCode = OpenTK.Windowing.GraphicsLibraryFramework.ErrorCode;
 using PrimitiveType = OpenTK.Graphics.OpenGL.Compatibility.PrimitiveType;
+using StringName = OpenTK.Graphics.OpenGL.Compatibility.StringName;
 
 namespace OpenTKTests
 {
     public static class Program
     {
-        private static unsafe void KeyCallback(Window* window, Keys key, int scancode, InputAction action, KeyModifiers mods)
-        {
-            if (key == Keys.Escape && action == InputAction.Press)
-            {
-                GLFW.SetWindowShouldClose(window, true);
-            }
-        }
-
         private static unsafe void Main(string[] args)
         {
-            
-            
-            
             GLFW.SetErrorCallback(ErrorCallback);
 
             if (!GLFW.Init())
@@ -33,7 +22,7 @@ namespace OpenTKTests
             GLFW.WindowHint(WindowHintInt.ContextVersionMajor, 2);
             GLFW.WindowHint(WindowHintInt.ContextVersionMinor, 0);
 
-            Window* window = GLFW.CreateWindow(640, 480, "Hello world", null, null);
+            var window = GLFW.CreateWindow(640, 480, "Hello world", null, null);
 
             if (window is null)
             {
@@ -50,6 +39,12 @@ namespace OpenTKTests
 
             GLLoader.LoadBindings(new GLFWBindingsContext());
 
+            Console.WriteLine("OpenGL Info");
+            Console.WriteLine($"    Version: {GL.GetString(OpenTK.Graphics.OpenGL.StringName.Version)}");
+            Console.WriteLine($"    Renderer: {GL.GetString(OpenTK.Graphics.OpenGL.StringName.Renderer)}");
+            Console.WriteLine($"    Vendor: {GL.GetString(OpenTK.Graphics.OpenGL.StringName.Vendor)}");
+            Console.WriteLine($"    ShadingLanguageVersion: {GL.GetString(OpenTK.Graphics.OpenGL.StringName.ShadingLanguageVersion)}");
+            
             while (!GLFW.WindowShouldClose(window))
             {
                 GL.Clear(ClearBufferMask.ColorBufferBit);
@@ -69,6 +64,14 @@ namespace OpenTKTests
             GLFW.DestroyWindow(window);
 
             GLFW.Terminate();
+        }
+
+        private static unsafe void KeyCallback(Window* window, Keys key, int scancode, InputAction action, KeyModifiers mods)
+        {
+            if (key == Keys.Escape && action == InputAction.Press)
+            {
+                GLFW.SetWindowShouldClose(window, true);
+            }
         }
 
         private static unsafe void CloseCallback(Window* window)

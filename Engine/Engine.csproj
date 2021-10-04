@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="EngineCore\Debug" />
+      <Folder Include="EngineCore\ImGui" />
+      <Folder Include="EngineCore\Scene" />
+      <Folder Include="EngineCore\Utils" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OpenTK" Version="5.0.0-pre.6" />
+    </ItemGroup>
+
+</Project>
