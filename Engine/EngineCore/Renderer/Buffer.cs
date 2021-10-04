@@ -3,47 +3,20 @@ using System.Collections.Generic;
 
 namespace Engine.EngineCore.Renderer
 {
-    public class ShaderDataType
+    public enum ShaderDataType
     {
-        public static readonly ShaderDataType None = 0;
-        public static readonly ShaderDataType Float = 4;
-        public static readonly ShaderDataType Float2 = 4 * 2;
-        public static readonly ShaderDataType Float3 = 4 * 3;
-        public static readonly ShaderDataType Float4 = 4 * 4;
-        public static readonly ShaderDataType Mat3 = 4 * 3 * 3;
-        public static readonly ShaderDataType Mat4 = 4 * 4 * 4;
-        public static readonly ShaderDataType Int = 4;
-        public static readonly ShaderDataType Int2 = 4 * 2;
-        public static readonly ShaderDataType Int3 = 4 * 3;
-        public static readonly ShaderDataType Int4 = 4 * 4;
-        public static readonly ShaderDataType Bool = 1;
-
-        public uint Value;
-
-        public ShaderDataType(uint value)
-        {
-            Value = value;
-        }
-
-        public static implicit operator ShaderDataType(uint val)
-        {
-            return new(val);
-        }
-
-        public static implicit operator uint(ShaderDataType val)
-        {
-            return val.Value;
-        }
-        
-        public static bool operator==(ShaderDataType left, ShaderDataType right)
-        {
-            return left.Value == right.Value;
-        }
-
-        public static bool operator!=(ShaderDataType left, ShaderDataType right)
-        {
-            return !(left == right);
-        }
+        None = 0,
+        Float = 4,
+        Float2 = 4 * 2,
+        Float3 = 4 * 3,
+        Float4 = 4 * 4,
+        Mat3 = 4 * 3 * 3,
+        Mat4 = 4 * 4 * 4,
+        Int = 4,
+        Int2 = 4 * 2,
+        Int3 = 4 * 3,
+        Int4 = 4 * 4,
+        Bool = 1,
     }
 
     public struct BufferElement

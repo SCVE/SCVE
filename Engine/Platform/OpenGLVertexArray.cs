@@ -61,10 +61,7 @@ namespace Engine.Platform
 
             foreach (var element in layout.GetElements())
             {
-                if (element.Type == ShaderDataType.Float ||
-                    element.Type == ShaderDataType.Float2 ||
-                    element.Type == ShaderDataType.Float3 ||
-                    element.Type == ShaderDataType.Float4)
+                if (element.Type is ShaderDataType.Float or ShaderDataType.Float2 or ShaderDataType.Float3 or ShaderDataType.Float4)
                 {
                     GL.EnableVertexAttribArray(_vertexBufferIndex);
                     GL.VertexAttribPointer(
@@ -77,11 +74,7 @@ namespace Engine.Platform
                     _vertexBufferIndex++;
                 }
 
-                if (element.Type == ShaderDataType.Int ||
-                    element.Type == ShaderDataType.Int2 ||
-                    element.Type == ShaderDataType.Int3 ||
-                    element.Type == ShaderDataType.Int4 ||
-                    element.Type == ShaderDataType.Bool)
+                if (element.Type is ShaderDataType.Int or ShaderDataType.Int2 or ShaderDataType.Int3 or ShaderDataType.Int4 or ShaderDataType.Bool)
                 {
                     GL.EnableVertexAttribArray(_vertexBufferIndex);
                     GL.VertexAttribIPointer(_vertexBufferIndex,
@@ -93,8 +86,7 @@ namespace Engine.Platform
                     break;
                 }
 
-                if (element.Type == ShaderDataType.Mat3 ||
-                    element.Type == ShaderDataType.Mat4)
+                if (element.Type is ShaderDataType.Mat3 or ShaderDataType.Mat4)
                 {
                     int count = (int)element.GetComponentCount();
                     for (byte i = 0; i < count; i++)
@@ -115,10 +107,16 @@ namespace Engine.Platform
 
                 throw new ArgumentOutOfRangeException("Unknown ShaderDataType!");
             }
+            
+            _vertexBuffers.Add(vertexBuffer);
         }
 
         public override void SetIndexBuffer(IndexBuffer indexBuffer)
         {
+            GL.BindVertexArray(_rendererId);
+            indexBuffer.Bind();
+
+            _indexBuffer = indexBuffer;
         }
 
         public override IList<VertexBuffer> GetVertexBuffers()
