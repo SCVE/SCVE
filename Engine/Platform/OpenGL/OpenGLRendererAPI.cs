@@ -4,7 +4,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
-namespace Engine.Platform
+namespace Engine.Platform.OpenGL
 {
     public class OpenGLRendererAPI : RendererAPI
     {

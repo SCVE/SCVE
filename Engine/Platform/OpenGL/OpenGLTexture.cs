@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Engine.EngineCore.Renderer;
 using OpenTK.Graphics;
@@ -9,10 +7,9 @@ using OpenTK.Graphics.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace Engine.Platform
+namespace Engine.Platform.OpenGL
 {
     public class OpenGLTexture2D : Texture2D
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using Engine.Platform;
+using Engine.Platform.OpenGL;
 
 namespace Engine.EngineCore.Renderer
 {

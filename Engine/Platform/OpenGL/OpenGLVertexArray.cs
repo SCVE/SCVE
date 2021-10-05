@@ -4,7 +4,7 @@ using Engine.EngineCore.Renderer;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-namespace Engine.Platform
+namespace Engine.Platform.OpenGL
 {
     public class OpenGLVertexArray : VertexArray
     {

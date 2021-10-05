@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Engine.Platform;
+using Engine.Platform.OpenGL;
 
 namespace Engine.EngineCore.Renderer
 {

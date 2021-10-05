@@ -1,5 +1,5 @@
 ﻿using System;
-using Engine.Platform;
+using Engine.Platform.OpenGL;
 using OpenTK.Mathematics;
 
 namespace Engine.EngineCore.Renderer
