@@ -4,32 +4,32 @@ namespace Engine.EngineCore.Renderer
 {
     public class Renderer
     {
-        public void Init()
+        public static void Init()
         {
             RenderCommand.Init();
             Renderer2D.Init();
         }
 
-        public void Shutdown()
+        public static void Shutdown()
         {
             Renderer2D.Shutdown();
         }
 
-        public void OnWindowResize(uint width, uint height)
+        public static void OnWindowResize(uint width, uint height)
         {
             RenderCommand.SetViewport(0, 0, width, height);
         }
 
-        public void BeginScene(OrthographicCamera camera)
+        public static void BeginScene(OrthographicCamera camera)
         {
             _sceneData.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
         }
 
-        public void EndScene()
+        public static void EndScene()
         {
         }
 
-        public void Submit(Shader shader, VertexArray vertexArray, Matrix4 transform)
+        public static void Submit(Shader shader, VertexArray vertexArray, Matrix4 transform)
         {
             shader.Bind();
             shader.SetMat4("u_ViewProjection", _sceneData.ViewProjectionMatrix);
@@ -49,6 +49,6 @@ namespace Engine.EngineCore.Renderer
             public Matrix4 ViewProjectionMatrix;
         };
 
-        private SceneData _sceneData = new SceneData();
+        private static SceneData _sceneData = new SceneData();
     }
 }

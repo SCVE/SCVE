@@ -41,6 +41,11 @@ namespace Engine.EngineCore.Core
             }
         }
 
+        public IEnumerator<Layer> GetEnumerator()
+        {
+            return _layers.GetEnumerator();
+        }
+
         ~LayerStack()
         {
             foreach (var layer in _layers)

@@ -12,6 +12,11 @@
             return timestep._time;
         }
 
+        public static implicit operator Timestep(float time)
+        {
+            return new Timestep(time);
+        }
+
         public float GetSeconds()
         {
             return _time;
