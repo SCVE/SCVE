@@ -17,9 +17,9 @@ namespace Playground
 
             application.Init();
 
-            application.WindowManager.Create(new WindowProps("SCVE1"));
+            application.WindowManager.Create(new WindowProps("SCVE1", isMain: true));
             // application.WindowManager.Create(new WindowProps("SCVE2"));
-            
+
             application.AddRenderable(new RenderableNull());
 
             application.Run();

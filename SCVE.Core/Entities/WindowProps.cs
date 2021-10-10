@@ -7,7 +7,7 @@
         public int Height { get; set; }
         public bool IsMain { get; set; }
 
-        public WindowProps(string title = "SCVE", int width = 1600, int height = 900, bool isMain = true)
+        public WindowProps(string title = "SCVE", int width = 800, int height = 600, bool isMain = true)
         {
             IsMain = isMain;
             Title = title;

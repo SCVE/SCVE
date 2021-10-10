@@ -27,6 +27,11 @@ namespace SCVE.Core.Entities
             return Application.Instance.WindowManager.WindowShouldClose(this);
         }
 
+        public void SwapBuffers()
+        {
+            Application.Instance.WindowManager.SwapBuffers(this);
+        }
+
         public void OnClose()
         {
             Logger.Warn($"Window ({Title}): OnClose()");

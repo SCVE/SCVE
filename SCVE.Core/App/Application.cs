@@ -50,8 +50,9 @@ namespace SCVE.Core.App
             {
                 throw new ScveException("App is not ready");
             }
+
             _state = AppState.Running;
-            
+
             while (_state == AppState.Running)
             {
                 float deltaTime = DeltaTimeProvider.Get();
@@ -59,6 +60,11 @@ namespace SCVE.Core.App
 
                 _scope.Render(Renderer);
                 WindowManager.PollEvents();
+
+                if (WindowManager.MainWindow is not null)
+                {
+                    WindowManager.SwapBuffers(WindowManager.MainWindow);
+                }
             }
 
             if (_state != AppState.TerminationRequested)

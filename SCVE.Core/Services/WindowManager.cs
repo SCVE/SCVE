@@ -23,6 +23,8 @@ namespace SCVE.Core.Services
         public abstract bool WindowShouldClose(ScveWindow window);
         
         public abstract void Close(ScveWindow window);
+        
+        public abstract void SwapBuffers(ScveWindow window);
 
         public virtual void WindowSetMain(ScveWindow window)
         {

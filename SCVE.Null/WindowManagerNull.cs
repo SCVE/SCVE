@@ -36,7 +36,11 @@ namespace SCVE.Null
         public override void OnTerminate()
         {
             Console.WriteLine("WindowManageNull: Terminate");
+        }
 
+        public override void SwapBuffers(ScveWindow window)
+        {
+            Console.WriteLine("WindowManageNull: SwapBuffers");
         }
     }
 }
