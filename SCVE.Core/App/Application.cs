@@ -1,4 +1,6 @@
-﻿using SCVE.Core.Entities;
+﻿using System;
+using System.Threading;
+using SCVE.Core.Entities;
 using SCVE.Core.Services;
 
 namespace SCVE.Core.App
@@ -6,12 +8,12 @@ namespace SCVE.Core.App
     public class Application
     {
         private static bool _isInited;
-        
+
         private static Application _instance;
 
         public static Application Instance => _instance;
 
-        private bool _terminate;
+        private AppState _state;
 
         private ApplicationScope _scope;
 
@@ -19,7 +21,7 @@ namespace SCVE.Core.App
         public IFileLoader FileLoader => _scope.FileLoader;
         public WindowManager WindowManager => _scope.WindowManager;
         public IDeltaTimeProvider DeltaTimeProvider => _scope.DeltaTimeProvider;
-        
+
         public ScveWindow MainWindow => WindowManager.MainWindow;
 
         private Application(ApplicationInit init)
@@ -37,19 +39,34 @@ namespace SCVE.Core.App
 
         public void Init()
         {
+            _state = AppState.Starting;
             _scope.Init();
+            _state = AppState.Ready;
         }
 
         public void Run()
         {
-            while (!_terminate)
+            if (_state != AppState.Ready)
             {
-                WindowManager.PollEvents();
+                throw new ScveException("App is not ready");
+            }
+            _state = AppState.Running;
+            
+            while (_state == AppState.Running)
+            {
                 float deltaTime = DeltaTimeProvider.Get();
                 _scope.Update(deltaTime);
-                
+
                 _scope.Render(Renderer);
+                WindowManager.PollEvents();
             }
+
+            if (_state != AppState.TerminationRequested)
+            {
+                throw new ScveException("Invalid state was set, application terminated abnormally");
+            }
+
+            _state = AppState.Terminating;
         }
 
         public void AddRenderable(IRenderable renderable)
@@ -57,10 +74,10 @@ namespace SCVE.Core.App
             _scope.Renderables.Add(renderable);
         }
 
-        public void Terminate()
+        public void RequestTerminate()
         {
-            _terminate = true;
-            _scope.Terminate();
+            Console.WriteLine($"Requesting app termination; Thread {Thread.CurrentThread.ManagedThreadId}");
+            _state = AppState.TerminationRequested;
         }
     }
 }

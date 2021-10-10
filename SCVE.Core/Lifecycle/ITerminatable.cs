@@ -2,6 +2,6 @@
 {
     public interface ITerminatable
     {
-        void Terminate();
+        void OnTerminate();
     }
 }

@@ -61,7 +61,7 @@ namespace SCVE.Core.App
         {
             foreach (var initable in _initables)
             {
-                initable.Init();
+                initable.OnInit();
             }
         }
 
@@ -69,7 +69,7 @@ namespace SCVE.Core.App
         {
             foreach (var updatable in _updatables)
             {
-                updatable.Update(deltaTime);
+                updatable.OnUpdate(deltaTime);
             }
         }
 
@@ -77,7 +77,7 @@ namespace SCVE.Core.App
         {
             foreach (var terminatable in _terminatables)
             {
-                terminatable.Terminate();
+                terminatable.OnTerminate();
             }
         }
 

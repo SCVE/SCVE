@@ -16,7 +16,7 @@ namespace SCVE.Core.Services
 
         public abstract ScveWindow Create(WindowProps props);
         
-        public abstract void Init();
+        public abstract void OnInit();
 
         public abstract void PollEvents();
         
@@ -29,6 +29,6 @@ namespace SCVE.Core.Services
             MainWindow = window;
         }
 
-        public abstract void Terminate();
+        public abstract void OnTerminate();
     }
 }

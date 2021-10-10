@@ -5,13 +5,13 @@ namespace SCVE.Null
 {
     public class RendererNull : IRenderer
     {
-        public void Init()
+        public void OnInit()
         {
             // Profiler.Invokations.Method();
             // Utils.PrintCurrentMethod();
         }
 
-        public void Terminate()
+        public void OnTerminate()
         {
             // Profiler.Invokations.Method();
             // Utils.PrintCurrentMethod();

@@ -1,5 +1,6 @@
 ﻿using System;
 using SCVE.Core.App;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Core.Entities
 {
@@ -10,12 +11,14 @@ namespace SCVE.Core.Entities
         public string Title { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool IsMain { get; set; }
 
-        protected ScveWindow(string title, int width, int height, IntPtr handle)
+        protected ScveWindow(string title, int width, int height, bool isMain, IntPtr handle)
         {
             Title = title;
             Width = width;
             Height = height;
+            IsMain = isMain;
             Handle = handle;
         }
 
@@ -24,9 +27,9 @@ namespace SCVE.Core.Entities
             return Application.Instance.WindowManager.WindowShouldClose(this);
         }
 
-        public void Close()
+        public void OnClose()
         {
-            Application.Instance.WindowManager.Close(this);
+            Logger.Warn($"Window ({Title}): OnClose()");
         }
     }
 }

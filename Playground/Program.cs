@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SCVE.Core.App;
 using SCVE.Core.Entities;
 using SCVE.Null;
@@ -23,7 +24,7 @@ namespace Playground
 
             application.Run();
 
-            application.Terminate();
+            Console.WriteLine("Exiting");
             // Profiler.Invokations.Print();
         }
     }

@@ -12,7 +12,7 @@ namespace SCVE.Null
             return null;
         }
 
-        public override void Init()
+        public override void OnInit()
         {
             Console.WriteLine("WindowManageNull: Init");
         }
@@ -33,7 +33,7 @@ namespace SCVE.Null
             Console.WriteLine("WindowManageNull: Close");
         }
 
-        public override void Terminate()
+        public override void OnTerminate()
         {
             Console.WriteLine("WindowManageNull: Terminate");
 
