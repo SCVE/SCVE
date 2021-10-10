@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SCVE.Core\SCVE.Core.csproj" />
+      <ProjectReference Include="..\SCVE.OpenTK.Glfw\SCVE.OpenTK.Glfw.csproj" />
+      <ProjectReference Include="..\SCVE.Null\SCVE.Null.csproj" />
+    </ItemGroup>
+
+</Project>

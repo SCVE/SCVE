@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AssemblyName>SCVE.OpenTK.Glfw</AssemblyName>
+        <RootNamespace>SCVE.OpenTK.Glfw</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OpenTK.Windowing.GraphicsLibraryFramework" Version="4.6.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SCVE.Core\SCVE.Core.csproj" />
+    </ItemGroup>
+
+</Project>
