@@ -7,12 +7,12 @@ namespace Engine.EngineCore.Renderer
         public static void Init()
         {
             RenderCommand.Init();
-            Renderer2D.Init();
+            // Renderer2D.Init();
         }
 
         public static void Shutdown()
         {
-            Renderer2D.Shutdown();
+            // Renderer2D.Shutdown();
         }
 
         public static void OnWindowResize(uint width, uint height)

@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Threading;
 using Engine.EngineCore.Renderer;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -90,6 +95,123 @@ namespace Engine.Platform.OpenGL
             }
 
             throw new ArgumentException("Unknown format");
+        }
+
+        // --------------------------------------
+
+        public static ShaderType ShaderTypeFromString(string type)
+        {
+            switch (type)
+            {
+                case "vertex":
+                    return ShaderType.VertexShader;
+                case "fragment":
+                case "pixel":
+                    return ShaderType.FragmentShader;
+                default:
+                    throw new ArgumentException("Unknown shader type!");
+            }
+        }
+
+        public static uint GLShaderStageToShaderC(ShaderType stage)
+        {
+            switch (stage)
+            {
+                case ShaderType.VertexShader:
+                    return 0; //shaderc_glsl_vertex_shader;
+                case ShaderType.FragmentShader:
+                    return 1; // shaderc_glsl_fragment_shader;
+                default:
+                    throw new ArgumentException("Unknown stage type!");
+            }
+        }
+
+        public static string GLShaderStageToString(ShaderType stage)
+        {
+            switch (stage)
+            {
+                case ShaderType.VertexShader:
+                    return "GL_VERTEX_SHADER";
+                case ShaderType.FragmentShader:
+                    return "GL_FRAGMENT_SHADER";
+                default:
+                    throw new ArgumentException("Unknown stage type!");
+            }
+        }
+
+        public static string GetCacheDirectory()
+        {
+            // TODO: make sure the assets directory is valid
+            return "assets/cache/shader/opengl";
+        }
+
+        public static void CreateCacheDirectoryIfNeeded()
+        {
+            string cacheDirectory = GetCacheDirectory();
+            if (!File.Exists(cacheDirectory))
+                Directory.CreateDirectory(cacheDirectory);
+        }
+
+        public static string GLShaderStageCachedOpenGLFileExtension(ShaderType stage)
+        {
+            switch (stage)
+            {
+                case ShaderType.VertexShader:
+                    return ".cached_opengl.vert";
+                case ShaderType.FragmentShader:
+                    return ".cached_opengl.frag";
+                default:
+                    throw new ArgumentException("Unknown stage type!");
+            }
+        }
+
+        public static string GLShaderStageCachedVulkanFileExtension(ShaderType stage)
+        {
+            switch (stage)
+            {
+                case ShaderType.VertexShader:
+                    return ".cached_vulkan.vert";
+                case ShaderType.FragmentShader:
+                    return ".cached_vulkan.frag";
+                default:
+                    throw new ArgumentException("Unknown stage type!");
+            }
+        }
+        
+        public static void ExecuteCmd(IEnumerable<string> commands)
+        {
+            StringBuilder outputBuilder = new StringBuilder();
+
+            ProcessStartInfo startInfo = new ProcessStartInfo("cmd")
+            {
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+            
+            var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
+            process.OutputDataReceived += (sender, eventArgs) => outputBuilder.AppendLine(eventArgs.Data);
+            process.Start();
+            process.BeginOutputReadLine();
+
+            foreach (var command in commands)
+            {
+                process.StandardInput.WriteLine(command);
+            }
+
+            // Force quit
+            process.StandardInput.WriteLine("exit /c");
+
+            process.StandardInput.Flush();
+            process.StandardInput.Close();
+
+            AutoResetEvent resetEvent = new AutoResetEvent(false);
+            process.Exited += (sender, args) => { resetEvent.Set(); };
+            resetEvent.WaitOne();
+
+            // for debug purposes
+            string output = outputBuilder.ToString();
         }
     }
 }

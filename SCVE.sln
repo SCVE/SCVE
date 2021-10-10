@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeTests", "NativeTests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{2543A41C-2773-4658-9318-099AA5758C98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGLFromScratch", "OpenGLFromScratch\OpenGLFromScratch.csproj", "{90385EC3-46FA-483C-946F-4793A1D6A06A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2543A41C-2773-4658-9318-099AA5758C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2543A41C-2773-4658-9318-099AA5758C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2543A41C-2773-4658-9318-099AA5758C98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90385EC3-46FA-483C-946F-4793A1D6A06A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90385EC3-46FA-483C-946F-4793A1D6A06A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90385EC3-46FA-483C-946F-4793A1D6A06A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90385EC3-46FA-483C-946F-4793A1D6A06A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

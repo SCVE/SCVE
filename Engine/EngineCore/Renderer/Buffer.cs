@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Engine.Platform.OpenGL;
 
 namespace Engine.EngineCore.Renderer
 {
@@ -111,12 +112,18 @@ namespace Engine.EngineCore.Renderer
             }
         }
 
-        public static VertexBuffer Create(float[] vertices, uint size)
+        public static unsafe VertexBuffer Create(float[] vertices, uint size)
         {
             switch (Renderer.GetAPI())
             {
                 case RendererAPI.API.None:    throw new ArgumentException("RendererAPI::None is currently not supported!"); 
-                case RendererAPI.API.OpenGL:  return new OpenGLVertexBuffer(vertices, size);
+                case RendererAPI.API.OpenGL:
+                {
+                    fixed (float* verticesPtr = vertices)
+                    {
+                        return new OpenGLVertexBuffer(verticesPtr, size);
+                    }
+                }
                 default:
                     throw new ArgumentOutOfRangeException("Unknown RendererAPI");
             }
@@ -130,12 +137,18 @@ namespace Engine.EngineCore.Renderer
 
         public abstract  uint GetCount();
 
-        public static IndexBuffer Create(uint[] indices, uint size)
+        public static unsafe IndexBuffer Create(uint[] indices, uint size)
         {
             switch (Renderer.GetAPI())
             {
                 case RendererAPI.API.None:    throw new ArgumentException("RendererAPI::None is currently not supported!"); 
-                case RendererAPI.API.OpenGL:  return new OpenGLIndexBuffer(indices, size);
+                case RendererAPI.API.OpenGL:
+                {
+                    fixed (uint* indicesPtr = indices)
+                    {
+                        return new OpenGLIndexBuffer(indicesPtr, size);
+                    }
+                }
                 default:
                     throw new ArgumentOutOfRangeException("Unknown RendererAPI");
             }

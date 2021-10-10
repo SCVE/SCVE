@@ -1,4 +1,5 @@
 ﻿using System;
+using Engine.Platform.OpenGL;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine.EngineCore.Renderer

@@ -11,7 +11,8 @@ namespace Engine.EngineCore.Core
         {
             _commandLineArgs = args;
             _instance = this;
-            _window = Window.Create(new WindowProps(name));
+            var windowProps = new WindowProps(name);
+            _window = Window.Create(ref windowProps);
             _window.SetEventCallback(OnEvent);
             
             Renderer.Renderer.Init();

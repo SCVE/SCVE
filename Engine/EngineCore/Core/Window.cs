@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Engine.EngineCore.Events;
+using Engine.Platform.Windows;
 
 namespace Engine.EngineCore.Core
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct WindowProps
     {
         public string Title;
@@ -31,8 +34,16 @@ namespace Engine.EngineCore.Core
 
         public abstract unsafe void* GetNativeWindow();
 
-        public static Window Create(WindowProps props = new())
+        public static Window Create(ref WindowProps props)
         {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                return new WindowsWindow(ref props);
+            }
+            else
+            {
+                throw new ApplicationException("Unknown platform");
+            }
         }
     }
 }

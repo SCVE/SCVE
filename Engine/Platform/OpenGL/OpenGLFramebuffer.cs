@@ -17,7 +17,7 @@ namespace Engine.Platform.OpenGL
             {
                 if (!Utils.IsDepthFormat(attachment.TextureFormat))
                 {
-                    Array.Resize<>(ref _depthAttachmentSpecification, _colorAttachmentSpecifications.Length + 1);
+                    Array.Resize(ref _colorAttachmentSpecifications, _colorAttachmentSpecifications.Length + 1);
                     _colorAttachmentSpecifications[^1] = attachment;
                 }
                 else
