@@ -2,6 +2,7 @@
 using System.Threading;
 using SCVE.Core.Entities;
 using SCVE.Core.Services;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Core.App
 {
@@ -37,6 +38,11 @@ namespace SCVE.Core.App
             return application;
         }
 
+        public void DeferedInit()
+        {
+            _scope.DeferedInit();
+        }
+
         public void Init()
         {
             _state = AppState.Starting;
@@ -53,12 +59,18 @@ namespace SCVE.Core.App
 
             _state = AppState.Running;
 
+            Random random = new Random(DateTime.Now.Millisecond);
+            
+            Logger.Warn("Starting Main Loop");
             while (_state == AppState.Running)
             {
                 WindowManager.PollEvents();
-                
+
                 float deltaTime = DeltaTimeProvider.Get();
                 _scope.Update(deltaTime);
+
+                Renderer.SetClearColor(new Color(random.Next(0, 2), random.Next(0, 2), random.Next(0, 2), 1));
+                Renderer.Clear();
 
                 _scope.Render(Renderer);
 

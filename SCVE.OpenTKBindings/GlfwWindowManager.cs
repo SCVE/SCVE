@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Linq;
-using System.Threading;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using SCVE.Core.App;
 using SCVE.Core.Entities;
 using SCVE.Core.Services;
 using SCVE.Core.Utilities;
 
-namespace SCVE.OpenTK.Glfw
+namespace SCVE.OpenTKBindings
 {
     public class GlfwWindowManager : WindowManager
     {
@@ -20,9 +18,11 @@ namespace SCVE.OpenTK.Glfw
 
         public override unsafe ScveWindow Create(WindowProps props)
         {
-            Logger.Trace($"{nameof(GlfwWindowManager)}.{nameof(Create)}");
+            Logger.Warn($"{nameof(GlfwWindowManager)}.{nameof(Create)}");
             var window = GLFW.CreateWindow(props.Width, props.Height, props.Title, null, null);
 
+            GLFW.MakeContextCurrent(window);
+            
             GLFW.SetWindowCloseCallback(window, _windowCloseRequestedCallback);
 
             var windowPtr = (IntPtr)window;
@@ -55,7 +55,7 @@ namespace SCVE.OpenTK.Glfw
             _errorCallback = OnGlfwError;
             GLFW.SetErrorCallback(_errorCallback);
             
-            Console.WriteLine("GLFW Inited");
+            Logger.Warn("GLFW Inited");
         }
 
         private void OnGlfwError(ErrorCode error, string description)

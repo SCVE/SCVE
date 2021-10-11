@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using SCVE.Core.App;
 using SCVE.Core.Entities;
 using SCVE.Null;
-using SCVE.OpenTK.Glfw;
+using SCVE.OpenTKBindings;
 
 namespace Playground
 {
@@ -13,6 +12,7 @@ namespace Playground
         {
             var applicationInit = new ApplicationInitNull();
             applicationInit.WindowManager = new GlfwWindowManager();
+            applicationInit.Renderer = new OpenGLRenderer();
             var application = Application.Init(applicationInit);
 
             application.Init();
@@ -22,6 +22,7 @@ namespace Playground
 
             application.AddRenderable(new RenderableNull());
 
+            application.DeferedInit();
             application.Run();
 
             Console.WriteLine("Exiting");

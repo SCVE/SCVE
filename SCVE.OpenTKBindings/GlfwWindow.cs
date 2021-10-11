@@ -1,7 +1,7 @@
 ﻿using System;
 using SCVE.Core.Entities;
 
-namespace SCVE.OpenTK.Glfw
+namespace SCVE.OpenTKBindings
 {
     public class GlfwWindow : ScveWindow
     {

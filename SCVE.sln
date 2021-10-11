@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Pl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Null", "SCVE.Null\SCVE.Null.csproj", "{CBA2D205-ACE6-4AE8-A3FB-D58B7F0952B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.OpenTK.Glfw", "SCVE.OpenTK.Glfw\SCVE.OpenTK.Glfw.csproj", "{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.OpenTKBindings", "SCVE.OpenTKBindings\SCVE.OpenTKBindings.csproj", "{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

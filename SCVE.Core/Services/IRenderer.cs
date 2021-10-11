@@ -1,8 +1,12 @@
-﻿using SCVE.Core.Lifecycle;
+﻿using SCVE.Core.Entities;
+using SCVE.Core.Lifecycle;
 
 namespace SCVE.Core.Services
 {
-    public interface IRenderer : IInitable, ITerminatable
+    public interface IRenderer : IDeferedInitable, ITerminatable
     {
+        void Clear();
+
+        void SetClearColor(Color color);
     }
 }

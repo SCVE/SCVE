@@ -7,7 +7,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\SCVE.Core\SCVE.Core.csproj" />
-      <ProjectReference Include="..\SCVE.OpenTK.Glfw\SCVE.OpenTK.Glfw.csproj" />
+      <ProjectReference Include="..\SCVE.OpenTKBindings\SCVE.OpenTKBindings.csproj" />
       <ProjectReference Include="..\SCVE.Null\SCVE.Null.csproj" />
     </ItemGroup>
 

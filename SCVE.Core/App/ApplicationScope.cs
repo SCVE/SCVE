@@ -13,6 +13,7 @@ namespace SCVE.Core.App
         public IDeltaTimeProvider DeltaTimeProvider { get; private set; }
 
         private List<IInitable> _initables;
+        private List<IDeferedInitable> _deferedInitables;
         private List<IUpdatable> _updatables;
         private List<ITerminatable> _terminatables;
         
@@ -23,6 +24,7 @@ namespace SCVE.Core.App
             _initables = new List<IInitable>();
             _updatables = new List<IUpdatable>();
             _terminatables = new List<ITerminatable>();
+            _deferedInitables = new List<IDeferedInitable>();
             Renderables = new List<IRenderable>();
         }
         
@@ -31,6 +33,11 @@ namespace SCVE.Core.App
             if (entity is IInitable initable)
             {
                 _initables.Add(initable);
+            }
+            
+            if (entity is IDeferedInitable deferedInitable)
+            {
+                _deferedInitables.Add(deferedInitable);
             }
 
             if (entity is ITerminatable terminatable)
@@ -50,6 +57,11 @@ namespace SCVE.Core.App
             {
                 _initables.Remove(initable);
             }
+            
+            if (entity is IDeferedInitable deferedInitable)
+            {
+                _deferedInitables.Remove(deferedInitable);
+            }
 
             if (entity is ITerminatable terminatable)
             {
@@ -62,6 +74,14 @@ namespace SCVE.Core.App
             foreach (var initable in _initables)
             {
                 initable.OnInit();
+            }
+        }
+
+        public void DeferedInit()
+        {
+            foreach (var deferedInitable in _deferedInitables)
+            {
+                deferedInitable.OnDeferInit();
             }
         }
 
