@@ -55,15 +55,16 @@ namespace SCVE.Core.App
 
             while (_state == AppState.Running)
             {
+                WindowManager.PollEvents();
+                
                 float deltaTime = DeltaTimeProvider.Get();
                 _scope.Update(deltaTime);
 
                 _scope.Render(Renderer);
-                WindowManager.PollEvents();
 
                 if (WindowManager.MainWindow is not null)
                 {
-                    WindowManager.SwapBuffers(WindowManager.MainWindow);
+                    WindowManager.MainWindow.SwapBuffers();
                 }
             }
 

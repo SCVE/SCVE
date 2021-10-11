@@ -34,7 +34,7 @@ namespace SCVE.Core.Entities
 
         public void OnClose()
         {
-            Logger.Warn($"Window ({Title}): OnClose()");
+            Logger.Warn($"Window ({Title}) closing");
         }
     }
 }
