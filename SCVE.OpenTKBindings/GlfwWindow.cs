@@ -22,6 +22,8 @@ namespace SCVE.OpenTKBindings
         private GLFWCallbacks.ScrollCallback _scrollCallback;
         private GLFWCallbacks.CursorPosCallback _cursorPosCallback;
         private GLFWCallbacks.CursorEnterCallback _cursorEnterCallback;
+        private GLFWCallbacks.WindowIconifyCallback _windowIconifyCallback;
+        private GLFWCallbacks.WindowMaximizeCallback _windowMaximizeCallback;
 
         public unsafe GlfwWindow(WindowProps props) : base(props)
         {
@@ -39,6 +41,8 @@ namespace SCVE.OpenTKBindings
                 _scrollCallback = OnScroll;
                 _cursorPosCallback = OnCursorMoved;
                 _cursorEnterCallback = OnCursorEnter;
+                _windowIconifyCallback = OnWindowMinimized;
+                _windowMaximizeCallback = OnWindowMaximized;
                 GLFW.SetErrorCallback(_errorCallback);
             }
 
@@ -60,6 +64,18 @@ namespace SCVE.OpenTKBindings
             GLFW.SetScrollCallback(_window, _scrollCallback);
             GLFW.SetCursorPosCallback(_window, _cursorPosCallback);
             GLFW.SetCursorEnterCallback(_window, _cursorEnterCallback);
+            GLFW.SetWindowIconifyCallback(_window, _windowIconifyCallback);
+            GLFW.SetWindowMaximizeCallback(_window, _windowMaximizeCallback);
+        }
+
+        private unsafe void OnWindowMaximized(Window* window, bool maximized)
+        {
+            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowMaximized)}(maximized: {maximized})");
+        }
+
+        private unsafe void OnWindowMinimized(Window* window, bool iconified)
+        {
+            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowMinimized)}(iconified: {iconified})");
         }
 
         public override unsafe void Shutdown()
