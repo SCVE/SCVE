@@ -5,11 +5,9 @@
         public string Title { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public bool IsMain { get; set; }
 
-        public WindowProps(string title = "SCVE", int width = 800, int height = 600, bool isMain = true)
+        public WindowProps(string title = "SCVE", int width = 800, int height = 600)
         {
-            IsMain = isMain;
             Title = title;
             Width = width;
             Height = height;
@@ -17,7 +15,7 @@
 
         public override string ToString()
         {
-            return $"WindowProps: {{{nameof(Title)}: {Title}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}, {nameof(IsMain)}: {IsMain}}}";
+            return $"WindowProps: {{{nameof(Title)}: {Title}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}}}";
         }
     }
 }

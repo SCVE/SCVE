@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using SCVE.Core.Entities;
+using SCVE.Core.Rendering;
 using SCVE.Core.Services;
 using SCVE.Core.Utilities;
 
@@ -20,10 +21,9 @@ namespace SCVE.Core.App
 
         public IRenderer Renderer => _scope.Renderer;
         public IFileLoader FileLoader => _scope.FileLoader;
-        public WindowManager WindowManager => _scope.WindowManager;
         public IDeltaTimeProvider DeltaTimeProvider => _scope.DeltaTimeProvider;
 
-        public ScveWindow MainWindow => WindowManager.MainWindow;
+        public ScveWindow MainWindow => _scope.MainWindow;
 
         private Application(ApplicationInit init)
         {
@@ -34,20 +34,14 @@ namespace SCVE.Core.App
         public static Application Init(ApplicationInit init)
         {
             var application = new Application(init);
+            
+            application._state = AppState.Starting;
+            application._scope.Init();
+            application._state = AppState.Ready;
+            
             _isInited = true;
+            
             return application;
-        }
-
-        public void DeferedInit()
-        {
-            _scope.DeferedInit();
-        }
-
-        public void Init()
-        {
-            _state = AppState.Starting;
-            _scope.Init();
-            _state = AppState.Ready;
         }
 
         public void Run()
@@ -59,25 +53,28 @@ namespace SCVE.Core.App
 
             _state = AppState.Running;
 
-            Random random = new Random(DateTime.Now.Millisecond);
-            
+            float time = 0f;
+            Color color = new Color();
             Logger.Warn("Starting Main Loop");
             while (_state == AppState.Running)
             {
-                WindowManager.PollEvents();
-
                 float deltaTime = DeltaTimeProvider.Get();
                 _scope.Update(deltaTime);
-
-                Renderer.SetClearColor(new Color(random.Next(0, 2), random.Next(0, 2), random.Next(0, 2), 1));
+                
+                time += deltaTime;
+                float sin = (MathF.Sin(time * MathF.PI) + 1) * 0.5f;
+                float brightness = sin * sin;
+                color.R = brightness;
+                color.G = brightness;
+                color.B = brightness;
+                color.A = 1;
+                
+                Renderer.SetClearColor(color);
                 Renderer.Clear();
 
                 _scope.Render(Renderer);
 
-                if (WindowManager.MainWindow is not null)
-                {
-                    WindowManager.MainWindow.SwapBuffers();
-                }
+                MainWindow.OnUpdate();
             }
 
             if (_state != AppState.TerminationRequested)

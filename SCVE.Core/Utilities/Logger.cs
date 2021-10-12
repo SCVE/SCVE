@@ -31,6 +31,14 @@ namespace SCVE.Core.Utilities
             Console.ResetColor();
         }
 
+        public static void Warn(string format, params object[] args)
+        {
+            if (MinLevel > LogLevel.Warn) return;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"WARN: {string.Format(format, args)}");
+            Console.ResetColor();
+        }
+
         public static void Error(string error)
         {
             if (MinLevel > LogLevel.Error) return;

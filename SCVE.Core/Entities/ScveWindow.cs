@@ -1,40 +1,48 @@
 ﻿using System;
 using SCVE.Core.App;
+using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 
 namespace SCVE.Core.Entities
 {
     public abstract class ScveWindow
     {
-        public IntPtr Handle { get; private set; }
-        
-        public string Title { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public bool IsMain { get; set; }
+        public IntPtr Handle { get; protected set; }
 
-        protected ScveWindow(string title, int width, int height, bool isMain, IntPtr handle)
+        public string Title { get; protected set; }
+        public int Width { get; protected set; }
+        public int Height { get; protected set; }
+
+        public RenderingContext Context { get; protected set; }
+        public static ScveWindow Instance { get; set; }
+
+        protected ScveWindow(WindowProps props)
         {
-            Title = title;
-            Width = width;
-            Height = height;
-            IsMain = isMain;
-            Handle = handle;
+            Title = props.Title;
+            Width = props.Width;
+            Height = props.Height;
+            Instance = this;
         }
 
-        public bool ShouldClose()
+        public abstract void SetVSync(bool vSync);
+        
+        public abstract void Shutdown();
+
+        public virtual void SetTitle(string title)
         {
-            return Application.Instance.WindowManager.WindowShouldClose(this);
+            this.Title = title;
         }
 
         public void SwapBuffers()
         {
-            Application.Instance.WindowManager.SwapBuffers(this);
+            Context.SwapBuffers();
         }
 
         public void OnClose()
         {
             Logger.Warn($"Window ({Title}) closing");
         }
+
+        public abstract void OnUpdate();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SCVE.Core.App;
+using SCVE.Core.Entities;
 using SCVE.Core.Services;
 
 namespace SCVE.Null
@@ -8,8 +9,8 @@ namespace SCVE.Null
         public ApplicationInitNull() : base(
             new RendererNull(),
             new FileLoaderNull(),
-            new WindowManagerNull(),
-            new DeltaTimeZero()
+            new DeltaTimeZero(),
+            null
         )
         {
         }

@@ -1,4 +1,6 @@
-﻿using SCVE.Core.Services;
+﻿using SCVE.Core.Entities;
+using SCVE.Core.Rendering;
+using SCVE.Core.Services;
 
 namespace SCVE.Core.App
 {
@@ -7,17 +9,17 @@ namespace SCVE.Core.App
         public IRenderer Renderer { get; set; }
 
         public IFileLoader FileLoader { get; set; }
-        
-        public WindowManager WindowManager { get; set; }
-        
+
         public IDeltaTimeProvider DeltaTimeProvider { get; set; }
 
-        public ApplicationInit(IRenderer renderer, IFileLoader fileLoader, WindowManager windowManager, IDeltaTimeProvider deltaTimeProvider)
+        public ScveWindow Window { get; set; }
+
+        public ApplicationInit(IRenderer renderer, IFileLoader fileLoader, IDeltaTimeProvider deltaTimeProvider, ScveWindow window)
         {
             Renderer = renderer;
             FileLoader = fileLoader;
-            WindowManager = windowManager;
             DeltaTimeProvider = deltaTimeProvider;
+            Window = window;
         }
     }
 }

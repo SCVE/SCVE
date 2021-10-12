@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SCVE.Core.Entities;
 using SCVE.Core.Lifecycle;
+using SCVE.Core.Rendering;
 using SCVE.Core.Services;
 
 namespace SCVE.Core.App
@@ -9,22 +10,20 @@ namespace SCVE.Core.App
     {
         public IRenderer Renderer { get; private set; }
         public IFileLoader FileLoader { get; private set; }
-        public WindowManager WindowManager { get; private set; }
         public IDeltaTimeProvider DeltaTimeProvider { get; private set; }
 
         private List<IInitable> _initables;
-        private List<IDeferedInitable> _deferedInitables;
         private List<IUpdatable> _updatables;
         private List<ITerminatable> _terminatables;
         
         public List<IRenderable> Renderables { get; private set; }
+        public ScveWindow MainWindow => ScveWindow.Instance;
 
         public ApplicationScope()
         {
             _initables = new List<IInitable>();
             _updatables = new List<IUpdatable>();
             _terminatables = new List<ITerminatable>();
-            _deferedInitables = new List<IDeferedInitable>();
             Renderables = new List<IRenderable>();
         }
         
@@ -33,11 +32,6 @@ namespace SCVE.Core.App
             if (entity is IInitable initable)
             {
                 _initables.Add(initable);
-            }
-            
-            if (entity is IDeferedInitable deferedInitable)
-            {
-                _deferedInitables.Add(deferedInitable);
             }
 
             if (entity is ITerminatable terminatable)
@@ -57,11 +51,6 @@ namespace SCVE.Core.App
             {
                 _initables.Remove(initable);
             }
-            
-            if (entity is IDeferedInitable deferedInitable)
-            {
-                _deferedInitables.Remove(deferedInitable);
-            }
 
             if (entity is ITerminatable terminatable)
             {
@@ -74,14 +63,6 @@ namespace SCVE.Core.App
             foreach (var initable in _initables)
             {
                 initable.OnInit();
-            }
-        }
-
-        public void DeferedInit()
-        {
-            foreach (var deferedInitable in _deferedInitables)
-            {
-                deferedInitable.OnDeferInit();
             }
         }
 
@@ -133,17 +114,6 @@ namespace SCVE.Core.App
             return this;
         }
 
-        public ApplicationScope WithWindowManager(WindowManager windowManager)
-        {
-            if (WindowManager is not null)
-            {
-                EndTrack(WindowManager);
-            }
-            WindowManager = windowManager;
-            BeginTrack(windowManager);
-            return this;
-        }
-
         public ApplicationScope WithDeltaTimeProvider(IDeltaTimeProvider deltaTimeProvider)
         {
             if (DeltaTimeProvider is not null)
@@ -160,7 +130,6 @@ namespace SCVE.Core.App
             return new ApplicationScope()
                 .WithRenderer(applicationInit.Renderer)
                 .WithFileStorage(applicationInit.FileLoader)
-                .WithWindowManager(applicationInit.WindowManager)
                 .WithDeltaTimeProvider(applicationInit.DeltaTimeProvider);
         }
     }
