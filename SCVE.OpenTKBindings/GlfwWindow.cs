@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using static OpenTK.Windowing.GraphicsLibraryFramework.GLFWCallbacks;
 using SCVE.Core.App;
 using SCVE.Core.Entities;
 using SCVE.Core.Utilities;
@@ -13,17 +14,17 @@ namespace SCVE.OpenTKBindings
         private unsafe Window* _window;
 
         // NOTE: this weird callback is required, because GLFW complains about garbage collected delegates if I pass in just a void
-        private GLFWCallbacks.WindowCloseCallback _windowCloseCallback;
-        private GLFWCallbacks.ErrorCallback _errorCallback;
-        private GLFWCallbacks.WindowSizeCallback _sizeCallback;
-        private GLFWCallbacks.KeyCallback _keyCallback;
-        private GLFWCallbacks.CharCallback _charCallback;
-        private GLFWCallbacks.MouseButtonCallback _mouseButtonCallback;
-        private GLFWCallbacks.ScrollCallback _scrollCallback;
-        private GLFWCallbacks.CursorPosCallback _cursorPosCallback;
-        private GLFWCallbacks.CursorEnterCallback _cursorEnterCallback;
-        private GLFWCallbacks.WindowIconifyCallback _windowIconifyCallback;
-        private GLFWCallbacks.WindowMaximizeCallback _windowMaximizeCallback;
+        private WindowCloseCallback _windowCloseCallback;
+        private ErrorCallback _errorCallback;
+        private WindowSizeCallback _sizeCallback;
+        private KeyCallback _keyCallback;
+        private CharCallback _charCallback;
+        private MouseButtonCallback _mouseButtonCallback;
+        private ScrollCallback _scrollCallback;
+        private CursorPosCallback _cursorPosCallback;
+        private CursorEnterCallback _cursorEnterCallback;
+        private WindowIconifyCallback _windowIconifyCallback;
+        private WindowMaximizeCallback _windowMaximizeCallback;
 
         public unsafe GlfwWindow(WindowProps props) : base(props)
         {
