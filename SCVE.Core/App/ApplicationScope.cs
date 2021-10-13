@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SCVE.Core.Entities;
+using SCVE.Core.Input;
 using SCVE.Core.Lifecycle;
 using SCVE.Core.Rendering;
 using SCVE.Core.Services;
@@ -18,6 +19,8 @@ namespace SCVE.Core.App
         
         public List<IRenderable> Renderables { get; private set; }
         public ScveWindow MainWindow => ScveWindow.Instance;
+        
+        public InputBase Input { get; set; }
 
         public ApplicationScope()
         {
@@ -125,12 +128,19 @@ namespace SCVE.Core.App
             return this;
         }
 
+        public ApplicationScope WithInput(InputBase input)
+        {
+            Input = input;
+            return this;
+        }
+
         public static ApplicationScope FromApplicationInit(ApplicationInit applicationInit)
         {
             return new ApplicationScope()
                 .WithRenderer(applicationInit.Renderer)
                 .WithFileStorage(applicationInit.FileLoader)
-                .WithDeltaTimeProvider(applicationInit.DeltaTimeProvider);
+                .WithDeltaTimeProvider(applicationInit.DeltaTimeProvider)
+                .WithInput(applicationInit.Input);
         }
     }
 }

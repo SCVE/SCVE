@@ -10,6 +10,7 @@ namespace SCVE.Null
             new RendererNull(),
             new FileLoaderNull(),
             new DeltaTimeZero(),
+            null,
             null
         )
         {

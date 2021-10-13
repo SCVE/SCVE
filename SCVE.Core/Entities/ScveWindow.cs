@@ -13,7 +13,7 @@ namespace SCVE.Core.Entities
         public int Width { get; protected set; }
         public int Height { get; protected set; }
 
-        public RenderingContext Context { get; protected set; }
+        public Context Context { get; protected set; }
         public static ScveWindow Instance { get; set; }
 
         protected ScveWindow(WindowProps props)

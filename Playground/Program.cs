@@ -14,6 +14,7 @@ namespace Playground
             applicationInit.Renderer = new OpenGLRenderer();
             applicationInit.DeltaTimeProvider = new GlfwDeltaTimeProvider();
             applicationInit.Window = new GlfwWindow(new WindowProps("Super Cool Video Editor"));
+            applicationInit.Input = new GlfwInput();
 
             var application = Application.Init(applicationInit);
 

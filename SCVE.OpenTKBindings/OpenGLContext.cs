@@ -7,10 +7,10 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.OpenTKBindings
 {
-    public class OpenGLContext : RenderingContext
+    public class OpenGLContext : Context
     {
         private DebugProc _openGLMessageCallback;
-        
+
         public OpenGLContext(ScveWindow window) : base(window)
         {
             Logger.Warn("Constructing OpenGLContext");
@@ -20,12 +20,12 @@ namespace SCVE.OpenTKBindings
         {
             Logger.Trace($"{nameof(OpenGLContext)}.{nameof(Init)}");
             GL.LoadBindings(new GLFWBindingsContext());
-            
+
             Logger.Warn("OpenGL Info:");
             Logger.Warn("  Vendor: {0}", GL.GetString(StringName.Vendor));
             Logger.Warn("  Renderer: {0}", GL.GetString(StringName.Renderer));
             Logger.Warn("  Version: {0}", GL.GetString(StringName.Version));
-            
+
             _openGLMessageCallback = OnOpenGLDebugMessageCallback;
 
             GL.Enable(EnableCap.DebugOutput);

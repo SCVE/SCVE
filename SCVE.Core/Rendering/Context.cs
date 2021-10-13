@@ -2,11 +2,11 @@
 
 namespace SCVE.Core.Rendering
 {
-    public abstract class RenderingContext
+    public abstract class Context
     {
         public ScveWindow Window { get; private set; }
 
-        public RenderingContext(ScveWindow window)
+        public Context(ScveWindow window)
         {
             Window = window;
         }

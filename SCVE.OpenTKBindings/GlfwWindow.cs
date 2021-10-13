@@ -72,11 +72,27 @@ namespace SCVE.OpenTKBindings
         private unsafe void OnWindowMaximized(Window* window, bool maximized)
         {
             Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowMaximized)}(maximized: {maximized})");
+            if (maximized)
+            {
+                Application.Instance.Input.RegisterWindowMaximized();
+            }
+            else
+            {
+                Application.Instance.Input.RegisterWindowWindowed();
+            }
         }
 
         private unsafe void OnWindowMinimized(Window* window, bool iconified)
         {
             Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowMinimized)}(iconified: {iconified})");
+            if (iconified)
+            {
+                Application.Instance.Input.RegisterWindowMinimized();
+            }
+            else
+            {
+                Application.Instance.Input.RegisterWindowWindowed();
+            }
         }
 
         public override unsafe void Shutdown()
@@ -104,31 +120,77 @@ namespace SCVE.OpenTKBindings
         private unsafe void OnCursorEnter(Window* window, bool entered)
         {
             Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnCursorEnter)}(entered: {entered})");
+
+            if (entered)
+            {
+                Application.Instance.Input.RegisterCursorEnter();
+            }
+            else
+            {
+                Application.Instance.Input.RegisterCursorLeave();
+            }
         }
 
         private unsafe void OnCursorMoved(Window* window, double x, double y)
         {
             Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnCursorMoved)}(x: {x}, y: {y})");
+
+            Application.Instance.Input.RegisterCursorMoved((float)x, (float)y);
         }
 
         private unsafe void OnScroll(Window* window, double offsetx, double offsety)
         {
             Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnScroll)}(offsetx: {offsetx}, offsety: {offsety})");
+
+            Application.Instance.Input.RegisterScroll((float)offsetx, (float)offsety);
         }
 
         private unsafe void OnMouseButtonClick(Window* window, MouseButton button, InputAction action, KeyModifiers mods)
         {
             Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnMouseButtonClick)}(button: {button}, action: {action}, mods: {mods})");
+
+            switch (action)
+            {
+                case InputAction.Press:
+                    Application.Instance.Input.RegisterMouseButtonDown(button.ToScveCode());
+                    break;
+                case InputAction.Release:
+                    Application.Instance.Input.RegisterMouseButtonUp(button.ToScveCode());
+                    break;
+                case InputAction.Repeat:
+                    // This is never called
+                    // TODO: figure out what to do with this thing
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
         private unsafe void OnKeyTyped(Window* window, uint codepoint)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnKeyTyped)}(codepoint: {codepoint})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnKeyTyped)}(codepoint: {codepoint})");
+            
+            // TODO: figure out what to do with this thing
         }
 
         private unsafe void OnKeyPressed(Window* window, Keys key, int scancode, InputAction action, KeyModifiers mods)
         {
             Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnKeyPressed)}(scancode: {scancode}, action: {action}, key: {key}, mods: {mods})");
+
+            switch (action)
+            {
+                case InputAction.Press:
+                    Application.Instance.Input.RegisterKeyDown(key.ToScveCode());
+                    break;
+                case InputAction.Release:
+                    Application.Instance.Input.RegisterKeyUp(key.ToScveCode());
+                    break;
+                case InputAction.Repeat:
+                    Application.Instance.Input.RegisterKeyRepeat(key.ToScveCode());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
         private unsafe void OnWindowClose(Window* window)
@@ -140,6 +202,8 @@ namespace SCVE.OpenTKBindings
         private unsafe void OnWindowSizeChanged(Window* window, int width, int height)
         {
             Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowSizeChanged)}(width: {width}, height: {height})");
+            
+            Application.Instance.Input.RegisterWindowSizeChanged(width, height);
         }
 
         public override void SetVSync(bool vSync)
@@ -150,6 +214,7 @@ namespace SCVE.OpenTKBindings
         private static void OnGlfwError(ErrorCode error, string description)
         {
             Logger.Error($"GLFW - {description}");
+            Application.Instance.RequestTerminate();
         }
     }
 }

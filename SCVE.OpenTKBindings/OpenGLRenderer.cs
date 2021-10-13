@@ -1,9 +1,8 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Windowing.GraphicsLibraryFramework;
+using SCVE.Core.App;
 using SCVE.Core.Entities;
 using SCVE.Core.Rendering;
-using SCVE.Core.Services;
 using SCVE.Core.Utilities;
 
 namespace SCVE.OpenTKBindings
@@ -16,6 +15,12 @@ namespace SCVE.OpenTKBindings
         {
             Logger.Warn("OpenTkOpenGLRenderer.OnInit");
             GL.DebugMessageCallback(OpenGLMessageCallback, IntPtr.Zero);
+            Application.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
+        }
+
+        private void InputOnWindowSizeChanged(int width, int height)
+        {
+            SetViewport(0, 0, width, height);
         }
 
         public void OnTerminate()

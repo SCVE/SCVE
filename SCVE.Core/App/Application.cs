@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using SCVE.Core.Entities;
+using SCVE.Core.Input;
 using SCVE.Core.Rendering;
 using SCVE.Core.Services;
 using SCVE.Core.Utilities;
@@ -22,8 +23,8 @@ namespace SCVE.Core.App
         public IRenderer Renderer => _scope.Renderer;
         public IFileLoader FileLoader => _scope.FileLoader;
         public IDeltaTimeProvider DeltaTimeProvider => _scope.DeltaTimeProvider;
-
         public ScveWindow MainWindow => _scope.MainWindow;
+        public InputBase Input => _scope.Input;
 
         private Application(ApplicationInit init)
         {
