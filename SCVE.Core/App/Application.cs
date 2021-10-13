@@ -25,6 +25,7 @@ namespace SCVE.Core.App
         public IDeltaTimeProvider DeltaTimeProvider => _scope.DeltaTimeProvider;
         public ScveWindow MainWindow => _scope.MainWindow;
         public InputBase Input => _scope.Input;
+        public IRenderEntitiesCreator RenderEntitiesCreator => _scope.RenderEntitiesCreator;
 
         private Application(ApplicationInit init)
         {
@@ -74,6 +75,8 @@ namespace SCVE.Core.App
                 Renderer.Clear();
 
                 _scope.Render(Renderer);
+                
+                MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 
                 MainWindow.OnUpdate();
             }

@@ -42,5 +42,11 @@ namespace SCVE.OpenTKBindings
         {
             GL.Viewport(x, y, width, height);
         }
+
+        public void Render(VertexArray vertexArray)
+        {
+            vertexArray.Bind();
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 1);
+        }
     }
 }

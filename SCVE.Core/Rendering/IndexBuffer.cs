@@ -2,10 +2,7 @@
 
 namespace SCVE.Core.Rendering
 {
-    /// <summary>
-    /// VBO
-    /// </summary>
-    public abstract class VertexBuffer : IDisposable
+    public abstract class IndexBuffer : IDisposable
     {
         public int Id;
 

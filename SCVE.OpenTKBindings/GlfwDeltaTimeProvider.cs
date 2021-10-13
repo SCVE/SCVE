@@ -10,7 +10,7 @@ namespace SCVE.OpenTKBindings
         public float Get()
         {
             var currentTime = (float)GLFW.GetTime();
-            float deltaTime = _lastTime - currentTime;
+            float deltaTime = currentTime - _lastTime;
             _lastTime = currentTime;
             return deltaTime;
         }

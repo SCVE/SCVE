@@ -20,7 +20,9 @@ namespace SCVE.Core.App
         public List<IRenderable> Renderables { get; private set; }
         public ScveWindow MainWindow => ScveWindow.Instance;
         
-        public InputBase Input { get; set; }
+        public InputBase Input { get; private set; }
+        
+        public IRenderEntitiesCreator RenderEntitiesCreator { get; private set; }
 
         public ApplicationScope()
         {
@@ -134,13 +136,20 @@ namespace SCVE.Core.App
             return this;
         }
 
+        public ApplicationScope WithRenderEntitiesProvider(IRenderEntitiesCreator renderEntitiesCreator)
+        {
+            RenderEntitiesCreator = renderEntitiesCreator;
+            return this;
+        }
+
         public static ApplicationScope FromApplicationInit(ApplicationInit applicationInit)
         {
             return new ApplicationScope()
                 .WithRenderer(applicationInit.Renderer)
                 .WithFileStorage(applicationInit.FileLoader)
                 .WithDeltaTimeProvider(applicationInit.DeltaTimeProvider)
-                .WithInput(applicationInit.Input);
+                .WithInput(applicationInit.Input)
+                .WithRenderEntitiesProvider(applicationInit.RenderEntitiesCreator);
         }
     }
 }

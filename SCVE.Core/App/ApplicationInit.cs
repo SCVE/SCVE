@@ -16,14 +16,17 @@ namespace SCVE.Core.App
         public ScveWindow Window { get; set; }
         
         public InputBase Input { get; set; }
+        
+        public IRenderEntitiesCreator RenderEntitiesCreator { get; set; }
 
-        public ApplicationInit(IRenderer renderer, IFileLoader fileLoader, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input)
+        public ApplicationInit(IRenderer renderer, IFileLoader fileLoader, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator)
         {
             Renderer = renderer;
             FileLoader = fileLoader;
             DeltaTimeProvider = deltaTimeProvider;
             Window = window;
             Input = input;
+            RenderEntitiesCreator = renderEntitiesCreator;
         }
     }
 }

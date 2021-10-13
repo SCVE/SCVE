@@ -1,24 +1,17 @@
-﻿using System;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using SCVE.Core.Rendering;
 
 namespace SCVE.OpenTKBindings
 {
-    public class OpenGLVertexBuffer : VertexBuffer
+    public class OpenGLIndexBuffer : IndexBuffer
     {
-        public OpenGLVertexBuffer(float[] vertices)
+        public OpenGLIndexBuffer(int[] indices)
         {
             Id = GL.GenBuffer();
             Bind();
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length, vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, indices.Length, indices, BufferUsageHint.StaticDraw);
         }
         
-        public OpenGLVertexBuffer(int size)
-        {
-            Id = GL.GenBuffer();
-            GL.BufferData(BufferTarget.ArrayBuffer, size, IntPtr.Zero, BufferUsageHint.StaticDraw);
-        }
-
         public override void Bind()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, Id);

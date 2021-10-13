@@ -10,5 +10,7 @@ namespace SCVE.Core.Rendering
         void SetClearColor(Color color);
 
         void SetViewport(int x, int y, int width, int height);
+
+        void Render(VertexArray vertexArray);
     }
 }
