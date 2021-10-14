@@ -6,6 +6,8 @@ namespace SCVE.Core.Rendering
     {
         public int Id;
 
+        public int Count;
+
         public abstract void Bind();
 
         public abstract void Unbind();

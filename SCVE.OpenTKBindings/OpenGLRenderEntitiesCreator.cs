@@ -14,6 +14,11 @@ namespace SCVE.OpenTKBindings
             return new OpenGLVertexBuffer(size);
         }
 
+        public VertexArray CreateVertexArray()
+        {
+            return new OpenGLVertexArray();
+        }
+
         public IndexBuffer CreateIndexBuffer(int[] indices)
         {
             return new OpenGLIndexBuffer(indices);
@@ -22,6 +27,11 @@ namespace SCVE.OpenTKBindings
         public Shader CreateShader(string source, ScveShaderType type)
         {
             return new OpenGLShader(source, type);
+        }
+
+        public Program CreateProgram()
+        {
+            return new OpenGLProgram();
         }
     }
 }

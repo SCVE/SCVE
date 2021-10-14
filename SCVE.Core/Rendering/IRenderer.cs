@@ -11,6 +11,6 @@ namespace SCVE.Core.Rendering
 
         void SetViewport(int x, int y, int width, int height);
 
-        void Render(VertexArray vertexArray);
+        void Render(VertexArray vertexArray, Program shaderProgram);
     }
 }

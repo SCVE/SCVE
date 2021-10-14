@@ -63,15 +63,15 @@ namespace SCVE.Core.App
                 float deltaTime = DeltaTimeProvider.Get();
                 _scope.Update(deltaTime);
                 
-                time += deltaTime;
-                float sin = (MathF.Sin(time * MathF.PI) + 1) * 0.5f;
-                float brightness = sin * sin;
-                color.R = brightness;
-                color.G = brightness;
-                color.B = brightness;
-                color.A = 1;
+                // time += deltaTime;
+                // float sin = (MathF.Sin(time * MathF.PI) + 1) * 0.5f;
+                // float brightness = sin * sin;
+                // color.R = brightness;
+                // color.G = brightness;
+                // color.B = brightness;
+                // color.A = 1;
+                //Renderer.SetClearColor(color);
                 
-                Renderer.SetClearColor(color);
                 Renderer.Clear();
 
                 _scope.Render(Renderer);

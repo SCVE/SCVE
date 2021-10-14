@@ -8,6 +8,10 @@ namespace SCVE.Core.Rendering
     public abstract class VertexBuffer : IDisposable
     {
         public int Id;
+        
+        public VertexBufferLayout Layout { get; set; }
+        
+        public abstract int GetSize();
 
         public abstract void Bind();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using SCVE.Core.App;
+using SCVE.Core.Components;
 using SCVE.Core.Entities;
 using SCVE.Null;
 using SCVE.OpenTKBindings;
@@ -18,6 +19,8 @@ namespace Playground
             applicationInit.RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
 
             var application = Application.Init(applicationInit);
+            
+            application.AddRenderable(new BasicComponent());
 
             application.Run();
 
