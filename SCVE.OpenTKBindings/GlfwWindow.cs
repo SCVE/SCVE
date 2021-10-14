@@ -71,7 +71,7 @@ namespace SCVE.OpenTKBindings
 
         private unsafe void OnWindowMaximized(Window* window, bool maximized)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowMaximized)}(maximized: {maximized})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnWindowMaximized)}(maximized: {maximized})");
             if (maximized)
             {
                 Application.Instance.Input.RegisterWindowMaximized();
@@ -84,7 +84,7 @@ namespace SCVE.OpenTKBindings
 
         private unsafe void OnWindowMinimized(Window* window, bool iconified)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowMinimized)}(iconified: {iconified})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnWindowMinimized)}(iconified: {iconified})");
             if (iconified)
             {
                 Application.Instance.Input.RegisterWindowMinimized();
@@ -97,6 +97,7 @@ namespace SCVE.OpenTKBindings
 
         public override unsafe void Shutdown()
         {
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(Shutdown)}()");
             GLFW.DestroyWindow(_window);
             _glfwWindowCount--;
             if (_glfwWindowCount == 0)
@@ -107,19 +108,21 @@ namespace SCVE.OpenTKBindings
 
         public override void OnUpdate()
         {
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnUpdate)}()");
             GLFW.PollEvents();
             Context.SwapBuffers();
         }
 
         public override unsafe void SetTitle(string title)
         {
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(SetTitle)}()");
             base.SetTitle(title);
             GLFW.SetWindowTitle(_window, title);
         }
 
         private unsafe void OnCursorEnter(Window* window, bool entered)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnCursorEnter)}(entered: {entered})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnCursorEnter)}(entered: {entered})");
 
             if (entered)
             {
@@ -133,21 +136,21 @@ namespace SCVE.OpenTKBindings
 
         private unsafe void OnCursorMoved(Window* window, double x, double y)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnCursorMoved)}(x: {x}, y: {y})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnCursorMoved)}(x: {x}, y: {y})");
 
             Application.Instance.Input.RegisterCursorMoved((float)x, (float)y);
         }
 
         private unsafe void OnScroll(Window* window, double offsetx, double offsety)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnScroll)}(offsetx: {offsetx}, offsety: {offsety})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnScroll)}(offsetx: {offsetx}, offsety: {offsety})");
 
             Application.Instance.Input.RegisterScroll((float)offsetx, (float)offsety);
         }
 
         private unsafe void OnMouseButtonClick(Window* window, MouseButton button, InputAction action, KeyModifiers mods)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnMouseButtonClick)}(button: {button}, action: {action}, mods: {mods})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnMouseButtonClick)}(button: {button}, action: {action}, mods: {mods})");
 
             switch (action)
             {
@@ -175,7 +178,7 @@ namespace SCVE.OpenTKBindings
 
         private unsafe void OnKeyPressed(Window* window, Keys key, int scancode, InputAction action, KeyModifiers mods)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnKeyPressed)}(scancode: {scancode}, action: {action}, key: {key}, mods: {mods})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnKeyPressed)}(scancode: {scancode}, action: {action}, key: {key}, mods: {mods})");
 
             switch (action)
             {
@@ -195,13 +198,13 @@ namespace SCVE.OpenTKBindings
 
         private unsafe void OnWindowClose(Window* window)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowClose)}()");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnWindowClose)}()");
             Application.Instance.RequestTerminate();
         }
 
         private unsafe void OnWindowSizeChanged(Window* window, int width, int height)
         {
-            Logger.Warn($"{nameof(GlfwWindow)}.{nameof(OnWindowSizeChanged)}(width: {width}, height: {height})");
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnWindowSizeChanged)}(width: {width}, height: {height})");
             
             Application.Instance.Input.RegisterWindowSizeChanged(width, height);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SCVE.Core.App;
 using SCVE.Core.Components;
 using SCVE.Core.Entities;
@@ -19,7 +20,7 @@ namespace Playground
             applicationInit.RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
 
             var application = Application.Init(applicationInit);
-            
+
             application.AddRenderable(new BasicComponent());
 
             application.Run();

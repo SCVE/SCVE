@@ -22,6 +22,7 @@ namespace SCVE.OpenTKBindings
             Logger.Trace("Constructing OpenGLVertexBuffer from size");
             Id = GL.GenBuffer();
             _size = size;
+            Bind();
             GL.BufferData(BufferTarget.ArrayBuffer, _size, IntPtr.Zero, BufferUsageHint.StaticDraw);
         }
 

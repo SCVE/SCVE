@@ -22,6 +22,11 @@ namespace SCVE.Core.Utilities
             Console.WriteLine($"TRACE: {trace}");
             Console.ResetColor();
         }
+        
+        public static void Trace(string format, params object[] args)
+        {
+            Trace(string.Format(format, args));
+        }
 
         public static void Warn(string warn)
         {
@@ -33,10 +38,7 @@ namespace SCVE.Core.Utilities
 
         public static void Warn(string format, params object[] args)
         {
-            if (MinLevel > LogLevel.Warn) return;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"WARN: {string.Format(format, args)}");
-            Console.ResetColor();
+            Warn(string.Format(format, args));
         }
 
         public static void Error(string error)
@@ -47,12 +49,22 @@ namespace SCVE.Core.Utilities
             Console.ResetColor();
         }
 
+        public static void Error(string format, params object[] args)
+        {
+            Error(string.Format(format, args));
+        }
+
         public static void Fatal(string fatal)
         {
             if (MinLevel > LogLevel.Fatal) return;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"FATAL: {fatal}");
             Console.ResetColor();
+        }
+
+        public static void Fatal(string format, params object[] args)
+        {
+            Fatal(string.Format(format, args));
         }
     }
 }

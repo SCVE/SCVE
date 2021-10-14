@@ -41,17 +41,17 @@ namespace SCVE.OpenTKBindings
             switch (severity)
             {
                 case DebugSeverity.DebugSeverityHigh:
-                    Logger.Fatal($"Critical: {messageString}");
+                    Logger.Fatal($"OpenGL - Critical! - {messageString}");
                     return;
                 case DebugSeverity.DebugSeverityMedium:
-                    Logger.Error($"Error: {messageString}");
+                    Logger.Error($"OpenGL - Error! - {messageString}");
                     return;
                 case DebugSeverity.DebugSeverityLow:
-                    Logger.Warn($"Warn: {messageString}");
+                    Logger.Warn($"OpenGL - Warn! - {messageString}");
                     return;
                 case DebugSeverity.DebugSeverityNotification:
                 case DebugSeverity.DontCare:
-                    Logger.Trace($"Trace: {messageString}");
+                    Logger.Trace($"OpenGL - Trace! - {messageString}");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("Unknown severity level!");
