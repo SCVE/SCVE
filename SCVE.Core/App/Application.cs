@@ -27,6 +27,10 @@ namespace SCVE.Core.App
         public InputBase Input => _scope.Input;
         public IRenderEntitiesCreator RenderEntitiesCreator => _scope.RenderEntitiesCreator;
 
+        public ITextureLoader TextureLoader => _scope.TextureLoader;
+
+        public IComponent RootComponent { get; set; }
+
         private Application(ApplicationInit init)
         {
             _instance = this;
@@ -53,6 +57,11 @@ namespace SCVE.Core.App
                 throw new ScveException("App is not ready");
             }
 
+            if (RootComponent is null)
+            {
+                throw new ScveException("No root component is present");
+            }
+
             _state = AppState.Running;
 
             float time = 0f;
@@ -73,8 +82,8 @@ namespace SCVE.Core.App
                 //Renderer.SetClearColor(color);
                 
                 Renderer.Clear();
-
-                _scope.Render(Renderer);
+                
+                RootComponent.Render(Renderer);
                 
                 MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 
@@ -87,11 +96,6 @@ namespace SCVE.Core.App
             }
 
             _state = AppState.Terminating;
-        }
-
-        public void AddRenderable(IRenderable renderable)
-        {
-            _scope.Renderables.Add(renderable);
         }
 
         public void RequestTerminate()

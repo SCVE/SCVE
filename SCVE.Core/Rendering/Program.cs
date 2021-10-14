@@ -2,7 +2,7 @@
 
 namespace SCVE.Core.Rendering
 {
-    public abstract class Program : IRenderEntity, IDisposable
+    public abstract class Program : IRenderEntity, IBindable, IDisposable
     {
         public int Id { get; protected set; }
 

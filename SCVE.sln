@@ -18,6 +18,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Null", "SCVE.Null\SCVE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.OpenTKBindings", "SCVE.OpenTKBindings\SCVE.OpenTKBindings.csproj", "{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.ImageSharpBindings", "SCVE.ImageSharpBindings\SCVE.ImageSharpBindings.csproj", "{CD6F55D9-A988-48D3-B158-E2EA2F943440}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Components", "SCVE.Components\SCVE.Components.csproj", "{66190B91-438A-4227-A800-AB3D88D69EA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +64,13 @@ Global
 		{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD6F55D9-A988-48D3-B158-E2EA2F943440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD6F55D9-A988-48D3-B158-E2EA2F943440}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD6F55D9-A988-48D3-B158-E2EA2F943440}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD6F55D9-A988-48D3-B158-E2EA2F943440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66190B91-438A-4227-A800-AB3D88D69EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66190B91-438A-4227-A800-AB3D88D69EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66190B91-438A-4227-A800-AB3D88D69EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66190B91-438A-4227-A800-AB3D88D69EA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

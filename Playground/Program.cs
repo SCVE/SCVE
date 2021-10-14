@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using SCVE.Components;
 using SCVE.Core.App;
-using SCVE.Core.Components;
 using SCVE.Core.Entities;
+using SCVE.ImageSharpBindings;
 using SCVE.Null;
 using SCVE.OpenTKBindings;
 
@@ -18,10 +18,11 @@ namespace Playground
             applicationInit.Window = new GlfwWindow(new WindowProps("Super Cool Video Editor"));
             applicationInit.Input = new GlfwInput();
             applicationInit.RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
+            applicationInit.TextureLoader = new ImageSharpTextureLoader();
 
             var application = Application.Init(applicationInit);
 
-            application.AddRenderable(new BasicComponent());
+            application.RootComponent = new BasicComponent();
 
             application.Run();
 

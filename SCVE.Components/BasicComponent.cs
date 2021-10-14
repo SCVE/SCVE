@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
+using SCVE.Core;
 using SCVE.Core.App;
-using SCVE.Core.Entities;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Core.Components
+namespace SCVE.Components
 {
-    public class BasicComponent : IRenderable
+    public class BasicComponent : IComponent
     {
-        private VertexBuffer _buffer;
-        private IndexBuffer _indexBuffer;
-
         private VertexArray _vertexArray;
         private Program _program;
+        
+        public List<IComponent> Children { get; }
 
         public BasicComponent()
         {
+            Children = new();
+            
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 
-            _buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(new[]
+            var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(new[]
             {
                 // Top left
                 -0.5f, 0.5f, 0f, 1, 0, 0, 1,
@@ -36,20 +37,20 @@ namespace SCVE.Core.Components
             //     0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
             // });
 
-            _buffer.Layout = new VertexBufferLayout(new()
+            buffer.Layout = new VertexBufferLayout(new()
             {
                 new(VertexBufferElementType.Float3, "a_Position"),
                 new(VertexBufferElementType.Float4, "a_Color"),
             });
-            _vertexArray.AddVertexBuffer(_buffer);
+            _vertexArray.AddVertexBuffer(buffer);
 
-            _indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(new[]
+            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(new[]
             {
                 0, 1, 2,
                 2, 3, 0
             });
 
-            _vertexArray.SetIndexBuffer(_indexBuffer);
+            _vertexArray.SetIndexBuffer(indexBuffer);
 
             string vertexSrc = @"
             #version 330 core
@@ -102,6 +103,11 @@ namespace SCVE.Core.Components
         public void Render(IRenderer renderer)
         {
             renderer.Render(_vertexArray, _program);
+
+            for (var i = 0; i < Children.Count; i++)
+            {
+                Children[i].Render(renderer);
+            }
         }
     }
 }

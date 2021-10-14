@@ -18,8 +18,10 @@ namespace SCVE.Core.App
         public InputBase Input { get; set; }
         
         public IRenderEntitiesCreator RenderEntitiesCreator { get; set; }
-
-        public ApplicationInit(IRenderer renderer, IFileLoader fileLoader, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator)
+        
+        public ITextureLoader TextureLoader { get; set; }
+        
+        public ApplicationInit(IRenderer renderer, IFileLoader fileLoader, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator, ITextureLoader textureLoader)
         {
             Renderer = renderer;
             FileLoader = fileLoader;
@@ -27,6 +29,7 @@ namespace SCVE.Core.App
             Window = window;
             Input = input;
             RenderEntitiesCreator = renderEntitiesCreator;
+            TextureLoader = textureLoader;
         }
     }
 }

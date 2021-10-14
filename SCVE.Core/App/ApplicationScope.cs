@@ -17,19 +17,18 @@ namespace SCVE.Core.App
         private List<IUpdatable> _updatables;
         private List<ITerminatable> _terminatables;
         
-        public List<IRenderable> Renderables { get; private set; }
         public ScveWindow MainWindow => ScveWindow.Instance;
         
         public InputBase Input { get; private set; }
         
         public IRenderEntitiesCreator RenderEntitiesCreator { get; private set; }
+        public ITextureLoader TextureLoader { get; set; }
 
         public ApplicationScope()
         {
             _initables = new List<IInitable>();
             _updatables = new List<IUpdatable>();
             _terminatables = new List<ITerminatable>();
-            Renderables = new List<IRenderable>();
         }
         
         private void BeginTrack(object entity)
@@ -87,14 +86,6 @@ namespace SCVE.Core.App
             }
         }
 
-        public void Render(IRenderer renderer)
-        {
-            foreach (var renderable in Renderables)
-            {
-                renderable.Render(renderer);
-            }
-        }
-
         public ApplicationScope WithRenderer(IRenderer renderer)
         {
             if (Renderer is not null)
@@ -142,6 +133,12 @@ namespace SCVE.Core.App
             return this;
         }
 
+        public ApplicationScope WithTextureLoader(ITextureLoader textureLoader)
+        {
+            TextureLoader = textureLoader;
+            return this;
+        }
+
         public static ApplicationScope FromApplicationInit(ApplicationInit applicationInit)
         {
             return new ApplicationScope()
@@ -149,7 +146,8 @@ namespace SCVE.Core.App
                 .WithFileStorage(applicationInit.FileLoader)
                 .WithDeltaTimeProvider(applicationInit.DeltaTimeProvider)
                 .WithInput(applicationInit.Input)
-                .WithRenderEntitiesProvider(applicationInit.RenderEntitiesCreator);
+                .WithRenderEntitiesProvider(applicationInit.RenderEntitiesCreator)
+                .WithTextureLoader(applicationInit.TextureLoader);
         }
     }
 }
