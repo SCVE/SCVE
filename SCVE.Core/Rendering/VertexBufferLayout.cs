@@ -2,6 +2,9 @@
 
 namespace SCVE.Core.Rendering
 {
+    /// <summary>
+    /// Representation of how the <see cref="VertexBuffer"/> is structurised
+    /// </summary>
     public class VertexBufferLayout
     {
         private List<VertexBufferElement> _elements;

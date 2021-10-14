@@ -1,8 +1,10 @@
-﻿namespace SCVE.Core.Rendering
+﻿using System;
+
+namespace SCVE.Core.Rendering
 {
-    public abstract class Program
+    public abstract class Program : IRenderEntity, IDisposable
     {
-        public int Id;
+        public int Id { get; protected set; }
 
         public abstract void AttachShader(Shader shader);
         

@@ -6,9 +6,9 @@ namespace SCVE.Core.Rendering
     /// <summary>
     /// VAO
     /// </summary>
-    public abstract class VertexArray : IDisposable
+    public abstract class VertexArray : IRenderEntity, IDisposable
     {
-        public int Id;
+        public int Id { get; protected set; }
 
         public List<VertexBuffer> VertexBuffers;
 

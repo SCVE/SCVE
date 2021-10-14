@@ -1,5 +1,8 @@
 ﻿namespace SCVE.Core.Rendering
 {
+    /// <summary>
+    /// Format of VertexBuffer element
+    /// </summary>
     public enum VertexBufferElementType : int
     {
         Float,

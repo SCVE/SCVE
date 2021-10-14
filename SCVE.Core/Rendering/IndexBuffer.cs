@@ -2,9 +2,12 @@
 
 namespace SCVE.Core.Rendering
 {
-    public abstract class IndexBuffer : IDisposable
+    /// <summary>
+    /// An array of indices of vertex, that forms triangles
+    /// </summary>
+    public abstract class IndexBuffer : IRenderEntity, IDisposable
     {
-        public int Id;
+        public int Id { get; protected set; }
 
         public int Count;
 

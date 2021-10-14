@@ -3,11 +3,11 @@
 namespace SCVE.Core.Rendering
 {
     /// <summary>
-    /// VBO
+    /// Representation of an array in Graphics Engine (aka OpenGL)
     /// </summary>
-    public abstract class VertexBuffer : IDisposable
+    public abstract class VertexBuffer : IRenderEntity, IDisposable
     {
-        public int Id;
+        public int Id { get; protected set; }
         
         public VertexBufferLayout Layout { get; set; }
         

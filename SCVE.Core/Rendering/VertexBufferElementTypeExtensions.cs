@@ -4,6 +4,9 @@ namespace SCVE.Core.Rendering
 {
     public static class VertexBufferElementTypeExtensions
     {
+        /// <summary>
+        /// Returns an amount of components in a single element
+        /// </summary>
         public static int ComponentCount(this VertexBufferElementType type)
         {
             switch (type)
@@ -35,6 +38,9 @@ namespace SCVE.Core.Rendering
             }
         }
 
+        /// <summary>
+        /// Returns an amount of bytes required for a single element
+        /// </summary>
         public static int SizeInBytes(this VertexBufferElementType type)
         {
             switch (type)
