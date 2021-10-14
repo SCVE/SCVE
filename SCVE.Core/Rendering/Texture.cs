@@ -2,11 +2,11 @@
 
 namespace SCVE.Core.Rendering
 {
-    public abstract class Texture : IRenderEntity, IBindable, IDisposable
+    public abstract class Texture : IRenderEntity, IDisposable
     {
         public int Id { get; protected set; }
 
-        public abstract void Bind();
+        public abstract void Bind(int slot);
         
         public abstract void Unbind();
         

@@ -22,7 +22,7 @@ namespace Playground
 
             var application = Application.Init(applicationInit);
 
-            application.RootComponent = new BasicComponent();
+            application.RootComponent = new TexturedComponent();
 
             application.Run();
 

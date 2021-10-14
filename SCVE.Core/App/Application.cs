@@ -79,7 +79,8 @@ namespace SCVE.Core.App
                 // color.G = brightness;
                 // color.B = brightness;
                 // color.A = 1;
-                //Renderer.SetClearColor(color);
+                
+                // Renderer.SetClearColor(color);
                 
                 Renderer.Clear();
                 

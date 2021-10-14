@@ -8,7 +8,7 @@ namespace SCVE.ImageSharpBindings
 {
     public class ImageSharpTextureLoader : ITextureLoader
     {
-        public byte[] Load(string path)
+        public TextureData Load(string path)
         {
             Image<Rgba32> image = Image.Load<Rgba32>(path);
 
@@ -32,7 +32,7 @@ namespace SCVE.ImageSharpBindings
                 }
             }
 
-            return pixels;
+            return new TextureData(image.Width, image.Height, pixels);
         }
     }
 }

@@ -5,6 +5,6 @@
         /// <summary>
         /// Returns an array of pixels in RGBA format
         /// </summary>
-        byte[] Load(string path);
+        TextureData Load(string path);
     }
 }

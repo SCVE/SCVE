@@ -33,5 +33,10 @@ namespace SCVE.OpenTKBindings
         {
             return new OpenGLProgram();
         }
+
+        public Texture CreateTexture(TextureData textureData)
+        {
+            return new OpenGLTexture(textureData);
+        }
     }
 }

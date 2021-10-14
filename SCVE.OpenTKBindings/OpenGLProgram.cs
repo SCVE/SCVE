@@ -40,6 +40,16 @@ namespace SCVE.OpenTKBindings
         {
             Logger.Trace("OpenGLProgram.Link()");
             GL.LinkProgram(Id);
+            
+            GL.GetProgram(Id, GetProgramParameterName.LinkStatus, out var isLinked);
+            if (isLinked == 0)
+            {
+                GL.GetProgram(Id, GetProgramParameterName.InfoLogLength, out var maxLength);
+
+                GL.GetProgramInfoLog(Id, maxLength, out var length, out var infoLog);
+                
+                Logger.Fatal("Shader linking failed ({0}):\n{1}", "", infoLog);
+            }
         }
 
         public override void Dispose()
