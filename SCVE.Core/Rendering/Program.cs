@@ -14,6 +14,8 @@ namespace SCVE.Core.Rendering
         
         public abstract void Unbind();
 
+        public abstract void SetVector4(string name, float x, float y, float z, float w);
+
         public abstract void Link();
 
         public abstract void Dispose();

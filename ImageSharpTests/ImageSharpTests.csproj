@@ -1,16 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta15" />
       <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
       <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\SCVE.Core\SCVE.Core.csproj" />
     </ItemGroup>
 
 </Project>

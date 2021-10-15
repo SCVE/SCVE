@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 using SCVE.Core.App;
 using SCVE.Core.Entities;
+using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 
@@ -73,9 +74,9 @@ namespace SCVE.OpenTKBindings
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public void SetClearColor(Color color)
+        public void SetClearColor(ColorRgba colorRgba)
         {
-            GL.ClearColor(color.R, color.G, color.B, color.A);
+            GL.ClearColor(colorRgba.R, colorRgba.G, colorRgba.B, colorRgba.A);
         }
 
         public void SetViewport(int x, int y, int width, int height)
@@ -83,10 +84,9 @@ namespace SCVE.OpenTKBindings
             GL.Viewport(x, y, width, height);
         }
 
-        public void Render(VertexArray vertexArray, Program shaderProgram)
+        public void Render(VertexArray vertexArray)
         {
             Logger.Trace("OpenGLRenderer.Render()");
-            shaderProgram.Bind();
             vertexArray.Bind();
             // GL.DrawArrays(PrimitiveType.Triangles, 0, vertexArray.IndexBuffer.Count);
             GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, IntPtr.Zero);

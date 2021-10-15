@@ -2,6 +2,7 @@
 using SCVE.Components;
 using SCVE.Core.App;
 using SCVE.Core.Entities;
+using SCVE.Core.Primitives;
 using SCVE.ImageSharpBindings;
 using SCVE.Null;
 using SCVE.OpenTKBindings;
@@ -22,7 +23,25 @@ namespace Playground
 
             var application = Application.Init(applicationInit);
 
-            application.RootComponent = new TexturedComponent();
+            var rootComponent = new EmptyComponent(new Rect(0, 0, 2, 2));
+            application.RootComponent = rootComponent;
+
+            rootComponent.AddChild(new RectComponent(
+                new Rect(-0.5f, 0.5f, 0.8f, 0.8f),
+                new ColorRgba(1, 0, 0, 1)
+            ));
+            rootComponent.AddChild(new RectComponent(
+                new Rect(0.5f, 0.5f, 0.8f, 0.8f),
+                new ColorRgba(0, 1, 0, 1)
+            ));
+            rootComponent.AddChild(new RectComponent(
+                new Rect(-0.5f, -0.5f, 0.8f, 0.8f),
+                new ColorRgba(0, 0, 1, 1)
+            ));
+            rootComponent.AddChild(new RectComponent(
+                new Rect(0.5f, -0.5f, 0.8f, 0.8f),
+                new ColorRgba(1, 1, 1, 1)
+            ));
 
             application.Run();
 

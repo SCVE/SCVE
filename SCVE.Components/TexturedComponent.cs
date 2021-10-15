@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using SCVE.Core;
 using SCVE.Core.App;
+using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 
 namespace SCVE.Components
 {
-    public class TexturedComponent : IComponent
+    public class TexturedComponent : Component
     {
         private readonly VertexArray _vertexArray;
         private readonly Program _program;
         private readonly Texture _texture;
-
-        public List<IComponent> Children { get; } = new();
-
-        public TexturedComponent()
+        
+        public TexturedComponent(Rect rect) : base(rect)
         {
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 
@@ -100,11 +99,12 @@ namespace SCVE.Components
             }
         }
 
-        public void Render(IRenderer renderer)
+        public override void Render(IRenderer renderer)
         {
             _texture.Bind(0);
             
-            renderer.Render(_vertexArray, _program);
+            _program.Bind();
+            renderer.Render(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)
             {

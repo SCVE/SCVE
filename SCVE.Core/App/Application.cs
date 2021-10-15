@@ -2,6 +2,7 @@
 using System.Threading;
 using SCVE.Core.Entities;
 using SCVE.Core.Input;
+using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Services;
 using SCVE.Core.Utilities;
@@ -29,7 +30,7 @@ namespace SCVE.Core.App
 
         public ITextureLoader TextureLoader => _scope.TextureLoader;
 
-        public IComponent RootComponent { get; set; }
+        public Component RootComponent { get; set; }
 
         private Application(ApplicationInit init)
         {
@@ -40,13 +41,13 @@ namespace SCVE.Core.App
         public static Application Init(ApplicationInit init)
         {
             var application = new Application(init);
-            
+
             application._state = AppState.Starting;
             application._scope.Init();
             application._state = AppState.Ready;
-            
+
             _isInited = true;
-            
+
             return application;
         }
 
@@ -65,13 +66,13 @@ namespace SCVE.Core.App
             _state = AppState.Running;
 
             float time = 0f;
-            Color color = new Color();
+            ColorRgba colorRgba = new ColorRgba();
             Logger.Warn("Starting Main Loop");
             while (_state == AppState.Running)
             {
                 float deltaTime = DeltaTimeProvider.Get();
                 _scope.Update(deltaTime);
-                
+
                 // time += deltaTime;
                 // float sin = (MathF.Sin(time * MathF.PI) + 1) * 0.5f;
                 // float brightness = sin * sin;
@@ -79,17 +80,66 @@ namespace SCVE.Core.App
                 // color.G = brightness;
                 // color.B = brightness;
                 // color.A = 1;
-                
+
                 // Renderer.SetClearColor(color);
-                
+
                 Renderer.Clear();
-                
+
                 RootComponent.Render(Renderer);
-                
+
                 MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 
                 MainWindow.OnUpdate();
             }
+
+            if (_state != AppState.TerminationRequested)
+            {
+                throw new ScveException("Invalid state was set, application terminated abnormally");
+            }
+
+            _state = AppState.Terminating;
+        }
+
+        public void RunOnce()
+        {
+            if (_state != AppState.Ready)
+            {
+                throw new ScveException("App is not ready");
+            }
+
+            if (RootComponent is null)
+            {
+                throw new ScveException("No root component is present");
+            }
+
+            _state = AppState.Running;
+
+            float time = 0f;
+            ColorRgba colorRgba = new ColorRgba();
+            Logger.Warn("Starting Main Loop");
+
+            float deltaTime = DeltaTimeProvider.Get();
+            _scope.Update(deltaTime);
+
+            // time += deltaTime;
+            // float sin = (MathF.Sin(time * MathF.PI) + 1) * 0.5f;
+            // float brightness = sin * sin;
+            // color.R = brightness;
+            // color.G = brightness;
+            // color.B = brightness;
+            // color.A = 1;
+
+            // Renderer.SetClearColor(color);
+
+            Renderer.Clear();
+
+            RootComponent.Render(Renderer);
+
+            MainWindow.SetTitle($"FPS: {1 / deltaTime}");
+
+            MainWindow.OnUpdate();
+
+            _state = AppState.TerminationRequested;
 
             if (_state != AppState.TerminationRequested)
             {

@@ -1,5 +1,6 @@
 ﻿using SCVE.Core.Entities;
 using SCVE.Core.Lifecycle;
+using SCVE.Core.Primitives;
 
 namespace SCVE.Core.Rendering
 {
@@ -7,10 +8,10 @@ namespace SCVE.Core.Rendering
     {
         void Clear();
 
-        void SetClearColor(Color color);
+        void SetClearColor(ColorRgba colorRgba);
 
         void SetViewport(int x, int y, int width, int height);
 
-        void Render(VertexArray vertexArray, Program shaderProgram);
+        void Render(VertexArray vertexArray);
     }
 }

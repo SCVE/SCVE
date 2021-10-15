@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.ImageSharpBindings", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Components", "SCVE.Components\SCVE.Components.csproj", "{66190B91-438A-4227-A800-AB3D88D69EA8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageSharpTests", "ImageSharpTests\ImageSharpTests.csproj", "{8C396DD0-76F9-4137-942F-1899E59B2DD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,9 @@ Global
 		{66190B91-438A-4227-A800-AB3D88D69EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66190B91-438A-4227-A800-AB3D88D69EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66190B91-438A-4227-A800-AB3D88D69EA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C396DD0-76F9-4137-942F-1899E59B2DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C396DD0-76F9-4137-942F-1899E59B2DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C396DD0-76F9-4137-942F-1899E59B2DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C396DD0-76F9-4137-942F-1899E59B2DD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
