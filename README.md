@@ -1,3 +1,12 @@
+# SCVE
+Super Cool Video Editor
+
+Written in C#.
+
+Inspired by Hazel.
+
+Based on Hazel, OpenTK, ImageSharp and likely many more.
+
 ## Solution structure
 - SCVE.Core contains all core abstractions, needed for the app.
 - SCVE.OpenTKBindings contains implementations via OpenTK (in future it is possible to use other backends)
@@ -29,6 +38,12 @@ Done:
 
 In Progress: 
 - Basic Renderer
+
+## TODO
+- Matrix
+- More Uniforms in program
+- MVP matrices to create a model-view space
+- Text Rendering via SharpFont (copy from SFML)
 
 ## Possible backends
 - Silk.Net

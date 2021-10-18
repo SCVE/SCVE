@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
@@ -12,16 +13,24 @@ namespace ImageSharpTests
     {
         static void Main(string[] args)
         {
+            Tests.Test2();
+            
+            return;
+            
             FontCollection collection = new FontCollection();
             FontFamily family = collection.Install("assets/arial.ttf");
-            Font font = family.CreateFont(72, FontStyle.Regular);
+            Font font = family.CreateFont(14, FontStyle.Regular);
+            
+            var glyph = font.GetGlyph('A');
 
+            var fontRectangle = glyph.BoundingBox(Vector2.Zero, new Vector2(72, 72));
+            
             var backgroundColor = new Rgba32(0, 0, 0, 0);
 
             string text = "Bird Egop Is Super Cool";
 
             var size = TextMeasurer.Measure(text, new RendererOptions(font, 72));
-            
+
             Image<Rgba32> image = new Image<Rgba32>((int)size.Width, (int)size.Height);
             image.Mutate(i => i.DrawText(text, font, Color.Black, PointF.Empty));
 
@@ -34,7 +43,7 @@ namespace ImageSharpTests
 
             image.Save("assets/texted.png");
         }
-        
+
         private static int GetTopPixel(Image<Rgba32> image, Rgba32 backgroundColor)
         {
             for (int y = 0; y < image.Height; y++)
