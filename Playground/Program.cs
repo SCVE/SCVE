@@ -24,24 +24,8 @@ namespace Playground
             var application = Application.Init(applicationInit);
 
             var rootComponent = new EmptyComponent(new Rect(0, 0, 2, 2));
-            application.RootComponent = rootComponent;
-
-            rootComponent.AddChild(new RectComponent(
-                new Rect(-0.5f, 0.5f, 0.8f, 0.8f),
-                new ColorRgba(1, 0, 0, 1)
-            ));
-            rootComponent.AddChild(new RectComponent(
-                new Rect(0.5f, 0.5f, 0.8f, 0.8f),
-                new ColorRgba(0, 1, 0, 1)
-            ));
-            rootComponent.AddChild(new RectComponent(
-                new Rect(-0.5f, -0.5f, 0.8f, 0.8f),
-                new ColorRgba(0, 0, 1, 1)
-            ));
-            rootComponent.AddChild(new RectComponent(
-                new Rect(0.5f, -0.5f, 0.8f, 0.8f),
-                new ColorRgba(1, 1, 1, 1)
-            ));
+            // application.RootComponent = rootComponent;
+            application.RootComponent = new RectWithOrthoComponent(new Rect(-4.5f, -4.5f, 1, 1), new ColorRgba(1, 1, 1, 1));
 
             application.Run();
 

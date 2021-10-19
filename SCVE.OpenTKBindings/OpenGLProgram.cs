@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
+using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 
@@ -53,6 +54,12 @@ namespace SCVE.OpenTKBindings
         {
             Bind();
             GL.Uniform4(GetOrCacheAttributeLocation(name), x, y, z, w);
+        }
+
+        public override void SetMatrix4(string name, ScveMatrix4X4 matrix)
+        {
+            Bind();
+            GL.UniformMatrix4(GetOrCacheAttributeLocation(name), 1, false, matrix.GetRawValues());
         }
 
         public override void Link()

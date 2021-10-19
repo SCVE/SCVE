@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 
@@ -17,7 +18,7 @@ namespace SCVE.OpenTKBindings
         {
             Logger.Trace("OpenGLShader.Compile()");
             GL.CompileShader(Id);
-            
+
             // Call this only when SPIRV is implemented
             // GL.SpecializeShader(Id, "main", 0, null, (int[])null);
         }
