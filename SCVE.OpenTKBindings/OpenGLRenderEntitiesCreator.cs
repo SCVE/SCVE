@@ -34,6 +34,11 @@ namespace SCVE.OpenTKBindings
             return new OpenGLProgram();
         }
 
+        public Program CreateProgram(byte[] binary)
+        {
+            return new OpenGLProgram(binary);
+        }
+
         public Texture CreateTexture(TextureData textureData)
         {
             return new OpenGLTexture(textureData);

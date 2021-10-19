@@ -1,4 +1,5 @@
-﻿using SCVE.Core;
+﻿using System.IO;
+using SCVE.Core;
 using SCVE.Core.App;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
@@ -43,7 +44,7 @@ namespace SCVE.Components
             void main()
             {
                 v_Position = a_Position;
-                gl_Position = v_Ortho * vec4(a_Position, 1.0);	
+                gl_Position = u_Ortho * vec4(a_Position, 1.0);	
             }
             ";
 
@@ -62,27 +63,38 @@ namespace SCVE.Components
             }
             ";
 
-            using var vertexShader = Application.Instance.RenderEntitiesCreator.CreateShader(vertexSrc, ScveShaderType.Vertex);
-            using var fragmentShader = Application.Instance.RenderEntitiesCreator.CreateShader(fragmentSrc, ScveShaderType.Fragment);
+            if (false)
+            {
+                using var vertexShader = Application.Instance.RenderEntitiesCreator.CreateShader(vertexSrc, ScveShaderType.Vertex);
+                using var fragmentShader = Application.Instance.RenderEntitiesCreator.CreateShader(fragmentSrc, ScveShaderType.Fragment);
 
-            vertexShader.Compile();
-            fragmentShader.Compile();
+                vertexShader.Compile();
+                fragmentShader.Compile();
 
-            _program = Application.Instance.RenderEntitiesCreator.CreateProgram();
+                _program = Application.Instance.RenderEntitiesCreator.CreateProgram();
 
-            _program.AttachShader(vertexShader);
-            _program.AttachShader(fragmentShader);
-            _program.Link();
+                _program.AttachShader(vertexShader);
+                _program.AttachShader(fragmentShader);
+                _program.Link();
 
-            _program.DetachShader(vertexShader);
-            _program.DetachShader(fragmentShader);
+                _program.DetachShader(vertexShader);
+                _program.DetachShader(fragmentShader);
+
+                var binary = _program.GetBinary();
+
+                File.WriteAllBytes("assets/program_binary.bin", binary);
+            }
+            else
+            {
+                _program = Application.Instance.RenderEntitiesCreator.CreateProgram(File.ReadAllBytes("assets/program_binary.bin"));
+            }
         }
 
         public override void Render(IRenderer renderer)
         {
             _program.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
             _program.SetMatrix4("u_Ortho", _ortho);
-            
+
             _program.Bind();
             renderer.Render(_vertexArray);
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using SCVE.Core.App;
 using SCVE.Core.Primitives;
@@ -15,6 +16,14 @@ namespace SCVE.OpenTKBindings
         {
             Logger.Trace("Constructing OpenGLProgram");
             Id = GL.CreateProgram();
+        }
+
+        public OpenGLProgram(byte[] binary)
+        {
+            Logger.Trace("Constructing OpenGLProgram from binary");
+            Id = GL.CreateProgram();
+            
+            GL.ProgramBinary(Id, (BinaryFormat)0x8E21, binary, binary.Length);
         }
 
         private int GetOrCacheAttributeLocation(string name)
@@ -98,6 +107,16 @@ namespace SCVE.OpenTKBindings
             }
         }
 
+        public override byte[] GetBinary()
+        {
+            byte[] buffer = new byte[16384];
+            GL.GetProgramBinary(Id, 16384, out var length, out var binaryFormat, buffer);
+            
+            Array.Resize(ref buffer, length);
+
+            return buffer;
+        }
+        
         public override void Dispose()
         {
             Logger.Trace("OpenGLProgram.Dispose()");

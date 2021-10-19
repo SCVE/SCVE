@@ -23,6 +23,8 @@ namespace SCVE.Core.Rendering
 
         public abstract void Link();
 
+        public abstract byte[] GetBinary();
+
         public abstract void Dispose();
     }
 }
