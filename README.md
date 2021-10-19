@@ -35,14 +35,14 @@ Done:
 - IndexBuffer
 - Shader
 - Program
-
-In Progress: 
+- Matrix
 - Basic Renderer
+- More Uniforms in program
+
+In Progress:
+- MVP matrices to create a model-view space
 
 ## TODO
-- Matrix
-- More Uniforms in program
-- MVP matrices to create a model-view space
 - Text Rendering via SharpFont (copy from SFML)
 
 ## Possible backends
