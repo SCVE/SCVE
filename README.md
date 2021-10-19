@@ -41,6 +41,7 @@ Done:
 
 In Progress:
 - MVP matrices to create a model-view space
+- Shader Program Caching
 
 ## TODO
 - Text Rendering via SharpFont (copy from SFML)
