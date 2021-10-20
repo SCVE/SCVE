@@ -20,6 +20,7 @@ namespace SCVE.Core
         public void AddChild(Component component)
         {
             Children.Add(component);
+            component.SetParent(this);
         }
 
         public void SetParent(Component component)

@@ -104,7 +104,7 @@ namespace SCVE.Components
             _texture.Bind(0);
             
             _program.Bind();
-            renderer.Render(_vertexArray);
+            renderer.RenderSolid(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)
             {

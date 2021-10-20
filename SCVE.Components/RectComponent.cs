@@ -80,7 +80,7 @@ namespace SCVE.Components
             _program.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
 
             _program.Bind();
-            renderer.Render(_vertexArray);
+            renderer.RenderSolid(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)
             {

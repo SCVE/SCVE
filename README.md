@@ -56,3 +56,40 @@ Viewport is a rectangle in which OpenGL will render objects.
 
 VAO (Vertex Array) is an object in OpenGL which contains all the necessary data to be rendered. 
 VBO (Vertex Buffer) is just an array in OpenGL.
+
+### Matrices
+
+- Model Space defines object relative to the object center.
+
+Model Matrix.
+This is a `translation * rotation * scale`
+This matrix translates the model into World Space
+
+- World Space defines object relative to world center.
+
+View Matrix.
+This is a camera matrix (ortho or perspective)
+This matrix translates the model into Camera Space.
+
+- Camera Space defines object relative to camera.
+
+Projection Matrix.
+
+This is a homogenous transformer (mapper to -1 to 1 space)
+
+This matrix translates the model into Screen Space.
+
+- Screen Space defines object relative to screen.
+
+MVP stands for Model-View-Projection.
+
+This is a matrix that applies to every vertex to be displayed.
+
+Matrix multiplication goes in inverted order, so MVP is combined like this:
+`MVP = projection * view * model`.
+
+So each vertex(vec3) must be processed like this:
+`gl_Position = MVP * vertex`
+
+When the model updates are seldom, we can extract the model matrix from MVP,
+so that we use only View-Projection as a constant, and supply vertex already multiplied by Model Matrix.

@@ -100,7 +100,7 @@ namespace SCVE.Components
         public override void Render(IRenderer renderer)
         {
             _program.Bind();
-            renderer.Render(_vertexArray);
+            renderer.RenderSolid(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)
             {

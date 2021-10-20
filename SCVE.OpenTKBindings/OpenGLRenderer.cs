@@ -84,13 +84,27 @@ namespace SCVE.OpenTKBindings
             GL.Viewport(x, y, width, height);
         }
 
-        public void Render(VertexArray vertexArray)
+        public void RenderSolid(VertexArray vertexArray)
         {
-            Logger.Trace("OpenGLRenderer.Render()");
+            Logger.Trace("OpenGLRenderer.RenderSolid()");
             vertexArray.Bind();
             // GL.DrawArrays(PrimitiveType.Triangles, 0, vertexArray.IndexBuffer.Count);
             GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
             GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        public void RenderWireframe(VertexArray vertexArray)
+        {
+            Logger.Trace("OpenGLRenderer.RenderWireframe()");
+            vertexArray.Bind();
+            // GL.DrawArrays(PrimitiveType.Triangles, 0, vertexArray.IndexBuffer.Count);
+            
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            
+            GL.DrawElements(PrimitiveType.Triangles, vertexArray.IndexBuffer.Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
         }
     }
 }

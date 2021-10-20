@@ -63,7 +63,7 @@ namespace SCVE.Components
             }
             ";
 
-            if (false)
+            if (true)
             {
                 using var vertexShader = Application.Instance.RenderEntitiesCreator.CreateShader(vertexSrc, ScveShaderType.Vertex);
                 using var fragmentShader = Application.Instance.RenderEntitiesCreator.CreateShader(fragmentSrc, ScveShaderType.Fragment);
@@ -96,7 +96,7 @@ namespace SCVE.Components
             _program.SetMatrix4("u_Ortho", _ortho);
 
             _program.Bind();
-            renderer.Render(_vertexArray);
+            renderer.RenderWireframe(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)
             {
