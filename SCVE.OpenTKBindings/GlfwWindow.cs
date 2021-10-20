@@ -205,6 +205,9 @@ namespace SCVE.OpenTKBindings
         private unsafe void OnWindowSizeChanged(Window* window, int width, int height)
         {
             Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnWindowSizeChanged)}(width: {width}, height: {height})");
+
+            Width = width;
+            Height = height;
             
             Application.Instance.Input.RegisterWindowSizeChanged(width, height);
         }

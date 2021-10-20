@@ -23,9 +23,13 @@ namespace Playground
 
             var application = Application.Init(applicationInit);
 
+            application.ViewProjectionAccessor.SetFromWindow();
+
+            // application.ViewProjectionAccessor.SetView(ScveMatrix4X4.Identity.Set(2, 3, -1));
+
             var rootComponent = new EmptyComponent(new Rect(0, 0, 2, 2));
             // application.RootComponent = rootComponent;
-            application.RootComponent = new RectWithOrthoComponent(new Rect(-4.5f, -4.5f, 1, 1), new ColorRgba(1, 1, 1, 1));
+            application.RootComponent = new FullFlexComponent(new Rect(0, 0, 600, 100));
 
             application.Run();
 

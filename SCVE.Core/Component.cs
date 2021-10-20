@@ -12,6 +12,8 @@ namespace SCVE.Core
         protected Component Parent;
         protected List<Component> Children = new();
 
+        public ScveMatrix4X4 ModelMatrix = ScveMatrix4X4.Identity;
+
         protected Component(Rect rect)
         {
             Rect = rect;

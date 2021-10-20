@@ -30,6 +30,8 @@ namespace SCVE.Core.App
 
         public ITextureLoader TextureLoader => _scope.TextureLoader;
 
+        public ViewProjectionAccessor ViewProjectionAccessor;
+
         public Component RootComponent { get; set; }
 
         private Application(ApplicationInit init)
@@ -47,6 +49,8 @@ namespace SCVE.Core.App
             application._state = AppState.Ready;
 
             _isInited = true;
+
+            application.ViewProjectionAccessor = new();
 
             return application;
         }

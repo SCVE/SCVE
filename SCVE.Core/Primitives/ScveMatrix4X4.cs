@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 
 namespace SCVE.Core.Primitives
@@ -15,7 +19,7 @@ namespace SCVE.Core.Primitives
             0, 0, 1, 0,
             0, 0, 0, 1
         };
-        
+
         private float[] _values = new float[16];
 
         /// <summary>
@@ -52,7 +56,7 @@ namespace SCVE.Core.Primitives
         {
             return _values;
         }
-        
+
         /// <summary>
         /// Implicit conversion to float array
         /// </summary>
@@ -65,6 +69,12 @@ namespace SCVE.Core.Primitives
         {
             get => _values[i * 4 + j];
             set => _values[i * 4 + j] = value;
+        }
+
+        public ScveMatrix4X4 Set(int i, int j, float value)
+        {
+            _values[i * 4 + j] = value;
+            return this;
         }
 
         /// <summary>
@@ -138,7 +148,7 @@ namespace SCVE.Core.Primitives
 
             return this;
         }
-        
+
         public static ScveMatrix4X4 CreateOrthographicOffCenter(
             float left,
             float right,
@@ -155,10 +165,10 @@ namespace SCVE.Core.Primitives
             result._values[0] = 2f * invWidth;
             result._values[5] = 2f * invHeight;
             result._values[10] = -2f * invDepth;
-            result._values[3 * 4 + 0] = -(right + left) * invWidth;
-            result._values[3 * 4 + 1] = -(top + bottom) * invHeight;
-            result._values[3 * 4 + 2] = -(depthFar + depthNear) * invDepth;
-
+            result._values[3] = -(right + left) * invWidth;
+            result._values[7] = -(top + bottom) * invHeight;
+            result._values[11] = -(depthFar + depthNear) * invDepth;
+            
             return result;
         }
 
@@ -232,7 +242,7 @@ namespace SCVE.Core.Primitives
 
             return this;
         }
-        
+
         /// <summary>
         /// Subtracts another matrix from current
         /// </summary>
@@ -266,6 +276,76 @@ namespace SCVE.Core.Primitives
             result._values[10] = z;
 
             return result;
+        }
+
+        /// <summary>Calculate the inverse of the given matrix.</summary>
+        /// <param name="mat">The matrix to invert.</param>
+        /// <param name="result">The inverse of the given matrix if it has one, or the input if it is singular.</param>
+        /// <exception cref="T:System.InvalidOperationException">Thrown if the Matrix4 is singular.</exception>
+        /// <footer><a href="https://www.google.com/search?q=OpenTK.Mathematics.Matrix4.Invert">`Matrix4.Invert` on google.com</a></footer>
+        public ScveMatrix4X4 Invert()
+        {
+            if (Sse3.IsSupported)
+            {
+                InvertSse3(this);
+            }
+            else
+            {
+                throw new ScveException("SSE3 is not supported");
+                // ScveMatrix4X4.InvertFallback(in mat, out result);
+            }
+
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static unsafe void InvertSse3(ScveMatrix4X4 mat)
+        {
+            Vector128<float> vector128_1;
+            Vector128<float> vector128_2;
+            Vector128<float> vector128_3;
+            Vector128<float> vector128_4;
+            fixed (float* address = mat._values)
+            {
+                vector128_1 = Sse.LoadVector128(address);
+                vector128_2 = Sse.LoadVector128(address + 4);
+                vector128_3 = Sse.LoadVector128(address + 8);
+                vector128_4 = Sse.LoadVector128(address + 12);
+            }
+
+            Vector128<float> high1 = Sse.MoveLowToHigh(vector128_1, vector128_2);
+            Vector128<float> low1 = Sse.MoveHighToLow(vector128_2, vector128_1);
+            Vector128<float> high2 = Sse.MoveLowToHigh(vector128_3, vector128_4);
+            Vector128<float> low2 = Sse.MoveHighToLow(vector128_4, vector128_3);
+            Vector128<float> vector1 = Sse.Subtract(Sse.Multiply(Sse.Shuffle(vector128_1, vector128_3, (byte)136), Sse.Shuffle(vector128_2, vector128_4, (byte)221)), Sse.Multiply(Sse.Shuffle(vector128_1, vector128_3, (byte)221), Sse.Shuffle(vector128_2, vector128_4, (byte)136)));
+            Vector128<float> left1 = Sse2.Shuffle(vector1.AsInt32<float>(), (byte)0).AsSingle<int>();
+            Vector128<float> left2 = Sse2.Shuffle(vector1.AsInt32<float>(), (byte)85).AsSingle<int>();
+            Vector128<float> vector128_5 = Sse2.Shuffle(vector1.AsInt32<float>(), (byte)170).AsSingle<int>();
+            Vector128<float> vector128_6 = Sse2.Shuffle(vector1.AsInt32<float>(), byte.MaxValue).AsSingle<int>();
+            Vector128<float> vector2 = Sse.Subtract(Sse.Multiply(Sse2.Shuffle(low2.AsInt32<float>(), (byte)15).AsSingle<int>(), high2), Sse.Multiply(Sse2.Shuffle(low2.AsInt32<float>(), (byte)165).AsSingle<int>(), Sse2.Shuffle(high2.AsInt32<float>(), (byte)78).AsSingle<int>()));
+            Vector128<float> vector128_7 = Sse.Subtract(Sse.Multiply(Sse2.Shuffle(high1.AsInt32<float>(), (byte)15).AsSingle<int>(), low1), Sse.Multiply(Sse2.Shuffle(high1.AsInt32<float>(), (byte)165).AsSingle<int>(), Sse2.Shuffle(low1.AsInt32<float>(), (byte)78).AsSingle<int>()));
+            Vector128<float> left3 = Sse.Subtract(Sse.Multiply(vector128_6, high1), Sse.Add(Sse.Multiply(low1, Sse2.Shuffle(vector2.AsInt32<float>(), (byte)204).AsSingle<int>()), Sse.Multiply(Sse2.Shuffle(low1.AsInt32<float>(), (byte)177).AsSingle<int>(), Sse2.Shuffle(vector2.AsInt32<float>(), (byte)102).AsSingle<int>())));
+            Vector128<float> left4 = Sse.Subtract(Sse.Multiply(left1, low2), Sse.Add(Sse.Multiply(high2, Sse2.Shuffle(vector128_7.AsInt32<float>(), (byte)204).AsSingle<int>()), Sse.Multiply(Sse2.Shuffle(high2.AsInt32<float>(), (byte)177).AsSingle<int>(), Sse2.Shuffle(vector128_7.AsInt32<float>(), (byte)102).AsSingle<int>())));
+            Vector128<float> left5 = Sse.Multiply(left1, vector128_6);
+            Vector128<float> left6 = Sse.Subtract(Sse.Multiply(left2, high2), Sse.Subtract(Sse.Multiply(low2, Sse2.Shuffle(vector128_7.AsInt32<float>(), (byte)51).AsSingle<int>()), Sse.Multiply(Sse2.Shuffle(low2.AsInt32<float>(), (byte)177).AsSingle<int>(), Sse2.Shuffle(vector128_7.AsInt32<float>(), (byte)102).AsSingle<int>())));
+            Vector128<float> left7 = Sse.Subtract(Sse.Multiply(vector128_5, low1), Sse.Subtract(Sse.Multiply(high1, Sse2.Shuffle(vector2.AsInt32<float>(), (byte)51).AsSingle<int>()), Sse.Multiply(Sse2.Shuffle(high1.AsInt32<float>(), (byte)177).AsSingle<int>(), Sse2.Shuffle(vector2.AsInt32<float>(), (byte)102).AsSingle<int>())));
+            Vector128<float> left8 = Sse.Add(left5, Sse.Multiply(left2, vector128_5));
+            Vector128<float> vector128_8 = Sse.Multiply(vector128_7, Sse2.Shuffle(vector2.AsInt32<float>(), (byte)216).AsSingle<int>());
+            Vector128<float> vector128_9 = Sse3.HorizontalAdd(vector128_8, vector128_8);
+            Vector128<float> right1 = Sse3.HorizontalAdd(vector128_9, vector128_9);
+            Vector128<float> vector128_10 = Sse.Subtract(left8, right1);
+            Vector128<float> right2 = (double)MathF.Abs(vector128_10.GetElement<float>(0)) >= 9.99999997475243E-07 ? Sse.Divide(Vector128.Create(1f, -1f, -1f, 1f), vector128_10) : throw new InvalidOperationException("Matrix is singular and cannot be inverted.");
+            Vector128<float> left9 = Sse.Multiply(left3, right2);
+            Vector128<float> right3 = Sse.Multiply(left6, right2);
+            Vector128<float> left10 = Sse.Multiply(left7, right2);
+            Vector128<float> right4 = Sse.Multiply(left4, right2);
+            fixed (float* address = mat._values)
+            {
+                Sse.Store(address, Sse.Shuffle(left9, right3, (byte)119));
+                Sse.Store(address + 4, Sse.Shuffle(left9, right3, (byte)34));
+                Sse.Store(address + 8, Sse.Shuffle(left10, right4, (byte)119));
+                Sse.Store(address + 12, Sse.Shuffle(left10, right4, (byte)34));
+            }
         }
 
         public override string ToString()
