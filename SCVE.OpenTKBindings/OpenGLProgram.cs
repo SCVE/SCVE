@@ -23,7 +23,7 @@ namespace SCVE.OpenTKBindings
         {
             Logger.Trace("Constructing OpenGLProgram from binary");
             Id = GL.CreateProgram();
-            
+
             GL.ProgramBinary(Id, (BinaryFormat)extension, binary, binary.Length);
         }
 
@@ -110,14 +110,15 @@ namespace SCVE.OpenTKBindings
 
         public override ShaderProgramBinaryData GetBinary()
         {
-            byte[] buffer = new byte[16384];
-            GL.GetProgramBinary(Id, 16384, out var length, out var binaryFormat, buffer);
-            
-            Array.Resize(ref buffer, length);
+            // NOTE: All.ProgramBinaryLength is required because OpenTK lost this parameter
+            GL.GetProgram(Id, (GetProgramParameterName)All.ProgramBinaryLength, out var binaryLength);
+
+            byte[] buffer = new byte[binaryLength];
+            GL.GetProgramBinary(Id, binaryLength, out var length, out var binaryFormat, buffer);
 
             return new ShaderProgramBinaryData(buffer, (int)binaryFormat);
         }
-        
+
         public override void Dispose()
         {
             Logger.Trace("OpenGLProgram.Dispose()");
