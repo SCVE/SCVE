@@ -14,9 +14,10 @@ namespace SCVE.Components
         {
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 
-            // ModelMatrix.Multiply(ScveMatrix4X4.CreateScale(2, 0.3f, 1f));
+            ModelMatrix.Multiply(ScveMatrix4X4.CreateScale(200, 100, 1f));
 
-            var rectGeometry = GeometryGenerator.GenerateRect(Rect);
+            // var rectGeometry = GeometryGenerator.GenerateRect(Rect);
+            var rectGeometry = GeometryGenerator.GenerateUnitSquare();
 
             var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
 

@@ -24,5 +24,26 @@ namespace SCVE.Core
 
             return new GeometryData(vertices, indices);
         }
+
+        public static GeometryData GenerateUnitSquare()
+        {
+            float[] vertices = {
+                // Top left
+                -1f, 1f, 0f, 
+                // Top right
+                1f, 1f, 0f, 
+                // Bottom right
+                1f, -1f, 0f, 
+                // Bottom left
+                -1f, -1f, 0f, 
+            };
+
+            int[] indices = {
+                0, 3, 1,
+                1, 3, 2
+            };
+
+            return new GeometryData(vertices, indices);
+        }
     }
 }
