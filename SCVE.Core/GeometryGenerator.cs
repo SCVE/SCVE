@@ -58,11 +58,6 @@ namespace SCVE.Core
                 // Bottom left
                 0, 1, 0f, 
             };
-            
-            // for (var i = 0; i < vertices.Length; i++)
-            // {
-            //     vertices[i] *= -1;
-            // }
 
             int[] indices = {
                 0, 3, 1,

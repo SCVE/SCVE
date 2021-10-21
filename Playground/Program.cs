@@ -31,14 +31,11 @@ namespace Playground
 
             var rootComponent = new EmptyComponent();
             // application.RootComponent = rootComponent;
-            
+
             var verticalLayoutEvenSpaceComponent = new VerticalLayoutEvenSpaceComponent();
             application.RootComponent = verticalLayoutEvenSpaceComponent;
 
-            application.RootComponent.X = 0;
-            application.RootComponent.Y = 0;
-            application.RootComponent.PixelWidth = application.MainWindow.Width;
-            application.RootComponent.PixelHeight = application.MainWindow.Height;
+            application.RootComponent.SetPositionAndSize(0, 0, application.MainWindow.Width, application.MainWindow.Height);
 
             var horizontalLayout = new HorizontalLayoutEvenSpaceComponent();
             application.RootComponent.AddChild(horizontalLayout);

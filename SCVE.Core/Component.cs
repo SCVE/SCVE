@@ -12,24 +12,34 @@ namespace SCVE.Core
 
         public ScveMatrix4X4 ModelMatrix = ScveMatrix4X4.Identity;
 
-        public float PixelWidth { get; set; }
-        public float PixelHeight { get; set; }
+        public float PixelWidth { get; private set; }
+        public float PixelHeight { get; private set; }
 
         /// <summary>
-        /// This should ALWAYS be the most left of the component
+        /// This should ALWAYS be the most left of the component in screen space
         /// </summary>
-        public float X { get; set; }
-        
+        public float X { get; private set; }
+
         /// <summary>
-        /// This should ALWAYS be the most top of the component
+        /// This should ALWAYS be the most top of the component in screen space
         /// </summary>
-        public float Y { get; set; }
+        public float Y { get; private set; }
 
         // NOTE: This is odd! I can't call OnResize in derived types when it's protected
-        public virtual void OnResize()
+        protected virtual void OnResized()
         {
             var scale = ScveMatrix4X4.CreateScale(PixelWidth, PixelHeight);
             ModelMatrix.MakeIdentity().Multiply(scale).Multiply(ScveMatrix4X4.CreateTranslation(X, Y));
+        }
+
+        public void SetPositionAndSize(float x, float y, float width, float height)
+        {
+            X = x;
+            Y = y;
+            PixelWidth = width;
+            PixelHeight = height;
+
+            OnResized();
         }
 
         protected Component()

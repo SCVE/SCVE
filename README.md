@@ -20,9 +20,10 @@ The app uses OpenTK and GLFW for window and OpenGL manipulation.
 - the application.Run() will spin main thread while termination is not requested.
 
 ## Current state
-For now the app will display colored rectangle
+For now the app will display layouted rectangles
 
-![image](https://user-images.githubusercontent.com/44116740/137251769-ec6802f0-4337-4f71-894f-0a3f544b907c.png)
+![image](https://user-images.githubusercontent.com/44116740/138205421-9bc43231-356b-46f7-a5d7-fc6959c64131.png)
+
 
 Done: 
 - Window handling
@@ -37,11 +38,12 @@ Done:
 - Program
 - Matrix
 - Basic Renderer
-- More Uniforms in program
-
-In Progress:
+- More Uniforms in program-
 - MVP matrices to create a model-view space
 - Shader Program Caching
+- Vertical and Horizontal Layouts
+
+In Progress:
 
 ## TODO
 - Text Rendering via SharpFont (copy from SFML)
