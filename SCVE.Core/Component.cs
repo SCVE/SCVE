@@ -28,6 +28,8 @@ namespace SCVE.Core
         // NOTE: This is odd! I can't call OnResize in derived types when it's protected
         public virtual void OnResize()
         {
+            var scale = ScveMatrix4X4.CreateScale(PixelWidth, PixelHeight);
+            ModelMatrix.MakeIdentity().Multiply(scale).Multiply(ScveMatrix4X4.CreateTranslation(X, Y));
         }
 
         protected Component()
