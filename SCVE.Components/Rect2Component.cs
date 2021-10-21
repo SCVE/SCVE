@@ -17,19 +17,7 @@ namespace SCVE.Components
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 
             // var rectGeometry = GeometryGenerator.GenerateRect(Rect);
-            var rectGeometry = GeometryGenerator.GeneratePositiveUnitSquare();
-
-            var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
-
-            buffer.Layout = new VertexBufferLayout(new()
-            {
-                new(VertexBufferElementType.Float3, "a_Position")
-            });
-            _vertexArray.AddVertexBuffer(buffer);
-
-            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(rectGeometry.Indices);
-
-            _vertexArray.SetIndexBuffer(indexBuffer);
+            _vertexArray = Application.Instance.VertexArrayCache.Get("Positive Unit");
 
             _program = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
         }

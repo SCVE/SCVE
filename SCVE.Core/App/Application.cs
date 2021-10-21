@@ -33,6 +33,7 @@ namespace SCVE.Core.App
         public ViewProjectionAccessor ViewProjectionAccessor;
 
         public ShaderProgramCache ShaderProgramCache;
+        public VertexArrayCache VertexArrayCache;
 
         public Component RootComponent { get; set; }
 
@@ -54,6 +55,7 @@ namespace SCVE.Core.App
 
             application.ViewProjectionAccessor = new();
             application.ShaderProgramCache = new();
+            application.VertexArrayCache = new();
 
             return application;
         }
