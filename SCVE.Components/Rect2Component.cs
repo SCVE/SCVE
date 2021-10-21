@@ -2,6 +2,7 @@
 using SCVE.Core.App;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Components
 {
@@ -13,10 +14,9 @@ namespace SCVE.Components
 
         public Rect2Component(ColorRgba colorRgba)
         {
+            Logger.Construct(nameof(Rect2Component));
             _colorRgba = colorRgba;
-            _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
-
-            // var rectGeometry = GeometryGenerator.GenerateRect(Rect);
+            
             _vertexArray = Application.Instance.VertexArrayCache.Get("Positive Unit");
 
             _program = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");

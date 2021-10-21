@@ -1,4 +1,5 @@
 ﻿using System;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Core.Rendering
 {
@@ -11,6 +12,7 @@ namespace SCVE.Core.Rendering
 
         public TextureData(int width, int height, byte[] rgbaPixels)
         {
+            Logger.Construct(nameof(TextureData));
             Width = width;
             Height = height;
             RgbaPixels = rgbaPixels;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define LOG_CONSTRUCT
+using System;
+
 
 namespace SCVE.Core.Utilities
 {
@@ -22,7 +24,7 @@ namespace SCVE.Core.Utilities
             Console.WriteLine($"TRACE: {trace}");
             Console.ResetColor();
         }
-        
+
         public static void Trace(string format, params object[] args)
         {
             Trace(string.Format(format, args));
@@ -65,6 +67,16 @@ namespace SCVE.Core.Utilities
         public static void Fatal(string format, params object[] args)
         {
             Fatal(string.Format(format, args));
+        }
+
+
+        public static void Construct(string name)
+        {
+#if LOG_CONSTRUCT
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"Constructing: {name}");
+            Console.ResetColor();
+#endif
         }
     }
 }

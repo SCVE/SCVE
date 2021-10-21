@@ -1,4 +1,6 @@
-﻿namespace SCVE.Core.Primitives
+﻿using SCVE.Core.Utilities;
+
+namespace SCVE.Core.Primitives
 {
     public class ColorRgba
     {
@@ -9,10 +11,12 @@
 
         public ColorRgba()
         {
+            Logger.Construct(nameof(ColorRgba));
         }
 
         public ColorRgba(float r, float g, float b, float a)
         {
+            Logger.Construct(nameof(ColorRgba));
             R = r;
             G = g;
             B = b;

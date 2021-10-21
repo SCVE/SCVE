@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Core.Primitives
 {
@@ -27,6 +28,7 @@ namespace SCVE.Core.Primitives
         /// </summary>
         public ScveMatrix4X4()
         {
+            // Logger.Construct(nameof(ScveMatrix4X4));
         }
 
         /// <summary>
@@ -34,6 +36,7 @@ namespace SCVE.Core.Primitives
         /// </summary>
         public ScveMatrix4X4(float[] values)
         {
+            // Logger.Construct(nameof(ScveMatrix4X4));
             if (values.Length != 16)
             {
                 throw new ScveException($"Values must contain exactly 16 elements, but was {values.Length}");

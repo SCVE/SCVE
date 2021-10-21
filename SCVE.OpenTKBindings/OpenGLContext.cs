@@ -13,7 +13,7 @@ namespace SCVE.OpenTKBindings
 
         public OpenGLContext(ScveWindow window) : base(window)
         {
-            Logger.Trace("Constructing OpenGLContext");
+            Logger.Construct(nameof(OpenGLContext));
         }
 
         public override void Init()

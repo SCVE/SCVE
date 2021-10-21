@@ -10,7 +10,7 @@ namespace SCVE.OpenTKBindings
         private int _size;
         public OpenGLVertexBuffer(float[] vertices)
         {
-            Logger.Trace("Constructing OpenGLVertexBuffer from vertices");
+            Logger.Construct(nameof(OpenGLVertexBuffer));
             Id = GL.GenBuffer();
             _size = sizeof(float) * vertices.Length;
             Bind();
@@ -19,7 +19,7 @@ namespace SCVE.OpenTKBindings
         
         public OpenGLVertexBuffer(int size)
         {
-            Logger.Trace("Constructing OpenGLVertexBuffer from size");
+            Logger.Construct(nameof(OpenGLVertexBuffer));
             Id = GL.GenBuffer();
             _size = size;
             Bind();

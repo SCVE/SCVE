@@ -28,7 +28,7 @@ namespace SCVE.OpenTKBindings
 
         public unsafe GlfwWindow(WindowProps props) : base(props)
         {
-            Logger.Warn("Constructing GlfwWindow");
+            Logger.Construct(nameof(GlfwWindow));
 
             if (_glfwWindowCount == 0)
             {

@@ -10,7 +10,7 @@ namespace SCVE.OpenTKBindings
         private int _usedVertexBufferLocations = 0;
         public OpenGLVertexArray()
         {
-            Logger.Trace("Constructing OpenGLVertexArray");
+            Logger.Construct(nameof(OpenGLVertexArray));
             Id = GL.GenVertexArray();
         }
         

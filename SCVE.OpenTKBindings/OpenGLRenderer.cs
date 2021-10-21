@@ -15,7 +15,7 @@ namespace SCVE.OpenTKBindings
 
         public OpenGLRenderer()
         {
-            Logger.Trace("Constructing OpenGLRenderer");
+            Logger.Construct(nameof(OpenGLRenderer));
         }
         
         public void OnInit()

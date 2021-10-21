@@ -1,4 +1,6 @@
-﻿namespace SCVE.Core.Primitives
+﻿using SCVE.Core.Utilities;
+
+namespace SCVE.Core.Primitives
 {
     public class Rect
     {
@@ -9,10 +11,12 @@
 
         public Rect()
         {
+            Logger.Construct(nameof(Rect));
         }
 
         public Rect(float x, float y, float width, float height)
         {
+            Logger.Construct(nameof(Rect));
             X = x;
             Y = y;
             Width = width;

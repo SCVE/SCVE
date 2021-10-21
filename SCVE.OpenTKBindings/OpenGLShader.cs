@@ -9,7 +9,7 @@ namespace SCVE.OpenTKBindings
     {
         public OpenGLShader(string source, ScveShaderType type)
         {
-            Logger.Trace("Construction OpenGLShader");
+            Logger.Construct(nameof(OpenGLShader));
             Id = GL.CreateShader(type.ToGLShaderType());
             GL.ShaderSource(Id, source);
         }

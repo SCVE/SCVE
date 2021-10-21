@@ -8,7 +8,7 @@ namespace SCVE.OpenTKBindings
     {
         public OpenGLIndexBuffer(int[] indices)
         {
-            Logger.Trace("Constructing OpenGLIndexBuffer");
+            Logger.Construct(nameof(OpenGLIndexBuffer));
             Count = indices.Length;
             Id = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, Id);

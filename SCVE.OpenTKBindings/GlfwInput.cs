@@ -1,4 +1,5 @@
 ﻿using SCVE.Core.Input;
+using SCVE.Core.Utilities;
 
 namespace SCVE.OpenTKBindings
 {
@@ -6,6 +7,7 @@ namespace SCVE.OpenTKBindings
     {
         public GlfwInput()
         {
+            Logger.Construct(nameof(GlfwInput));
         }
     }
 }

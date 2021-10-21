@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using SCVE.Core.Rendering;
+using SCVE.Core.Utilities;
 
 namespace SCVE.OpenTKBindings
 {
@@ -10,6 +11,7 @@ namespace SCVE.OpenTKBindings
 
         public OpenGLTexture(TextureData data)
         {
+            Logger.Construct(nameof(OpenGLTexture));
             _width = data.Width;
             _height = data.Height;
             Id = GL.GenTexture();

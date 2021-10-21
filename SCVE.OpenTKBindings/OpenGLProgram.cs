@@ -15,13 +15,13 @@ namespace SCVE.OpenTKBindings
 
         public OpenGLProgram()
         {
-            Logger.Trace("Constructing OpenGLProgram");
+            Logger.Construct(nameof(OpenGLProgram));
             Id = GL.CreateProgram();
         }
 
         public OpenGLProgram(byte[] binary, int extension)
         {
-            Logger.Trace("Constructing OpenGLProgram from binary");
+            Logger.Construct(nameof(OpenGLProgram));
             Id = GL.CreateProgram();
 
             GL.ProgramBinary(Id, (BinaryFormat)extension, binary, binary.Length);
