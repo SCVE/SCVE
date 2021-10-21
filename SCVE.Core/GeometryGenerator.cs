@@ -29,14 +29,40 @@ namespace SCVE.Core
         {
             float[] vertices = {
                 // Top left
-                -1f, 1f, 0f, 
+                -0.5f, 0.5f, 0f, 
                 // Top right
-                1f, 1f, 0f, 
+                0.5f, 0.5f, 0f, 
                 // Bottom right
-                1f, -1f, 0f, 
+                0.5f, -0.5f, 0f, 
                 // Bottom left
-                -1f, -1f, 0f, 
+                -0.5f, -0.5f, 0f, 
             };
+
+            int[] indices = {
+                0, 3, 1,
+                1, 3, 2
+            };
+
+            return new GeometryData(vertices, indices);
+        }
+
+        public static GeometryData GeneratePositiveUnitSquare()
+        {
+            float[] vertices = {
+                // Top left
+                0, 0, 0f, 
+                // Top right
+                1, 0, 0f, 
+                // Bottom right
+                1, 1, 0f, 
+                // Bottom left
+                0, 1, 0f, 
+            };
+            
+            // for (var i = 0; i < vertices.Length; i++)
+            // {
+            //     vertices[i] *= -1;
+            // }
 
             int[] indices = {
                 0, 3, 1,

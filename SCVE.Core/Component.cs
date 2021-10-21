@@ -7,25 +7,40 @@ namespace SCVE.Core
 {
     public abstract class Component : IRenderable
     {
-        public Rect Rect { get; protected set; }
-        
         protected Component Parent;
         protected List<Component> Children = new();
 
         public ScveMatrix4X4 ModelMatrix = ScveMatrix4X4.Identity;
 
-        protected Component(Rect rect)
+        public float PixelWidth { get; set; }
+        public float PixelHeight { get; set; }
+
+        /// <summary>
+        /// This should ALWAYS be the most left of the component
+        /// </summary>
+        public float X { get; set; }
+        
+        /// <summary>
+        /// This should ALWAYS be the most top of the component
+        /// </summary>
+        public float Y { get; set; }
+
+        // NOTE: This is odd! I can't call OnResize in derived types when it's protected
+        public virtual void OnResize()
         {
-            Rect = rect;
         }
 
-        public void AddChild(Component component)
+        protected Component()
+        {
+        }
+
+        public virtual void AddChild(Component component)
         {
             Children.Add(component);
             component.SetParent(this);
         }
 
-        public void SetParent(Component component)
+        public virtual void SetParent(Component component)
         {
             Parent = component;
         }

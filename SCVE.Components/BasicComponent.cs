@@ -11,7 +11,7 @@ namespace SCVE.Components
         private VertexArray _vertexArray;
         private Program _program;
 
-        public BasicComponent(Rect rect) : base(rect)
+        public BasicComponent()
         {
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 

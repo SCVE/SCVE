@@ -12,7 +12,7 @@ namespace SCVE.Components
         private readonly Program _program;
         private readonly Texture _texture;
         
-        public TexturedComponent(Rect rect) : base(rect)
+        public TexturedComponent()
         {
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 

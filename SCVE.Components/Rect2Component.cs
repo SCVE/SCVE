@@ -5,19 +5,19 @@ using SCVE.Core.Rendering;
 
 namespace SCVE.Components
 {
-    public class FullFlexComponent : Component
+    public class Rect2Component : Component
     {
         private readonly VertexArray _vertexArray;
         private readonly Program _program;
+        private ColorRgba _colorRgba;
 
-        public FullFlexComponent()
+        public Rect2Component(ColorRgba colorRgba)
         {
+            _colorRgba = colorRgba;
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 
-            ModelMatrix.Multiply(ScveMatrix4X4.CreateScale(200, 100, 1f));
-
             // var rectGeometry = GeometryGenerator.GenerateRect(Rect);
-            var rectGeometry = GeometryGenerator.GenerateUnitSquare();
+            var rectGeometry = GeometryGenerator.GeneratePositiveUnitSquare();
 
             var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
 
@@ -36,7 +36,7 @@ namespace SCVE.Components
 
         public override void Render(IRenderer renderer)
         {
-            _program.SetVector4("u_Color", 1, 1, 1, 1);
+            _program.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
             
             _program.SetMatrix4("u_Model",
                 ModelMatrix

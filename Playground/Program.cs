@@ -29,9 +29,24 @@ namespace Playground
 
             // application.ViewProjectionAccessor.SetView(ScveMatrix4X4.Identity.Set(2, 3, -1));
 
-            var rootComponent = new EmptyComponent(new Rect(0, 0, 2, 2));
+            var rootComponent = new EmptyComponent();
             // application.RootComponent = rootComponent;
-            application.RootComponent = new FullFlexComponent(new Rect(0, 0, 600, 100));
+            
+            var verticalLayoutEvenSpaceComponent = new VerticalLayoutEvenSpaceComponent();
+            application.RootComponent = verticalLayoutEvenSpaceComponent;
+
+            application.RootComponent.X = 0;
+            application.RootComponent.Y = 0;
+            application.RootComponent.PixelWidth = application.MainWindow.Width;
+            application.RootComponent.PixelHeight = application.MainWindow.Height;
+
+            var horizontalLayout = new HorizontalLayoutEvenSpaceComponent();
+            application.RootComponent.AddChild(horizontalLayout);
+            horizontalLayout.AddChild(new Rect2Component(new ColorRgba(1, 0, 0, 1)));
+            horizontalLayout.AddChild(new Rect2Component(new ColorRgba(0, 0.5f, 0, 1)));
+            horizontalLayout.AddChild(new Rect2Component(new ColorRgba(0, 0, 1, 1)));
+            application.RootComponent.AddChild(new Rect2Component(new ColorRgba(0, 1, 0, 1)));
+            application.RootComponent.AddChild(new Rect2Component(new ColorRgba(0, 0, 1, 1)));
 
             application.Run();
 

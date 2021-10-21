@@ -11,12 +11,12 @@ namespace SCVE.Components
         private readonly Program _program;
         private ColorRgba _colorRgba;
 
-        public RectComponent(Rect rect, ColorRgba colorRgba) : base(rect)
+        public RectComponent(ColorRgba colorRgba)
         {
             _colorRgba = colorRgba;
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 
-            var rectGeometry = GeometryGenerator.GenerateRect(Rect);
+            var rectGeometry = GeometryGenerator.GenerateUnitSquare();
 
             var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
 

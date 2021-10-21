@@ -19,10 +19,10 @@ namespace SCVE.Core.Services
         {
             SetProjection(
                 ScveMatrix4X4.CreateOrthographicOffCenter(
-                    -Application.Instance.MainWindow.Width / 2f,
-                    Application.Instance.MainWindow.Width / 2f,
-                    -Application.Instance.MainWindow.Height / 2f,
-                    Application.Instance.MainWindow.Height / 2f,
+                    0,
+                    Application.Instance.MainWindow.Width,
+                    Application.Instance.MainWindow.Height,
+                    0,
                     -1,
                     1
                 )
@@ -32,15 +32,24 @@ namespace SCVE.Core.Services
         private void InputOnWindowSizeChanged(int width, int height)
         {
             Logger.Warn($"Window Size Changed: {width}:{height}");
-            
+
             // SetFromWindow();
-            
-            SetProjection(ScveMatrix4X4.CreateOrthographicOffCenter(-width / 2f, width / 2f, -height / 2f, height / 2f, -1, 1));
+
+            // SetProjection(ScveMatrix4X4.CreateOrthographicOffCenter(-width / 2f, width / 2f, -height / 2f, height / 2f, -1, 1));
+            SetProjection(ScveMatrix4X4.CreateOrthographicOffCenter(
+                    0,
+                    width,
+                    height,
+                    0,
+                    -1,
+                    1
+                )
+            );
         }
 
         public void SetProjection(ScveMatrix4X4 projection)
         {
-            Logger.Warn($"Setting projection to \n{projection}");
+            // Logger.Warn($"Setting projection to \n{projection}");
             ProjectionMatrix = projection;
 
             ViewProjectionMatrix.MakeIdentity().Multiply(projection).Multiply(ViewMatrix);

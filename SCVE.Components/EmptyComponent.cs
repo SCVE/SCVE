@@ -6,7 +6,7 @@ namespace SCVE.Components
 {
     public class EmptyComponent : Component
     {
-        public EmptyComponent(Rect rect) : base(rect)
+        public EmptyComponent()
         {
         }
 

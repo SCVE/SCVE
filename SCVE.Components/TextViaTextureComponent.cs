@@ -4,7 +4,7 @@ namespace SCVE.Components
 {
     public class TextViaTextureComponent : TexturedComponent
     {
-        public TextViaTextureComponent(Rect rect) : base(rect)
+        public TextViaTextureComponent()
         {
         }
     }

@@ -13,13 +13,13 @@ namespace SCVE.Components
         private ColorRgba _colorRgba;
         private ScveMatrix4X4 _ortho;
 
-        public RectWithOrthoComponent(Rect rect, ColorRgba colorRgba) : base(rect)
+        public RectWithOrthoComponent(Rect rect, ColorRgba colorRgba)
         {
             _ortho = ScveMatrix4X4.CreateOrthographicOffCenter(-5, 5, -5, 5, -1, 1);
             _colorRgba = colorRgba;
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 
-            var rectGeometry = GeometryGenerator.GenerateRect(Rect);
+            var rectGeometry = GeometryGenerator.GenerateRect(rect);
 
             var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
 

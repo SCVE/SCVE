@@ -165,9 +165,9 @@ namespace SCVE.Core.Primitives
             result._values[0] = 2f * invWidth;
             result._values[5] = 2f * invHeight;
             result._values[10] = -2f * invDepth;
-            result._values[3] = -(right + left) * invWidth;
-            result._values[7] = -(top + bottom) * invHeight;
-            result._values[11] = -(depthFar + depthNear) * invDepth;
+            result._values[12] = -(right + left) * invWidth;
+            result._values[13] = -(top + bottom) * invHeight;
+            result._values[14] = -(depthFar + depthNear) * invDepth;
             
             return result;
         }
