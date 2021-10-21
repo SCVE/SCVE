@@ -14,7 +14,7 @@
 
         Program CreateProgram();
         
-        Program CreateProgram(byte[] binary);
+        Program CreateProgram(byte[] binary, int extension);
 
         Texture CreateTexture(TextureData textureData);
     }

@@ -82,11 +82,11 @@ namespace SCVE.Components
 
                 var binary = _program.GetBinary();
 
-                File.WriteAllBytes("assets/program_binary.bin", binary);
+                File.WriteAllBytes("assets/program_binary.bin", binary.Data);
             }
             else
             {
-                _program = Application.Instance.RenderEntitiesCreator.CreateProgram(File.ReadAllBytes("assets/program_binary.bin"));
+                _program = Application.Instance.RenderEntitiesCreator.CreateProgram(File.ReadAllBytes("assets/program_binary.bin"), 0);
             }
         }
 

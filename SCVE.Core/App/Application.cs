@@ -22,7 +22,7 @@ namespace SCVE.Core.App
         private ApplicationScope _scope;
 
         public IRenderer Renderer => _scope.Renderer;
-        public IFileLoader FileLoader => _scope.FileLoader;
+        public FileLoader FileLoader => _scope.FileLoader;
         public IDeltaTimeProvider DeltaTimeProvider => _scope.DeltaTimeProvider;
         public ScveWindow MainWindow => _scope.MainWindow;
         public InputBase Input => _scope.Input;
@@ -31,6 +31,8 @@ namespace SCVE.Core.App
         public ITextureLoader TextureLoader => _scope.TextureLoader;
 
         public ViewProjectionAccessor ViewProjectionAccessor;
+
+        public ShaderProgramCache ShaderProgramCache;
 
         public Component RootComponent { get; set; }
 
@@ -51,6 +53,7 @@ namespace SCVE.Core.App
             _isInited = true;
 
             application.ViewProjectionAccessor = new();
+            application.ShaderProgramCache = new();
 
             return application;
         }

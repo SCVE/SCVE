@@ -10,7 +10,7 @@ namespace SCVE.Core.App
     public class ApplicationScope
     {
         public IRenderer Renderer { get; private set; }
-        public IFileLoader FileLoader { get; private set; }
+        public FileLoader FileLoader { get; private set; }
         public IDeltaTimeProvider DeltaTimeProvider { get; private set; }
 
         private List<IInitable> _initables;
@@ -98,7 +98,7 @@ namespace SCVE.Core.App
             return this;
         }
 
-        public ApplicationScope WithFileStorage(IFileLoader fileLoader)
+        public ApplicationScope WithFileStorage(FileLoader fileLoader)
         {
             if (FileLoader is not null)
             {

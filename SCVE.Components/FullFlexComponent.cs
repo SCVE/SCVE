@@ -30,56 +30,7 @@ namespace SCVE.Components
 
             _vertexArray.SetIndexBuffer(indexBuffer);
 
-            string vertexSrc = @"
-            #version 330 core
-			
-            layout(location = 0) in vec3 a_Position;
-
-            // uniform mat4 u_MVP;
-
-            uniform mat4 u_Model;
-            uniform mat4 u_View;
-            uniform mat4 u_Proj;
-
-            out vec3 v_Position;
-
-            void main()
-            {
-                v_Position = normalize(a_Position);
-                // gl_Position = u_MVP * vec4(a_Position, 1.0);	
-                gl_Position = u_Proj * u_View * u_Model * vec4(a_Position, 1.0);	
-            }
-            ";
-
-            string fragmentSrc = @"
-            #version 330 core
-			
-            layout(location = 0) out vec4 color;
-
-            in vec3 v_Position;
-
-            uniform vec4 u_Color;
-
-            void main()
-            {
-                color = u_Color;
-            }
-            ";
-
-            using var vertexShader = Application.Instance.RenderEntitiesCreator.CreateShader(vertexSrc, ScveShaderType.Vertex);
-            using var fragmentShader = Application.Instance.RenderEntitiesCreator.CreateShader(fragmentSrc, ScveShaderType.Fragment);
-
-            vertexShader.Compile();
-            fragmentShader.Compile();
-
-            _program = Application.Instance.RenderEntitiesCreator.CreateProgram();
-
-            _program.AttachShader(vertexShader);
-            _program.AttachShader(fragmentShader);
-            _program.Link();
-
-            _program.DetachShader(vertexShader);
-            _program.DetachShader(fragmentShader);
+            _program = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
         }
 
         public override void Render(IRenderer renderer)

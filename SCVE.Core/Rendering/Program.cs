@@ -1,4 +1,5 @@
 ﻿using System;
+using SCVE.Core.Entities;
 using SCVE.Core.Primitives;
 
 namespace SCVE.Core.Rendering
@@ -23,7 +24,7 @@ namespace SCVE.Core.Rendering
 
         public abstract void Link();
 
-        public abstract byte[] GetBinary();
+        public abstract ShaderProgramBinaryData GetBinary();
 
         public abstract void Dispose();
     }

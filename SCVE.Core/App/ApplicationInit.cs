@@ -9,7 +9,7 @@ namespace SCVE.Core.App
     {
         public IRenderer Renderer { get; set; }
 
-        public IFileLoader FileLoader { get; set; }
+        public FileLoader FileLoader { get; set; }
 
         public IDeltaTimeProvider DeltaTimeProvider { get; set; }
 
@@ -21,7 +21,7 @@ namespace SCVE.Core.App
         
         public ITextureLoader TextureLoader { get; set; }
         
-        public ApplicationInit(IRenderer renderer, IFileLoader fileLoader, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator, ITextureLoader textureLoader)
+        public ApplicationInit(IRenderer renderer, FileLoader fileLoader, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator, ITextureLoader textureLoader)
         {
             Renderer = renderer;
             FileLoader = fileLoader;

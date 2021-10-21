@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using SCVE.Core.App;
+using SCVE.Core.Entities;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
@@ -18,12 +19,12 @@ namespace SCVE.OpenTKBindings
             Id = GL.CreateProgram();
         }
 
-        public OpenGLProgram(byte[] binary)
+        public OpenGLProgram(byte[] binary, int extension)
         {
             Logger.Trace("Constructing OpenGLProgram from binary");
             Id = GL.CreateProgram();
             
-            GL.ProgramBinary(Id, (BinaryFormat)0x8E21, binary, binary.Length);
+            GL.ProgramBinary(Id, (BinaryFormat)extension, binary, binary.Length);
         }
 
         private int GetOrCacheAttributeLocation(string name)
@@ -107,14 +108,14 @@ namespace SCVE.OpenTKBindings
             }
         }
 
-        public override byte[] GetBinary()
+        public override ShaderProgramBinaryData GetBinary()
         {
             byte[] buffer = new byte[16384];
             GL.GetProgramBinary(Id, 16384, out var length, out var binaryFormat, buffer);
             
             Array.Resize(ref buffer, length);
 
-            return buffer;
+            return new ShaderProgramBinaryData(buffer, (int)binaryFormat);
         }
         
         public override void Dispose()
