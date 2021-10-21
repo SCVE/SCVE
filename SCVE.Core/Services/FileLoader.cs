@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using SCVE.Core.App;
 using SCVE.Core.Rendering;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Core.Services
 {
@@ -12,9 +13,11 @@ namespace SCVE.Core.Services
 
         public Program LoadProgram(string name)
         {
-            if (Directory.Exists($"{BaseDirectory}/{name}"))
+            // Note: it's easier to store 16 based extension because of the length
+            
+            var directoryInfo = new DirectoryInfo($"{BaseDirectory}/{name}");
+            if (directoryInfo.Exists)
             {
-                var directoryInfo = new DirectoryInfo($"{BaseDirectory}/{name}");
                 var files = directoryInfo.EnumerateFiles();
                 var compiledFileName = files.Select(f => Path.GetFileName(f.Name)).FirstOrDefault(f => f.StartsWith("compiled"));
 
@@ -46,8 +49,8 @@ namespace SCVE.Core.Services
                 }
                 else
                 {
-                    var substring = compiledFileName.Substring(compiledFileName.IndexOf("_") + 1);
-                    substring = substring.Substring(0, substring.IndexOf(".bin"));
+                    var substring = compiledFileName[(compiledFileName.IndexOf("_", StringComparison.Ordinal) + 1)..];
+                    substring = substring[..substring.IndexOf(".bin", StringComparison.Ordinal)];
                     int extension = Convert.ToInt32(substring, 16);
 
                     var bytes = File.ReadAllBytes($"{BaseDirectory}/{name}/compiled_{extension:X}.bin");
@@ -58,11 +61,14 @@ namespace SCVE.Core.Services
             }
             else
             {
+                Logger.Error($"ShaderProgram ({name}) was not found! Fallback to (Default)");
                 var program = LoadProgram("Default");
                 if (program is null)
                 {
                     throw new ScveException("Default shader was not found in assets folder");
                 }
+
+                return program;
             }
 
             return null;
