@@ -13,7 +13,7 @@ namespace ImageSharpTests
     {
         static void Main(string[] args)
         {
-            Tests.Test2();
+            new Example().Run();
             
             return;
             

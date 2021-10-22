@@ -1,4 +1,9 @@
-﻿using SixLabors.Fonts;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+using System.Reflection;
+using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -14,6 +19,8 @@ namespace ImageSharpTests
             // image.Mutate(i => i.DrawText("Some text", font, Color.White, PointF.Empty));
         }
 
+        
+        
         public static void Test2()
         {
             FontCollection collection = new FontCollection();
