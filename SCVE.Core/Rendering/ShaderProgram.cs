@@ -4,7 +4,7 @@ using SCVE.Core.Primitives;
 
 namespace SCVE.Core.Rendering
 {
-    public abstract class Program : IRenderEntity, IBindable, IDisposable
+    public abstract class ShaderProgram : IRenderEntity, IBindable, IDisposable
     {
         public int Id { get; protected set; }
 

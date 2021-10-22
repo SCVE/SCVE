@@ -8,7 +8,7 @@ namespace SCVE.Components
     public class FullFlexComponent : Component
     {
         private readonly VertexArray _vertexArray;
-        private readonly Program _program;
+        private readonly ShaderProgram _shaderProgram;
 
         public FullFlexComponent()
         {
@@ -31,23 +31,23 @@ namespace SCVE.Components
 
             _vertexArray.SetIndexBuffer(indexBuffer);
 
-            _program = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
+            _shaderProgram = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
         }
 
         public override void Render(IRenderer renderer)
         {
-            _program.SetVector4("u_Color", 1, 1, 1, 1);
+            _shaderProgram.SetVector4("u_Color", 1, 1, 1, 1);
             
-            _program.SetMatrix4("u_Model",
+            _shaderProgram.SetMatrix4("u_Model",
                 ModelMatrix
             );
-            _program.SetMatrix4("u_View",
+            _shaderProgram.SetMatrix4("u_View",
                 Application.Instance.ViewProjectionAccessor.ViewMatrix
             );
-            _program.SetMatrix4("u_Proj",
+            _shaderProgram.SetMatrix4("u_Proj",
                 Application.Instance.ViewProjectionAccessor.ProjectionMatrix
             );
-            _program.Bind();
+            _shaderProgram.Bind();
 
             renderer.RenderSolid(_vertexArray);
 

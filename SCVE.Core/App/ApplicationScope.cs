@@ -10,7 +10,7 @@ namespace SCVE.Core.App
     public class ApplicationScope
     {
         public IRenderer Renderer { get; private set; }
-        public FileLoader FileLoader { get; private set; }
+        public FileLoaders FileLoaders { get; private set; }
         public IDeltaTimeProvider DeltaTimeProvider { get; private set; }
 
         private List<IInitable> _initables;
@@ -23,6 +23,7 @@ namespace SCVE.Core.App
         
         public IRenderEntitiesCreator RenderEntitiesCreator { get; private set; }
         public ITextureLoader TextureLoader { get; set; }
+        public IFontAtlasGenerator FontAtlasGenerator { get; set; }
 
         public ApplicationScope()
         {
@@ -98,15 +99,15 @@ namespace SCVE.Core.App
             return this;
         }
 
-        public ApplicationScope WithFileStorage(FileLoader fileLoader)
+        public ApplicationScope WithFileLoaders(FileLoaders fileLoaders)
         {
-            if (FileLoader is not null)
+            if (FileLoaders is not null)
             {
-                EndTrack(FileLoader);
+                EndTrack(FileLoaders);
             }
 
-            FileLoader = fileLoader;
-            BeginTrack(fileLoader);
+            FileLoaders = fileLoaders;
+            BeginTrack(fileLoaders);
             return this;
         }
 
@@ -138,16 +139,23 @@ namespace SCVE.Core.App
             TextureLoader = textureLoader;
             return this;
         }
+        
+        public ApplicationScope WithFontAtlasGenerator(IFontAtlasGenerator fontAtlasGenerator)
+        {
+            FontAtlasGenerator = fontAtlasGenerator;
+            return this;
+        }
 
         public static ApplicationScope FromApplicationInit(ApplicationInit applicationInit)
         {
             return new ApplicationScope()
                 .WithRenderer(applicationInit.Renderer)
-                .WithFileStorage(applicationInit.FileLoader)
+                .WithFileLoaders(applicationInit.FileLoaders)
                 .WithDeltaTimeProvider(applicationInit.DeltaTimeProvider)
                 .WithInput(applicationInit.Input)
                 .WithRenderEntitiesProvider(applicationInit.RenderEntitiesCreator)
-                .WithTextureLoader(applicationInit.TextureLoader);
+                .WithTextureLoader(applicationInit.TextureLoader)
+                .WithFontAtlasGenerator(applicationInit.FontAtlasGenerator);
         }
     }
 }

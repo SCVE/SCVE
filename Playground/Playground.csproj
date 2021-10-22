@@ -11,6 +11,7 @@
       <ProjectReference Include="..\SCVE.ImageSharpBindings\SCVE.ImageSharpBindings.csproj" />
       <ProjectReference Include="..\SCVE.OpenTKBindings\SCVE.OpenTKBindings.csproj" />
       <ProjectReference Include="..\SCVE.Null\SCVE.Null.csproj" />
+      <ProjectReference Include="..\SCVE.Platform.Windows\SCVE.Platform.Windows.csproj" />
     </ItemGroup>
 
 </Project>

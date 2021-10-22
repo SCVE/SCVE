@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using SCVE.Core.Services;
 using SCVE.Core.Texts;
 using SCVE.Core.Utilities;
 using SharpFont;
@@ -10,28 +11,21 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace ImageSharpTests
+namespace SCVE.ImageSharpBindings
 {
-    public class Example
+    public class SharpFontImageSharpFontAtlasGenerator : IFontAtlasGenerator
     {
-        public void Run()
+        private const string BasePath = "assets/Font";
+        
+        public void Generate(string fontFileName, string alphabet, float fontSize)
         {
-            float fontSize = 32;
-
-            var font = new FontFace(File.OpenRead("assets/Fonts/arial.ttf"));
-
-            string alphabet =
-                "abcdefghijklmnopqrstuvwxyz" +
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-                "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
-                "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
-                "0123456789" +
-                "!\"#$%^&*()+=-_'?.,|/`~№:;@[]{}";
+            var fontName = Path.GetFileNameWithoutExtension(fontFileName);
+            var font = new FontFace(File.OpenRead($"{BasePath}/{fontFileName}"));
 
             int chunkWidth = (int)fontSize;
 
-            // fit as much characters as possible into a square
-            int chunksInARow = (int)MathF.Floor(MathF.Sqrt(alphabet.Length));
+            // fit as much characters as possible into a square (+ 1 for space)
+            int chunksInARow = (int)MathF.Floor(MathF.Sqrt(alphabet.Length + 1));
 
             var imageWidth = Maths.ClosestPowerOf2Up(chunksInARow) * Maths.ClosestPowerOf2Up(chunkWidth);
 
@@ -43,6 +37,17 @@ namespace ImageSharpTests
 
             HashSet<char> atlasChars = new HashSet<char>();
 
+            fontAtlasData.Add(
+                c: (int)' ',
+                new FontAtlasChunk(
+                    advance: fontSize / 2,
+                    textureX: 0,
+                    textureY: 0,
+                    bearingX: 0,
+                    bearingY: 0
+                ));
+            usedChunks++;
+            
             for (int i = 0; i < alphabet.Length; i++)
             {
                 if (alphabet[i] == ' ') continue;
@@ -81,14 +86,14 @@ namespace ImageSharpTests
                     ));
             }
 
-            atlas.Save($"assets/Fonts/arial/atlas.png");
+            atlas.Save($"{BasePath}/{fontName}/atlas.png");
 
             var json = JsonSerializer.Serialize(fontAtlasData, new JsonSerializerOptions()
             {
                 WriteIndented = true
             });
 
-            File.WriteAllText($"assets/Fonts/arial/atlasData.json", json);
+            File.WriteAllText($"{BasePath}/{fontName}/atlasData.json", json);
         }
 
         public unsafe Surface RenderGlyph(Glyph glyph)
@@ -129,6 +134,8 @@ namespace ImageSharpTests
                 pixels[index++] = c;
             }
 
+            // TODO: Image allocation is out of scope here. We can extract SharpFont glyph rendering to RGBA byte array and then use the byte array in ImageSharp separately 
+            
             var image = Image.WrapMemory<Rgba32>(Configuration.Default, pixels, width, height);
 
             Marshal.FreeHGlobal(surface.Bits); //Give the memory back!

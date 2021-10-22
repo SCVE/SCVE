@@ -9,7 +9,7 @@ namespace SCVE.Components
     public class Rect2Component : Component
     {
         private readonly VertexArray _vertexArray;
-        private readonly Program _program;
+        private readonly ShaderProgram _shaderProgram;
         private ColorRgba _colorRgba;
 
         public Rect2Component(ColorRgba colorRgba)
@@ -19,23 +19,23 @@ namespace SCVE.Components
             
             _vertexArray = Application.Instance.VertexArrayCache.Get("Positive Unit");
 
-            _program = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
+            _shaderProgram = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
         }
 
         public override void Render(IRenderer renderer)
         {
-            _program.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
+            _shaderProgram.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
             
-            _program.SetMatrix4("u_Model",
+            _shaderProgram.SetMatrix4("u_Model",
                 ModelMatrix
             );
-            _program.SetMatrix4("u_View",
+            _shaderProgram.SetMatrix4("u_View",
                 Application.Instance.ViewProjectionAccessor.ViewMatrix
             );
-            _program.SetMatrix4("u_Proj",
+            _shaderProgram.SetMatrix4("u_Proj",
                 Application.Instance.ViewProjectionAccessor.ProjectionMatrix
             );
-            _program.Bind();
+            _shaderProgram.Bind();
 
             renderer.RenderSolid(_vertexArray);
 

@@ -9,7 +9,7 @@ namespace SCVE.Components
     public class BasicComponent : Component
     {
         private VertexArray _vertexArray;
-        private Program _program;
+        private ShaderProgram _shaderProgram;
 
         public BasicComponent()
         {
@@ -87,19 +87,19 @@ namespace SCVE.Components
             vertexShader.Compile();
             fragmentShader.Compile();
 
-            _program = Application.Instance.RenderEntitiesCreator.CreateProgram();
+            _shaderProgram = Application.Instance.RenderEntitiesCreator.CreateProgram();
 
-            _program.AttachShader(vertexShader);
-            _program.AttachShader(fragmentShader);
-            _program.Link();
+            _shaderProgram.AttachShader(vertexShader);
+            _shaderProgram.AttachShader(fragmentShader);
+            _shaderProgram.Link();
 
-            _program.DetachShader(vertexShader);
-            _program.DetachShader(fragmentShader);
+            _shaderProgram.DetachShader(vertexShader);
+            _shaderProgram.DetachShader(fragmentShader);
         }
 
         public override void Render(IRenderer renderer)
         {
-            _program.Bind();
+            _shaderProgram.Bind();
             renderer.RenderWireframe(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)

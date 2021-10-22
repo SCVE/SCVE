@@ -22,13 +22,15 @@ namespace SCVE.Core.App
         private ApplicationScope _scope;
 
         public IRenderer Renderer => _scope.Renderer;
-        public FileLoader FileLoader => _scope.FileLoader;
+        public FileLoaders FileLoaders => _scope.FileLoaders;
         public IDeltaTimeProvider DeltaTimeProvider => _scope.DeltaTimeProvider;
         public ScveWindow MainWindow => _scope.MainWindow;
         public InputBase Input => _scope.Input;
         public IRenderEntitiesCreator RenderEntitiesCreator => _scope.RenderEntitiesCreator;
 
         public ITextureLoader TextureLoader => _scope.TextureLoader;
+
+        public IFontAtlasGenerator FontAtlasGenerator => _scope.FontAtlasGenerator;
 
         public ViewProjectionAccessor ViewProjectionAccessor;
 

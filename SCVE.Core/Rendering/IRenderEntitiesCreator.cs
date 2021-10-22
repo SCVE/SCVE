@@ -12,9 +12,9 @@
         
         Shader CreateShader(string source, ScveShaderType type);
 
-        Program CreateProgram();
+        ShaderProgram CreateProgram();
         
-        Program CreateProgram(byte[] binary, int extension);
+        ShaderProgram CreateProgram(byte[] binary, int extension);
 
         Texture CreateTexture(TextureData textureData);
     }

@@ -9,6 +9,7 @@ using SCVE.Core.Services;
 using SCVE.ImageSharpBindings;
 using SCVE.Null;
 using SCVE.OpenTKBindings;
+using SCVE.Platform.Windows;
 
 namespace Playground
 {
@@ -22,8 +23,9 @@ namespace Playground
             applicationInit.Window = new GlfwWindow(new WindowProps("Super Cool Video Editor"));
             applicationInit.Input = new GlfwInput();
             applicationInit.RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
-            applicationInit.FileLoader = new FileLoader();
+            applicationInit.FileLoaders = new WindowsFileLoaders();
             applicationInit.TextureLoader = new ImageSharpTextureLoader();
+            applicationInit.FontAtlasGenerator = new SharpFontImageSharpFontAtlasGenerator();
 
             var application = Application.Init(applicationInit);
 
@@ -37,21 +39,21 @@ namespace Playground
 
             // application.ViewProjectionAccessor.SetView(ScveMatrix4X4.Identity.Set(2, 3, -1));
 
-            var rootComponent = new EmptyComponent();
-            // application.RootComponent = rootComponent;
+            var rootComponent = new TextViaAtlasComponent();
+            application.RootComponent = rootComponent;
 
-            var verticalLayoutEvenSpaceComponent = new VerticalLayoutEvenSpaceComponent();
-            application.RootComponent = verticalLayoutEvenSpaceComponent;
-
-            application.RootComponent.SetPositionAndSize(0, 0, application.MainWindow.Width, application.MainWindow.Height);
-
-            var horizontalLayout = new HorizontalLayoutEvenSpaceComponent();
-            application.RootComponent.AddChild(horizontalLayout);
-            horizontalLayout.AddChild(new Rect2Component(new ColorRgba(1, 0, 0, 1)));
-            horizontalLayout.AddChild(new Rect2Component(new ColorRgba(0, 0.5f, 0, 1)));
-            horizontalLayout.AddChild(new Rect2Component(new ColorRgba(0, 0, 1, 1)));
-            application.RootComponent.AddChild(new Rect2Component(new ColorRgba(0, 1, 0, 1)));
-            application.RootComponent.AddChild(new Rect2Component(new ColorRgba(0, 0, 1, 1)));
+            // var verticalLayoutEvenSpaceComponent = new VerticalLayoutEvenSpaceComponent();
+            // application.RootComponent = verticalLayoutEvenSpaceComponent;
+            
+            // application.RootComponent.SetPositionAndSize(0, 0, application.MainWindow.Width, application.MainWindow.Height);
+            //
+            // var horizontalLayout = new HorizontalLayoutEvenSpaceComponent();
+            // application.RootComponent.AddChild(horizontalLayout);
+            // horizontalLayout.AddChild(new Rect2Component(new ColorRgba(1, 0, 0, 1)));
+            // horizontalLayout.AddChild(new Rect2Component(new ColorRgba(0, 0.5f, 0, 1)));
+            // horizontalLayout.AddChild(new Rect2Component(new ColorRgba(0, 0, 1, 1)));
+            // application.RootComponent.AddChild(new Rect2Component(new ColorRgba(0, 1, 0, 1)));
+            // application.RootComponent.AddChild(new Rect2Component(new ColorRgba(0, 0, 1, 1)));
 
             application.Run();
 

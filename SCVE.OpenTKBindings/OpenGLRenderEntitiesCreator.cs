@@ -29,14 +29,14 @@ namespace SCVE.OpenTKBindings
             return new OpenGLShader(source, type);
         }
 
-        public Program CreateProgram()
+        public ShaderProgram CreateProgram()
         {
-            return new OpenGLProgram();
+            return new OpenGLShaderProgram();
         }
 
-        public Program CreateProgram(byte[] binary, int extension)
+        public ShaderProgram CreateProgram(byte[] binary, int extension)
         {
-            return new OpenGLProgram(binary, extension);
+            return new OpenGLShaderProgram(binary, extension);
         }
 
         public Texture CreateTexture(TextureData textureData)

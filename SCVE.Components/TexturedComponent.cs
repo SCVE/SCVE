@@ -9,7 +9,7 @@ namespace SCVE.Components
     public class TexturedComponent : Component
     {
         private readonly VertexArray _vertexArray;
-        private readonly Program _program;
+        private readonly ShaderProgram _shaderProgram;
         private readonly Texture _texture;
         
         public TexturedComponent()
@@ -84,16 +84,16 @@ namespace SCVE.Components
             vertexShader.Compile();
             fragmentShader.Compile();
 
-            _program = Application.Instance.RenderEntitiesCreator.CreateProgram();
+            _shaderProgram = Application.Instance.RenderEntitiesCreator.CreateProgram();
 
-            _program.AttachShader(vertexShader);
-            _program.AttachShader(fragmentShader);
-            _program.Link();
+            _shaderProgram.AttachShader(vertexShader);
+            _shaderProgram.AttachShader(fragmentShader);
+            _shaderProgram.Link();
 
-            _program.DetachShader(vertexShader);
-            _program.DetachShader(fragmentShader);
+            _shaderProgram.DetachShader(vertexShader);
+            _shaderProgram.DetachShader(fragmentShader);
 
-            using (var textureData = Application.Instance.TextureLoader.Load("assets/texture_squares_1024_1024.png"))
+            using (var textureData = Application.Instance.TextureLoader.Load("assets/Font/arial/atlas.png"))
             {
                 _texture = Application.Instance.RenderEntitiesCreator.CreateTexture(textureData);
             }
@@ -103,7 +103,7 @@ namespace SCVE.Components
         {
             _texture.Bind(0);
             
-            _program.Bind();
+            _shaderProgram.Bind();
             renderer.RenderSolid(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)

@@ -9,27 +9,34 @@ namespace SCVE.Core.App
     {
         public IRenderer Renderer { get; set; }
 
-        public FileLoader FileLoader { get; set; }
+        public FileLoaders FileLoaders { get; set; }
 
         public IDeltaTimeProvider DeltaTimeProvider { get; set; }
 
         public ScveWindow Window { get; set; }
-        
+
         public InputBase Input { get; set; }
-        
+
         public IRenderEntitiesCreator RenderEntitiesCreator { get; set; }
-        
+
         public ITextureLoader TextureLoader { get; set; }
-        
-        public ApplicationInit(IRenderer renderer, FileLoader fileLoader, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator, ITextureLoader textureLoader)
+
+        public IFontAtlasGenerator FontAtlasGenerator { get; set; }
+
+        public ApplicationInit(IRenderer renderer, FileLoaders fileLoaders, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator, ITextureLoader textureLoader, IFontAtlasGenerator fontAtlasGenerator)
         {
             Renderer = renderer;
-            FileLoader = fileLoader;
+            FileLoaders = fileLoaders;
             DeltaTimeProvider = deltaTimeProvider;
             Window = window;
             Input = input;
             RenderEntitiesCreator = renderEntitiesCreator;
             TextureLoader = textureLoader;
+            FontAtlasGenerator = fontAtlasGenerator;
+        }
+
+        protected ApplicationInit()
+        {
         }
     }
 }

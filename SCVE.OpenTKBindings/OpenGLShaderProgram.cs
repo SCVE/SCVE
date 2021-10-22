@@ -9,19 +9,19 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.OpenTKBindings
 {
-    public class OpenGLProgram : Program
+    public class OpenGLShaderProgram : ShaderProgram
     {
         private Dictionary<string, int> _uniformLocations = new();
 
-        public OpenGLProgram()
+        public OpenGLShaderProgram()
         {
-            Logger.Construct(nameof(OpenGLProgram));
+            Logger.Construct(nameof(OpenGLShaderProgram));
             Id = GL.CreateProgram();
         }
 
-        public OpenGLProgram(byte[] binary, int extension)
+        public OpenGLShaderProgram(byte[] binary, int extension)
         {
-            Logger.Construct(nameof(OpenGLProgram));
+            Logger.Construct(nameof(OpenGLShaderProgram));
             Id = GL.CreateProgram();
 
             GL.ProgramBinary(Id, (BinaryFormat)extension, binary, binary.Length);

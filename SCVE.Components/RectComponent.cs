@@ -8,7 +8,7 @@ namespace SCVE.Components
     public class RectComponent : Component
     {
         private readonly VertexArray _vertexArray;
-        private readonly Program _program;
+        private readonly ShaderProgram _shaderProgram;
         private ColorRgba _colorRgba;
 
         public RectComponent(ColorRgba colorRgba)
@@ -65,21 +65,21 @@ namespace SCVE.Components
             vertexShader.Compile();
             fragmentShader.Compile();
 
-            _program = Application.Instance.RenderEntitiesCreator.CreateProgram();
+            _shaderProgram = Application.Instance.RenderEntitiesCreator.CreateProgram();
 
-            _program.AttachShader(vertexShader);
-            _program.AttachShader(fragmentShader);
-            _program.Link();
+            _shaderProgram.AttachShader(vertexShader);
+            _shaderProgram.AttachShader(fragmentShader);
+            _shaderProgram.Link();
 
-            _program.DetachShader(vertexShader);
-            _program.DetachShader(fragmentShader);
+            _shaderProgram.DetachShader(vertexShader);
+            _shaderProgram.DetachShader(fragmentShader);
         }
 
         public override void Render(IRenderer renderer)
         {
-            _program.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
+            _shaderProgram.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
 
-            _program.Bind();
+            _shaderProgram.Bind();
             renderer.RenderSolid(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)

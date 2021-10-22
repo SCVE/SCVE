@@ -6,13 +6,13 @@ namespace SCVE.Core.Services
 {
     public class ShaderProgramCache
     {
-        private Dictionary<string, Program> _programs = new();
+        private Dictionary<string, ShaderProgram> _programs = new();
         
-        public Program LoadOrCache(string name)
+        public ShaderProgram LoadOrCache(string name)
         {
             if (_programs.ContainsKey(name)) return _programs[name];
             
-            var program = Application.Instance.FileLoader.LoadProgram(name);
+            var program = Application.Instance.FileLoaders.Program.Load(name);
             _programs.Add(name, program);
             return program;
         }

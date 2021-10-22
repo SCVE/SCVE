@@ -48,6 +48,9 @@ namespace SCVE.OpenTKBindings
             }
 
             _window = GLFW.CreateWindow(props.Width, props.Height, props.Title, null, null);
+            
+            GLFW.WindowHint(WindowHintInt.Samples, 4);
+            
             Handle = new IntPtr(_window);
             GLFW.MakeContextCurrent(_window);
             _glfwWindowCount++;

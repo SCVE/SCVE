@@ -6,14 +6,11 @@ namespace SCVE.OpenTKBindings
 {
     public class OpenGLTexture : Texture
     {
-        private int _width;
-        private int _height;
-
         public OpenGLTexture(TextureData data)
         {
             Logger.Construct(nameof(OpenGLTexture));
-            _width = data.Width;
-            _height = data.Height;
+            Width = data.Width;
+            Height = data.Height;
             Id = GL.GenTexture();
             
             // Hazel implementation
@@ -25,15 +22,15 @@ namespace SCVE.OpenTKBindings
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
             
             GL.TexImage2D(
                 target: TextureTarget.Texture2D,
                 level: 0,
                 internalformat: PixelInternalFormat.Rgba,
-                width: _width,
-                height: _height,
+                width: Width,
+                height: Height,
                 border: 0,
                 format: PixelFormat.Rgba,
                 type: PixelType.UnsignedByte,
