@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using SCVE.Core.App;
 using SCVE.Core.Entities;
+using SCVE.Core.Loading;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;

@@ -1,5 +1,6 @@
 ﻿using System;
 using SCVE.Core.Entities;
+using SCVE.Core.Loading;
 using SCVE.Core.Primitives;
 
 namespace SCVE.Core.Rendering

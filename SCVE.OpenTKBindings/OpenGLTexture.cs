@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using SCVE.Core.Loading;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 
@@ -19,8 +20,8 @@ namespace SCVE.OpenTKBindings
             // GL.TextureSubImage2D(Id, 0, 0, 0, data.Width, data.Height, PixelFormat.Rgba, PixelType.UnsignedByte, data.RgbaPixels);
 
             GL.BindTexture(TextureTarget.Texture2D, Id);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);

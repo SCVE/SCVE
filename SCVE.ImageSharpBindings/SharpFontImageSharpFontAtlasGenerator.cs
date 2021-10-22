@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using SCVE.Core.Loading;
 using SCVE.Core.Services;
 using SCVE.Core.Texts;
 using SCVE.Core.Utilities;

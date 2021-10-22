@@ -1,5 +1,6 @@
 ﻿using SCVE.Core;
 using SCVE.Core.App;
+using SCVE.Core.Loading;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
@@ -16,8 +17,8 @@ namespace SCVE.Components
 
         public TextViaAtlasComponent()
         {
+            // TODO: Extract font logic into separate service
             Application.Instance.FontAtlasGenerator.Generate("arial.ttf", Alphabets.Default, 100);
-            // using var textureData = Application.Instance.TextureLoader.Load("assets/texture_squares_1024_1024.png");
             using var textureData = Application.Instance.TextureLoader.Load("assets/Font/arial/atlas.png");
 
             _texture = Application.Instance.RenderEntitiesCreator.CreateTexture(textureData);
@@ -26,32 +27,44 @@ namespace SCVE.Components
 
             _shaderProgram = Application.Instance.ShaderProgramCache.LoadOrCache("Text");
 
+            // NOTE: for text alignment we can precalculate the sum of all advances (width of the text)
+            
             SetText("Bird Egop is Super Cool");
 
-            ModelMatrix.MakeIdentity().Multiply(ScveMatrix4X4.CreateTranslation(50, 50));
+            ModelMatrix.MakeIdentity().Multiply(ScveMatrix4X4.CreateScale(0.14f, 0.14f)).Multiply(ScveMatrix4X4.CreateTranslation(50, 50));
         }
 
         public void SetText(string text)
         {
             float x = 0f;
 
+            // We have 4 vertices for each character (quad) of 3 floats each
             float[] vertices = new float[text.Length * 4 * 3];
-            int[] indices = new int[text.Length * 6];
+            
+            // We have 2 triangles in each character (quad) of 3 vertices each
+            int[] indices = new int[text.Length * 2 * 3];
+            
+            // We have 4 texture coordinate for each character (quad) of 2 floats each
             float[] textureCoordinates = new float[text.Length * 4 * 2];
 
             for (var i = 0; i < text.Length; i++)
             {
                 var chunk = AtlasData.Chunks[(int)text[i]];
 
+                // NOTE: we invert the Y axis, because Textures have (0,0) at top left, but OpenGL have (0,0) at bottom left
                 float textureLeft = (float)chunk.TextureX / _texture.Width;
                 float textureTop = 1 - (float)chunk.TextureY / _texture.Height;
-                float textureRight = (float)(chunk.TextureX + AtlasData.ChunkWidth) / _texture.Width;
-                float textureBottom = 1 - (float)(chunk.TextureY + AtlasData.ChunkWidth) / _texture.Height;
+                float textureRight = (float)(chunk.TextureX + AtlasData.ChunkSize) / _texture.Width;
+                float textureBottom = 1 - (float)(chunk.TextureY + AtlasData.ChunkSize) / _texture.Height;
 
+                // NOTE: When we overlap trianles with same Z, OpenGL have a collision, and stops rendering them correctly
+                // So I simply add a small Z offset to each character quad (some kind of stack), so OpenGL can sort the quads and render them correctly
+                float zOffset = i * 0.005f;
+                
                 // top left
                 vertices[i * 12 + 0] = x;
-                vertices[i * 12 + 1] = AtlasData.ChunkWidth - chunk.BearingY;
-                vertices[i * 12 + 2] = i * 0.005f;
+                vertices[i * 12 + 1] = AtlasData.ChunkSize - chunk.BearingY;
+                vertices[i * 12 + 2] = zOffset;
 
                 textureCoordinates[i * 8 + 0] = textureLeft;
                 textureCoordinates[i * 8 + 1] = textureTop;
@@ -60,9 +73,9 @@ namespace SCVE.Components
                 // textureCoordinates[i * 8 + 1] = 1;
 
                 // top right
-                vertices[i * 12 + 3] = x + AtlasData.ChunkWidth;
-                vertices[i * 12 + 4] = AtlasData.ChunkWidth - chunk.BearingY;
-                vertices[i * 12 + 5] = i * 0.005f;
+                vertices[i * 12 + 3] = x + AtlasData.ChunkSize;
+                vertices[i * 12 + 4] = AtlasData.ChunkSize - chunk.BearingY;
+                vertices[i * 12 + 5] = zOffset;
 
                 textureCoordinates[i * 8 + 2] = textureRight;
                 textureCoordinates[i * 8 + 3] = textureTop;
@@ -71,9 +84,9 @@ namespace SCVE.Components
                 // textureCoordinates[i * 8 + 3] = 1;
 
                 // Bottom right
-                vertices[i * 12 + 6] = x + AtlasData.ChunkWidth;
-                vertices[i * 12 + 7] = AtlasData.ChunkWidth - chunk.BearingY + AtlasData.ChunkWidth;
-                vertices[i * 12 + 8] = i * 0.005f;
+                vertices[i * 12 + 6] = x + AtlasData.ChunkSize;
+                vertices[i * 12 + 7] = AtlasData.ChunkSize - chunk.BearingY + AtlasData.ChunkSize;
+                vertices[i * 12 + 8] = zOffset;
 
                 textureCoordinates[i * 8 + 4] = textureRight;
                 textureCoordinates[i * 8 + 5] = textureBottom;
@@ -83,8 +96,8 @@ namespace SCVE.Components
 
                 // Bottom left
                 vertices[i * 12 + 9] = x;
-                vertices[i * 12 + 10] = AtlasData.ChunkWidth - chunk.BearingY + AtlasData.ChunkWidth;
-                vertices[i * 12 + 11] = i * 0.005f;
+                vertices[i * 12 + 10] = AtlasData.ChunkSize - chunk.BearingY + AtlasData.ChunkSize;
+                vertices[i * 12 + 11] = zOffset;
 
                 textureCoordinates[i * 8 + 6] = textureLeft;
                 textureCoordinates[i * 8 + 7] = textureBottom;

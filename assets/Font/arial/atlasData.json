@@ -1,5 +1,5 @@
 {
-  "ChunkWidth": 100,
+  "ChunkSize": 100,
   "Chunks": {
     "32": {
       "Advance": 50,

@@ -1,4 +1,6 @@
-﻿namespace SCVE.Core.Rendering
+﻿using SCVE.Core.Loading;
+
+namespace SCVE.Core.Rendering
 {
     public interface IRenderEntitiesCreator
     {

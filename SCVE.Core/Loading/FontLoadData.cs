@@ -1,6 +1,6 @@
 ﻿using SCVE.Core.Rendering;
 
-namespace SCVE.Core.Texts
+namespace SCVE.Core.Loading
 {
     public class FontLoadData
     {

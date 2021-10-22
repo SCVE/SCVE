@@ -12,7 +12,7 @@ namespace SCVE.Core.Services
         {
             if (_programs.ContainsKey(name)) return _programs[name];
             
-            var program = Application.Instance.FileLoaders.Program.Load(name);
+            var program = Application.Instance.FileLoaders.ShaderProgram.Load(name);
             _programs.Add(name, program);
             return program;
         }

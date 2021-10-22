@@ -1,7 +1,7 @@
 ﻿using System;
 using SCVE.Core.Utilities;
 
-namespace SCVE.Core.Rendering
+namespace SCVE.Core.Loading
 {
     public class TextureData : IDisposable
     {

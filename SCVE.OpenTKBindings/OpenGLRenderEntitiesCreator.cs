@@ -1,4 +1,5 @@
-﻿using SCVE.Core.Rendering;
+﻿using SCVE.Core.Loading;
+using SCVE.Core.Rendering;
 
 namespace SCVE.OpenTKBindings
 {

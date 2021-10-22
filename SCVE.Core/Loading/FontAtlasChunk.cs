@@ -1,4 +1,4 @@
-﻿namespace SCVE.Core.Texts
+﻿namespace SCVE.Core.Loading
 {
     public class FontAtlasChunk
     {
@@ -18,12 +18,12 @@
         public int TextureY { get; set; }
 
         /// <summary>
-        /// Offset from left of the chunk
+        /// Offset from the baseline (X should be always zero)
         /// </summary>
         public float BearingX { get; set; }
 
         /// <summary>
-        /// Offset from top of the chunk
+        /// Offset from the baseline
         /// </summary>
         public float BearingY { get; set; }
 

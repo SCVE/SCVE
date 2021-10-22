@@ -1,4 +1,4 @@
-﻿namespace SCVE.Core.Entities
+﻿namespace SCVE.Core.Loading
 {
     public class ShaderProgramBinaryData
     {

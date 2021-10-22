@@ -3,7 +3,7 @@
 namespace SCVE.Core.Rendering
 {
     /// <summary>
-    /// An array of indices of vertex, that forms triangles
+    /// An array of indices of vertices, that forms triangles
     /// </summary>
     public abstract class IndexBuffer : IRenderEntity, IBindable, IDisposable
     {
