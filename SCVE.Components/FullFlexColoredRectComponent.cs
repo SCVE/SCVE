@@ -2,41 +2,29 @@
 using SCVE.Core.App;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Components
 {
-    public class FullFlexComponent : Component
+    public class FullFlexColoredRectComponent : Component
     {
         private readonly VertexArray _vertexArray;
         private readonly ShaderProgram _shaderProgram;
+        private ColorRgba _colorRgba;
 
-        public FullFlexComponent()
+        public FullFlexColoredRectComponent(ColorRgba colorRgba)
         {
-            _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
-
-            ModelMatrix.Multiply(ScveMatrix4X4.CreateScale(200, 100, 1f));
-
-            // var rectGeometry = GeometryGenerator.GenerateRect(Rect);
-            var rectGeometry = GeometryGenerator.GenerateUnitSquare();
-
-            var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
-
-            buffer.Layout = new VertexBufferLayout(new()
-            {
-                new(VertexBufferElementType.Float3, "a_Position")
-            });
-            _vertexArray.AddVertexBuffer(buffer);
-
-            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(rectGeometry.Indices);
-
-            _vertexArray.SetIndexBuffer(indexBuffer);
+            Logger.Construct(nameof(FullFlexColoredRectComponent));
+            _colorRgba = colorRgba;
+            
+            _vertexArray = Application.Instance.VertexArrayCache.Get("Positive Unit");
 
             _shaderProgram = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
         }
 
         public override void Render(IRenderer renderer)
         {
-            _shaderProgram.SetVector4("u_Color", 1, 1, 1, 1);
+            _shaderProgram.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
             
             _shaderProgram.SetMatrix4("u_Model",
                 ModelMatrix

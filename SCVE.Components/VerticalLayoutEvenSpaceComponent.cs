@@ -1,6 +1,4 @@
-﻿using SCVE.Core;
-
-namespace SCVE.Components
+﻿namespace SCVE.Components
 {
     public class VerticalLayoutEvenSpaceComponent : LayoutComponent
     {
