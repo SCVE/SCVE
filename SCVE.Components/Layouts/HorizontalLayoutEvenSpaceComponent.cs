@@ -1,4 +1,4 @@
-﻿namespace SCVE.Components
+﻿namespace SCVE.Components.Layouts
 {
     public class HorizontalLayoutEvenSpaceComponent : LayoutComponent
     {

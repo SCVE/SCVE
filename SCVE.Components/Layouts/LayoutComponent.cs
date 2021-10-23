@@ -1,10 +1,13 @@
 ﻿using SCVE.Core;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Components
+namespace SCVE.Components.Layouts
 {
     public abstract class LayoutComponent : Component
     {
+        /// <summary>
+        /// Method is supposed to resize first depth level children 
+        /// </summary>
         protected abstract void ConstraintChildren();
         
         protected override void OnResized()
