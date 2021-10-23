@@ -33,6 +33,10 @@ namespace SCVE.OpenTKBindings
             if (_uniformLocations.ContainsKey(name)) return _uniformLocations[name];
 
             var location = GL.GetUniformLocation(Id, name);
+            if (location == -1)
+            {
+                Logger.Warn($"A uniform ({name}) was not found in the current program");
+            }
             _uniformLocations[name] = location;
 
             return _uniformLocations[name];
