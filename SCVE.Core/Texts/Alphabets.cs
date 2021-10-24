@@ -1,6 +1,6 @@
 ﻿namespace SCVE.Core.Texts
 {
-    public class Alphabets
+    public static class Alphabets
     {
         /// <summary>
         /// Default alphabet with basically all common chars (EN + RU + Digits + Controls)

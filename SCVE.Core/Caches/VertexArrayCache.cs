@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Core.Services
+namespace SCVE.Core.Caches
 {
     public class VertexArrayCache
     {
-        private VertexArray _default;
         private Dictionary<string, VertexArray> _vertexArrays = new();
 
         public VertexArray Get(string name)
         {
-            return _vertexArrays.ContainsKey(name) ? _vertexArrays[name] : _default;
+            return _vertexArrays.ContainsKey(name) ? _vertexArrays[name] : null;
         }
 
         public void AddOrReplace(string name, VertexArray vertexArray)
@@ -22,11 +21,6 @@ namespace SCVE.Core.Services
                 _vertexArrays.Remove(name);
             }
             _vertexArrays.Add(name, vertexArray);
-        }
-
-        public void SetDefault(VertexArray vertexArray)
-        {
-            _default = vertexArray;
         }
     }
 }

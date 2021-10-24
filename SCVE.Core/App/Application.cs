@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
+using SCVE.Core.Caches;
 using SCVE.Core.Entities;
 using SCVE.Core.Input;
+using SCVE.Core.Loading.Loaders;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Services;
@@ -28,14 +30,11 @@ namespace SCVE.Core.App
         public InputBase Input => _scope.Input;
         public IRenderEntitiesCreator RenderEntitiesCreator => _scope.RenderEntitiesCreator;
 
-        public ITextureLoader TextureLoader => _scope.TextureLoader;
-
         public IFontAtlasGenerator FontAtlasGenerator => _scope.FontAtlasGenerator;
 
         public ViewProjectionAccessor ViewProjectionAccessor;
 
-        public ShaderProgramCache ShaderProgramCache;
-        public VertexArrayCache VertexArrayCache;
+        public CachesContainer Cache;
 
         public Component RootComponent { get; set; }
 
@@ -56,8 +55,7 @@ namespace SCVE.Core.App
             _isInited = true;
 
             application.ViewProjectionAccessor = new();
-            application.ShaderProgramCache = new();
-            application.VertexArrayCache = new();
+            application.Cache = new();
 
             return application;
         }

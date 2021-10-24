@@ -69,7 +69,6 @@ namespace SCVE.Core.Utilities
             Fatal(string.Format(format, args));
         }
 
-
         public static void Construct(string name)
         {
 #if LOG_CONSTRUCT

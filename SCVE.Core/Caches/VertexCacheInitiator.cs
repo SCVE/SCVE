@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Core.Services
+namespace SCVE.Core.Caches
 {
     public class VertexCacheInitiator
     {
-        private VertexArray _default;
         private Dictionary<string, VertexArray> _vertexArrays = new();
 
         public VertexCacheInitiator()
@@ -19,19 +18,12 @@ namespace SCVE.Core.Services
             return this;
         }
 
-        public VertexCacheInitiator WithDefault(VertexArray vertexArray)
-        {
-            _default = vertexArray;
-            return this;
-        }
-
         public void Init(VertexArrayCache vertexArrayCache)
         {
             foreach (var keyValuePair in _vertexArrays)
             {
                 vertexArrayCache.AddOrReplace(keyValuePair.Key, keyValuePair.Value);
             }
-            vertexArrayCache.SetDefault(_default);
         }
     }
 }

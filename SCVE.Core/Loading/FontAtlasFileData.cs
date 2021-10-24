@@ -2,7 +2,7 @@
 
 namespace SCVE.Core.Loading
 {
-    public class FontAtlasData
+    public class FontAtlasFileData
     {
         /// <summary>
         /// PixelWidth of each character in a Font Atlas
@@ -16,7 +16,7 @@ namespace SCVE.Core.Loading
         /// </summary>
         public Dictionary<int, FontAtlasChunk> Chunks { get; set; }
 
-        public FontAtlasData(int chunkSize)
+        public FontAtlasFileData(int chunkSize)
         {
             ChunkSize = chunkSize;
             Chunks = new Dictionary<int, FontAtlasChunk>();

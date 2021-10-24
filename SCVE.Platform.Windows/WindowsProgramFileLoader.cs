@@ -3,17 +3,17 @@ using System.IO;
 using System.Linq;
 using SCVE.Core;
 using SCVE.Core.App;
+using SCVE.Core.Loading.Loaders;
 using SCVE.Core.Rendering;
-using SCVE.Core.Services;
 using SCVE.Core.Utilities;
 
 namespace SCVE.Platform.Windows
 {
-    public class WindowsProgramFileLoader : FileLoader<ShaderProgram>
+    public class WindowsProgramFileLoader : IShaderProgramLoader
     {
         private static readonly string BaseDirectory = $"assets/{nameof(ShaderProgram)}";
 
-        public override ShaderProgram Load(string fileName)
+        public ShaderProgram Load(string fileName)
         {
             // Note: it's easier to store 16 based extension because of the length
             

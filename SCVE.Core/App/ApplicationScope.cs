@@ -2,6 +2,7 @@
 using SCVE.Core.Entities;
 using SCVE.Core.Input;
 using SCVE.Core.Lifecycle;
+using SCVE.Core.Loading.Loaders;
 using SCVE.Core.Rendering;
 using SCVE.Core.Services;
 
@@ -22,7 +23,6 @@ namespace SCVE.Core.App
         public InputBase Input { get; private set; }
         
         public IRenderEntitiesCreator RenderEntitiesCreator { get; private set; }
-        public ITextureLoader TextureLoader { get; set; }
         public IFontAtlasGenerator FontAtlasGenerator { get; set; }
 
         public ApplicationScope()
@@ -133,12 +133,6 @@ namespace SCVE.Core.App
             RenderEntitiesCreator = renderEntitiesCreator;
             return this;
         }
-
-        public ApplicationScope WithTextureLoader(ITextureLoader textureLoader)
-        {
-            TextureLoader = textureLoader;
-            return this;
-        }
         
         public ApplicationScope WithFontAtlasGenerator(IFontAtlasGenerator fontAtlasGenerator)
         {
@@ -154,7 +148,6 @@ namespace SCVE.Core.App
                 .WithDeltaTimeProvider(applicationInit.DeltaTimeProvider)
                 .WithInput(applicationInit.Input)
                 .WithRenderEntitiesProvider(applicationInit.RenderEntitiesCreator)
-                .WithTextureLoader(applicationInit.TextureLoader)
                 .WithFontAtlasGenerator(applicationInit.FontAtlasGenerator);
         }
     }

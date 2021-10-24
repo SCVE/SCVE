@@ -2,7 +2,7 @@
 using SCVE.Core.App;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Core.Services
+namespace SCVE.Core.Caches
 {
     public class ShaderProgramCache
     {

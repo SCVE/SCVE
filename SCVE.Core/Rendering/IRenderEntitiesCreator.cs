@@ -18,6 +18,6 @@ namespace SCVE.Core.Rendering
         
         ShaderProgram CreateProgram(byte[] binary, int extension);
 
-        Texture CreateTexture(TextureData textureData);
+        Texture CreateTexture(TextureFileData textureFileData);
     }
 }

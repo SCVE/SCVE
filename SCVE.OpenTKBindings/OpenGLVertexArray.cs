@@ -68,6 +68,13 @@ namespace SCVE.OpenTKBindings
         {
             Logger.Trace("OpenGLVertexArray.Dispose()");
             GL.DeleteVertexArray(Id);
+            
+            foreach (var vertexBuffer in VertexBuffers)
+            {
+                vertexBuffer.Dispose();
+            }
+            
+            IndexBuffer.Dispose();
         }
     }
 }

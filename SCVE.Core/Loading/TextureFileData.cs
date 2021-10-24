@@ -3,16 +3,16 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Core.Loading
 {
-    public class TextureData : IDisposable
+    public class TextureFileData : IDisposable
     {
         public int Width { get; set; }
         public int Height { get; set; }
 
         public byte[] RgbaPixels { get; set; }
 
-        public TextureData(int width, int height, byte[] rgbaPixels)
+        public TextureFileData(int width, int height, byte[] rgbaPixels)
         {
-            Logger.Construct(nameof(TextureData));
+            Logger.Construct(nameof(TextureFileData));
             Width = width;
             Height = height;
             RgbaPixels = rgbaPixels;

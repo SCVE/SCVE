@@ -11,4 +11,5 @@ uniform vec2 u_Color;
 void main()
 {
     color = texture(texture0, v_TextureCoordinate);
+    // color = vec4(1,1,1,1);
 }

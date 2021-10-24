@@ -17,9 +17,9 @@ namespace SCVE.Components
             Logger.Construct(nameof(FullFlexColoredRectComponent));
             _colorRgba = colorRgba;
             
-            _vertexArray = Application.Instance.VertexArrayCache.Get("Positive Unit");
+            _vertexArray = Application.Instance.Cache.VertexArray.Get("Positive Unit");
 
-            _shaderProgram = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
+            _shaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("FlatColor_MVP_Uniform");
         }
 
         public override void Render(IRenderer renderer)

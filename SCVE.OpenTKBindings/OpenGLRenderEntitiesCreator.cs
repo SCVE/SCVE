@@ -40,9 +40,9 @@ namespace SCVE.OpenTKBindings
             return new OpenGLShaderProgram(binary, extension);
         }
 
-        public Texture CreateTexture(TextureData textureData)
+        public Texture CreateTexture(TextureFileData textureFileData)
         {
-            return new OpenGLTexture(textureData);
+            return new OpenGLTexture(textureFileData);
         }
     }
 }

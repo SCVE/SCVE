@@ -34,11 +34,11 @@ namespace SCVE.ImageSharpBindings
 
             int usedChunks = 0;
 
-            FontAtlasData fontAtlasData = new FontAtlasData(chunkWidth);
+            FontAtlasFileData fontAtlasFileData = new FontAtlasFileData(chunkWidth);
 
             HashSet<char> atlasChars = new HashSet<char>();
 
-            fontAtlasData.Add(
+            fontAtlasFileData.Add(
                 c: (int)' ',
                 new FontAtlasChunk(
                     advance: fontSize / 2,
@@ -76,7 +76,7 @@ namespace SCVE.ImageSharpBindings
 
                 atlas.Mutate(a => a.DrawImage(image, new Point(chunkX, chunkY), 1f));
 
-                fontAtlasData.Add(
+                fontAtlasFileData.Add(
                     c: (int)alphabet[i],
                     new FontAtlasChunk(
                         advance: glyph.HorizontalMetrics.Advance,
@@ -87,14 +87,14 @@ namespace SCVE.ImageSharpBindings
                     ));
             }
 
-            atlas.Save($"{BasePath}/{fontName}/atlas.png");
+            atlas.Save($"{BasePath}/{fontName}/{fontSize}.png");
 
-            var json = JsonSerializer.Serialize(fontAtlasData, new JsonSerializerOptions()
+            var json = JsonSerializer.Serialize(fontAtlasFileData, new JsonSerializerOptions()
             {
                 WriteIndented = true
             });
 
-            File.WriteAllText($"{BasePath}/{fontName}/atlasData.json", json);
+            File.WriteAllText($"{BasePath}/{fontName}/{fontSize}.json", json);
         }
 
         public unsafe Surface RenderGlyph(Glyph glyph)

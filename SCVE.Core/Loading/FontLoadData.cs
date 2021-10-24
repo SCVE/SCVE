@@ -1,17 +1,15 @@
-﻿using SCVE.Core.Rendering;
-
-namespace SCVE.Core.Loading
+﻿namespace SCVE.Core.Loading
 {
     public class FontLoadData
     {
-        public FontAtlasData FontAtlasData { get; set; }
+        public FontAtlasFileData FontAtlasFileData { get; set; }
 
-        public TextureData AtlasTextureData { get; set; }
+        public TextureFileData AtlasTextureFileData { get; set; }
 
-        public FontLoadData(FontAtlasData fontAtlasData, TextureData atlasTextureData)
+        public FontLoadData(FontAtlasFileData fontAtlasFileData, TextureFileData atlasTextureFileData)
         {
-            FontAtlasData = fontAtlasData;
-            AtlasTextureData = atlasTextureData;
+            FontAtlasFileData = fontAtlasFileData;
+            AtlasTextureFileData = atlasTextureFileData;
         }
     }
 }

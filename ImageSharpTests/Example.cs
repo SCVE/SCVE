@@ -40,7 +40,7 @@ namespace ImageSharpTests
 
             int usedChunks = 0;
 
-            FontAtlasData fontAtlasData = new FontAtlasData(chunkWidth);
+            FontAtlasFileData fontAtlasFileData = new FontAtlasFileData(chunkWidth);
 
             HashSet<char> atlasChars = new HashSet<char>();
 
@@ -71,7 +71,7 @@ namespace ImageSharpTests
 
                 atlas.Mutate(a => a.DrawImage(image, new Point(chunkX, chunkY), 1f));
 
-                fontAtlasData.Add(
+                fontAtlasFileData.Add(
                     c: (int)alphabet[i],
                     new FontAtlasChunk(
                         advance: glyph.HorizontalMetrics.Advance,
@@ -84,7 +84,7 @@ namespace ImageSharpTests
 
             atlas.Save($"assets/Fonts/arial/atlas.png");
 
-            var json = JsonSerializer.Serialize(fontAtlasData, new JsonSerializerOptions()
+            var json = JsonSerializer.Serialize(fontAtlasFileData, new JsonSerializerOptions()
             {
                 WriteIndented = true
             });

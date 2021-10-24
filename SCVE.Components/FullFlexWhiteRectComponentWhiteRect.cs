@@ -31,7 +31,7 @@ namespace SCVE.Components
 
             _vertexArray.SetIndexBuffer(indexBuffer);
 
-            _shaderProgram = Application.Instance.ShaderProgramCache.LoadOrCache("FlatColor_MVP_Uniform");
+            _shaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("FlatColor_MVP_Uniform");
         }
 
         public override void Render(IRenderer renderer)

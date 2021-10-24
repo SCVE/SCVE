@@ -93,7 +93,7 @@ namespace SCVE.Components
             _shaderProgram.DetachShader(vertexShader);
             _shaderProgram.DetachShader(fragmentShader);
 
-            using (var textureData = Application.Instance.TextureLoader.Load("assets/Font/arial/atlas.png"))
+            using (var textureData = Application.Instance.FileLoaders.Texture.Load("assets/Font/arial/atlas.png"))
             {
                 _texture = Application.Instance.RenderEntitiesCreator.CreateTexture(textureData);
             }

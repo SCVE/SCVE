@@ -7,11 +7,11 @@ namespace SCVE.OpenTKBindings
 {
     public class OpenGLTexture : Texture
     {
-        public OpenGLTexture(TextureData data)
+        public OpenGLTexture(TextureFileData fileData)
         {
             Logger.Construct(nameof(OpenGLTexture));
-            Width = data.Width;
-            Height = data.Height;
+            Width = fileData.Width;
+            Height = fileData.Height;
             Id = GL.GenTexture();
             
             // Hazel implementation
@@ -35,7 +35,7 @@ namespace SCVE.OpenTKBindings
                 border: 0,
                 format: PixelFormat.Rgba,
                 type: PixelType.UnsignedByte,
-                pixels: data.RgbaPixels
+                pixels: fileData.RgbaPixels
             );
         }
 
