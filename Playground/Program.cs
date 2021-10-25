@@ -1,18 +1,13 @@
 ﻿using System;
 using SCVE.Components;
-using SCVE.Components.Layouts;
 using SCVE.Core;
 using SCVE.Core.App;
 using SCVE.Core.Caches;
 using SCVE.Core.Entities;
-using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
-using SCVE.Core.Services;
-using SCVE.Core.Utilities;
 using SCVE.ImageSharpBindings;
 using SCVE.Null;
 using SCVE.OpenTKBindings;
-using SCVE.Platform.Windows;
 
 namespace Playground
 {

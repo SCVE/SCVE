@@ -7,13 +7,13 @@ namespace SCVE.Core.Rendering
         public int Id { get; protected set; }
 
         public int Width { get; set; }
-        
+
         public int Height { get; set; }
 
         public abstract void Bind(int slot);
-        
+
         public abstract void Unbind();
-        
+
         public abstract void Dispose();
     }
 }
