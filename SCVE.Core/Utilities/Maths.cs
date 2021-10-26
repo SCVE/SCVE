@@ -48,5 +48,11 @@ namespace SCVE.Core.Utilities
                     throw new ArgumentOutOfRangeException(nameof(value));
             }
         }
+
+        public static bool PointInRect(float x, float y, float width, float height, float px, float py)
+        {
+            return px >= x && px <= x + width &&
+                   py >= y && py <= y + height;
+        }
     }
 }

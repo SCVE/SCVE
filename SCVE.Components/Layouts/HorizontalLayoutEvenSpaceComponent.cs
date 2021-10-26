@@ -4,20 +4,32 @@
     {
         protected override void ConstraintChildren()
         {
-            var componentHeight = PixelHeight;
+            var cellHeight = PixelHeight;
 
-            var componentWidth = PixelWidth / Children.Count;
+            var cellWidth = PixelWidth / Children.Count;
+            
+            ValidateDividersCount();
 
             for (var index = 0; index < Children.Count; index++)
             {
                 var child = Children[index];
 
                 child.SetPositionAndSize(
-                    x: X + componentWidth * index,
+                    x: X + cellWidth * index,
                     y: Y,
-                    width: componentWidth,
-                    height: componentHeight
+                    width: cellWidth,
+                    height: cellHeight
                 );
+                
+                if (index != Children.Count - 1)
+                {
+                    Dividers[index].SetPositionAndSize(
+                        x: X + cellWidth * (index + 1) - Divider.DefaultWidth / 2,
+                        y: Y,
+                        width: Divider.DefaultWidth,
+                        height: cellHeight
+                    );
+                }
             }
         }
     }
