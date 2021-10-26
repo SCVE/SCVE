@@ -76,10 +76,10 @@ namespace SCVE.Components
                 float textureRight = (float)(chunk.TextureX + Font.Atlas.ChunkSize) / Font.Texture.Width;
                 float textureBottom = 1 - (float)(chunk.TextureY + Font.Atlas.ChunkSize) / Font.Texture.Height;
 
-                // NOTE: When we overlap trianles with same Z, OpenGL have a collision, and stops rendering them correctly
+                // NOTE: When we overlap trianles with same Z and have a Z-Depth Test, OpenGL have a collision, and stops rendering them correctly
                 // So I simply add a small Z offset to each character quad (some kind of stack), so OpenGL can sort the quads and render them correctly
                 // Visible like this [[[[  ] instead of  [[[]]]
-                float zOffset = i * 0.005f;
+                float zOffset = 0f; //i * 0.005f;
                 
                 // top left
                 vertices[i * 12 + 0] = x;

@@ -31,7 +31,10 @@ namespace SCVE.OpenTKBindings
 
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Enable(EnableCap.DepthTest);
+            
+            // NOTE: https://habr.com/ru/post/342610/
+            // GL.Enable(EnableCap.DepthTest);
+            
             GL.Enable(EnableCap.Multisample);
 
             Application.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
