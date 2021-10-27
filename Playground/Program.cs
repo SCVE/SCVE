@@ -1,9 +1,12 @@
 ﻿using System;
+using System.IO;
 using SCVE.Components;
+using SCVE.Components.Layouts;
 using SCVE.Core;
 using SCVE.Core.App;
 using SCVE.Core.Caches;
 using SCVE.Core.Entities;
+using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.ImageSharpBindings;
 using SCVE.Null;
@@ -15,6 +18,7 @@ namespace Playground
     {
         static void Main(string[] args)
         {
+
             var applicationInit = new ApplicationInitNull();
             applicationInit.Renderer = new OpenGLRenderer();
             applicationInit.DeltaTimeProvider = new GlfwDeltaTimeProvider();
@@ -35,22 +39,13 @@ namespace Playground
 
             // application.ViewProjectionAccessor.SetView(ScveMatrix4X4.Identity.Set(2, 3, -1));
 
-            var rootComponent = new TextViaAtlasComponent();
-            application.RootComponent = rootComponent;
+            // var rootComponent = new TextViaAtlasComponent();
+            // application.RootComponent = rootComponent;
 
-            // var verticalLayoutEvenSpaceComponent = new VerticalLayoutEvenSpaceComponent();
-            // application.RootComponent = verticalLayoutEvenSpaceComponent;
-            //
-            // application.RootComponent.SetPositionAndSize(0, 0, application.MainWindow.Width, application.MainWindow.Height);
-            //
-            // var horizontalLayout = new HorizontalLayoutEvenSpaceComponent();
-            // application.RootComponent.AddChild(horizontalLayout);
-            // horizontalLayout.AddChild(new FullFlexColoredRectComponent(new ColorRgba(1, 0, 0, 1)));
-            // horizontalLayout.AddChild(new FullFlexColoredRectComponent(new ColorRgba(0, 0.5f, 0, 1)));
-            // horizontalLayout.AddChild(new FullFlexColoredRectComponent(new ColorRgba(0, 0, 1, 1)));
-            // application.RootComponent.AddChild(new FullFlexColoredRectComponent(new ColorRgba(0, 1, 0, 1)));
-            // application.RootComponent.AddChild(new FullFlexColoredRectComponent(new ColorRgba(0, 0, 1, 1)));
-
+            application.RootComponent = UIBuilder.Build(File.ReadAllText("assets/UI/default.ui.xml"));
+            
+            application.RootComponent.SetPositionAndSize(0, 0, application.MainWindow.Width, application.MainWindow.Height);
+            
             application.Run();
 
             Console.WriteLine("Exiting");

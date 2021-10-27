@@ -7,7 +7,7 @@
             var cellHeight = PixelHeight;
 
             var cellWidth = PixelWidth / Children.Count;
-            
+
             ValidateDividersCount();
 
             for (var index = 0; index < Children.Count; index++)
@@ -20,7 +20,7 @@
                     width: cellWidth,
                     height: cellHeight
                 );
-                
+
                 if (index != Children.Count - 1)
                 {
                     Dividers[index].SetPositionAndSize(

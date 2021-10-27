@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<vertical-layout>
+    <horizontal-layout>
+        <color-rect r="1" g="0" b="0" a="1"/>
+        <color-rect r="0" g="0,5" b="0" a="1"/>
+        <color-rect r="0" g="0" b="1" a="1"/>
+        <color-rect r="1" g="0" b="1" a="1"/>
+    </horizontal-layout>
+    <color-rect r="0" g="1" b="0" a="1"/>
+    <color-rect r="0" g="0" b="1" a="1"/>
+    <text font-file-name="arial.ttf" font-size="28" text="hello"/>
+</vertical-layout>

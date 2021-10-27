@@ -37,6 +37,8 @@ namespace SCVE.Core.App
         public CachesContainer Cache;
 
         public Component RootComponent { get; set; }
+        
+        public Component ActiveComponent { get; set; }
 
         private Application(ApplicationInit init)
         {

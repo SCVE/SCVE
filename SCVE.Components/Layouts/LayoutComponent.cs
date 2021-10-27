@@ -30,7 +30,9 @@ namespace SCVE.Components.Layouts
             {
                 for (var i = 0; i < Children.Count - 1 - Dividers.Count; i++)
                 {
-                    Dividers.Add(new Divider());
+                    var divider = new Divider();
+                    divider.SetParent(this);
+                    Dividers.Add(divider);
                 }
             }
         }
@@ -45,10 +47,10 @@ namespace SCVE.Components.Layouts
         {
             if (component is not LayoutCell cell)
             {
-                component = new LayoutCell(component);
+                cell = new LayoutCell(component);
             }
 
-            base.AddChild(component);
+            base.AddChild(cell);
             ConstraintChildren();
         }
 

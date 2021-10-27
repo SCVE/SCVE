@@ -15,54 +15,64 @@ namespace SCVE.Components
         private VertexArray _vertexArray;
         private readonly ShaderProgram _shaderProgram;
 
-        private float _currentFontSize = 72;
 
-        public TextViaAtlasComponent()
+        private string _fontFileName;
+        private float _fontSize;
+        private string _text;
+
+        public TextViaAtlasComponent(string fontFileName, float fontSize, string text)
         {
+            Logger.Construct(nameof(TextViaAtlasComponent));
+            _fontFileName = fontFileName;
+            _fontSize = fontSize;
+            _text = text;
+
             _shaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("Text");
 
             // NOTE: for text alignment we can precalculate the sum of all advances (width of the text)
-            
-            ModelMatrix.MakeIdentity()
-                // .Multiply(ScveMatrix4X4.CreateScale(0.14f, 0.14f))
-                .Multiply(ScveMatrix4X4.CreateTranslation(50, 50));
-            
+
             Application.Instance.Input.Scroll += InputOnScroll;
 
-            Init();
+            Rebuild();
+        }
+
+        protected override void OnResized()
+        {
+            // We need to override this, because no scaling is needed for text
+            ModelMatrix.MakeIdentity().Multiply(ScveMatrix4X4.CreateTranslation(X, Y));
         }
 
         private void InputOnScroll(float arg1, float arg2)
         {
             Logger.Warn($"Scrolled {arg2}");
-            _currentFontSize += arg2;
-            Init();
+            _fontSize += arg2;
+            Rebuild();
         }
 
-        private void Init()
+        private void Rebuild()
         {
-            Font = Application.Instance.Cache.Font.GetOrCache("arial.ttf", _currentFontSize);
-            SetText("Bird Egop is Super Cool");
+            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, _fontSize);
+            SetText(_text);
         }
 
         public void SetText(string text)
         {
-            var cachedVertexArray = Application.Instance.Cache.VertexArray.Get($"Text({text}, {_currentFontSize})");
+            var cachedVertexArray = Application.Instance.Cache.VertexArray.Get($"Text({text}, {_fontSize})");
 
             if (cachedVertexArray is not null)
             {
                 _vertexArray = cachedVertexArray;
                 return;
             }
-            
+
             float x = 0f;
 
             // We have 4 vertices for each character (quad) of 3 floats each
             float[] vertices = new float[text.Length * 4 * 3];
-            
+
             // We have 2 triangles in each character (quad) of 3 vertices each
             int[] indices = new int[text.Length * 2 * 3];
-            
+
             // We have 4 texture coordinate for each character (quad) of 2 floats each
             float[] textureCoordinates = new float[text.Length * 4 * 2];
 
@@ -76,11 +86,12 @@ namespace SCVE.Components
                 float textureRight = (float)(chunk.TextureX + Font.Atlas.ChunkSize) / Font.Texture.Width;
                 float textureBottom = 1 - (float)(chunk.TextureY + Font.Atlas.ChunkSize) / Font.Texture.Height;
 
-                // NOTE: When we overlap trianles with same Z and have a Z-Depth Test, OpenGL have a collision, and stops rendering them correctly
+                // NOTE: When we overlap triangles with same Z and have a Z-Depth Test, OpenGL have a collision, and stops rendering them correctly
                 // So I simply add a small Z offset to each character quad (some kind of stack), so OpenGL can sort the quads and render them correctly
                 // Visible like this [[[[  ] instead of  [[[]]]
+                // Take this into account when enabling DEPTH_TEST
                 float zOffset = 0f; //i * 0.005f;
-                
+
                 // top left
                 vertices[i * 12 + 0] = x;
                 vertices[i * 12 + 1] = Font.Atlas.ChunkSize - chunk.BearingY;
@@ -151,8 +162,8 @@ namespace SCVE.Components
             _vertexArray.AddVertexBuffer(verticesVertexBuffer);
             _vertexArray.AddVertexBuffer(textureCoordinatesVertexBuffer);
             _vertexArray.SetIndexBuffer(indexBuffer);
-            
-            Application.Instance.Cache.VertexArray.AddOrReplace($"Text({text}, {_currentFontSize})", _vertexArray);
+
+            Application.Instance.Cache.VertexArray.AddOrReplace($"Text({text}, {_fontSize})", _vertexArray);
         }
 
         public override void Render(IRenderer renderer)
