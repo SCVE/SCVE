@@ -1,6 +1,5 @@
 ﻿using SCVE.Core;
 using SCVE.Core.App;
-using SCVE.Core.Loading;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
@@ -8,7 +7,7 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components
 {
-    public class TextViaAtlasComponent : Component
+    public class TextViaAtlasComponent : RenderableComponent
     {
         public ScveFont Font { get; set; }
 

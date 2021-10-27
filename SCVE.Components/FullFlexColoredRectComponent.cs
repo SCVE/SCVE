@@ -6,7 +6,7 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components
 {
-    public class FullFlexColoredRectComponent : Component
+    public class FullFlexColoredRectComponent : RenderableComponent
     {
         private readonly VertexArray _vertexArray;
         private readonly ShaderProgram _shaderProgram;

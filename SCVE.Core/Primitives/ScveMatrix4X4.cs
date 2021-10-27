@@ -37,12 +37,18 @@ namespace SCVE.Core.Primitives
         public ScveMatrix4X4(float[] values)
         {
             // Logger.Construct(nameof(ScveMatrix4X4));
+            LoadValues(values);
+        }
+
+        public ScveMatrix4X4 LoadValues(float[] values)
+        {
             if (values.Length != 16)
             {
                 throw new ScveException($"Values must contain exactly 16 elements, but was {values.Length}");
             }
 
             Array.Copy(values, _values, 16);
+            return this;
         }
 
         /// <summary>
@@ -72,12 +78,6 @@ namespace SCVE.Core.Primitives
         {
             get => _values[i * 4 + j];
             set => _values[i * 4 + j] = value;
-        }
-
-        public ScveMatrix4X4 Set(int i, int j, float value)
-        {
-            _values[i * 4 + j] = value;
-            return this;
         }
 
         /// <summary>
@@ -152,6 +152,28 @@ namespace SCVE.Core.Primitives
             return this;
         }
 
+        public ScveMatrix4X4 MakeOrthographicOffCenter(
+            float left,
+            float right,
+            float bottom,
+            float top,
+            float depthNear,
+            float depthFar)
+        {
+            float invWidth = 1.0f / (right - left);
+            float invHeight = 1.0f / (top - bottom);
+            float invDepth = 1.0f / (depthFar - depthNear);
+
+            _values[0] = 2f * invWidth;
+            _values[5] = 2f * invHeight;
+            _values[10] = -2f * invDepth;
+            _values[12] = -(right + left) * invWidth;
+            _values[13] = -(top + bottom) * invHeight;
+            _values[14] = -(depthFar + depthNear) * invDepth;
+
+            return this;
+        }
+
         public static ScveMatrix4X4 CreateOrthographicOffCenter(
             float left,
             float right,
@@ -160,18 +182,7 @@ namespace SCVE.Core.Primitives
             float depthNear,
             float depthFar)
         {
-            ScveMatrix4X4 result = Identity;
-            float invWidth = 1.0f / (right - left);
-            float invHeight = 1.0f / (top - bottom);
-            float invDepth = 1.0f / (depthFar - depthNear);
-
-            result._values[0] = 2f * invWidth;
-            result._values[5] = 2f * invHeight;
-            result._values[10] = -2f * invDepth;
-            result._values[12] = -(right + left) * invWidth;
-            result._values[13] = -(top + bottom) * invHeight;
-            result._values[14] = -(depthFar + depthNear) * invDepth;
-            
+            ScveMatrix4X4 result = Identity.MakeOrthographicOffCenter(left, right, bottom, top, depthNear, depthFar);
             return result;
         }
 
@@ -259,25 +270,33 @@ namespace SCVE.Core.Primitives
             return this;
         }
 
+        public ScveMatrix4X4 MakeTranslation(float x = 0, float y = 0, float z = 0)
+        {
+            _values[12] = x;
+            _values[13] = y;
+            _values[14] = z;
+
+            return this;
+        }
+
         public static ScveMatrix4X4 CreateTranslation(float x = 0, float y = 0, float z = 0)
         {
-            ScveMatrix4X4 result = Identity;
-
-            result._values[12] = x;
-            result._values[13] = y;
-            result._values[14] = z;
-
+            ScveMatrix4X4 result = Identity.MakeTranslation(x, y, z);
             return result;
+        }
+
+        public ScveMatrix4X4 MakeScale(float x = 1, float y = 1, float z = 1)
+        {
+            _values[0] = x;
+            _values[5] = y;
+            _values[10] = z;
+
+            return this;
         }
 
         public static ScveMatrix4X4 CreateScale(float x = 1, float y = 1, float z = 1)
         {
-            ScveMatrix4X4 result = Identity;
-
-            result._values[0] = x;
-            result._values[5] = y;
-            result._values[10] = z;
-
+            ScveMatrix4X4 result = Identity.MakeScale(x, y, z);
             return result;
         }
 

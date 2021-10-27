@@ -1,0 +1,23 @@
+﻿using SCVE.Core.Primitives;
+using SCVE.Core.Rendering;
+
+namespace SCVE.Core
+{
+    public class RenderableComponent : Component
+    {
+        private ScveMatrix4X4 ScaleMatrix = ScveMatrix4X4.Identity;
+        private ScveMatrix4X4 TranslationMatrix = ScveMatrix4X4.Identity;
+        public ScveMatrix4X4 ModelMatrix = ScveMatrix4X4.Identity;
+        
+        public override void Render(IRenderer renderer)
+        {
+        }
+
+        protected override void OnResized()
+        {
+            var scale = ScaleMatrix.MakeScale(PixelWidth, PixelHeight);
+            var translation = TranslationMatrix.MakeTranslation(X, Y);
+            ModelMatrix.MakeIdentity().Multiply(scale).Multiply(translation);
+        }
+    }
+}

@@ -6,7 +6,7 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components
 {
-    public class Divider : Component
+    public class Divider : RenderableComponent
     {
         public const float DefaultWidth = 10;
         public const float DefaultHeight = 10;
