@@ -40,23 +40,23 @@ namespace SCVE.OpenTKBindings
             Application.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
         }
 
-        private unsafe void OnOpenGLDebugMessageCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userparam)
+        private void OnOpenGLDebugMessageCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userparam)
         {
             var messageString = Marshal.PtrToStringAnsi(message);
             switch (severity)
             {
                 case DebugSeverity.DebugSeverityHigh:
-                    Logger.Fatal($"OpenGL - Critical! - {messageString}");
+                    Logger.Fatal($"OpenGL - {messageString}");
                     return;
                 case DebugSeverity.DebugSeverityMedium:
-                    Logger.Error($"OpenGL - Error! - {messageString}");
+                    Logger.Error($"OpenGL - {messageString}");
                     return;
                 case DebugSeverity.DebugSeverityLow:
-                    Logger.Warn($"OpenGL - Warn! - {messageString}");
+                    Logger.Warn($"OpenGL - {messageString}");
                     return;
                 case DebugSeverity.DebugSeverityNotification:
                 case DebugSeverity.DontCare:
-                    Logger.Trace($"OpenGL - Trace! - {messageString}");
+                    Logger.Trace($"OpenGL - {messageString}");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("Unknown severity level!");

@@ -44,7 +44,7 @@ namespace SCVE.Components
         {
             var scale = ScveMatrix4X4.CreateScale(PixelWidth, PixelHeight);
             ModelMatrix.MakeIdentity().Multiply(scale).Multiply(ScveMatrix4X4.CreateTranslation(X, Y, 0f));
-            Logger.Warn($"Divider set to ({X}, {Y}, {PixelWidth}, {PixelHeight})");
+            // Logger.Warn($"Divider set to ({X}, {Y}, {PixelWidth}, {PixelHeight})");
         }
 
         public override void AddChild(Component component)
