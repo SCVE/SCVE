@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageSharpTests", "ImageSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Platform.Windows", "SCVE.Platform.Windows\SCVE.Platform.Windows.csproj", "{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeTypeTests", "FreeTypeTests\FreeTypeTests.csproj", "{33E3A51E-20D7-4844-9C40-5EE01B8768C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,5 +86,9 @@ Global
 		{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33E3A51E-20D7-4844-9C40-5EE01B8768C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33E3A51E-20D7-4844-9C40-5EE01B8768C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33E3A51E-20D7-4844-9C40-5EE01B8768C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33E3A51E-20D7-4844-9C40-5EE01B8768C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
