@@ -6,11 +6,12 @@ namespace SCVE.Core
     public class RenderableComponent : Component
     {
         private ScveMatrix4X4 ScaleMatrix = ScveMatrix4X4.Identity;
-        private ScveMatrix4X4 TranslationMatrix = ScveMatrix4X4.Identity;
+        protected ScveMatrix4X4 TranslationMatrix = ScveMatrix4X4.Identity;
         public ScveMatrix4X4 ModelMatrix = ScveMatrix4X4.Identity;
         
         public override void Render(IRenderer renderer)
         {
+            RenderChildren(renderer);
         }
 
         protected override void OnResized()

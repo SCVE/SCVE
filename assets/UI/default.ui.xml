@@ -6,8 +6,20 @@
         <color-rect r="0" g="0,5" b="0" a="1"/>
         <color-rect r="0" g="0" b="1" a="1"/>
         <color-rect r="1" g="0" b="1" a="1"/>
-    </horizontal-layout>
-    <color-rect r="0" g="1" b="0" a="1"/>
+    </horizontal-layout>    
+    <horizontal-layout>
+        <outline>
+            <color-rect r="0" g="1" b="0" a="1"/>
+        </outline>
+        <outline>
+            <color-rect r="0" g="1" b="1" a="0,3"/>
+        </outline>
+    </horizontal-layout>    
     <color-rect r="0" g="0" b="1" a="1"/>
-    <text font-file-name="arial.ttf" font-size="28" text="hello"/>
+    <outline>
+        <text font-file-name="arial.ttf" font-size="28" text="hello"/>
+    </outline>
+    <outline>
+        <empty/>
+    </outline>
 </vertical-layout>

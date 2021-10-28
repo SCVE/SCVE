@@ -1,43 +1,36 @@
-﻿using System.Collections.Generic;
-using SCVE.Core;
+﻿using SCVE.Core;
 using SCVE.Core.App;
-using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Components
+namespace SCVE.Components.Legacy
 {
-    public class BasicComponent : Component
+    public class TexturedComponent : Component
     {
-        private VertexArray _vertexArray;
-        private ShaderProgram _shaderProgram;
-
-        public BasicComponent()
+        private readonly VertexArray _vertexArray;
+        private readonly ShaderProgram _shaderProgram;
+        private readonly Texture _texture;
+        
+        public TexturedComponent()
         {
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
 
             var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(new[]
             {
                 // Top left
-                -0.5f, 0.5f, 0f, 1, 0, 0, 1,
+                -0.5f, 0.5f, 0f, 0, 1,
                 // Top right
-                0.5f, 0.5f, 0f, 0, 1, 0, 1,
+                0.5f, 0.5f, 0f, 1, 1,
                 // Bottom right
-                0.5f, -0.5f, 0f, 0, 0, 1, 1,
+                0.5f, -0.5f, 0f, 1, 0,
                 // Bottom left
-                -0.5f, -0.5f, 0f, 1, 1, 1, 1,
+                -0.5f, -0.5f, 0f, 0, 0,
             });
 
-            // _buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(new[]
-            // {
-            //     -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-            //     0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
-            //     0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
-            // });
 
             buffer.Layout = new VertexBufferLayout(new()
             {
                 new(VertexBufferElementType.Float3, "a_Position"),
-                new(VertexBufferElementType.Float4, "a_Color"),
+                new(VertexBufferElementType.Float2, "a_TextureCoordinate"),
             });
             _vertexArray.AddVertexBuffer(buffer);
 
@@ -53,15 +46,15 @@ namespace SCVE.Components
             #version 330 core
 			
             layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
+            layout(location = 1) in vec2 a_TextureCoordinate;
 
             out vec3 v_Position;
-            out vec4 v_Color;
+            out vec2 v_TextureCoordinate;
 
             void main()
             {
                 v_Position = a_Position;
-                v_Color = a_Color;
+                v_TextureCoordinate = a_TextureCoordinate;
                 gl_Position = vec4(a_Position, 1.0);	
             }
             ";
@@ -72,12 +65,14 @@ namespace SCVE.Components
             layout(location = 0) out vec4 color;
 
             in vec3 v_Position;
-            in vec4 v_Color;
+            in vec2 v_TextureCoordinate;
+
+            uniform sampler2D texture0;
 
             void main()
             {
-                // color = vec4(v_Position, 1.0);
-                color = v_Color;
+                // color = vec4(v_Position, 1.0) ; 
+                color = texture(texture0, v_TextureCoordinate);
             }
             ";
 
@@ -95,12 +90,19 @@ namespace SCVE.Components
 
             _shaderProgram.DetachShader(vertexShader);
             _shaderProgram.DetachShader(fragmentShader);
+
+            using (var textureData = Application.Instance.FileLoaders.Texture.Load("assets/Font/arial/atlas.png"))
+            {
+                _texture = Application.Instance.RenderEntitiesCreator.CreateTexture(textureData);
+            }
         }
 
         public override void Render(IRenderer renderer)
         {
+            _texture.Bind(0);
+            
             _shaderProgram.Bind();
-            renderer.RenderWireframe(_vertexArray);
+            renderer.RenderSolid(_vertexArray);
 
             for (var i = 0; i < Children.Count; i++)
             {

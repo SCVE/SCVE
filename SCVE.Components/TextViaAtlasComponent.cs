@@ -38,7 +38,8 @@ namespace SCVE.Components
         protected override void OnResized()
         {
             // We need to override this, because no scaling is needed for text
-            ModelMatrix.MakeIdentity().Multiply(ScveMatrix4X4.CreateTranslation(X, Y));
+            var translation = TranslationMatrix.MakeTranslation(X, Y);
+            ModelMatrix.MakeIdentity().Multiply(translation);
         }
 
         private void InputOnScroll(float arg1, float arg2)
@@ -182,11 +183,6 @@ namespace SCVE.Components
             _shaderProgram.Bind();
 
             renderer.RenderSolid(_vertexArray);
-
-            for (var i = 0; i < Children.Count; i++)
-            {
-                Children[i].Render(renderer);
-            }
         }
     }
 }

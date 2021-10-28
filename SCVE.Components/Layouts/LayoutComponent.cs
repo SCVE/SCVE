@@ -19,7 +19,7 @@ namespace SCVE.Components.Layouts
             {
                 return;
             }
-            
+
             // Divider is between two children so there must be children-1 dividers
             if (Dividers.Count > Children.Count - 1)
             {
@@ -56,10 +56,7 @@ namespace SCVE.Components.Layouts
 
         public override void Render(IRenderer renderer)
         {
-            foreach (var child in Children)
-            {
-                child.Render(renderer);
-            }
+            RenderChildren(renderer);
 
             foreach (var divider in Dividers)
             {

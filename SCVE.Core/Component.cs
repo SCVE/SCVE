@@ -52,6 +52,14 @@ namespace SCVE.Core
             Parent = component;
         }
 
+        protected void RenderChildren(IRenderer renderer)
+        {
+            for (var i = 0; i < Children.Count; i++)
+            {
+                Children[i].Render(renderer);
+            }
+        }
+
         public abstract void Render(IRenderer renderer);
     }
 }

@@ -3,7 +3,7 @@ using SCVE.Core.App;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Components
+namespace SCVE.Components.Legacy
 {
     public class RectComponent : Component
     {

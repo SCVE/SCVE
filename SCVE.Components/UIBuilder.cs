@@ -21,11 +21,12 @@ namespace SCVE.Components
             var localName = xElement.Name.LocalName;
             Component component = localName switch
             {
-                "root" => ProcessRootElement(xElement),
+                "empty" => ProcessEmptyElement(xElement),
                 "vertical-layout" => ProcessVerticalLayoutElement(xElement),
                 "horizontal-layout" => ProcessHorizontalLayoutElement(),
                 "color-rect" => ProcessColorRectElement(xElement),
                 "text" => ProcessTextElement(xElement),
+                "outline" => ProcessOutlineElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             foreach (var element in xElement.Elements())
@@ -34,6 +35,11 @@ namespace SCVE.Components
             }
 
             return component;
+        }
+
+        private static Component ProcessOutlineElement(XElement xElement)
+        {
+            return new OutlineComponent();
         }
 
         private static Component ProcessTextElement(XElement xElement)
@@ -69,7 +75,7 @@ namespace SCVE.Components
             return new VerticalLayoutEvenSpaceComponent();
         }
 
-        private static EmptyComponent ProcessRootElement(XElement xElement)
+        private static EmptyComponent ProcessEmptyElement(XElement xElement)
         {
             return new EmptyComponent();
         }
