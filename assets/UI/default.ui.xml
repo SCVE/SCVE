@@ -17,7 +17,7 @@
     </horizontal-layout>    
     <color-rect r="0" g="0" b="1" a="1"/>
     <outline>
-        <text font-file-name="arial.ttf" font-size="24" text="Bird Egop Is God Damn' Cool shiit@@&#xA;more text"/>
+        <text font-file-name="arial.ttf" alignment="right" font-size="24" text="Bird Egop Is God Damn' Cool shit@@&#xA;more text"/>
     </outline>
     <outline>
         <empty/>

@@ -6,6 +6,7 @@ using SCVE.Components.Layouts;
 using SCVE.Components.Legacy;
 using SCVE.Core;
 using SCVE.Core.Primitives;
+using SCVE.Core.Texts;
 
 namespace SCVE.Components
 {
@@ -60,9 +61,11 @@ namespace SCVE.Components
             string fontFileName = xElement.Attribute("font-file-name")?.Value ?? "arial.ttf";
             float fontSize = Convert.ToSingle(xElement.Attribute("font-size")?.Value ?? "14");
             string text = xElement.Attribute("text")?.Value ?? "unknown";
+            
+            TextAlignment alignment = Enum.Parse<TextAlignment>(xElement.Attribute("alignment")?.Value ?? "left", true);
 
             return new TextComponent(
-                fontFileName, fontSize, text
+                fontFileName, fontSize, text, alignment
             );
         }
 

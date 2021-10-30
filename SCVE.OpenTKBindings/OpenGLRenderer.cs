@@ -214,12 +214,13 @@ namespace SCVE.OpenTKBindings
 
             GL.DrawArrays(PrimitiveType.Lines, 0, 2);
         }
-
+        
         public void RenderText(ScveFont font, string text, float fontSize, float x, float y)
         {
             float destLineHeight = Maths.FontSizeToLineHeight(fontSize);
             float lineHeightRel = destLineHeight / font.LineHeight;
             float xStart = x;
+
             for (var i = 0; i < text.Length; i++)
             {
                 if (text[i] == '\n')
@@ -280,7 +281,7 @@ namespace SCVE.OpenTKBindings
                     x + chunk.BearingX * lineHeightRel,
                     // Here we offset from top of line to bottom, then from bottom we go up for CellDescent (baseline offset) + BearingY (size of a char)
                     y + destLineHeight - font.Atlas.CellDescent * lineHeightRel - chunk.BearingY * lineHeightRel
-                    );
+                );
 
                 ModelMatrix.MakeIdentity().Multiply(_scaleMatrix).Multiply(_translationMatrix);
                 _textShaderProgram.SetMatrix4("u_Model",
@@ -298,6 +299,7 @@ namespace SCVE.OpenTKBindings
             }
         }
 
+        // TODO: Extract clip component
         public void RenderText(ScveFont font, string text, float fontSize, float x, float y, float clipWidth, float clipHeight)
         {
             GL.Scissor((int)x, (int)(Application.Instance.MainWindow.Height - (int)clipHeight - y), (int)clipWidth, (int)clipHeight);
@@ -310,20 +312,24 @@ namespace SCVE.OpenTKBindings
             VertexArray vertexArray = new OpenGLVertexArray();
             var rectGeometry = GeometryGenerator.GeneratePositiveUnitSquare();
 
-            var verticesVertexBuffer = new OpenGLVertexBuffer(rectGeometry.Vertices, BufferUsage.Static);
-
-            verticesVertexBuffer.Layout = new VertexBufferLayout(new()
+            var verticesVertexBuffer = new OpenGLVertexBuffer(rectGeometry.Vertices, BufferUsage.Static)
             {
-                new(VertexBufferElementType.Float3, "a_Position")
-            });
+                Layout = new VertexBufferLayout(new()
+                {
+                    new(VertexBufferElementType.Float3, "a_Position")
+                })
+            };
+
             vertexArray.AddVertexBuffer(verticesVertexBuffer);
 
-            var textureCoordinateVertexBuffer = new OpenGLVertexBuffer(rectGeometry.Vertices, BufferUsage.Dynamic);
-
-            textureCoordinateVertexBuffer.Layout = new VertexBufferLayout(new()
+            var textureCoordinateVertexBuffer = new OpenGLVertexBuffer(rectGeometry.Vertices, BufferUsage.Dynamic)
             {
-                new(VertexBufferElementType.Float2, "a_TextureCoordinate")
-            });
+                Layout = new VertexBufferLayout(new()
+                {
+                    new(VertexBufferElementType.Float2, "a_TextureCoordinate")
+                })
+            };
+
             vertexArray.AddVertexBuffer(textureCoordinateVertexBuffer);
 
             var indexBuffer = new OpenGLIndexBuffer(rectGeometry.Indices, BufferUsage.Static);
@@ -336,12 +342,13 @@ namespace SCVE.OpenTKBindings
         {
             VertexArray vertexArray = new OpenGLVertexArray();
 
-            var buffer = new OpenGLVertexBuffer();
-
-            buffer.Layout = new VertexBufferLayout(new()
+            var buffer = new OpenGLVertexBuffer()
             {
-                new(VertexBufferElementType.Float3, "a_Position")
-            });
+                Layout = new VertexBufferLayout(new()
+                {
+                    new(VertexBufferElementType.Float3, "a_Position")
+                })
+            };
             vertexArray.AddVertexBuffer(buffer);
 
             return vertexArray;

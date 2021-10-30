@@ -25,7 +25,7 @@ namespace SCVE.Core.Rendering
         void RenderColorRect(float x, float y, float width, float height, ColorRgba colorRgba);
 
         void RenderLine(float x1, float y1, float x2, float y2, ColorRgba colorRgba, float width = 1f);
-
+        
         void RenderText(ScveFont font, string text, float fontSize, float x, float y);
         
         void RenderText(ScveFont font, string text, float fontSize, float x, float y, float clipWidth, float clipHeight);
