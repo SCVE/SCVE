@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
-using SCVE.Core;
 using SCVE.Core.App;
 using SCVE.Core.Entities;
 using SCVE.Core.Loading;
@@ -216,7 +215,7 @@ namespace SCVE.OpenTKBindings
             GL.DrawArrays(PrimitiveType.Lines, 0, 2);
         }
 
-        public void RenderText(ScveFont font, string text, float fontSize, float x, float y)
+        public void RenderText(ScveFont font, string text, float fontSize, float x, float y, ColorRgba color)
         {
             float destLineHeight = Maths.FontSizeToLineHeight(fontSize);
             float lineHeightRel = destLineHeight / font.LineHeight;
@@ -293,6 +292,7 @@ namespace SCVE.OpenTKBindings
                 );
                 font.Texture.Bind(0);
                 _textShaderProgram.Bind();
+                _textShaderProgram.SetVector4("u_Color", color.R, color.G, color.B, color.A);
 
                 RenderSolid(_positiveUnitVertexArray, _textShaderProgram);
 
@@ -301,10 +301,10 @@ namespace SCVE.OpenTKBindings
         }
 
         // TODO: Extract clip component
-        public void RenderText(ScveFont font, string text, float fontSize, float x, float y, float clipWidth, float clipHeight)
+        public void RenderText(ScveFont font, string text, float fontSize, float x, float y, ColorRgba color, float clipWidth, float clipHeight)
         {
             GL.Scissor((int)x, (int)(Application.Instance.MainWindow.Height - (int)clipHeight - y), (int)clipWidth, (int)clipHeight);
-            RenderText(font, text, fontSize, x, y);
+            RenderText(font, text, fontSize, x, y, color);
             GL.Scissor(0, 0, Application.Instance.MainWindow.Width, Application.Instance.MainWindow.Height);
         }
 

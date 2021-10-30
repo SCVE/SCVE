@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <empty style="alignment-direction=vertical">
-    <fps-counter/>
+    <fps-counter style="primary-color=rgba255(255,0,0,255)"/>
     <empty>
         <color-rect style="min-width=50; min-height=50; primary-color=rgba255(255,0,0,255)"/>
         <color-rect style="min-width=50; min-height=50; primary-color=rgba255(0,255,0,255)"/>

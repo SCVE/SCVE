@@ -38,11 +38,11 @@ namespace Playground
 
             application.ComponentRoot = new ComponentRoot(UIBuilder.Build(File.ReadAllText("assets/UI/default.ui.xml")));
 
-            File.WriteAllText("ui.json", JsonSerializer.Serialize(application.ComponentRoot, new JsonSerializerOptions()
-            {
-                WriteIndented = true,
-                IncludeFields = true
-            }));
+            // File.WriteAllText("ui.json", JsonSerializer.Serialize(application.ComponentRoot, new JsonSerializerOptions()
+            // {
+            //     WriteIndented = true,
+            //     IncludeFields = true
+            // }));
             
             application.Run();
 
