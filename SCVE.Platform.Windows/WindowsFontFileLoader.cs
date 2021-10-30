@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using SCVE.Core;
 using SCVE.Core.App;
@@ -6,6 +7,7 @@ using SCVE.Core.Loading;
 using SCVE.Core.Loading.Loaders;
 using SCVE.Core.Services;
 using SCVE.Core.Texts;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Platform.Windows
 {
@@ -13,23 +15,29 @@ namespace SCVE.Platform.Windows
     {
         private static readonly string BaseDirectory = $"assets/Font";
         
-        public FontLoadData Load(string fontFileName, float size)
+        public FontLoadData Load(string fontFileName, float lineHeight)
         {
             if (File.Exists($"{BaseDirectory}/{fontFileName}"))
             {
+                var fontSize = Maths.LineHeightToFontSize(lineHeight);
                 var fontName = Path.GetFileNameWithoutExtension(fontFileName);
 
-                var fontAtlasFileDataPath = $"{BaseDirectory}/{fontName}/{size}.json";
+                if (!Directory.Exists($"{BaseDirectory}/{fontName}"))
+                {
+                    Directory.CreateDirectory($"{BaseDirectory}/{fontName}");
+                }
+                
+                var fontAtlasFileDataPath = $"{BaseDirectory}/{fontName}/{fontSize}.json";
                 if (!File.Exists(fontAtlasFileDataPath))
                 {
                     // No atlas, so we need to create one
-                    Application.Instance.FontAtlasGenerator.Generate(fontFileName, Alphabets.Default, size);
+                    Application.Instance.FontAtlasGenerator.Generate(fontFileName, Alphabets.Default, fontSize);
                 }
             
                 string json = File.ReadAllText(fontAtlasFileDataPath);
                 var fontAtlasFileData = JsonSerializer.Deserialize<FontAtlasFileData>(json);
             
-                var fontAtlasFileTexturePath = $"{BaseDirectory}/{fontName}/{size}.png";
+                var fontAtlasFileTexturePath = $"{BaseDirectory}/{fontName}/{fontSize}.png";
 
                 var textureFileData = Application.Instance.FileLoaders.Texture.Load(fontAtlasFileTexturePath);
 
@@ -40,7 +48,7 @@ namespace SCVE.Platform.Windows
                 // Font even not exists in BaseDirectory
                 // TODO: Fallback to default
 
-                var defaultFontLoad = Load("default.ttf", size);
+                var defaultFontLoad = Load("default.ttf", lineHeight);
 
                 if (defaultFontLoad == null)
                 {

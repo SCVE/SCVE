@@ -59,20 +59,7 @@ namespace SCVE.Components
                 return;
             }
 
-            _shaderProgram.SetVector4("u_Color", ActivatedColor.R, ActivatedColor.G, ActivatedColor.B, ActivatedColor.A);
-
-            _shaderProgram.SetMatrix4("u_Model",
-                ModelMatrix
-            );
-            _shaderProgram.SetMatrix4("u_View",
-                Application.Instance.ViewProjectionAccessor.ViewMatrix
-            );
-            _shaderProgram.SetMatrix4("u_Proj",
-                Application.Instance.ViewProjectionAccessor.ProjectionMatrix
-            );
-            _shaderProgram.Bind();
-
-            renderer.RenderSolid(_vertexArray);
+            // renderer.RenderSolid(_vertexArray);
         }
     }
 }

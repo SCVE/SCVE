@@ -9,19 +9,14 @@ namespace SCVE.Components
     public class OutlineComponent : RenderableComponent
     {
         private static readonly ColorRgba DefaultColor = new(1, 1, 1, 1);
-        private readonly ColorRgba _colorRgba;
-        private readonly VertexArray _vertexArray;
-        private readonly ShaderProgram _shaderProgram;
+
+        private float _width;
 
         private bool _visible;
-        
-        public OutlineComponent()
-        {
-            _colorRgba = DefaultColor;
-            
-            _vertexArray = Application.Instance.Cache.VertexArray.Get("Positive Unit");
 
-            _shaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("FlatColor_MVP_Uniform");
+        public OutlineComponent(float width = 4f)
+        {
+            _width = width;
             Application.Instance.Input.CursorMoved += InputOnCursorMoved;
             Application.Instance.Input.CursorLeave += InputOnCursorLeave;
         }
@@ -48,22 +43,19 @@ namespace SCVE.Components
             {
                 Children[i].Render(renderer);
             }
+
             if (_visible)
             {
-                _shaderProgram.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
-            
-                _shaderProgram.SetMatrix4("u_Model",
-                    ModelMatrix
-                );
-                _shaderProgram.SetMatrix4("u_View",
-                    Application.Instance.ViewProjectionAccessor.ViewMatrix
-                );
-                _shaderProgram.SetMatrix4("u_Proj",
-                    Application.Instance.ViewProjectionAccessor.ProjectionMatrix
-                );
-                _shaderProgram.Bind();
+                // top
+                renderer.RenderLine(X, Y + _width / 2, X + PixelWidth, Y + _width / 2, DefaultColor, _width);
+                // right
+                renderer.RenderLine(X + PixelWidth - _width / 2, Y, X + PixelWidth - _width / 2, Y + PixelHeight, DefaultColor, _width);
+                // bottom
+                renderer.RenderLine(X, Y + PixelHeight - _width / 2, X + PixelWidth, Y + PixelHeight - _width / 2, DefaultColor, _width);
+                // left
+                renderer.RenderLine(X + _width / 2, Y, X + _width / 2, Y + PixelHeight, DefaultColor, _width);
 
-                renderer.RenderWireframe(_vertexArray);
+                // renderer.RenderWireframe(_vertexArray);
             }
         }
     }

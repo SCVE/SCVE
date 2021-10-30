@@ -1,11 +1,10 @@
 ﻿using SCVE.Core;
 using SCVE.Core.App;
-using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
 using SCVE.Core.Utilities;
 
-namespace SCVE.Components
+namespace SCVE.Components.Legacy
 {
     public class TextViaAtlasComponent : RenderableComponent
     {
@@ -13,7 +12,6 @@ namespace SCVE.Components
 
         private VertexArray _vertexArray;
         private readonly ShaderProgram _shaderProgram;
-
 
         private string _fontFileName;
         private float _fontSize;
@@ -51,7 +49,7 @@ namespace SCVE.Components
 
         private void Rebuild()
         {
-            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, _fontSize);
+            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
             SetText(_text);
         }
 
@@ -81,10 +79,10 @@ namespace SCVE.Components
                 var chunk = Font.Atlas.Chunks[(int)text[i]];
 
                 // NOTE: we invert the Y axis, because Textures have (0,0) at top left, but OpenGL have (0,0) at bottom left
-                float textureLeft = (float)chunk.TextureX / Font.Texture.Width;
-                float textureTop = 1 - (float)chunk.TextureY / Font.Texture.Height;
-                float textureRight = (float)(chunk.TextureX + Font.Atlas.ChunkSize) / Font.Texture.Width;
-                float textureBottom = 1 - (float)(chunk.TextureY + Font.Atlas.ChunkSize) / Font.Texture.Height;
+                float textureLeft = (float)chunk.TextureCoordX / Font.Texture.Width;
+                float textureTop = 1 - (float)chunk.TextureCoordY / Font.Texture.Height;
+                float textureRight = (float)(chunk.TextureCoordX + Font.Atlas.ChunkSize) / Font.Texture.Width;
+                float textureBottom = 1 - (float)(chunk.TextureCoordY + Font.Atlas.ChunkSize) / Font.Texture.Height;
 
                 // NOTE: When we overlap triangles with same Z and have a Z-Depth Test, OpenGL have a collision, and stops rendering them correctly
                 // So I simply add a small Z offset to each character quad (some kind of stack), so OpenGL can sort the quads and render them correctly
@@ -100,9 +98,6 @@ namespace SCVE.Components
                 textureCoordinates[i * 8 + 0] = textureLeft;
                 textureCoordinates[i * 8 + 1] = textureTop;
 
-                // textureCoordinates[i * 8 + 0] = 0;
-                // textureCoordinates[i * 8 + 1] = 1;
-
                 // top right
                 vertices[i * 12 + 3] = x + Font.Atlas.ChunkSize;
                 vertices[i * 12 + 4] = Font.Atlas.ChunkSize - chunk.BearingY;
@@ -110,9 +105,6 @@ namespace SCVE.Components
 
                 textureCoordinates[i * 8 + 2] = textureRight;
                 textureCoordinates[i * 8 + 3] = textureTop;
-
-                // textureCoordinates[i * 8 + 2] = 1;
-                // textureCoordinates[i * 8 + 3] = 1;
 
                 // Bottom right
                 vertices[i * 12 + 6] = x + Font.Atlas.ChunkSize;
@@ -122,9 +114,6 @@ namespace SCVE.Components
                 textureCoordinates[i * 8 + 4] = textureRight;
                 textureCoordinates[i * 8 + 5] = textureBottom;
 
-                // textureCoordinates[i * 8 + 4] = 1;
-                // textureCoordinates[i * 8 + 5] = 0;
-
                 // Bottom left
                 vertices[i * 12 + 9] = x;
                 vertices[i * 12 + 10] = Font.Atlas.ChunkSize - chunk.BearingY + Font.Atlas.ChunkSize;
@@ -132,9 +121,6 @@ namespace SCVE.Components
 
                 textureCoordinates[i * 8 + 6] = textureLeft;
                 textureCoordinates[i * 8 + 7] = textureBottom;
-
-                // textureCoordinates[i * 8 + 6] = 0;
-                // textureCoordinates[i * 8 + 7] = 0;
 
                 indices[i * 6 + 0] = i * 4 + 0;
                 indices[i * 6 + 1] = i * 4 + 3;
@@ -148,17 +134,17 @@ namespace SCVE.Components
             }
 
             _vertexArray = Application.Instance.RenderEntitiesCreator.CreateVertexArray();
-            var verticesVertexBuffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(vertices);
+            var verticesVertexBuffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(vertices, BufferUsage.Static);
             verticesVertexBuffer.Layout = new VertexBufferLayout(new()
             {
                 new(VertexBufferElementType.Float3, "a_Position")
             });
-            var textureCoordinatesVertexBuffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(textureCoordinates);
+            var textureCoordinatesVertexBuffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(textureCoordinates, BufferUsage.Static);
             textureCoordinatesVertexBuffer.Layout = new VertexBufferLayout(new()
             {
                 new(VertexBufferElementType.Float2, "a_TextureCoordinate")
             });
-            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(indices);
+            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(indices, BufferUsage.Static);
             _vertexArray.AddVertexBuffer(verticesVertexBuffer);
             _vertexArray.AddVertexBuffer(textureCoordinatesVertexBuffer);
             _vertexArray.SetIndexBuffer(indexBuffer);
@@ -170,19 +156,21 @@ namespace SCVE.Components
         {
             _shaderProgram.SetVector4("u_Color", 1, 1, 1, 1);
             Font.Texture.Bind(0);
-
+            
             _shaderProgram.SetMatrix4("u_Model",
                 ModelMatrix
             );
             _shaderProgram.SetMatrix4("u_View",
-                Application.Instance.ViewProjectionAccessor.ViewMatrix
+                renderer.GetViewMatrix()
             );
             _shaderProgram.SetMatrix4("u_Proj",
-                Application.Instance.ViewProjectionAccessor.ProjectionMatrix
+                renderer.GetProjectionMatrix()
             );
             _shaderProgram.Bind();
 
-            renderer.RenderSolid(_vertexArray);
+            renderer.RenderSolid(_vertexArray, _shaderProgram);
+
+            //renderer.RenderText(Font, _text, _fontSize, X, Y, PixelWidth, PixelHeight);
         }
     }
 }

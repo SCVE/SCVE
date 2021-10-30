@@ -23,7 +23,7 @@ namespace SCVE.Components.Legacy
                 0.5f, -0.5f, 0f, 0, 0, 1, 1,
                 // Bottom left
                 -0.5f, -0.5f, 0f, 1, 1, 1, 1,
-            });
+            }, BufferUsage.Static);
 
             // _buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(new[]
             // {
@@ -43,7 +43,7 @@ namespace SCVE.Components.Legacy
             {
                 0, 1, 2,
                 2, 3, 0
-            });
+            }, BufferUsage.Static);
 
             _vertexArray.SetIndexBuffer(indexBuffer);
 
@@ -98,7 +98,7 @@ namespace SCVE.Components.Legacy
         public override void Render(IRenderer renderer)
         {
             _shaderProgram.Bind();
-            renderer.RenderWireframe(_vertexArray);
+            renderer.RenderWireframe(_vertexArray, _shaderProgram);
 
             for (var i = 0; i < Children.Count; i++)
             {

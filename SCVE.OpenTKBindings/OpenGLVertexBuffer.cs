@@ -8,22 +8,34 @@ namespace SCVE.OpenTKBindings
     public class OpenGLVertexBuffer : VertexBuffer
     {
         private int _size;
-        public OpenGLVertexBuffer(float[] vertices)
+
+        public OpenGLVertexBuffer()
         {
             Logger.Construct(nameof(OpenGLVertexBuffer));
             Id = GL.GenBuffer();
-            _size = sizeof(float) * vertices.Length;
-            Bind();
-            GL.BufferData(BufferTarget.ArrayBuffer, _size, vertices, BufferUsageHint.StaticDraw);
         }
         
-        public OpenGLVertexBuffer(int size)
+        public OpenGLVertexBuffer(float[] vertices, BufferUsage usage)
+        {
+            Logger.Construct(nameof(OpenGLVertexBuffer));
+            Id = GL.GenBuffer();
+            Upload(vertices, usage);
+        }
+        
+        public OpenGLVertexBuffer(int size, BufferUsage usage)
         {
             Logger.Construct(nameof(OpenGLVertexBuffer));
             Id = GL.GenBuffer();
             _size = size;
             Bind();
-            GL.BufferData(BufferTarget.ArrayBuffer, _size, IntPtr.Zero, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, _size, IntPtr.Zero, usage.ToOpenGlUsage());
+        }
+
+        public override void Upload(float[] data, BufferUsage usage)
+        {
+            _size = sizeof(float) * data.Length;
+            Bind();
+            GL.BufferData(BufferTarget.ArrayBuffer, _size, data, usage.ToOpenGlUsage());
         }
 
         public override int GetSize()

@@ -23,7 +23,12 @@ namespace SCVE.ImageSharpBindings
             var fontName = Path.GetFileNameWithoutExtension(fontFileName);
             var font = new FontFace(File.OpenRead($"{BasePath}/{fontFileName}"));
 
-            int chunkWidth = (int)fontSize;
+
+            // https://websemantics.uk/tools/font-size-conversion-pixel-point-em-rem-percent/
+            float lineHeight = Maths.FontSizeToLineHeight(fontSize);
+            var faceMetrics = font.GetFaceMetrics(lineHeight);
+
+            int chunkWidth = (int)lineHeight;
 
             // fit as much characters as possible into a square (+ 1 for space)
             int chunksInARow = (int)MathF.Floor(MathF.Sqrt(alphabet.Length + 1));
@@ -34,18 +39,19 @@ namespace SCVE.ImageSharpBindings
 
             int usedChunks = 0;
 
-            FontAtlasFileData fontAtlasFileData = new FontAtlasFileData(chunkWidth);
+            FontAtlasFileData fontAtlasFileData = new FontAtlasFileData(chunkWidth, faceMetrics.CellDescent);
 
             HashSet<char> atlasChars = new HashSet<char>();
 
             fontAtlasFileData.Add(
                 c: (int)' ',
                 new FontAtlasChunk(
-                    advance: fontSize / 2,
-                    textureX: 0,
-                    textureY: 0,
+                    advance: lineHeight / 2,
+                    textureCoordX: 0,
+                    textureCoordY: 0,
                     bearingX: 0,
-                    bearingY: 0
+                    bearingY: 0,
+                    0
                 ));
             usedChunks++;
             
@@ -53,7 +59,7 @@ namespace SCVE.ImageSharpBindings
             {
                 if (alphabet[i] == ' ') continue;
 
-                var glyph = font.GetGlyph(alphabet[i], fontSize);
+                var glyph = font.GetGlyph(alphabet[i], lineHeight);
 
                 if (alphabet[i] == 'g')
                 {
@@ -80,10 +86,11 @@ namespace SCVE.ImageSharpBindings
                     c: (int)alphabet[i],
                     new FontAtlasChunk(
                         advance: glyph.HorizontalMetrics.Advance,
-                        textureX: chunkX,
-                        textureY: chunkY,
+                        textureCoordX: chunkX,
+                        textureCoordY: chunkY,
                         bearingX: glyph.HorizontalMetrics.Bearing.X,
-                        bearingY: glyph.HorizontalMetrics.Bearing.Y
+                        bearingY: glyph.HorizontalMetrics.Bearing.Y,
+                        sizeTextureY: surface.Height
                     ));
             }
 

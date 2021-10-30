@@ -8,6 +8,7 @@ using SCVE.Core.Caches;
 using SCVE.Core.Entities;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
+using SCVE.Core.Texts;
 using SCVE.ImageSharpBindings;
 using SCVE.Null;
 using SCVE.OpenTKBindings;
@@ -18,7 +19,13 @@ namespace Playground
     {
         static void Main(string[] args)
         {
+            if (false)
+            {
+                var atlasGenerator = new SharpFontImageSharpFontAtlasGenerator();
 
+                atlasGenerator.Generate("arial.ttf", Alphabets.Default, 12);
+            }
+            
             var applicationInit = new ApplicationInitNull();
             applicationInit.Renderer = new OpenGLRenderer();
             applicationInit.DeltaTimeProvider = new GlfwDeltaTimeProvider();
@@ -30,45 +37,16 @@ namespace Playground
 
             var application = Application.Init(applicationInit);
 
-            application.ViewProjectionAccessor.SetFromWindow();
-
-            var positiveUnitVertexArray = CreatePositiveUnitVertexArray(application);
-            var vertexCacheInitiator = new VertexCacheInitiator()
-                .With("Positive Unit", positiveUnitVertexArray);
-            vertexCacheInitiator.Init(application.Cache.VertexArray);
-
-            // application.ViewProjectionAccessor.SetView(ScveMatrix4X4.Identity.Set(2, 3, -1));
-
-            // var rootComponent = new TextViaAtlasComponent();
-            // application.RootComponent = rootComponent;
+            application.Renderer.SetFromWindow(application.MainWindow);
 
             application.RootComponent = UIBuilder.Build(File.ReadAllText("assets/UI/default.ui.xml"));
-            
+
             application.RootComponent.SetPositionAndSize(0, 0, application.MainWindow.Width, application.MainWindow.Height);
-            
+
             application.Run();
 
             Console.WriteLine("Exiting");
             // Profiler.Invokations.Print();
-        }
-
-        private static VertexArray CreatePositiveUnitVertexArray(Application application)
-        {
-            VertexArray vertexArray = application.RenderEntitiesCreator.CreateVertexArray();
-            var rectGeometry = GeometryGenerator.GeneratePositiveUnitSquare();
-
-            var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
-
-            buffer.Layout = new VertexBufferLayout(new()
-            {
-                new(VertexBufferElementType.Float3, "a_Position")
-            });
-            vertexArray.AddVertexBuffer(buffer);
-
-            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(rectGeometry.Indices);
-
-            vertexArray.SetIndexBuffer(indexBuffer);
-            return vertexArray;
         }
     }
 }

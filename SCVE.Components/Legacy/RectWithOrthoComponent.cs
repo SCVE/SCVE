@@ -21,7 +21,7 @@ namespace SCVE.Components.Legacy
 
             var rectGeometry = GeometryGenerator.GenerateRect(rect);
 
-            var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
+            var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices, BufferUsage.Static);
 
             buffer.Layout = new VertexBufferLayout(new()
             {
@@ -29,7 +29,7 @@ namespace SCVE.Components.Legacy
             });
             _vertexArray.AddVertexBuffer(buffer);
 
-            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(rectGeometry.Indices);
+            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(rectGeometry.Indices, BufferUsage.Static);
 
             _vertexArray.SetIndexBuffer(indexBuffer);
 
@@ -96,7 +96,7 @@ namespace SCVE.Components.Legacy
             _shaderProgram.SetMatrix4("u_Ortho", _ortho);
 
             _shaderProgram.Bind();
-            renderer.RenderWireframe(_vertexArray);
+            renderer.RenderWireframe(_vertexArray, _shaderProgram);
 
             for (var i = 0; i < Children.Count; i++)
             {

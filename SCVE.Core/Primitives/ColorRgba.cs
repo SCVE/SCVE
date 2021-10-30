@@ -9,6 +9,8 @@ namespace SCVE.Core.Primitives
         public float B { get; set; }
         public float A { get; set; }
 
+        public static readonly ColorRgba White = new(1, 1, 1, 1);
+
         public ColorRgba()
         {
             Logger.Construct(nameof(ColorRgba));

@@ -18,7 +18,7 @@ namespace SCVE.Components.Legacy
 
             var rectGeometry = GeometryGenerator.GenerateUnitSquare();
 
-            var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices);
+            var buffer = Application.Instance.RenderEntitiesCreator.CreateVertexBuffer(rectGeometry.Vertices, BufferUsage.Static);
 
             buffer.Layout = new VertexBufferLayout(new()
             {
@@ -26,7 +26,7 @@ namespace SCVE.Components.Legacy
             });
             _vertexArray.AddVertexBuffer(buffer);
 
-            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(rectGeometry.Indices);
+            var indexBuffer = Application.Instance.RenderEntitiesCreator.CreateIndexBuffer(rectGeometry.Indices, BufferUsage.Static);
 
             _vertexArray.SetIndexBuffer(indexBuffer);
 
@@ -80,7 +80,7 @@ namespace SCVE.Components.Legacy
             _shaderProgram.SetVector4("u_Color", _colorRgba.R, _colorRgba.G, _colorRgba.B, _colorRgba.A);
 
             _shaderProgram.Bind();
-            renderer.RenderSolid(_vertexArray);
+            renderer.RenderSolid(_vertexArray, _shaderProgram);
 
             for (var i = 0; i < Children.Count; i++)
             {

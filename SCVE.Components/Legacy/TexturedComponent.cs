@@ -24,7 +24,7 @@ namespace SCVE.Components.Legacy
                 0.5f, -0.5f, 0f, 1, 0,
                 // Bottom left
                 -0.5f, -0.5f, 0f, 0, 0,
-            });
+            }, BufferUsage.Static);
 
 
             buffer.Layout = new VertexBufferLayout(new()
@@ -38,7 +38,7 @@ namespace SCVE.Components.Legacy
             {
                 0, 1, 2,
                 2, 3, 0
-            });
+            }, BufferUsage.Static);
 
             _vertexArray.SetIndexBuffer(indexBuffer);
 
@@ -102,7 +102,7 @@ namespace SCVE.Components.Legacy
             _texture.Bind(0);
             
             _shaderProgram.Bind();
-            renderer.RenderSolid(_vertexArray);
+            renderer.RenderSolid(_vertexArray, _shaderProgram);
 
             for (var i = 0; i < Children.Count; i++)
             {

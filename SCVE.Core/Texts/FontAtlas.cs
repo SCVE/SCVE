@@ -9,6 +9,8 @@ namespace SCVE.Core.Texts
         /// PixelWidth of each character in a Font Atlas
         /// </summary>
         public int ChunkSize { get; set; }
+
+        public float CellDescent { get; set; }
         
         // TODO: LineHeight
         
@@ -21,12 +23,14 @@ namespace SCVE.Core.Texts
         {
             ChunkSize = fontAtlasFileData.ChunkSize;
             Chunks = fontAtlasFileData.Chunks;
+            CellDescent = fontAtlasFileData.CellDescent;
         }
         
-        public FontAtlas(int chunkSize, Dictionary<int, FontAtlasChunk> chunks)
+        public FontAtlas(int chunkSize, Dictionary<int, FontAtlasChunk> chunks, float cellDescent)
         {
             ChunkSize = chunkSize;
             Chunks = chunks;
+            CellDescent = cellDescent;
         }
     }
 }

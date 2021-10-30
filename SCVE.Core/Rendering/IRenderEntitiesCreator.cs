@@ -4,13 +4,13 @@ namespace SCVE.Core.Rendering
 {
     public interface IRenderEntitiesCreator
     {
-        VertexBuffer CreateVertexBuffer(float[] vertices);
+        VertexBuffer CreateVertexBuffer(float[] vertices, BufferUsage usage);
 
-        VertexBuffer CreateVertexBuffer(int size);
+        VertexBuffer CreateVertexBuffer(int size, BufferUsage usage);
 
         VertexArray CreateVertexArray();
 
-        IndexBuffer CreateIndexBuffer(int[] indices);
+        IndexBuffer CreateIndexBuffer(int[] indices, BufferUsage usage);
 
         Shader CreateShader(string source, ScveShaderType type);
 

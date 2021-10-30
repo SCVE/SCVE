@@ -5,14 +5,14 @@ namespace SCVE.OpenTKBindings
 {
     public class OpenGLRenderEntitiesCreator : IRenderEntitiesCreator
     {
-        public VertexBuffer CreateVertexBuffer(float[] vertices)
+        public VertexBuffer CreateVertexBuffer(float[] vertices, BufferUsage usage)
         {
-            return new OpenGLVertexBuffer(vertices);
+            return new OpenGLVertexBuffer(vertices, usage);
         }
 
-        public VertexBuffer CreateVertexBuffer(int size)
+        public VertexBuffer CreateVertexBuffer(int size, BufferUsage usage)
         {
-            return new OpenGLVertexBuffer(size);
+            return new OpenGLVertexBuffer(size,  usage);
         }
 
         public VertexArray CreateVertexArray()
@@ -20,9 +20,9 @@ namespace SCVE.OpenTKBindings
             return new OpenGLVertexArray();
         }
 
-        public IndexBuffer CreateIndexBuffer(int[] indices)
+        public IndexBuffer CreateIndexBuffer(int[] indices, BufferUsage usage)
         {
-            return new OpenGLIndexBuffer(indices);
+            return new OpenGLIndexBuffer(indices, usage);
         }
 
         public Shader CreateShader(string source, ScveShaderType type)

@@ -2,6 +2,6 @@
 {
     public interface IFontLoader
     {
-        FontLoadData Load(string fontFileName, float size);
+        FontLoadData Load(string fontFileName, float lineHeight);
     }
 }

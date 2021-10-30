@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using SCVE.Components.Layouts;
+using SCVE.Components.Legacy;
 using SCVE.Core;
 using SCVE.Core.Primitives;
 
@@ -26,6 +27,7 @@ namespace SCVE.Components
                 "horizontal-layout" => ProcessHorizontalLayoutElement(),
                 "color-rect" => ProcessColorRectElement(xElement),
                 "text" => ProcessTextElement(xElement),
+                "legacy-text" => ProcessLegacyTextElement(xElement),
                 "outline" => ProcessOutlineElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
@@ -35,6 +37,17 @@ namespace SCVE.Components
             }
 
             return component;
+        }
+
+        private static Component ProcessLegacyTextElement(XElement xElement)
+        {
+            string fontFileName = xElement.Attribute("font-file-name")?.Value ?? "arial.ttf";
+            float fontSize = Convert.ToSingle(xElement.Attribute("font-size")?.Value ?? "14");
+            string text = xElement.Attribute("text")?.Value ?? "unknown";
+
+            return new TextViaAtlasComponent(
+                fontFileName, fontSize, text
+            );
         }
 
         private static Component ProcessOutlineElement(XElement xElement)
@@ -48,7 +61,7 @@ namespace SCVE.Components
             float fontSize = Convert.ToSingle(xElement.Attribute("font-size")?.Value ?? "14");
             string text = xElement.Attribute("text")?.Value ?? "unknown";
 
-            return new TextViaAtlasComponent(
+            return new TextComponent(
                 fontFileName, fontSize, text
             );
         }

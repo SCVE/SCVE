@@ -8,20 +8,20 @@ namespace SCVE.Core.Texts
     public class ScveFont
     {
         /// <summary>
-        /// The size of this font
+        /// The height of this font
         /// </summary>
-        public float Size { get; set; }
+        public float LineHeight { get; set; }
 
         public FontAtlas Atlas { get; set; }
-        
+
         /// <summary>
         /// Texture, holding the atlas
         /// </summary>
         public Texture Texture { get; set; }
 
-        public ScveFont(FontLoadData loadData, float size)
+        public ScveFont(FontLoadData loadData, float lineHeight)
         {
-            Size = size;
+            LineHeight = lineHeight;
             Atlas = new FontAtlas(loadData.FontAtlasFileData);
             Texture = Application.Instance.RenderEntitiesCreator.CreateTexture(loadData.AtlasTextureFileData);
         }

@@ -11,6 +11,8 @@ namespace SCVE.Core.Rendering
 
         public int Count;
 
+        public abstract void Upload(int[] indices, BufferUsage usage);
+
         public abstract void Bind();
 
         public abstract void Unbind();

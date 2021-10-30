@@ -6,15 +6,25 @@ namespace SCVE.OpenTKBindings
 {
     public class OpenGLIndexBuffer : IndexBuffer
     {
-        public OpenGLIndexBuffer(int[] indices)
+        public OpenGLIndexBuffer()
+        {
+            Logger.Construct(nameof(OpenGLIndexBuffer));
+        }
+
+        public OpenGLIndexBuffer(int[] indices, BufferUsage usage)
         {
             Logger.Construct(nameof(OpenGLIndexBuffer));
             Count = indices.Length;
             Id = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, Id);
-            GL.BufferData(BufferTarget.ArrayBuffer, indices.Length * sizeof(int), indices, BufferUsageHint.StaticDraw);
+            Upload(indices, usage);
         }
-        
+
+        public override void Upload(int[] indices, BufferUsage usage)
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, Id);
+            GL.BufferData(BufferTarget.ArrayBuffer, indices.Length * sizeof(int), indices, usage.ToOpenGlUsage());
+        }
+
         public override void Bind()
         {
             Logger.Trace("OpenGLIndexBuffer.Bind()");

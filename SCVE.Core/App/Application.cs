@@ -32,12 +32,10 @@ namespace SCVE.Core.App
 
         public IFontAtlasGenerator FontAtlasGenerator => _scope.FontAtlasGenerator;
 
-        public ViewProjectionAccessor ViewProjectionAccessor;
-
         public CachesContainer Cache;
 
         public Component RootComponent { get; set; }
-        
+
         public Component ActiveComponent { get; set; }
 
         private Application(ApplicationInit init)
@@ -50,14 +48,13 @@ namespace SCVE.Core.App
         {
             var application = new Application(init);
 
+            application.Cache = new();
+
             application._state = AppState.Starting;
             application._scope.Init();
             application._state = AppState.Ready;
 
             _isInited = true;
-
-            application.ViewProjectionAccessor = new();
-            application.Cache = new();
 
             return application;
         }

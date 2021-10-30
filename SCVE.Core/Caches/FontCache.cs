@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SCVE.Core.App;
 using SCVE.Core.Texts;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Core.Caches
 {
@@ -16,7 +17,7 @@ namespace SCVE.Core.Caches
             _cachedFonts = new Dictionary<string, Dictionary<float, ScveFont>>();
         }
 
-        public ScveFont GetOrCache(string fontFileName, float size)
+        public ScveFont GetOrCache(string fontFileName, float fontSize)
         {
             if (!_cachedFonts.ContainsKey(fontFileName))
             {
@@ -26,14 +27,18 @@ namespace SCVE.Core.Caches
             }
 
             var cachedFontsOfName = _cachedFonts[fontFileName];
-            if (!cachedFontsOfName.ContainsKey(size))
+            if (!cachedFontsOfName.ContainsKey(fontSize))
             {
-                var fontLoadData = Application.Instance.FileLoaders.Font.Load(fontFileName, size);
+                var lineHeight = Maths.FontSizeToLineHeight(fontSize);
+                var fontLoadData = Application.Instance.FileLoaders.Font.Load(
+                    fontFileName,
+                    lineHeight
+                );
 
-                cachedFontsOfName[size] = new ScveFont(fontLoadData, size);
+                cachedFontsOfName[fontSize] = new ScveFont(fontLoadData, lineHeight);
             }
 
-            return cachedFontsOfName[size];
+            return cachedFontsOfName[fontSize];
         }
     }
 }

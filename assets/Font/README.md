@@ -1,0 +1,1 @@
+﻿Font folder contains png and json with font data. The name of files is FONT SIZE, but not the Line Height.
