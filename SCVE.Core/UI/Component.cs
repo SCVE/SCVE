@@ -95,7 +95,7 @@ namespace SCVE.Core.UI
 
                             for (var i = 0; i < Children.Count; i++)
                             {
-                                Children[i].Render(renderer, offsetX, offsetY);
+                                Children[i].RenderSelf(renderer, offsetX, offsetY);
                                 offsetX += Children[i].ContentWidth;
                             }
 
@@ -125,7 +125,7 @@ namespace SCVE.Core.UI
 
                             for (var i = 0; i < Children.Count; i++)
                             {
-                                Children[i].Render(renderer, offsetX, offsetY);
+                                Children[i].RenderSelf(renderer, offsetX, offsetY);
                                 offsetY += Children[i].ContentHeight;
                             }
 
@@ -217,6 +217,6 @@ namespace SCVE.Core.UI
             SetContentSize(offsetX, offsetY);
         }
 
-        public abstract void Render(IRenderer renderer, float x, float y);
+        protected abstract void RenderSelf(IRenderer renderer, float x, float y);
     }
 }

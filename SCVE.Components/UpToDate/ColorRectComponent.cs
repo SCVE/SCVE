@@ -18,7 +18,7 @@ namespace SCVE.Components.UpToDate
             Logger.Construct(nameof(ColorRectComponent));
         }
 
-        public override void Render(IRenderer renderer, float x, float y)
+        protected override void RenderSelf(IRenderer renderer, float x, float y)
         {
             float selfWidth = MathF.Max(Style.MinWidth, MathF.Min(Style.MaxWidth, ContentWidth));
             float selfHeight = MathF.Max(Style.MinHeight, MathF.Min(Style.MaxHeight, ContentHeight));

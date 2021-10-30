@@ -13,7 +13,7 @@ namespace SCVE.Components.UpToDate
         {
         }
 
-        public override void Render(IRenderer renderer, float x, float y)
+        protected override void RenderSelf(IRenderer renderer, float x, float y)
         {
             RenderChildren(renderer, x, y);
         }

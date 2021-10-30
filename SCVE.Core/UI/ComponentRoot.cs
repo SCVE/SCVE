@@ -1,9 +1,10 @@
 ﻿using SCVE.Core.App;
+using SCVE.Core.Entities;
 using SCVE.Core.Rendering;
 
 namespace SCVE.Core.UI
 {
-    public class ComponentRoot : Component
+    public class ComponentRoot : Component, IRenderable
     {
         public ComponentRoot(Component bootstrappedComponent)
         {
@@ -19,9 +20,14 @@ namespace SCVE.Core.UI
             // TODO: Propagate event back to update width and height
         }
 
-        public override void Render(IRenderer renderer, float x, float y)
+        protected override void RenderSelf(IRenderer renderer, float x, float y)
         {
             RenderChildren(renderer, x, y);
+        }
+
+        public void Render(IRenderer renderer)
+        {
+            RenderSelf(renderer, 0, 0);
         }
     }
 }

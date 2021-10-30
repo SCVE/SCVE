@@ -86,7 +86,7 @@ namespace SCVE.Components.UpToDate
             SetContentSize(maxLineWidth, _lines.Length * Maths.FontSizeToLineHeight(_fontSize));
         }
 
-        public override void Render(IRenderer renderer, float x, float y)
+        protected override void RenderSelf(IRenderer renderer, float x, float y)
         {
             var lineHeight = Maths.FontSizeToLineHeight(_fontSize);
             switch (_alignment)

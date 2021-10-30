@@ -29,12 +29,9 @@ namespace SCVE.Components.UpToDate
         //     _visible = Maths.PointInRect(X, Y, PixelWidth, PixelHeight, arg1, arg2);
         // }
 
-        public override void Render(IRenderer renderer, float x, float y)
+        protected override void RenderSelf(IRenderer renderer, float x, float y)
         {
-            for (var i = 0; i < Children.Count; i++)
-            {
-                Children[i].Render(renderer, x, y);
-            }
+            RenderChildren(renderer, x, y);
 
             if (_visible)
             {

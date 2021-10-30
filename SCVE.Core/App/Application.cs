@@ -93,7 +93,7 @@ namespace SCVE.Core.App
 
                 Renderer.Clear();
 
-                ComponentRoot.Render(Renderer, 0, 0);
+                ComponentRoot.Render(Renderer);
 
                 MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 
@@ -141,7 +141,7 @@ namespace SCVE.Core.App
 
             Renderer.Clear();
 
-            ComponentRoot.Render(Renderer, 0, 0);
+            ComponentRoot.Render(Renderer);
 
             MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 
