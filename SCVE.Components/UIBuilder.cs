@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Xml.Linq;
 using SCVE.Components.Layouts;
 using SCVE.Components.Legacy;
 using SCVE.Components.UpToDate;
-using SCVE.Core;
+using SCVE.Core.Misc;
 using SCVE.Core.Primitives;
 using SCVE.Core.Texts;
+using SCVE.Core.UI;
 
 namespace SCVE.Components
 {

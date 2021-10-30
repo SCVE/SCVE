@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
+using SCVE.Core.Misc;
 using SCVE.Core.Utilities;
 
 namespace SCVE.Core.Primitives

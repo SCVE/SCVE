@@ -1,7 +1,7 @@
 ﻿using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Core
+namespace SCVE.Core.UI
 {
     public class RenderableComponent : Component
     {

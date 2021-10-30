@@ -1,6 +1,6 @@
 ﻿using SCVE.Core.Utilities;
 
-namespace SCVE.Core
+namespace SCVE.Core.Entities
 {
     public class GeometryData
     {

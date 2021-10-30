@@ -1,6 +1,6 @@
-﻿using SCVE.Core;
-using SCVE.Core.App;
+﻿using SCVE.Core.App;
 using SCVE.Core.Rendering;
+using SCVE.Core.UI;
 
 namespace SCVE.Components.Legacy
 {

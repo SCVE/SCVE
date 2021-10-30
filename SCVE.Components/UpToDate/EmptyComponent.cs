@@ -1,5 +1,5 @@
-﻿using SCVE.Core;
-using SCVE.Core.Rendering;
+﻿using SCVE.Core.Rendering;
+using SCVE.Core.UI;
 
 namespace SCVE.Components.UpToDate
 {

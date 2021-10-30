@@ -1,6 +1,6 @@
 using System;
 
-namespace SCVE.Core
+namespace SCVE.Core.Misc
 {
     public class ScveException : Exception
     {

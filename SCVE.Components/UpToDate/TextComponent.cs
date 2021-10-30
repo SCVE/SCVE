@@ -1,8 +1,8 @@
 ﻿using System;
-using SCVE.Core;
 using SCVE.Core.App;
 using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
+using SCVE.Core.UI;
 using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate

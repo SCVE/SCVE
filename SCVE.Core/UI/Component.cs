@@ -2,7 +2,7 @@
 using SCVE.Core.Entities;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Core
+namespace SCVE.Core.UI
 {
     public abstract class Component : IRenderable
     {

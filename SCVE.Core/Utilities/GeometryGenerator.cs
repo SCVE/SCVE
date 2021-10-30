@@ -1,6 +1,7 @@
-﻿using SCVE.Core.Primitives;
+﻿using SCVE.Core.Entities;
+using SCVE.Core.Primitives;
 
-namespace SCVE.Core
+namespace SCVE.Core.Utilities
 {
     public class GeometryGenerator
     {

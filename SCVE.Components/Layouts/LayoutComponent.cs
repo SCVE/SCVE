@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SCVE.Components.UpToDate;
-using SCVE.Core;
 using SCVE.Core.Rendering;
+using SCVE.Core.UI;
 
 namespace SCVE.Components.Layouts
 {

@@ -1,6 +1,6 @@
-﻿using SCVE.Core;
-using SCVE.Core.Primitives;
+﻿using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
+using SCVE.Core.UI;
 using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate
