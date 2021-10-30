@@ -27,8 +27,6 @@ The app uses OpenTK and GLFW for window and OpenGL manipulation.
 For now the app will display layouted rectangles
 
 ![image](https://user-images.githubusercontent.com/44116740/139516757-28043c3b-250e-4f29-9a83-152bb5303f9e.png)
-
-
 Done: 
 - Window handling
 - Application scope
@@ -47,6 +45,9 @@ Done:
 - Shader Program Caching
 - Vertical and Horizontal Layouts
 - Text Rendering via font atlas
+- Font via atlas
+- UI from file
+- Font caching
 
 In Progress:
 
