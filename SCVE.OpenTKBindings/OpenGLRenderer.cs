@@ -101,6 +101,7 @@ namespace SCVE.OpenTKBindings
         public void SetFromWindow(ScveWindow window)
         {
             SetViewport(0, 0, window.Width, window.Height);
+            GL.Scissor(0, 0, window.Width, window.Height);
 
             ProjectionMatrix
                 .MakeIdentity()
@@ -214,7 +215,7 @@ namespace SCVE.OpenTKBindings
 
             GL.DrawArrays(PrimitiveType.Lines, 0, 2);
         }
-        
+
         public void RenderText(ScveFont font, string text, float fontSize, float x, float y)
         {
             float destLineHeight = Maths.FontSizeToLineHeight(fontSize);
@@ -302,9 +303,9 @@ namespace SCVE.OpenTKBindings
         // TODO: Extract clip component
         public void RenderText(ScveFont font, string text, float fontSize, float x, float y, float clipWidth, float clipHeight)
         {
-            GL.Scissor((int)x, (int)(Application.Instance.MainWindow.Height - (int)clipHeight - y), (int)clipWidth, (int)clipHeight);
+            //GL.Scissor((int)x, (int)(Application.Instance.MainWindow.Height - (int)clipHeight - y), (int)clipWidth, (int)clipHeight);
             RenderText(font, text, fontSize, x, y);
-            GL.Scissor(0, 0, Application.Instance.MainWindow.Width, Application.Instance.MainWindow.Height);
+            //GL.Scissor(0, 0, Application.Instance.MainWindow.Width, Application.Instance.MainWindow.Height);
         }
 
         private static VertexArray CreatePositiveUnitVertexArray()

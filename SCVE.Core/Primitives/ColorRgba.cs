@@ -24,5 +24,14 @@ namespace SCVE.Core.Primitives
             B = b;
             A = a;
         }
+
+        public ColorRgba(ColorRgba color)
+        {
+            Logger.Construct(nameof(ColorRgba));
+            R = color.R;
+            G = color.G;
+            B = color.B;
+            A = color.A;
+        }
     }
 }

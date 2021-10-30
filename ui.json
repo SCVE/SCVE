@@ -1,0 +1,382 @@
+{
+  "ContentWidth": 576.6094,
+  "ContentHeight": 214,
+  "Style": {
+    "Width": 800,
+    "Height": 600,
+    "MaxWidth": 3.4028235E+38,
+    "MaxHeight": 3.4028235E+38,
+    "MinWidth": 0,
+    "MinHeight": 0,
+    "AlignmentDirection": 0,
+    "HorizontalAlignmentBehavior": 0,
+    "VerticalAlignmentBehavior": 0,
+    "PrimaryColor": {
+      "R": 1,
+      "G": 1,
+      "B": 1,
+      "A": 1
+    }
+  },
+  "Children": [
+    {
+      "ContentWidth": 576.6094,
+      "ContentHeight": 214,
+      "Style": {
+        "Width": 0,
+        "Height": 0,
+        "MaxWidth": 3.4028235E+38,
+        "MaxHeight": 3.4028235E+38,
+        "MinWidth": 0,
+        "MinHeight": 0,
+        "AlignmentDirection": 1,
+        "HorizontalAlignmentBehavior": 0,
+        "VerticalAlignmentBehavior": 0,
+        "PrimaryColor": {
+          "R": 1,
+          "G": 1,
+          "B": 1,
+          "A": 1
+        }
+      },
+      "Children": [
+        {
+          "ContentWidth": 200,
+          "ContentHeight": 50,
+          "Style": {
+            "Width": 800,
+            "Height": 600,
+            "MaxWidth": 3.4028235E+38,
+            "MaxHeight": 3.4028235E+38,
+            "MinWidth": 0,
+            "MinHeight": 0,
+            "AlignmentDirection": 0,
+            "HorizontalAlignmentBehavior": 0,
+            "VerticalAlignmentBehavior": 0,
+            "PrimaryColor": {
+              "R": 1,
+              "G": 1,
+              "B": 1,
+              "A": 1
+            }
+          },
+          "Children": [
+            {
+              "ContentWidth": 50,
+              "ContentHeight": 50,
+              "Style": {
+                "Width": 0,
+                "Height": 0,
+                "MaxWidth": 3.4028235E+38,
+                "MaxHeight": 3.4028235E+38,
+                "MinWidth": 50,
+                "MinHeight": 50,
+                "AlignmentDirection": 0,
+                "HorizontalAlignmentBehavior": 0,
+                "VerticalAlignmentBehavior": 0,
+                "PrimaryColor": {
+                  "R": 1,
+                  "G": 0,
+                  "B": 0,
+                  "A": 1
+                }
+              },
+              "Children": []
+            },
+            {
+              "ContentWidth": 50,
+              "ContentHeight": 50,
+              "Style": {
+                "Width": 0,
+                "Height": 0,
+                "MaxWidth": 3.4028235E+38,
+                "MaxHeight": 3.4028235E+38,
+                "MinWidth": 50,
+                "MinHeight": 50,
+                "AlignmentDirection": 0,
+                "HorizontalAlignmentBehavior": 0,
+                "VerticalAlignmentBehavior": 0,
+                "PrimaryColor": {
+                  "R": 0,
+                  "G": 1,
+                  "B": 0,
+                  "A": 1
+                }
+              },
+              "Children": []
+            },
+            {
+              "ContentWidth": 50,
+              "ContentHeight": 50,
+              "Style": {
+                "Width": 0,
+                "Height": 0,
+                "MaxWidth": 3.4028235E+38,
+                "MaxHeight": 3.4028235E+38,
+                "MinWidth": 50,
+                "MinHeight": 50,
+                "AlignmentDirection": 0,
+                "HorizontalAlignmentBehavior": 0,
+                "VerticalAlignmentBehavior": 0,
+                "PrimaryColor": {
+                  "R": 0,
+                  "G": 0,
+                  "B": 1,
+                  "A": 1
+                }
+              },
+              "Children": []
+            },
+            {
+              "ContentWidth": 50,
+              "ContentHeight": 50,
+              "Style": {
+                "Width": 0,
+                "Height": 0,
+                "MaxWidth": 3.4028235E+38,
+                "MaxHeight": 3.4028235E+38,
+                "MinWidth": 50,
+                "MinHeight": 50,
+                "AlignmentDirection": 0,
+                "HorizontalAlignmentBehavior": 0,
+                "VerticalAlignmentBehavior": 0,
+                "PrimaryColor": {
+                  "R": 1,
+                  "G": 1,
+                  "B": 0,
+                  "A": 1
+                }
+              },
+              "Children": []
+            }
+          ]
+        },
+        {
+          "ContentWidth": 100,
+          "ContentHeight": 50,
+          "Style": {
+            "Width": 800,
+            "Height": 600,
+            "MaxWidth": 3.4028235E+38,
+            "MaxHeight": 3.4028235E+38,
+            "MinWidth": 0,
+            "MinHeight": 0,
+            "AlignmentDirection": 0,
+            "HorizontalAlignmentBehavior": 0,
+            "VerticalAlignmentBehavior": 0,
+            "PrimaryColor": {
+              "R": 1,
+              "G": 1,
+              "B": 1,
+              "A": 1
+            }
+          },
+          "Children": [
+            {
+              "ContentWidth": 50,
+              "ContentHeight": 50,
+              "Style": {
+                "Width": 800,
+                "Height": 600,
+                "MaxWidth": 3.4028235E+38,
+                "MaxHeight": 3.4028235E+38,
+                "MinWidth": 0,
+                "MinHeight": 0,
+                "AlignmentDirection": 0,
+                "HorizontalAlignmentBehavior": 0,
+                "VerticalAlignmentBehavior": 0,
+                "PrimaryColor": {
+                  "R": 1,
+                  "G": 1,
+                  "B": 1,
+                  "A": 1
+                }
+              },
+              "Children": [
+                {
+                  "ContentWidth": 50,
+                  "ContentHeight": 50,
+                  "Style": {
+                    "Width": 0,
+                    "Height": 0,
+                    "MaxWidth": 3.4028235E+38,
+                    "MaxHeight": 3.4028235E+38,
+                    "MinWidth": 50,
+                    "MinHeight": 50,
+                    "AlignmentDirection": 0,
+                    "HorizontalAlignmentBehavior": 0,
+                    "VerticalAlignmentBehavior": 0,
+                    "PrimaryColor": {
+                      "R": 0,
+                      "G": 1,
+                      "B": 1,
+                      "A": 1
+                    }
+                  },
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "ContentWidth": 50,
+              "ContentHeight": 50,
+              "Style": {
+                "Width": 800,
+                "Height": 600,
+                "MaxWidth": 3.4028235E+38,
+                "MaxHeight": 3.4028235E+38,
+                "MinWidth": 0,
+                "MinHeight": 0,
+                "AlignmentDirection": 0,
+                "HorizontalAlignmentBehavior": 0,
+                "VerticalAlignmentBehavior": 0,
+                "PrimaryColor": {
+                  "R": 1,
+                  "G": 1,
+                  "B": 1,
+                  "A": 1
+                }
+              },
+              "Children": [
+                {
+                  "ContentWidth": 50,
+                  "ContentHeight": 50,
+                  "Style": {
+                    "Width": 0,
+                    "Height": 0,
+                    "MaxWidth": 3.4028235E+38,
+                    "MaxHeight": 3.4028235E+38,
+                    "MinWidth": 50,
+                    "MinHeight": 50,
+                    "AlignmentDirection": 0,
+                    "HorizontalAlignmentBehavior": 0,
+                    "VerticalAlignmentBehavior": 0,
+                    "PrimaryColor": {
+                      "R": 1,
+                      "G": 0,
+                      "B": 1,
+                      "A": 1
+                    }
+                  },
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ContentWidth": 50,
+          "ContentHeight": 50,
+          "Style": {
+            "Width": 0,
+            "Height": 0,
+            "MaxWidth": 3.4028235E+38,
+            "MaxHeight": 3.4028235E+38,
+            "MinWidth": 50,
+            "MinHeight": 50,
+            "AlignmentDirection": 0,
+            "HorizontalAlignmentBehavior": 0,
+            "VerticalAlignmentBehavior": 0,
+            "PrimaryColor": {
+              "R": 1,
+              "G": 1,
+              "B": 1,
+              "A": 1
+            }
+          },
+          "Children": []
+        },
+        {
+          "ContentWidth": 576.6094,
+          "ContentHeight": 64,
+          "Style": {
+            "Width": 800,
+            "Height": 600,
+            "MaxWidth": 3.4028235E+38,
+            "MaxHeight": 3.4028235E+38,
+            "MinWidth": 0,
+            "MinHeight": 0,
+            "AlignmentDirection": 0,
+            "HorizontalAlignmentBehavior": 0,
+            "VerticalAlignmentBehavior": 0,
+            "PrimaryColor": {
+              "R": 1,
+              "G": 1,
+              "B": 1,
+              "A": 1
+            }
+          },
+          "Children": [
+            {
+              "ContentWidth": 576.6094,
+              "ContentHeight": 64,
+              "Style": {
+                "Width": 800,
+                "Height": 600,
+                "MaxWidth": 3.4028235E+38,
+                "MaxHeight": 3.4028235E+38,
+                "MinWidth": 0,
+                "MinHeight": 0,
+                "AlignmentDirection": 0,
+                "HorizontalAlignmentBehavior": 0,
+                "VerticalAlignmentBehavior": 0,
+                "PrimaryColor": {
+                  "R": 1,
+                  "G": 1,
+                  "B": 1,
+                  "A": 1
+                }
+              },
+              "Children": []
+            }
+          ]
+        },
+        {
+          "ContentWidth": 0,
+          "ContentHeight": 0,
+          "Style": {
+            "Width": 800,
+            "Height": 600,
+            "MaxWidth": 3.4028235E+38,
+            "MaxHeight": 3.4028235E+38,
+            "MinWidth": 0,
+            "MinHeight": 0,
+            "AlignmentDirection": 0,
+            "HorizontalAlignmentBehavior": 0,
+            "VerticalAlignmentBehavior": 0,
+            "PrimaryColor": {
+              "R": 1,
+              "G": 1,
+              "B": 1,
+              "A": 1
+            }
+          },
+          "Children": [
+            {
+              "ContentWidth": 0,
+              "ContentHeight": 0,
+              "Style": {
+                "Width": 800,
+                "Height": 600,
+                "MaxWidth": 3.4028235E+38,
+                "MaxHeight": 3.4028235E+38,
+                "MinWidth": 0,
+                "MinHeight": 0,
+                "AlignmentDirection": 0,
+                "HorizontalAlignmentBehavior": 0,
+                "VerticalAlignmentBehavior": 0,
+                "PrimaryColor": {
+                  "R": 1,
+                  "G": 1,
+                  "B": 1,
+                  "A": 1
+                }
+              },
+              "Children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

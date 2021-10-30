@@ -36,9 +36,7 @@ namespace SCVE.Core.App
 
         public CachesContainer Cache;
 
-        public Component RootComponent { get; set; }
-
-        public Component ActiveComponent { get; set; }
+        public ComponentRoot ComponentRoot { get; set; }
 
         private Application(ApplicationInit init)
         {
@@ -68,9 +66,9 @@ namespace SCVE.Core.App
                 throw new ScveException("App is not ready");
             }
 
-            if (RootComponent is null)
+            if (ComponentRoot is null)
             {
-                throw new ScveException("No root component is present");
+                throw new ScveException("No component root is present");
             }
 
             _state = AppState.Running;
@@ -95,7 +93,7 @@ namespace SCVE.Core.App
 
                 Renderer.Clear();
 
-                RootComponent.Render(Renderer);
+                ComponentRoot.Render(Renderer, 0, 0);
 
                 MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 
@@ -117,7 +115,7 @@ namespace SCVE.Core.App
                 throw new ScveException("App is not ready");
             }
 
-            if (RootComponent is null)
+            if (ComponentRoot is null)
             {
                 throw new ScveException("No root component is present");
             }
@@ -143,7 +141,7 @@ namespace SCVE.Core.App
 
             Renderer.Clear();
 
-            RootComponent.Render(Renderer);
+            ComponentRoot.Render(Renderer, 0, 0);
 
             MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 

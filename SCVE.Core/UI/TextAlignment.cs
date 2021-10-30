@@ -1,4 +1,4 @@
-﻿namespace SCVE.Core.Texts
+﻿namespace SCVE.Core.UI
 {
     public enum TextAlignment
     {

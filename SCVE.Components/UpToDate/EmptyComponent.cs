@@ -9,12 +9,13 @@ namespace SCVE.Components.UpToDate
         {
         }
 
-        public override void Render(IRenderer renderer)
+        public EmptyComponent(ComponentStyle style) : base(style)
         {
-            for (var i = 0; i < Children.Count; i++)
-            {
-                Children[i].Render(renderer);
-            }
+        }
+
+        public override void Render(IRenderer renderer, float x, float y)
+        {
+            RenderChildren(renderer, x, y);
         }
     }
 }

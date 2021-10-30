@@ -33,13 +33,25 @@ namespace SCVE.Components.UpToDate
             Application.Instance.Input.Scroll += InputOnScroll;
 
             Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
-            
+
             Rebuild();
         }
 
-        protected override void OnResized()
+        public TextComponent(ComponentStyle style, string fontFileName, float fontSize, string text, TextAlignment alignment) : base(style)
         {
-            // We need to override this, because no scaling or translatin is needed for text
+            Logger.Construct(nameof(TextComponent));
+            _fontFileName = fontFileName;
+            _fontSize = fontSize;
+            _text = text;
+            _alignment = alignment;
+
+            // NOTE: for text alignment we can precalculate the sum of all advances (width of the text)
+
+            Application.Instance.Input.Scroll += InputOnScroll;
+
+            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
+
+            Rebuild();
         }
 
         private void InputOnScroll(float arg1, float arg2)
@@ -57,17 +69,24 @@ namespace SCVE.Components.UpToDate
                 // Don't even calculate or allocate memory, when text is aligned to left, it's automatically rendered as a single scve-render pass
                 return;
             }
-            
+
             _lines = _text.Split('\n');
             _lineWidths = new float[_lines.Length];
+            float maxLineWidth = 0f;
             for (var i = 0; i < _lines.Length; i++)
             {
                 var textMeasurement = TextMeasurer.MeasureText(Font, _lines[i], _fontSize);
                 _lineWidths[i] = textMeasurement.Width;
+                if (textMeasurement.Width > maxLineWidth)
+                {
+                    maxLineWidth = textMeasurement.Width;
+                }
             }
+
+            SetContentSize(maxLineWidth, _lines.Length * Maths.FontSizeToLineHeight(_fontSize));
         }
 
-        public override void Render(IRenderer renderer)
+        public override void Render(IRenderer renderer, float x, float y)
         {
             var lineHeight = Maths.FontSizeToLineHeight(_fontSize);
             switch (_alignment)
@@ -75,7 +94,7 @@ namespace SCVE.Components.UpToDate
                 case TextAlignment.Left:
                 {
                     // When rendering with left alignment, renderer will take care of line alignment (it's always zero)
-                    renderer.RenderText(Font, _text, _fontSize, X, Y, PixelWidth, PixelHeight);
+                    renderer.RenderText(Font, _text, _fontSize, x, y, ContentWidth, ContentHeight);
                     break;
                 }
                 case TextAlignment.Center:
@@ -83,8 +102,9 @@ namespace SCVE.Components.UpToDate
                     // When rendering with center alignment, we need to render line by line, telling renderer where to start
                     for (var i = 0; i < _lines.Length; i++)
                     {
-                        renderer.RenderText(Font, _lines[i], _fontSize, X + PixelWidth / 2 - _lineWidths[i] / 2, Y + lineHeight * i);
+                        renderer.RenderText(Font, _lines[i], _fontSize, x + ContentWidth / 2 - _lineWidths[i] / 2, y + lineHeight * i);
                     }
+
                     break;
                 }
                 case TextAlignment.Right:
@@ -92,13 +112,16 @@ namespace SCVE.Components.UpToDate
                     // When rendering with right alignment, we need to render line by line, telling renderer where to start
                     for (var i = 0; i < _lines.Length; i++)
                     {
-                        renderer.RenderText(Font, _lines[i], _fontSize, X + PixelWidth - _lineWidths[i], Y + lineHeight * i);
+                        renderer.RenderText(Font, _lines[i], _fontSize, x + ContentWidth - _lineWidths[i], y + lineHeight * i);
                     }
+
                     break;
                 }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_alignment));
             }
+            
+            RenderChildren(renderer, x, y);
         }
     }
 }

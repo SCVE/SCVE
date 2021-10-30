@@ -1,14 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using SCVE.Components;
-using SCVE.Components.Layouts;
-using SCVE.Core;
 using SCVE.Core.App;
-using SCVE.Core.Caches;
 using SCVE.Core.Entities;
-using SCVE.Core.Primitives;
-using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
+using SCVE.Core.UI;
 using SCVE.ImageSharpBindings;
 using SCVE.Null;
 using SCVE.OpenTKBindings;
@@ -39,10 +36,14 @@ namespace Playground
 
             application.Renderer.SetFromWindow(application.MainWindow);
 
-            application.RootComponent = UIBuilder.Build(File.ReadAllText("assets/UI/default.ui.xml"));
+            application.ComponentRoot = new ComponentRoot(UIBuilder.Build(File.ReadAllText("assets/UI/default.ui.xml")));
 
-            application.RootComponent.SetPositionAndSize(0, 0, application.MainWindow.Width, application.MainWindow.Height);
-
+            File.WriteAllText("ui.json", JsonSerializer.Serialize(application.ComponentRoot, new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                IncludeFields = true
+            }));
+            
             application.Run();
 
             Console.WriteLine("Exiting");

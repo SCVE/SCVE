@@ -1,65 +1,222 @@
-﻿using System.Collections.Generic;
-using SCVE.Core.Entities;
+﻿using System;
+using System.Collections.Generic;
+using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
 
 namespace SCVE.Core.UI
 {
-    public abstract class Component : IRenderable
+    public abstract class Component
     {
         protected Component Parent;
-        protected List<Component> Children = new();
+        public List<Component> Children = new();
 
-        public float PixelWidth { get; private set; }
-        public float PixelHeight { get; private set; }
+        public float ContentWidth { get; private set; }
 
-        /// <summary>
-        /// This should ALWAYS be the most left of the component in screen space
-        /// </summary>
-        public float X { get; private set; }
+        public float ContentHeight { get; private set; }
 
         /// <summary>
-        /// This should ALWAYS be the most top of the component in screen space
+        /// The style of the component
         /// </summary>
-        public float Y { get; private set; }
+        public ComponentStyle Style { get; private set; }
 
-        // NOTE: This is odd! I can't call OnResize in derived types when it's protected
-        protected virtual void OnResized()
+        protected Component() : this(ComponentStyle.Default)
         {
         }
 
-        public void SetPositionAndSize(float x, float y, float width, float height)
+        protected Component(ComponentStyle style)
         {
-            X = x;
-            Y = y;
-            PixelWidth = width;
-            PixelHeight = height;
-
-            OnResized();
+            Style = style;
+            SetContentSize(
+                MathF.Max(style.MinWidth, style.Width),
+                MathF.Max(style.MinHeight, style.Height)
+            );
         }
 
-        protected Component()
+        public void SetStyle(ComponentStyle style)
         {
+            Style = style;
+            SetContentSize(
+                MathF.Max(MathF.Max(style.MinWidth, style.Width), ContentWidth),
+                MathF.Max(MathF.Max(style.MinHeight, style.Height), ContentHeight)
+            );
         }
 
-        public virtual void AddChild(Component component)
+        public void AddChild(Component child)
         {
-            Children.Add(component);
-            component.SetParent(this);
+            Children.Add(child);
+            child.Parent = this;
+            SubtreeUpdated();
         }
 
-        public virtual void SetParent(Component component)
+        public void RemoveChild(Component child)
         {
-            Parent = component;
+            Children.Remove(child);
+            child.Parent = null;
+            SubtreeUpdated();
         }
 
-        protected void RenderChildren(IRenderer renderer)
+        protected virtual void SubtreeUpdated()
         {
-            for (var i = 0; i < Children.Count; i++)
+            // Default to update self
+            RecalculateSelfContentSize();
+            this.Parent?.SubtreeUpdated();
+        }
+
+        /// <summary>
+        /// Set a parent component for current component
+        /// </summary>
+        public void MoveParent(Component parent)
+        {
+            this.Parent?.RemoveChild(this);
+
+            parent.AddChild(this);
+        }
+
+        protected void SetContentSize(float width, float height)
+        {
+            ContentWidth = width;
+            ContentHeight = height;
+        }
+
+        protected void RenderChildren(IRenderer renderer, float x, float y)
+        {
+            float offsetX = 0;
+            float offsetY = 0;
+
+            switch (Style.AlignmentDirection)
             {
-                Children[i].Render(renderer);
+                case AlignmentDirection.Horizontal:
+                    switch (Style.HorizontalAlignmentBehavior)
+                    {
+                        case AlignmentBehavior.Start:
+                        {
+                            offsetX = x;
+                            offsetY = y;
+
+                            for (var i = 0; i < Children.Count; i++)
+                            {
+                                Children[i].Render(renderer, offsetX, offsetY);
+                                offsetX += Children[i].ContentWidth;
+                            }
+
+                            break;
+                        }
+                        case AlignmentBehavior.Center:
+
+                            throw new ScveException("Center alignment is currently not supported");
+
+                            break;
+                        case AlignmentBehavior.End:
+
+                            throw new ScveException("End alignment is currently not supported");
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(Style.HorizontalAlignmentBehavior));
+                    }
+
+                    break;
+                case AlignmentDirection.Vertical:
+                    switch (Style.VerticalAlignmentBehavior)
+                    {
+                        case AlignmentBehavior.Start:
+                        {
+                            offsetX = x;
+                            offsetY = y;
+
+                            for (var i = 0; i < Children.Count; i++)
+                            {
+                                Children[i].Render(renderer, offsetX, offsetY);
+                                offsetY += Children[i].ContentHeight;
+                            }
+
+                            break;
+                        }
+                        case AlignmentBehavior.Center:
+
+                            throw new ScveException("Center alignment is currently not supported");
+
+                            break;
+                        case AlignmentBehavior.End:
+
+                            throw new ScveException("End alignment is currently not supported");
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(Style.HorizontalAlignmentBehavior));
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        public abstract void Render(IRenderer renderer);
+        private void RecalculateSelfContentSize()
+        {
+            float offsetX = 0;
+            float offsetY = 0;
+            switch (Style.AlignmentDirection)
+            {
+                case AlignmentDirection.Horizontal:
+                    switch (Style.HorizontalAlignmentBehavior)
+                    {
+                        case AlignmentBehavior.Start:
+                        {
+                            for (var i = 0; i < Children.Count; i++)
+                            {
+                                offsetX += Children[i].ContentWidth;
+                                offsetY = MathF.Max(offsetY, Children[i].ContentHeight);
+                            }
+
+                            break;
+                        }
+                        case AlignmentBehavior.Center:
+
+                            throw new ScveException("Center alignment is currently not supported");
+
+                            break;
+                        case AlignmentBehavior.End:
+
+                            throw new ScveException("End alignment is currently not supported");
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(Style.HorizontalAlignmentBehavior));
+                    }
+
+                    break;
+                case AlignmentDirection.Vertical:
+                    switch (Style.VerticalAlignmentBehavior)
+                    {
+                        case AlignmentBehavior.Start:
+                        {
+                            for (var i = 0; i < Children.Count; i++)
+                            {
+                                offsetX = MathF.Max(offsetX, Children[i].ContentWidth);
+                                offsetY += Children[i].ContentHeight;
+                            }
+
+                            break;
+                        }
+                        case AlignmentBehavior.Center:
+
+                            throw new ScveException("Center alignment is currently not supported");
+
+                            break;
+                        case AlignmentBehavior.End:
+
+                            throw new ScveException("End alignment is currently not supported");
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(Style.HorizontalAlignmentBehavior));
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            SetContentSize(offsetX, offsetY);
+        }
+
+        public abstract void Render(IRenderer renderer, float x, float y);
     }
 }

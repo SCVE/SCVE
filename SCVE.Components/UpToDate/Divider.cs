@@ -26,34 +26,23 @@ namespace SCVE.Components.UpToDate
 
             _shaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("FlatColor_MVP_Uniform");
 
-            Application.Instance.Input.CursorMoved += InputOnCursorMoved;
+            // Application.Instance.Input.CursorMoved += InputOnCursorMoved;
         }
 
-        private void InputOnCursorMoved(float arg1, float arg2)
-        {
-            _visible = Maths.PointInRect(
-                x: X,
-                y: Y,
-                width: PixelWidth,
-                height: PixelHeight,
-                px: Application.Instance.Input.GetCursorX(),
-                py: Application.Instance.Input.GetCursorY()
-            );
-        }
+        // Migrate to layout
+        // private void InputOnCursorMoved(float arg1, float arg2)
+        // {
+        //     _visible = Maths.PointInRect(
+        //         x: X,
+        //         y: Y,
+        //         width: PixelWidth,
+        //         height: PixelHeight,
+        //         px: Application.Instance.Input.GetCursorX(),
+        //         py: Application.Instance.Input.GetCursorY()
+        //     );
+        // }
 
-        protected override void OnResized()
-        {
-            var scale = ScveMatrix4X4.CreateScale(PixelWidth, PixelHeight);
-            ModelMatrix.MakeIdentity().Multiply(scale).Multiply(ScveMatrix4X4.CreateTranslation(X, Y, 0f));
-            // Logger.Warn($"Divider set to ({X}, {Y}, {PixelWidth}, {PixelHeight})");
-        }
-
-        public override void AddChild(Component component)
-        {
-            throw new ScveException("Divider is not supposed to have any children");
-        }
-
-        public override void Render(IRenderer renderer)
+        public override void Render(IRenderer renderer, float x, float y)
         {
             if (!_visible)
             {

@@ -1,4 +1,5 @@
-﻿using SCVE.Core.Primitives;
+﻿using System;
+using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.UI;
 using SCVE.Core.Utilities;
@@ -7,22 +8,24 @@ namespace SCVE.Components.UpToDate
 {
     public class ColorRectComponent : RenderableComponent
     {
-        private ColorRgba _colorRgba;
-
-        public ColorRectComponent(ColorRgba colorRgba)
+        public ColorRectComponent():base()
         {
             Logger.Construct(nameof(ColorRectComponent));
-            _colorRgba = colorRgba;
         }
 
-        public override void Render(IRenderer renderer)
+        public ColorRectComponent(ComponentStyle style) : base(style)
         {
-            renderer.RenderColorRect(X, Y, PixelWidth, PixelHeight, _colorRgba);
+            Logger.Construct(nameof(ColorRectComponent));
+        }
 
-            for (var i = 0; i < Children.Count; i++)
-            {
-                Children[i].Render(renderer);
-            }
+        public override void Render(IRenderer renderer, float x, float y)
+        {
+            float selfWidth = MathF.Max(Style.MinWidth, MathF.Min(Style.MaxWidth, ContentWidth));
+            float selfHeight = MathF.Max(Style.MinHeight, MathF.Min(Style.MaxHeight, ContentHeight));
+
+            renderer.RenderColorRect(x, y, selfWidth, selfHeight, Style.PrimaryColor);
+
+            RenderChildren(renderer, x, y);
         }
     }
 }
