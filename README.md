@@ -3,9 +3,13 @@ Super Cool Video Editor
 
 Written in C#.
 
-Inspired by Hazel.
+Inspired by [Hazel](https://github.com/TheCherno/Hazel).
 
-Based on Hazel, OpenTK, ImageSharp and likely many more.
+Based on: 
+- [OpenTK](https://github.com/opentk/opentk/), 
+- [ImageSharp](https://github.com/SixLabors/ImageSharp/), 
+- [SharpFont](https://github.com/SpacialCircumstances/SharpFont) 
+- likely many more.
 
 ## Solution structure
 - SCVE.Core contains all core abstractions, needed for the app.
@@ -22,7 +26,7 @@ The app uses OpenTK and GLFW for window and OpenGL manipulation.
 ## Current state
 For now the app will display layouted rectangles
 
-![image](https://user-images.githubusercontent.com/44116740/138205421-9bc43231-356b-46f7-a5d7-fc6959c64131.png)
+![image](https://user-images.githubusercontent.com/44116740/139516757-28043c3b-250e-4f29-9a83-152bb5303f9e.png)
 
 
 Done: 
@@ -42,15 +46,16 @@ Done:
 - MVP matrices to create a model-view space
 - Shader Program Caching
 - Vertical and Horizontal Layouts
+- Text Rendering via font atlas
 
 In Progress:
 
 ## TODO
-- Text Rendering via SharpFont (copy from SFML)
 
 ## Possible backends
 - Silk.Net
 - glfw-net
+- SFML.NET
 
 ## Investigations
 
@@ -70,14 +75,14 @@ This matrix translates the model into World Space
 - World Space defines object relative to world center.
 
 View Matrix.
-This is a camera matrix (ortho or perspective)
+This is a camera matrix
 This matrix translates the model into Camera Space.
 
 - Camera Space defines object relative to camera.
 
 Projection Matrix.
 
-This is a homogenous transformer (mapper to -1 to 1 space)
+This is a homogenous transformer (mapper to -1 to 1 space)  (ortho or perspective)
 
 This matrix translates the model into Screen Space.
 
@@ -95,3 +100,4 @@ So each vertex(vec3) must be processed like this:
 
 When the model updates are seldom, we can extract the model matrix from MVP,
 so that we use only View-Projection as a constant, and supply vertex already multiplied by Model Matrix.
+But currently I don't do this. It requires more human-hours to understand.
