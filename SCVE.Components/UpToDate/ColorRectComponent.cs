@@ -1,18 +1,17 @@
 ﻿using SCVE.Core;
-using SCVE.Core.App;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 
-namespace SCVE.Components
+namespace SCVE.Components.UpToDate
 {
-    public class FullFlexColoredRectComponent : RenderableComponent
+    public class ColorRectComponent : RenderableComponent
     {
         private ColorRgba _colorRgba;
 
-        public FullFlexColoredRectComponent(ColorRgba colorRgba)
+        public ColorRectComponent(ColorRgba colorRgba)
         {
-            Logger.Construct(nameof(FullFlexColoredRectComponent));
+            Logger.Construct(nameof(ColorRectComponent));
             _colorRgba = colorRgba;
         }
 

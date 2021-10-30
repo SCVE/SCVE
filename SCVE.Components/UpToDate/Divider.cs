@@ -4,7 +4,7 @@ using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 
-namespace SCVE.Components
+namespace SCVE.Components.UpToDate
 {
     public class Divider : RenderableComponent
     {

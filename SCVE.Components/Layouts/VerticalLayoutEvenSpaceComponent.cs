@@ -1,4 +1,6 @@
-﻿namespace SCVE.Components.Layouts
+﻿using SCVE.Components.UpToDate;
+
+namespace SCVE.Components.Layouts
 {
     public class VerticalLayoutEvenSpaceComponent : LayoutComponent
     {

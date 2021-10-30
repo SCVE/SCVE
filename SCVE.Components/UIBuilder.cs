@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 using SCVE.Components.Layouts;
 using SCVE.Components.Legacy;
+using SCVE.Components.UpToDate;
 using SCVE.Core;
 using SCVE.Core.Primitives;
 using SCVE.Core.Texts;
@@ -69,14 +70,14 @@ namespace SCVE.Components
             );
         }
 
-        private static FullFlexColoredRectComponent ProcessColorRectElement(XElement xElement)
+        private static ColorRectComponent ProcessColorRectElement(XElement xElement)
         {
             float r = Convert.ToSingle(xElement.Attribute("r")?.Value ?? "0");
             float g = Convert.ToSingle(xElement.Attribute("g")?.Value ?? "0");
             float b = Convert.ToSingle(xElement.Attribute("b")?.Value ?? "0");
             float a = Convert.ToSingle(xElement.Attribute("a")?.Value ?? "0");
 
-            return new FullFlexColoredRectComponent(
+            return new ColorRectComponent(
                 new ColorRgba(r, g, b, a)
             );
         }

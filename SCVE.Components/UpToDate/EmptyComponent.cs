@@ -1,8 +1,7 @@
 ﻿using SCVE.Core;
-using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 
-namespace SCVE.Components
+namespace SCVE.Components.UpToDate
 {
     public class EmptyComponent : Component
     {

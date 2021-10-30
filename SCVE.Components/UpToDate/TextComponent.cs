@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using SCVE.Core;
 using SCVE.Core.App;
 using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
 using SCVE.Core.Utilities;
 
-namespace SCVE.Components
+namespace SCVE.Components.UpToDate
 {
     public class TextComponent : RenderableComponent
     {
