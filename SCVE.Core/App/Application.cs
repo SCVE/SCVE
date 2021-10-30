@@ -73,29 +73,16 @@ namespace SCVE.Core.App
 
             _state = AppState.Running;
 
-            float time = 0f;
-            ColorRgba colorRgba = new ColorRgba();
             Logger.Warn("Starting Main Loop");
             while (_state == AppState.Running)
             {
                 float deltaTime = DeltaTimeProvider.Get();
                 _scope.Update(deltaTime);
 
-                // time += deltaTime;
-                // float sin = (MathF.Sin(time * MathF.PI) + 1) * 0.5f;
-                // float brightness = sin * sin;
-                // color.R = brightness;
-                // color.G = brightness;
-                // color.B = brightness;
-                // color.A = 1;
-
-                // Renderer.SetClearColor(color);
-
                 Renderer.Clear();
 
+                ComponentRoot.Update(deltaTime);
                 ComponentRoot.Render(Renderer);
-
-                MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 
                 MainWindow.OnUpdate();
             }
@@ -122,28 +109,16 @@ namespace SCVE.Core.App
 
             _state = AppState.Running;
 
-            float time = 0f;
-            ColorRgba colorRgba = new ColorRgba();
             Logger.Warn("Starting Main Loop");
 
             float deltaTime = DeltaTimeProvider.Get();
             _scope.Update(deltaTime);
 
-            // time += deltaTime;
-            // float sin = (MathF.Sin(time * MathF.PI) + 1) * 0.5f;
-            // float brightness = sin * sin;
-            // color.R = brightness;
-            // color.G = brightness;
-            // color.B = brightness;
-            // color.A = 1;
-
-            // Renderer.SetClearColor(color);
-
             Renderer.Clear();
+            
+            ComponentRoot.Update(deltaTime);
 
             ComponentRoot.Render(Renderer);
-
-            MainWindow.SetTitle($"FPS: {1 / deltaTime}");
 
             MainWindow.OnUpdate();
 

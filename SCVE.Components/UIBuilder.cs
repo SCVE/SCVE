@@ -28,6 +28,7 @@ namespace SCVE.Components
                 "color-rect" => ProcessColorRectElement(xElement),
                 "text" => ProcessTextElement(xElement),
                 "outline" => ProcessOutlineElement(xElement),
+                "fps-counter" => ProcessFpsCounterElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             component.SetStyle(ExtractStyles(xElement));
@@ -37,6 +38,11 @@ namespace SCVE.Components
             }
 
             return component;
+        }
+
+        private static Component ProcessFpsCounterElement(XElement xElement)
+        {
+            return new FpsCounter();
         }
 
         private static Component ProcessOutlineElement(XElement xElement)

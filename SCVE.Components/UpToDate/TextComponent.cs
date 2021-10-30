@@ -62,14 +62,14 @@ namespace SCVE.Components.UpToDate
             Rebuild();
         }
 
+        public void SetText(string text)
+        {
+            _text = text;
+            Rebuild();
+        }
+        
         private void Rebuild()
         {
-            if (_alignment == TextAlignment.Left)
-            {
-                // Don't even calculate or allocate memory, when text is aligned to left, it's automatically rendered as a single scve-render pass
-                return;
-            }
-
             _lines = _text.Split('\n');
             _lineWidths = new float[_lines.Length];
             float maxLineWidth = 0f;

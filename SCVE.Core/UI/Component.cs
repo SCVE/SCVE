@@ -72,6 +72,19 @@ namespace SCVE.Core.UI
             parent.AddChild(this);
         }
 
+        protected virtual void SelfProcessUpdate(float deltaTime)
+        {
+        }
+
+        public void Update(float deltaTime)
+        {
+            SelfProcessUpdate(deltaTime);
+            for (var i = 0; i < Children.Count; i++)
+            {
+                Children[i].Update(deltaTime);
+            }
+        }
+
         protected void SetContentSize(float width, float height)
         {
             ContentWidth = width;
