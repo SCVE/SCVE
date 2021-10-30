@@ -96,10 +96,10 @@ namespace SCVE.Core.UI
             float offsetX = 0;
             float offsetY = 0;
 
-            switch (Style.AlignmentDirection)
+            switch (Style.AlignmentDirection.Value)
             {
                 case AlignmentDirection.Horizontal:
-                    switch (Style.HorizontalAlignmentBehavior)
+                    switch (Style.HorizontalAlignmentBehavior.Value)
                     {
                         case AlignmentBehavior.Start:
                         {
@@ -129,7 +129,7 @@ namespace SCVE.Core.UI
 
                     break;
                 case AlignmentDirection.Vertical:
-                    switch (Style.VerticalAlignmentBehavior)
+                    switch (Style.VerticalAlignmentBehavior.Value)
                     {
                         case AlignmentBehavior.Start:
                         {
@@ -167,10 +167,10 @@ namespace SCVE.Core.UI
         {
             float offsetX = 0;
             float offsetY = 0;
-            switch (Style.AlignmentDirection)
+            switch (Style.AlignmentDirection.Value)
             {
                 case AlignmentDirection.Horizontal:
-                    switch (Style.HorizontalAlignmentBehavior)
+                    switch (Style.HorizontalAlignmentBehavior.Value)
                     {
                         case AlignmentBehavior.Start:
                         {
@@ -197,7 +197,7 @@ namespace SCVE.Core.UI
 
                     break;
                 case AlignmentDirection.Vertical:
-                    switch (Style.VerticalAlignmentBehavior)
+                    switch (Style.VerticalAlignmentBehavior.Value)
                     {
                         case AlignmentBehavior.Start:
                         {

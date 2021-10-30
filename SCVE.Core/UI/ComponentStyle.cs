@@ -1,4 +1,5 @@
 ﻿using SCVE.Core.Primitives;
+using SCVE.Core.UI.StyleValues;
 
 namespace SCVE.Core.UI
 {
@@ -10,52 +11,52 @@ namespace SCVE.Core.UI
         /// <summary>
         /// Current width of the component
         /// </summary>
-        public float Width { get; set; }
+        public FloatStyleValue Width { get; set; }
 
         /// <summary>
         /// Current height of the component
         /// </summary>
-        public float Height { get; set; }
+        public FloatStyleValue Height { get; set; }
         
         /// <summary>
         /// Max width of the component, default to <see cref="float.MaxValue">float.MaxValue</see>
         /// </summary>
-        public float MaxWidth { get; set; }
+        public FloatStyleValue MaxWidth { get; set; }
 
         /// <summary>
         /// Max height of the component, default to <see cref="float.MaxValue">float.MaxValue</see>
         /// </summary>
-        public float MaxHeight { get; set; }
+        public FloatStyleValue MaxHeight { get; set; }
 
         /// <summary>
         /// Min width of the component, default to 0
         /// </summary>
-        public float MinWidth { get; set; }
+        public FloatStyleValue MinWidth { get; set; }
 
         /// <summary>
         /// Min height of the component, default to 0
         /// </summary>
-        public float MinHeight { get; set; }
+        public FloatStyleValue MinHeight { get; set; }
 
         /// <summary>
         /// Alignment direction of children
         /// </summary>
-        public AlignmentDirection AlignmentDirection { get; set; }
+        public StyleValue<AlignmentDirection> AlignmentDirection { get; set; }
 
         /// <summary>
         /// Horizontal alignment of the children, defaults to left
         /// </summary>
-        public AlignmentBehavior HorizontalAlignmentBehavior { get; set; }
+        public StyleValue<AlignmentBehavior> HorizontalAlignmentBehavior { get; set; }
 
         /// <summary>
         /// Vertical alignment of the children, defaults to top
         /// </summary>
-        public AlignmentBehavior VerticalAlignmentBehavior { get; set; }
+        public StyleValue<AlignmentBehavior> VerticalAlignmentBehavior { get; set; }
 
         /// <summary>
         /// Primary component color, default White
         /// </summary>
-        public ColorRgba PrimaryColor { get; set; }
+        public ColorStyleValue PrimaryColor { get; set; }
 
         public ComponentStyle(float width, float height, float maxWidth, float maxHeight, float minWidth, float minHeight, AlignmentDirection alignmentDirection, AlignmentBehavior horizontalAlignmentBehavior, AlignmentBehavior verticalAlignmentBehavior, ColorRgba primaryColor)
         {
@@ -78,7 +79,7 @@ namespace SCVE.Core.UI
             maxHeight: float.MaxValue,
             minWidth: 0,
             minHeight: 0,
-            alignmentDirection: AlignmentDirection.Horizontal,
+            alignmentDirection: UI.AlignmentDirection.Horizontal,
             horizontalAlignmentBehavior: AlignmentBehavior.Start,
             verticalAlignmentBehavior: AlignmentBehavior.Start,
             primaryColor: ColorRgba.White
