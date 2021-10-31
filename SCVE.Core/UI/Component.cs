@@ -1,64 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using SCVE.Core.Misc;
+﻿using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
 
 namespace SCVE.Core.UI
 {
     public abstract class Component
     {
-        protected Component Parent;
-        public List<Component> Children = new();
+        public Component Parent;
 
-        public float ContentWidth { get; private set; }
+        public float SelfContentWidth { get; protected set; }
+        public float SelfContentHeight { get; protected set; }
 
-        public float ContentHeight { get; private set; }
+        public float ScreenWidth { get; set; }
+        public float ScreenHeight { get; set; }
 
         /// <summary>
         /// The style of the component
         /// </summary>
-        public ComponentStyle Style { get; private set; }
+        public ComponentStyle Style { get; protected set; }
 
-        protected Component() : this(ComponentStyle.Default)
+        protected Component()
         {
         }
 
-        protected Component(ComponentStyle style)
+        public virtual void OnSetStyle()
         {
-            Style = style;
-            SetContentSize(
-                MathF.Max(style.MinWidth, style.Width),
-                MathF.Max(style.MinHeight, style.Height)
-            );
         }
 
         public void SetStyle(ComponentStyle style)
         {
             Style = style;
-            SetContentSize(
-                MathF.Max(MathF.Max(style.MinWidth, style.Width), ContentWidth),
-                MathF.Max(MathF.Max(style.MinHeight, style.Height), ContentHeight)
-            );
+            OnSetStyle();
         }
 
-        public void AddChild(Component child)
+        public virtual void AddChild(Component child)
         {
-            Children.Add(child);
-            child.Parent = this;
-            SubtreeUpdated();
+            throw new ScveException($"Unsupported AddChild for component ({GetType().Name})");
         }
 
-        public void RemoveChild(Component child)
+        public virtual void RemoveChild(Component child)
         {
-            Children.Remove(child);
-            child.Parent = null;
-            SubtreeUpdated();
+            throw new ScveException($"Unsupported RemoveChild for component ({GetType().Name})");
         }
 
         protected virtual void SubtreeUpdated()
         {
-            // Default to update self
-            RecalculateSelfContentSize();
             this.Parent?.SubtreeUpdated();
         }
 
@@ -72,164 +57,26 @@ namespace SCVE.Core.UI
             parent.AddChild(this);
         }
 
-        protected virtual void SelfProcessUpdate(float deltaTime)
+        public virtual void Update(float deltaTime)
         {
         }
 
-        public void Update(float deltaTime)
+        public void SetSelfContentSize(float width, float height)
         {
-            SelfProcessUpdate(deltaTime);
-            for (var i = 0; i < Children.Count; i++)
-            {
-                Children[i].Update(deltaTime);
-            }
+            SelfContentWidth  = width;
+            SelfContentHeight = height;
         }
 
-        protected void SetContentSize(float width, float height)
+        public void SetScreenSize(float width, float height)
         {
-            ContentWidth = width;
-            ContentHeight = height;
+            ScreenWidth  = width;
+            ScreenHeight = height;
         }
 
-        protected void RenderChildren(IRenderer renderer, float x, float y)
+        public virtual void Reflow(float parentWidth, float parentHeight)
         {
-            float offsetX = 0;
-            float offsetY = 0;
-
-            switch (Style.AlignmentDirection.Value)
-            {
-                case AlignmentDirection.Horizontal:
-                    switch (Style.HorizontalAlignmentBehavior.Value)
-                    {
-                        case AlignmentBehavior.Start:
-                        {
-                            offsetX = x;
-                            offsetY = y;
-
-                            for (var i = 0; i < Children.Count; i++)
-                            {
-                                Children[i].RenderSelf(renderer, offsetX, offsetY);
-                                offsetX += Children[i].ContentWidth;
-                            }
-
-                            break;
-                        }
-                        case AlignmentBehavior.Center:
-
-                            throw new ScveException("Center alignment is currently not supported");
-
-                            break;
-                        case AlignmentBehavior.End:
-
-                            throw new ScveException("End alignment is currently not supported");
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(Style.HorizontalAlignmentBehavior));
-                    }
-
-                    break;
-                case AlignmentDirection.Vertical:
-                    switch (Style.VerticalAlignmentBehavior.Value)
-                    {
-                        case AlignmentBehavior.Start:
-                        {
-                            offsetX = x;
-                            offsetY = y;
-
-                            for (var i = 0; i < Children.Count; i++)
-                            {
-                                Children[i].RenderSelf(renderer, offsetX, offsetY);
-                                offsetY += Children[i].ContentHeight;
-                            }
-
-                            break;
-                        }
-                        case AlignmentBehavior.Center:
-
-                            throw new ScveException("Center alignment is currently not supported");
-
-                            break;
-                        case AlignmentBehavior.End:
-
-                            throw new ScveException("End alignment is currently not supported");
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(Style.HorizontalAlignmentBehavior));
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
-        private void RecalculateSelfContentSize()
-        {
-            float offsetX = 0;
-            float offsetY = 0;
-            switch (Style.AlignmentDirection.Value)
-            {
-                case AlignmentDirection.Horizontal:
-                    switch (Style.HorizontalAlignmentBehavior.Value)
-                    {
-                        case AlignmentBehavior.Start:
-                        {
-                            for (var i = 0; i < Children.Count; i++)
-                            {
-                                offsetX += Children[i].ContentWidth;
-                                offsetY = MathF.Max(offsetY, Children[i].ContentHeight);
-                            }
-
-                            break;
-                        }
-                        case AlignmentBehavior.Center:
-
-                            throw new ScveException("Center alignment is currently not supported");
-
-                            break;
-                        case AlignmentBehavior.End:
-
-                            throw new ScveException("End alignment is currently not supported");
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(Style.HorizontalAlignmentBehavior));
-                    }
-
-                    break;
-                case AlignmentDirection.Vertical:
-                    switch (Style.VerticalAlignmentBehavior.Value)
-                    {
-                        case AlignmentBehavior.Start:
-                        {
-                            for (var i = 0; i < Children.Count; i++)
-                            {
-                                offsetX = MathF.Max(offsetX, Children[i].ContentWidth);
-                                offsetY += Children[i].ContentHeight;
-                            }
-
-                            break;
-                        }
-                        case AlignmentBehavior.Center:
-
-                            throw new ScveException("Center alignment is currently not supported");
-
-                            break;
-                        case AlignmentBehavior.End:
-
-                            throw new ScveException("End alignment is currently not supported");
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(Style.HorizontalAlignmentBehavior));
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            SetContentSize(offsetX, offsetY);
-        }
-
-        protected abstract void RenderSelf(IRenderer renderer, float x, float y);
+        public abstract void RenderSelf(IRenderer renderer, float x, float y);
     }
 }

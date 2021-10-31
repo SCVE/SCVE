@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<group style="alignment-direction=horizontal;horizontal-alignment-behavior=center;">
+    <color-rect style="width=50; height=50; primary-color=rgba255(255,0,0,255)"/>
+    <color-rect style="width=50; height=50; primary-color=rgba255(0,255,0,255)"/>
+    <color-rect style="width=50; height=50; primary-color=rgba255(0,0,255,255)"/>
+    <color-rect style="width=50; height=50; primary-color=rgba255(255,255,0,255)"/>
+    <color-rect style="width=50; height=50; primary-color=rgba255(255,255,255,255)"/>
+</group>

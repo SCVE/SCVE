@@ -17,7 +17,7 @@ namespace SCVE.Core.UI
         /// Current height of the component
         /// </summary>
         public FloatStyleValue Height { get; set; }
-        
+
         /// <summary>
         /// Max width of the component, default to <see cref="float.MaxValue">float.MaxValue</see>
         /// </summary>
@@ -57,32 +57,46 @@ namespace SCVE.Core.UI
         /// Primary component color, default White
         /// </summary>
         public ColorStyleValue PrimaryColor { get; set; }
-
-        public ComponentStyle(float width, float height, float maxWidth, float maxHeight, float minWidth, float minHeight, AlignmentDirection alignmentDirection, AlignmentBehavior horizontalAlignmentBehavior, AlignmentBehavior verticalAlignmentBehavior, ColorRgba primaryColor)
+        
+        public ComponentStyle(FloatStyleValue width, FloatStyleValue height, FloatStyleValue maxWidth, FloatStyleValue maxHeight, FloatStyleValue minWidth, FloatStyleValue minHeight, StyleValue<AlignmentDirection> alignmentDirection, StyleValue<AlignmentBehavior> horizontalAlignmentBehavior, StyleValue<AlignmentBehavior> verticalAlignmentBehavior, ColorStyleValue primaryColor)
         {
-            Width = width;
-            Height = height;
-            MaxWidth = maxWidth;
-            MaxHeight = maxHeight;
-            MinWidth = minWidth;
-            MinHeight = minHeight;
-            AlignmentDirection = alignmentDirection;
+            Width                       = width;
+            Height                      = height;
+            MaxWidth                    = maxWidth;
+            MaxHeight                   = maxHeight;
+            MinWidth                    = minWidth;
+            MinHeight                   = minHeight;
+            AlignmentDirection          = alignmentDirection;
             HorizontalAlignmentBehavior = horizontalAlignmentBehavior;
-            VerticalAlignmentBehavior = verticalAlignmentBehavior;
-            PrimaryColor = primaryColor;
+            VerticalAlignmentBehavior   = verticalAlignmentBehavior;
+            PrimaryColor                = primaryColor;
+        }
+
+        public ComponentStyle(ComponentStyle componentStyle)
+        {
+            Width                       = componentStyle.Width;
+            Height                      = componentStyle.Height;
+            MaxWidth                    = componentStyle.MaxWidth;
+            MaxHeight                   = componentStyle.MaxHeight;
+            MinWidth                    = componentStyle.MinWidth;
+            MinHeight                   = componentStyle.MinHeight;
+            AlignmentDirection          = componentStyle.AlignmentDirection;
+            HorizontalAlignmentBehavior = componentStyle.HorizontalAlignmentBehavior;
+            VerticalAlignmentBehavior   = componentStyle.VerticalAlignmentBehavior;
+            PrimaryColor                = componentStyle.PrimaryColor;
         }
 
         public static ComponentStyle Default = new(
-            width: 0,
-            height: 0,
-            maxWidth: float.MaxValue,
-            maxHeight: float.MaxValue,
-            minWidth: 0,
-            minHeight: 0,
-            alignmentDirection: UI.AlignmentDirection.Horizontal,
-            horizontalAlignmentBehavior: AlignmentBehavior.Start,
-            verticalAlignmentBehavior: AlignmentBehavior.Start,
-            primaryColor: ColorRgba.White
+            width: new FloatStyleValue(0),
+            height: new FloatStyleValue(0),
+            maxWidth: new FloatStyleValue(float.MaxValue),
+            maxHeight: new FloatStyleValue(float.MaxValue),
+            minWidth: new FloatStyleValue(0),
+            minHeight: new FloatStyleValue(0),
+            alignmentDirection: new StyleValue<AlignmentDirection>(UI.AlignmentDirection.Horizontal),
+            horizontalAlignmentBehavior: new StyleValue<AlignmentBehavior>(AlignmentBehavior.Start),
+            verticalAlignmentBehavior: new StyleValue<AlignmentBehavior>(AlignmentBehavior.Start),
+            primaryColor: new ColorStyleValue(ColorRgba.White)
         );
     }
 }

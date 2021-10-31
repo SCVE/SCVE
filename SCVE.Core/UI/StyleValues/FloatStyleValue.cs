@@ -2,6 +2,10 @@
 {
     public class FloatStyleValue : StyleValue<float>
     {
+        public bool IsAbsolute { get; set; }
+
+        public bool IsRelative { get; set; }
+        
         public FloatStyleValue() : base(0)
         {
         }

@@ -36,7 +36,7 @@ namespace Playground
 
             application.Renderer.SetFromWindow(application.MainWindow);
 
-            application.ComponentRoot = new ComponentRoot(UIBuilder.Build(File.ReadAllText("assets/UI/default.ui.xml")));
+            application.ComponentRoot = new ComponentRoot(UIBuilder.Build(File.ReadAllText("assets/UI/simple.ui.xml")));
 
             // File.WriteAllText("ui.json", JsonSerializer.Serialize(application.ComponentRoot, new JsonSerializerOptions()
             // {

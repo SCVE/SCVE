@@ -33,5 +33,10 @@ namespace SCVE.Core.Primitives
             B = color.B;
             A = color.A;
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(R)}: {R}, {nameof(G)}: {G}, {nameof(B)}: {B}, {nameof(A)}: {A}";
+        }
     }
 }

@@ -8,24 +8,20 @@ namespace SCVE.Components.UpToDate
 {
     public class ColorRectComponent : RenderableComponent
     {
-        public ColorRectComponent():base()
+        public ColorRectComponent()
         {
             Logger.Construct(nameof(ColorRectComponent));
         }
 
-        public ColorRectComponent(ComponentStyle style) : base(style)
+        public override void OnSetStyle()
         {
-            Logger.Construct(nameof(ColorRectComponent));
+            SetSelfContentSize(Style.Width, Style.Height);
+            Logger.Warn($"Set ColorRect Color to {Style.PrimaryColor.Value}");
         }
 
-        protected override void RenderSelf(IRenderer renderer, float x, float y)
+        public override void RenderSelf(IRenderer renderer, float x, float y)
         {
-            float selfWidth = MathF.Max(Style.MinWidth, MathF.Min(Style.MaxWidth, ContentWidth));
-            float selfHeight = MathF.Max(Style.MinHeight, MathF.Min(Style.MaxHeight, ContentHeight));
-
-            renderer.RenderColorRect(x, y, selfWidth, selfHeight, Style.PrimaryColor);
-
-            RenderChildren(renderer, x, y);
+            renderer.RenderColorRect(x, y, SelfContentWidth, SelfContentHeight, Style.PrimaryColor.Value);
         }
     }
 }

@@ -4,15 +4,11 @@ namespace SCVE.Components.UpToDate
 {
     public class FpsCounter : TextComponent
     {
-        public FpsCounter() : this(ComponentStyle.Default)
+        public FpsCounter() : base("arial.ttf", 24, "", TextAlignment.Left)
         {
         }
 
-        public FpsCounter(ComponentStyle style) : base(style, "arial.ttf", 24, "", TextAlignment.Left)
-        {
-        }
-
-        protected override void SelfProcessUpdate(float deltaTime)
+        public override void Update(float deltaTime)
         {
             SetText($"{1 / deltaTime :F} FPS");
         }

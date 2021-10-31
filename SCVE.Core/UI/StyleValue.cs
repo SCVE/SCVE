@@ -2,21 +2,19 @@
 {
     public class StyleValue<T>
     {
-        public T Value { get; }
+        public T Value { get; set; }
 
-        public StyleValue(T value)
+        public bool Specified { get; set; }
+
+        public StyleValue(T value, bool specified = false)
         {
-            Value = value;
+            Value     = value;
+            Specified = specified;
         }
 
-        public static implicit operator T(StyleValue<T> value)
+        public override string ToString()
         {
-            return value.Value;
-        }
-
-        public static implicit operator StyleValue<T>(T value)
-        {
-            return new StyleValue<T>(value);
+            return Value.ToString();
         }
     }
 }

@@ -6,6 +6,7 @@ using SCVE.Components.UpToDate;
 using SCVE.Core.Misc;
 using SCVE.Core.Primitives;
 using SCVE.Core.UI;
+using SCVE.Core.UI.StyleValues;
 using SCVE.Core.Utilities;
 
 namespace SCVE.Components
@@ -24,11 +25,11 @@ namespace SCVE.Components
 
             Component component = localName switch
             {
-                "empty" => ProcessEmptyElement(xElement),
                 "color-rect" => ProcessColorRectElement(xElement),
                 "text" => ProcessTextElement(xElement),
                 "outline" => ProcessOutlineElement(xElement),
                 "fps-counter" => ProcessFpsCounterElement(xElement),
+                "group" => ProcessGroupElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             component.SetStyle(ExtractStyles(xElement));
@@ -38,6 +39,11 @@ namespace SCVE.Components
             }
 
             return component;
+        }
+
+        private static Component ProcessGroupElement(XElement xElement)
+        {
+            return new GroupComponent();
         }
 
         private static Component ProcessFpsCounterElement(XElement xElement)
@@ -71,27 +77,23 @@ namespace SCVE.Components
             return new ColorRectComponent();
         }
 
-        private static EmptyComponent ProcessEmptyElement(XElement xElement)
-        {
-            return new EmptyComponent();
-        }
-
         private static ComponentStyle ExtractStyles(XElement xElement)
         {
-            float width = ComponentStyle.Default.Width;
-            float height = ComponentStyle.Default.Height;
-            float maxWidth = ComponentStyle.Default.MaxWidth;
-            float maxHeight = ComponentStyle.Default.MaxHeight;
-            float minWidth = ComponentStyle.Default.MinWidth;
-            float minHeight = ComponentStyle.Default.MinHeight;
-            AlignmentDirection alignmentDirection = ComponentStyle.Default.AlignmentDirection;
-            AlignmentBehavior horizontalAlignmentBehavior = ComponentStyle.Default.HorizontalAlignmentBehavior;
-            AlignmentBehavior verticalAlignmentBehavior = ComponentStyle.Default.VerticalAlignmentBehavior;
-            ColorRgba primaryColor = new ColorRgba(ComponentStyle.Default.PrimaryColor);
+            var defaultStyle = ComponentStyle.Default;
+            FloatStyleValue width = defaultStyle.Width;
+            FloatStyleValue height = defaultStyle.Height;
+            FloatStyleValue maxWidth = defaultStyle.MaxWidth;
+            FloatStyleValue maxHeight = defaultStyle.MaxHeight;
+            FloatStyleValue minWidth = defaultStyle.MinWidth;
+            FloatStyleValue minHeight = defaultStyle.MinHeight;
+            StyleValue<AlignmentDirection> alignmentDirection = defaultStyle.AlignmentDirection;
+            StyleValue<AlignmentBehavior> horizontalAlignmentBehavior = defaultStyle.HorizontalAlignmentBehavior;
+            StyleValue<AlignmentBehavior> verticalAlignmentBehavior = defaultStyle.VerticalAlignmentBehavior;
+            ColorStyleValue primaryColor = new ColorStyleValue(new ColorRgba(defaultStyle.PrimaryColor.Value));
 
             if (xElement.Attribute("style") is not { } attribute)
             {
-                return ComponentStyle.Default;
+                return defaultStyle;
             }
 
             var tokens = attribute.Value.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -112,61 +114,61 @@ namespace SCVE.Components
                 {
                     case "width":
                     {
-                        if (!float.TryParse(styleValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out width))
+                        if (!TryParseFloatStyle(width, styleValue))
                         {
-                            Logger.Warn($"Failed to parse (width) style property! Value ({styleValue})");
+                            Logger.Warn("Failed to parse width style");
                         }
 
                         break;
                     }
                     case "height":
                     {
-                        if (!float.TryParse(styleValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out height))
+                        if (!TryParseFloatStyle(height, styleValue))
                         {
-                            Logger.Warn($"Failed to parse (height) style property! Value ({styleValue})");
+                            Logger.Warn("Failed to parse height style");
                         }
 
                         break;
                     }
                     case "max-width":
                     {
-                        if (!float.TryParse(styleValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out maxWidth))
+                        if (!TryParseFloatStyle(maxWidth, styleValue))
                         {
-                            Logger.Warn($"Failed to parse (max-width) style property! Value ({styleValue})");
+                            Logger.Warn("Failed to parse max-width style");
                         }
 
                         break;
                     }
                     case "max-height":
                     {
-                        if (!float.TryParse(styleValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out maxHeight))
+                        if (!TryParseFloatStyle(maxHeight, styleValue))
                         {
-                            Logger.Warn($"Failed to parse (max-height) style property! Value ({styleValue})");
+                            Logger.Warn("Failed to parse max-height style");
                         }
 
                         break;
                     }
                     case "min-width":
                     {
-                        if (!float.TryParse(styleValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out minWidth))
+                        if (!TryParseFloatStyle(minWidth, styleValue))
                         {
-                            Logger.Warn($"Failed to parse (min-width) style property! Value ({styleValue})");
+                            Logger.Warn("Failed to parse min-width style");
                         }
 
                         break;
                     }
                     case "min-height":
                     {
-                        if (!float.TryParse(styleValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out minHeight))
+                        if (!TryParseFloatStyle(minHeight, styleValue))
                         {
-                            Logger.Warn($"Failed to parse (min-height) style property! Value ({styleValue})");
+                            Logger.Warn("Failed to parse min-height style");
                         }
 
                         break;
                     }
                     case "alignment-direction":
                     {
-                        if (!Enum.TryParse(styleValue, true, out alignmentDirection))
+                        if (!TryParseEnumStyle(alignmentDirection, styleValue))
                         {
                             Logger.Warn($"Failed to parse (horizontal-alignment) style property! Value ({styleValue})");
                         }
@@ -175,18 +177,18 @@ namespace SCVE.Components
                     }
                     case "horizontal-alignment-behavior":
                     {
-                        if (!Enum.TryParse(styleValue, true, out horizontalAlignmentBehavior))
+                        if (!TryParseEnumStyle(horizontalAlignmentBehavior, styleValue))
                         {
-                            Logger.Warn($"Failed to parse (horizontal-alignment) style property! Value ({styleValue})");
+                            Logger.Warn($"Failed to parse (horizontal-alignment-behavior) style property! Value ({styleValue})");
                         }
 
                         break;
                     }
                     case "vertical-alignment-behavior":
                     {
-                        if (!Enum.TryParse(styleValue, true, out verticalAlignmentBehavior))
+                        if (!TryParseEnumStyle(verticalAlignmentBehavior, styleValue))
                         {
-                            Logger.Warn($"Failed to parse (vertical-alignment) style property! Value ({styleValue})");
+                            Logger.Warn($"Failed to parse (vertical-alignment-behavior) style property! Value ({styleValue})");
                         }
 
                         break;
@@ -199,19 +201,19 @@ namespace SCVE.Components
                             substring = substring.Substring(0, substring.LastIndexOf(')'));
                             var values = substring.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                             float r, g, b, a;
-                            if (!float.TryParse(values[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out r)||
-                                !float.TryParse(values[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out g)||
-                                !float.TryParse(values[2], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out b)||
-                                !float.TryParse(values[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out a)
-                                )
+                            if (!TryParseRawFloat(values[0], out r) ||
+                                !TryParseRawFloat(values[1], out g) ||
+                                !TryParseRawFloat(values[2], out b) ||
+                                !TryParseRawFloat(values[3], out a)
+                            )
                             {
-                                throw new ScveException($"Failed to parse rgba values ({styleValue})");
+                                throw new ScveException($"Failed to parse rgba255 values ({styleValue})");
                             }
 
-                            primaryColor.R = r / 255;
-                            primaryColor.G = g / 255;
-                            primaryColor.B = b / 255;
-                            primaryColor.A = a / 255;
+                            primaryColor.Value.R = r / 255;
+                            primaryColor.Value.G = g / 255;
+                            primaryColor.Value.B = b / 255;
+                            primaryColor.Value.A = a / 255;
                         }
                         else if (styleValue.StartsWith("rgba01"))
                         {
@@ -219,19 +221,19 @@ namespace SCVE.Components
                             substring = substring.Substring(0, substring.LastIndexOf(')'));
                             var values = substring.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                             float r, g, b, a;
-                            if (!float.TryParse(values[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out r)||
-                                !float.TryParse(values[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out g)||
-                                !float.TryParse(values[2], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out b)||
-                                !float.TryParse(values[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out a)
+                            if (!TryParseRawFloat(values[0], out r) ||
+                                !TryParseRawFloat(values[1], out g) ||
+                                !TryParseRawFloat(values[2], out b) ||
+                                !TryParseRawFloat(values[3], out a)
                             )
                             {
-                                throw new ScveException($"Failed to parse rgba values ({styleValue})");
+                                throw new ScveException($"Failed to parse rgba01 values ({styleValue})");
                             }
 
-                            primaryColor.R = r;
-                            primaryColor.G = g;
-                            primaryColor.B = b;
-                            primaryColor.A = a;
+                            primaryColor.Value.R = r;
+                            primaryColor.Value.G = g;
+                            primaryColor.Value.B = b;
+                            primaryColor.Value.A = a;
                         }
 
                         break;
@@ -251,6 +253,65 @@ namespace SCVE.Components
                 verticalAlignmentBehavior: verticalAlignmentBehavior,
                 primaryColor: primaryColor
             );
+        }
+
+        private static bool TryParseRawFloat(string styleValue, out float value)
+        {
+            return float.TryParse(styleValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out value);
+        }
+
+        private static bool TryParseFloatStyle(FloatStyleValue style, string styleValue)
+        {
+            if (styleValue.EndsWith('%'))
+            {
+                if (TryParseRawFloat(styleValue.Substring(0, styleValue.Length - 1), out var value))
+                {
+                    style.IsRelative = true;
+                    style.IsAbsolute = false;
+                    style.Value      = value;
+                    style.Specified  = true;
+                    return true;
+                }
+                else
+                {
+                    Logger.Warn($"Failed to parse float value with % ({styleValue})");
+                    style.Specified = false;
+                    return false;
+                }
+            }
+            else
+            {
+                if (TryParseRawFloat(styleValue, out var value))
+                {
+                    style.IsRelative = false;
+                    style.IsAbsolute = true;
+                    style.Value      = value;
+                    style.Specified  = true;
+                    return true;
+                }
+                else
+                {
+                    Logger.Warn($"Failed to parse absolute float value ({styleValue})");
+                    style.Specified = false;
+                    return false;
+                }
+            }
+        }
+
+        private static bool TryParseEnumStyle<T>(StyleValue<T> style, string styleValue) where T : struct, Enum
+        {
+            if (Enum.TryParse(styleValue, true, out T parsed))
+            {
+                style.Value     = parsed;
+                style.Specified = true;
+                return true;
+            }
+            else
+            {
+                Logger.Warn($"Failed to parse enum style property! Value ({styleValue})");
+                style.Specified = false;
+                return false;
+            }
         }
     }
 }

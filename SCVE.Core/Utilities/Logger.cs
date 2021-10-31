@@ -43,6 +43,23 @@ namespace SCVE.Core.Utilities
             Warn(string.Format(format, args));
         }
 
+        public static void WarnIndent(string warn, int indent = 0)
+        {
+            if (MinLevel > LogLevel.Warn) return;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            for (int i = 0; i < indent; i++)
+            {
+                Console.Write("  ");
+            }
+            Console.WriteLine($"WARN: {warn}");
+            Console.ResetColor();
+        }
+
+        public static void WarnIndent(string format, int indent = 0, params object[] args)
+        {
+            Warn(string.Format(format, args));
+        }
+
         public static void Error(string error)
         {
             if (MinLevel > LogLevel.Error) return;

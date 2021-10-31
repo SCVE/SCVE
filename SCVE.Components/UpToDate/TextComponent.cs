@@ -37,23 +37,6 @@ namespace SCVE.Components.UpToDate
             Rebuild();
         }
 
-        public TextComponent(ComponentStyle style, string fontFileName, float fontSize, string text, TextAlignment alignment) : base(style)
-        {
-            Logger.Construct(nameof(TextComponent));
-            _fontFileName = fontFileName;
-            _fontSize = fontSize;
-            _text = text;
-            _alignment = alignment;
-
-            // NOTE: for text alignment we can precalculate the sum of all advances (width of the text)
-
-            Application.Instance.Input.Scroll += InputOnScroll;
-
-            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
-
-            Rebuild();
-        }
-
         private void InputOnScroll(float arg1, float arg2)
         {
             Logger.Warn($"Scrolled {arg2}");
@@ -66,6 +49,7 @@ namespace SCVE.Components.UpToDate
         {
             _text = text;
             Rebuild();
+            SubtreeUpdated();
         }
 
         private void Rebuild()
@@ -83,10 +67,10 @@ namespace SCVE.Components.UpToDate
                 }
             }
 
-            SetContentSize(maxLineWidth, _lines.Length * Maths.FontSizeToLineHeight(_fontSize));
+            SetSelfContentSize(maxLineWidth, _lines.Length * Maths.FontSizeToLineHeight(_fontSize));
         }
 
-        protected override void RenderSelf(IRenderer renderer, float x, float y)
+        public override void RenderSelf(IRenderer renderer, float x, float y)
         {
             var lineHeight = Maths.FontSizeToLineHeight(_fontSize);
             switch (_alignment)
@@ -94,7 +78,7 @@ namespace SCVE.Components.UpToDate
                 case TextAlignment.Left:
                 {
                     // When rendering with left alignment, renderer will take care of line alignment (it's always zero)
-                    renderer.RenderText(Font, _text, _fontSize, x, y, Style.PrimaryColor, ContentWidth, ContentHeight);
+                    renderer.RenderText(Font, _text, _fontSize, x, y, Style.PrimaryColor.Value, SelfContentWidth, SelfContentHeight);
                     break;
                 }
                 case TextAlignment.Center:
@@ -102,7 +86,7 @@ namespace SCVE.Components.UpToDate
                     // When rendering with center alignment, we need to render line by line, telling renderer where to start
                     for (var i = 0; i < _lines.Length; i++)
                     {
-                        renderer.RenderText(Font, _lines[i], _fontSize, x + ContentWidth / 2 - _lineWidths[i] / 2, y + lineHeight * i, Style.PrimaryColor);
+                        renderer.RenderText(Font, _lines[i], _fontSize, x + SelfContentWidth / 2 - _lineWidths[i] / 2, y + lineHeight * i, Style.PrimaryColor.Value);
                     }
 
                     break;
@@ -112,7 +96,7 @@ namespace SCVE.Components.UpToDate
                     // When rendering with right alignment, we need to render line by line, telling renderer where to start
                     for (var i = 0; i < _lines.Length; i++)
                     {
-                        renderer.RenderText(Font, _lines[i], _fontSize, x + ContentWidth - _lineWidths[i], y + lineHeight * i, Style.PrimaryColor);
+                        renderer.RenderText(Font, _lines[i], _fontSize, x + SelfContentWidth - _lineWidths[i], y + lineHeight * i, Style.PrimaryColor.Value);
                     }
 
                     break;
@@ -120,8 +104,6 @@ namespace SCVE.Components.UpToDate
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_alignment));
             }
-
-            RenderChildren(renderer, x, y);
         }
     }
 }

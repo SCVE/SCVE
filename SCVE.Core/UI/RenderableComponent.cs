@@ -9,14 +9,6 @@ namespace SCVE.Core.UI
         protected ScveMatrix4X4 TranslationMatrix = ScveMatrix4X4.Identity;
         public ScveMatrix4X4 ModelMatrix = ScveMatrix4X4.Identity;
 
-        public RenderableComponent()
-        {
-        }
-
-        public RenderableComponent(ComponentStyle style) : base(style)
-        {
-        }
-
         // protected override void OnResized()
         // {
         //     var scale = ScaleMatrix.MakeScale(PixelWidth, PixelHeight);

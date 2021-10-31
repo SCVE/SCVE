@@ -29,23 +29,21 @@ namespace SCVE.Components.UpToDate
         //     _visible = Maths.PointInRect(X, Y, PixelWidth, PixelHeight, arg1, arg2);
         // }
 
-        protected override void RenderSelf(IRenderer renderer, float x, float y)
+        public override void RenderSelf(IRenderer renderer, float x, float y)
         {
-            RenderChildren(renderer, x, y);
-
-            if (_visible)
-            {
-                // top
-                renderer.RenderLine(x, y + _width / 2, y + ContentWidth, y + _width / 2, DefaultColor, _width);
-                // right
-                renderer.RenderLine(x + ContentWidth - _width / 2, y, x + ContentWidth - _width / 2, y + ContentHeight, DefaultColor, _width);
-                // bottom
-                renderer.RenderLine(x, y + ContentHeight - _width / 2, x + ContentWidth, y + ContentHeight - _width / 2, DefaultColor, _width);
-                // left
-                renderer.RenderLine(x + _width / 2, y, x + _width / 2, y + ContentHeight, DefaultColor, _width);
-
-                // renderer.RenderWireframe(_vertexArray);
-            }
+            // if (_visible)
+            // {
+            //     // top
+            //     renderer.RenderLine(x, y + _width / 2, x + Com, y + _width / 2, DefaultColor, _width);
+            //     // right
+            //     renderer.RenderLine(x + ContentWidth - _width / 2, y, x + ContentWidth - _width / 2, y + ContentHeight, DefaultColor, _width);
+            //     // bottom
+            //     renderer.RenderLine(x, y + ContentHeight - _width / 2, x + ContentWidth, y + ContentHeight - _width / 2, DefaultColor, _width);
+            //     // left
+            //     renderer.RenderLine(x + _width / 2, y, x + _width / 2, y + ContentHeight, DefaultColor, _width);
+            //
+            //     // renderer.RenderWireframe(_vertexArray);
+            // }
         }
     }
 }

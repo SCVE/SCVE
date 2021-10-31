@@ -42,7 +42,7 @@ namespace SCVE.Components.UpToDate
         //     );
         // }
 
-        protected override void RenderSelf(IRenderer renderer, float x, float y)
+        public override void RenderSelf(IRenderer renderer, float x, float y)
         {
             if (!_visible)
             {
