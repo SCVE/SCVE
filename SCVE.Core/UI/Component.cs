@@ -7,11 +7,16 @@ namespace SCVE.Core.UI
     {
         public Component Parent;
 
-        public float SelfContentWidth { get; protected set; }
-        public float SelfContentHeight { get; protected set; }
+        public float X { get; set; }
+        public float Y { get; set; }
 
-        public float ScreenWidth { get; set; }
-        public float ScreenHeight { get; set; }
+        public float Width { get; set; }
+        public float Height { get; set; }
+
+        public float DesiredWidth { get; set; }
+        public float DesiredHeight { get; set; }
+        
+        public virtual bool HasConstMeasure { get; set; }
 
         /// <summary>
         /// The style of the component
@@ -61,22 +66,26 @@ namespace SCVE.Core.UI
         {
         }
 
-        public void SetSelfContentSize(float width, float height)
-        {
-            SelfContentWidth  = width;
-            SelfContentHeight = height;
-        }
-
-        public void SetScreenSize(float width, float height)
-        {
-            ScreenWidth  = width;
-            ScreenHeight = height;
-        }
-
-        public virtual void Reflow(float parentWidth, float parentHeight)
+        /// <summary>
+        /// Measure the desired component size in available space
+        /// </summary>
+        public virtual void Measure(float availableWidth, float availableHeight)
         {
         }
 
-        public abstract void RenderSelf(IRenderer renderer, float x, float y);
+        /// <summary>
+        /// Sets the final size for the current component
+        /// </summary>
+        public virtual void Arrange(float x, float y, float availableWidth, float availableHeight)
+        {
+            X      = x;
+            Y      = y;
+            Width  = availableWidth;
+            Height = availableHeight;
+        }
+
+        public abstract void PrintComponentTree(int indent);
+
+        public abstract void RenderSelf(IRenderer renderer);
     }
 }

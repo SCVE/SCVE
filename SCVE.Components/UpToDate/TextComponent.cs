@@ -7,7 +7,7 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate
 {
-    public class TextComponent : RenderableComponent
+    public class TextComponent : Component
     {
         public ScveFont Font { get; set; }
 
@@ -20,15 +20,15 @@ namespace SCVE.Components.UpToDate
 
         private TextAlignment _alignment;
 
+        public override bool HasConstMeasure { get; set; } = true;
+
         public TextComponent(string fontFileName, float fontSize, string text, TextAlignment alignment)
         {
             Logger.Construct(nameof(TextComponent));
             _fontFileName = fontFileName;
-            _fontSize = fontSize;
-            _text = text;
-            _alignment = alignment;
-
-            // NOTE: for text alignment we can precalculate the sum of all advances (width of the text)
+            _fontSize     = fontSize;
+            _text         = text;
+            _alignment    = alignment;
 
             Application.Instance.Input.Scroll += InputOnScroll;
 
@@ -41,7 +41,7 @@ namespace SCVE.Components.UpToDate
         {
             Logger.Warn($"Scrolled {arg2}");
             _fontSize += arg2;
-            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
+            Font      =  Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
             Rebuild();
         }
 
@@ -49,12 +49,11 @@ namespace SCVE.Components.UpToDate
         {
             _text = text;
             Rebuild();
-            SubtreeUpdated();
         }
 
         private void Rebuild()
         {
-            _lines = _text.Split('\n');
+            _lines      = _text.Split('\n');
             _lineWidths = new float[_lines.Length];
             float maxLineWidth = 0f;
             for (var i = 0; i < _lines.Length; i++)
@@ -67,10 +66,18 @@ namespace SCVE.Components.UpToDate
                 }
             }
 
-            SetSelfContentSize(maxLineWidth, _lines.Length * Maths.FontSizeToLineHeight(_fontSize));
+            DesiredWidth  = maxLineWidth;
+            DesiredHeight = _lines.Length * Maths.FontSizeToLineHeight(_fontSize);
+
+            SubtreeUpdated();
         }
 
-        public override void RenderSelf(IRenderer renderer, float x, float y)
+        public override void PrintComponentTree(int indent)
+        {
+            Logger.WarnIndent(nameof(TextComponent), indent);
+        }
+
+        public override void RenderSelf(IRenderer renderer)
         {
             var lineHeight = Maths.FontSizeToLineHeight(_fontSize);
             switch (_alignment)
@@ -78,7 +85,7 @@ namespace SCVE.Components.UpToDate
                 case TextAlignment.Left:
                 {
                     // When rendering with left alignment, renderer will take care of line alignment (it's always zero)
-                    renderer.RenderText(Font, _text, _fontSize, x, y, Style.PrimaryColor.Value, SelfContentWidth, SelfContentHeight);
+                    renderer.RenderText(Font, _text, _fontSize, X, Y, Style.PrimaryColor.Value, Width, Height);
                     break;
                 }
                 case TextAlignment.Center:
@@ -86,7 +93,7 @@ namespace SCVE.Components.UpToDate
                     // When rendering with center alignment, we need to render line by line, telling renderer where to start
                     for (var i = 0; i < _lines.Length; i++)
                     {
-                        renderer.RenderText(Font, _lines[i], _fontSize, x + SelfContentWidth / 2 - _lineWidths[i] / 2, y + lineHeight * i, Style.PrimaryColor.Value);
+                        renderer.RenderText(Font, _lines[i], _fontSize, X + Width / 2 - _lineWidths[i] / 2, Y + lineHeight * i, Style.PrimaryColor.Value);
                     }
 
                     break;
@@ -96,7 +103,7 @@ namespace SCVE.Components.UpToDate
                     // When rendering with right alignment, we need to render line by line, telling renderer where to start
                     for (var i = 0; i < _lines.Length; i++)
                     {
-                        renderer.RenderText(Font, _lines[i], _fontSize, x + SelfContentWidth - _lineWidths[i], y + lineHeight * i, Style.PrimaryColor.Value);
+                        renderer.RenderText(Font, _lines[i], _fontSize, X + Width - _lineWidths[i], Y + lineHeight * i, Style.PrimaryColor.Value);
                     }
 
                     break;

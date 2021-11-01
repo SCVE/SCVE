@@ -1,6 +1,7 @@
 ﻿using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.UI;
+using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate
 {
@@ -29,7 +30,13 @@ namespace SCVE.Components.UpToDate
         //     _visible = Maths.PointInRect(X, Y, PixelWidth, PixelHeight, arg1, arg2);
         // }
 
-        public override void RenderSelf(IRenderer renderer, float x, float y)
+
+        public override void PrintComponentTree(int indent)
+        {
+            Logger.WarnIndent(nameof(OutlineComponent), indent);
+        }
+
+        public override void RenderSelf(IRenderer renderer)
         {
             // if (_visible)
             // {

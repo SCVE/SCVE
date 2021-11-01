@@ -42,7 +42,12 @@ namespace SCVE.Components.UpToDate
         //     );
         // }
 
-        public override void RenderSelf(IRenderer renderer, float x, float y)
+        public override void PrintComponentTree(int indent)
+        {
+            Logger.WarnIndent(nameof(Divider), indent);
+        }
+
+        public override void RenderSelf(IRenderer renderer)
         {
             if (!_visible)
             {

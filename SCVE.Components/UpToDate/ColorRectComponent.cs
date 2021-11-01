@@ -1,6 +1,4 @@
-﻿using System;
-using SCVE.Core.Primitives;
-using SCVE.Core.Rendering;
+﻿using SCVE.Core.Rendering;
 using SCVE.Core.UI;
 using SCVE.Core.Utilities;
 
@@ -13,15 +11,29 @@ namespace SCVE.Components.UpToDate
             Logger.Construct(nameof(ColorRectComponent));
         }
 
-        public override void OnSetStyle()
+        public override void Measure(float availableWidth, float availableHeight)
         {
-            SetSelfContentSize(Style.Width, Style.Height);
-            Logger.Warn($"Set ColorRect Color to {Style.PrimaryColor.Value}");
+            DesiredWidth  = Style.Width.Flatten(availableWidth);
+            DesiredHeight = Style.Height.Flatten(availableHeight);
         }
 
-        public override void RenderSelf(IRenderer renderer, float x, float y)
+        public override void Arrange(float x, float y, float availableWidth, float availableHeight)
         {
-            renderer.RenderColorRect(x, y, SelfContentWidth, SelfContentHeight, Style.PrimaryColor.Value);
+            X = x;
+            Y = y;
+            
+            Width  = Style.Width.Flatten(availableWidth);
+            Height = Style.Height.Flatten(availableHeight);
+        }
+
+        public override void PrintComponentTree(int indent)
+        {
+            Logger.WarnIndent($"{nameof(ColorRectComponent)} {X}:{Y}:{Width}:{Height}:{Style.PrimaryColor}", indent);
+        }
+
+        public override void RenderSelf(IRenderer renderer)
+        {
+            renderer.RenderColorRect(X, Y, Width, Height, Style.PrimaryColor.Value);
         }
     }
 }

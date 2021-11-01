@@ -1,9 +1,29 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
-<group style="alignment-direction=horizontal;horizontal-alignment-behavior=center;">
-    <color-rect style="width=50; height=50; primary-color=rgba255(255,0,0,255)"/>
-    <color-rect style="width=50; height=50; primary-color=rgba255(0,255,0,255)"/>
-    <color-rect style="width=50; height=50; primary-color=rgba255(0,0,255,255)"/>
-    <color-rect style="width=50; height=50; primary-color=rgba255(255,255,0,255)"/>
-    <color-rect style="width=50; height=50; primary-color=rgba255(255,255,255,255)"/>
-</group>
+<align direction="vertical" behavior="start">
+    <box style="width=50%;height=80%">
+        <flex direction="vertical">
+            <flex-cell flex="1">
+                <stack>
+                    <color-rect style="width=100%; height=50; primary-color=rgba255(255,0,0,255)"/>
+                    <text font-file-name="arial.ttf" alignment="center" font-size="16"
+                          text="Bird Egop Is God Damn' Cool shit@@&#xA;more text"/>
+                </stack>
+            </flex-cell>
+            <flex-cell flex="1">
+                <color-rect style="width=50; height=50; primary-color=rgba255(0,255,0,255)"/>
+            </flex-cell>
+            <flex-cell flex="3">
+                <align direction="horizontal" behavior="center">
+                    <color-rect style="width=50; height=50; primary-color=rgba255(0,0,255,255)"/>
+                </align>
+            </flex-cell>
+            <flex-cell flex="1">
+                <color-rect style="width=50; height=50; primary-color=rgba255(255,255,0,255)"/>
+            </flex-cell>
+            <flex-cell flex="1">
+                <color-rect style="width=50; height=50; primary-color=rgba255(255,255,255,255)"/>
+            </flex-cell>
+        </flex>
+    </box>
+</align>

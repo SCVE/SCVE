@@ -38,6 +38,8 @@ namespace Playground
 
             application.ComponentRoot = new ComponentRoot(UIBuilder.Build(File.ReadAllText("assets/UI/simple.ui.xml")));
 
+            application.ComponentRoot.PrintComponentTree(0);
+            
             // File.WriteAllText("ui.json", JsonSerializer.Serialize(application.ComponentRoot, new JsonSerializerOptions()
             // {
             //     WriteIndented = true,

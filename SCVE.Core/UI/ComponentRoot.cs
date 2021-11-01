@@ -5,48 +5,52 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Core.UI
 {
-    public class ComponentRoot : Component, IRenderable
+    public class ComponentRoot : ContainerComponent, IRenderable
     {
-        private Component _bootstrappedComponent;
-
         public ComponentRoot(Component bootstrappedComponent)
         {
-            _bootstrappedComponent       = bootstrappedComponent;
-            bootstrappedComponent.Parent = this;
+            AddChild(bootstrappedComponent);
+            
+            Reflow();
 
-            ScreenWidth  = Application.Instance.MainWindow.Width;
-            ScreenHeight = Application.Instance.MainWindow.Height;
-
-            Reflow(ScreenWidth, ScreenHeight);
             Application.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
         }
 
         private void InputOnWindowSizeChanged(int arg1, int arg2)
         {
-            ScreenWidth  = (float)Application.Instance.MainWindow.Width;
-            ScreenHeight = (float)Application.Instance.MainWindow.Height;
-            Reflow(ScreenWidth, ScreenHeight);
+            Reflow();
         }
 
         protected override void SubtreeUpdated()
         {
             Logger.Warn("Component Root Subtree Updated");
-            Reflow(ScreenWidth, ScreenHeight);
+
+            Component.Measure(DesiredWidth, DesiredHeight);
+            Component.Arrange(0, 0, DesiredWidth, DesiredHeight);
         }
 
-        public override void Reflow(float parentWidth, float parentHeight)
+        public override void PrintComponentTree(int indent)
         {
-            _bootstrappedComponent.Reflow(parentWidth, parentHeight);
+            Logger.WarnIndent(nameof(ComponentRoot), indent);
+            Component.PrintComponentTree(indent + 1);
         }
 
-        public override void RenderSelf(IRenderer renderer, float x, float y)
+        public void Reflow()
         {
-            _bootstrappedComponent.RenderSelf(renderer, x, y);
+            DesiredWidth  = Application.Instance.MainWindow.Width;
+            DesiredHeight = Application.Instance.MainWindow.Height;
+
+            if (!Component.HasConstMeasure)
+            {
+                Component.Measure(DesiredWidth, DesiredHeight);
+            }
+
+            Component.Arrange(0, 0, DesiredWidth, DesiredHeight);
         }
 
         public void Render(IRenderer renderer)
         {
-            RenderSelf(renderer, 0, 0);
+            RenderSelf(renderer);
         }
     }
 }

@@ -29,7 +29,11 @@ namespace SCVE.Components
                 "text" => ProcessTextElement(xElement),
                 "outline" => ProcessOutlineElement(xElement),
                 "fps-counter" => ProcessFpsCounterElement(xElement),
-                "group" => ProcessGroupElement(xElement),
+                "flex" => ProcessFlexElement(xElement),
+                "flex-cell" => ProcessFlexCellElement(xElement),
+                "align" => ProcessAlignElement(xElement),
+                "box" => ProcessBoxElement(xElement),
+                "stack" => ProcessStackElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             component.SetStyle(ExtractStyles(xElement));
@@ -41,9 +45,77 @@ namespace SCVE.Components
             return component;
         }
 
-        private static Component ProcessGroupElement(XElement xElement)
+        private static Component ProcessStackElement(XElement xElement)
         {
-            return new GroupComponent();
+            return new StackComponent();
+        }
+
+        private static Component ProcessBoxElement(XElement xElement)
+        {
+            return new BoxComponent();
+        }
+
+        private static Component ProcessAlignElement(XElement xElement)
+        {
+            var alignComponent = new AlignComponent();
+
+            var directionAttribute = xElement.Attribute("direction");
+            if (directionAttribute is not null)
+            {
+                TryParseRawEnum(directionAttribute.Value, out AlignmentDirection direction);
+                alignComponent.Direction = direction;
+            }
+            else
+            {
+                alignComponent.Direction = AlignmentDirection.Horizontal;
+            }
+
+            var behaviorAttribute = xElement.Attribute("behavior");
+            if (behaviorAttribute is not null)
+            {
+                TryParseRawEnum(behaviorAttribute.Value, out AlignmentBehavior behavior);
+                alignComponent.Behavior = behavior;
+            }
+            else
+            {
+                alignComponent.Behavior = AlignmentBehavior.Start;
+            }
+
+            return alignComponent;
+        }
+
+        private static Component ProcessFlexCellElement(XElement xElement)
+        {
+            var flexCell = new FlexCell();
+            var flexAttribute = xElement.Attribute("flex");
+            if (flexAttribute is not null)
+            {
+                TryParseRawFloat(flexAttribute.Value, out var flex);
+                flexCell.Flex = flex;
+            }
+            else
+            {
+                flexCell.Flex = 1;
+            }
+
+            return flexCell;
+        }
+
+        private static Component ProcessFlexElement(XElement xElement)
+        {
+            var flex = new FlexComponent();
+            var directionAttribute = xElement.Attribute("direction");
+            if (directionAttribute is not null)
+            {
+                TryParseRawEnum(directionAttribute.Value, out AlignmentDirection direction);
+                flex.Direction = direction;
+            }
+            else
+            {
+                flex.Direction = AlignmentDirection.Horizontal;
+            }
+
+            return flex;
         }
 
         private static Component ProcessFpsCounterElement(XElement xElement)
@@ -80,15 +152,15 @@ namespace SCVE.Components
         private static ComponentStyle ExtractStyles(XElement xElement)
         {
             var defaultStyle = ComponentStyle.Default;
-            FloatStyleValue width = defaultStyle.Width;
-            FloatStyleValue height = defaultStyle.Height;
-            FloatStyleValue maxWidth = defaultStyle.MaxWidth;
-            FloatStyleValue maxHeight = defaultStyle.MaxHeight;
-            FloatStyleValue minWidth = defaultStyle.MinWidth;
-            FloatStyleValue minHeight = defaultStyle.MinHeight;
-            StyleValue<AlignmentDirection> alignmentDirection = defaultStyle.AlignmentDirection;
-            StyleValue<AlignmentBehavior> horizontalAlignmentBehavior = defaultStyle.HorizontalAlignmentBehavior;
-            StyleValue<AlignmentBehavior> verticalAlignmentBehavior = defaultStyle.VerticalAlignmentBehavior;
+            FloatStyleValue width = new FloatStyleValue(defaultStyle.Width.Value);
+            FloatStyleValue height = new FloatStyleValue(defaultStyle.Height.Value);
+            FloatStyleValue maxWidth = new FloatStyleValue(defaultStyle.MaxWidth.Value);
+            FloatStyleValue maxHeight = new FloatStyleValue(defaultStyle.MaxHeight.Value);
+            FloatStyleValue minWidth = new FloatStyleValue(defaultStyle.MinWidth.Value);
+            FloatStyleValue minHeight = new FloatStyleValue(defaultStyle.MinHeight.Value);
+            StyleValue<AlignmentDirection> alignmentDirection = new StyleValue<AlignmentDirection>(defaultStyle.AlignmentDirection.Value);
+            StyleValue<AlignmentBehavior> horizontalAlignmentBehavior = new StyleValue<AlignmentBehavior>(defaultStyle.HorizontalAlignmentBehavior.Value);
+            StyleValue<AlignmentBehavior> verticalAlignmentBehavior = new StyleValue<AlignmentBehavior>(defaultStyle.VerticalAlignmentBehavior.Value);
             ColorStyleValue primaryColor = new ColorStyleValue(new ColorRgba(defaultStyle.PrimaryColor.Value));
 
             if (xElement.Attribute("style") is not { } attribute)
@@ -310,6 +382,21 @@ namespace SCVE.Components
             {
                 Logger.Warn($"Failed to parse enum style property! Value ({styleValue})");
                 style.Specified = false;
+                return false;
+            }
+        }
+
+        private static bool TryParseRawEnum<T>(string value, out T result) where T : struct, Enum
+        {
+            if (Enum.TryParse(value, true, out T parsed))
+            {
+                result = parsed;
+                return true;
+            }
+            else
+            {
+                Logger.Warn($"Failed to parse enum property! Value ({value})");
+                result = default;
                 return false;
             }
         }
