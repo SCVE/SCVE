@@ -9,6 +9,7 @@ Based on:
 - [OpenTK](https://github.com/opentk/opentk/), 
 - [ImageSharp](https://github.com/SixLabors/ImageSharp/), 
 - [SharpFont](https://github.com/SpacialCircumstances/SharpFont) 
+- UI Layout is based on [WPF's](https://github.com/dotnet/wpf) layout system. No sources, but the [idea](https://habr.com/ru/post/135990/) explained on _habr.com_.
 - likely many more.
 
 ## Solution structure
@@ -48,6 +49,7 @@ Done:
 - Font via atlas
 - UI from file
 - Font caching
+- UI Layout System (from scratch, based on WPF layout system)
 
 In Progress:
 
