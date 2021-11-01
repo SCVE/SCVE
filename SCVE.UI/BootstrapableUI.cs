@@ -2,18 +2,26 @@
 using SCVE.Core.Lifecycle;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI
 {
-    public class BootstrapableComponent : ContainerComponent, IBootstrapable
+    public class BootstrapableUI : ContainerComponent, IBootstrapable
     {
-        public BootstrapableComponent(Component bootstrappedComponent)
+        public BootstrapableUI()
         {
-            AddChild(bootstrappedComponent);
         }
 
-        public void Init()
+        public BootstrapableUI WithBootstraped(Component bootstrappedComponent)
         {
+            AddChild(bootstrappedComponent);
+            return this;
+        }
+
+        public override void Init()
+        {
+            base.Init();
+
             Reflow();
 
             Application.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
@@ -31,16 +39,10 @@ namespace SCVE.UI
 
         protected override void SubtreeUpdated()
         {
-            Logger.Warn("Component Root Subtree Updated");
+            Logger.Warn($"{nameof(BootstrapableUI)} Subtree Updated");
 
             Component.Measure(DesiredWidth, DesiredHeight);
             Component.Arrange(0, 0, DesiredWidth, DesiredHeight);
-        }
-
-        public override void PrintComponentTree(int indent)
-        {
-            Logger.WarnIndent(nameof(BootstrapableComponent), indent);
-            Component.PrintComponentTree(indent + 1);
         }
 
         public void Reflow()
@@ -59,6 +61,11 @@ namespace SCVE.UI
         public void Render(IRenderer renderer)
         {
             RenderSelf(renderer);
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

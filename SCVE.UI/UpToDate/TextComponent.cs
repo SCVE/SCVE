@@ -3,6 +3,7 @@ using SCVE.Core.App;
 using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
 using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.UpToDate
 {
@@ -28,19 +29,12 @@ namespace SCVE.UI.UpToDate
             _fontSize     = fontSize;
             _text         = text;
             _alignment    = alignment;
-
-            Application.Instance.Input.Scroll += InputOnScroll;
-
-            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
-
-            Rebuild();
         }
 
-        private void InputOnScroll(float arg1, float arg2)
+        public override void Init()
         {
-            Logger.Warn($"Scrolled {arg2}");
-            _fontSize += arg2;
-            Font      =  Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
+            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
+
             Rebuild();
         }
 
@@ -69,11 +63,6 @@ namespace SCVE.UI.UpToDate
             DesiredHeight = _lines.Length * Maths.FontSizeToLineHeight(_fontSize);
 
             SubtreeUpdated();
-        }
-
-        public override void PrintComponentTree(int indent)
-        {
-            Logger.WarnIndent(nameof(TextComponent), indent);
         }
 
         public override void RenderSelf(IRenderer renderer)
@@ -110,6 +99,11 @@ namespace SCVE.UI.UpToDate
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_alignment));
             }
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

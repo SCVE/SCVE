@@ -7,18 +7,16 @@ namespace SCVE.Default
 {
     public class DefaultApplicationInit : ApplicationInit
     {
-        public static ApplicationInit Get()
+        public DefaultApplicationInit()
         {
-            return new ApplicationInit()
-            {
-                Renderer              = new OpenGLRenderer(),
-                DeltaTimeProvider     = new GlfwDeltaTimeProvider(),
-                Window                = new GlfwWindow(new WindowProps("Super Cool Video Editor")),
-                Input                 = new GlfwInput(),
-                RenderEntitiesCreator = new OpenGLRenderEntitiesCreator(),
-                FileLoaders           = new DefaultFileLoaders(),
-                FontAtlasGenerator    = new SharpFontImageSharpFontAtlasGenerator(),
-            };
+            Renderer              = new OpenGLRenderer();
+            DeltaTimeProvider     = new GlfwDeltaTimeProvider();
+            Window                = new GlfwWindow(new WindowProps("Super Cool Video Editor"));
+            Input                 = new GlfwInput();
+            RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
+            FileLoaders           = new DefaultFileLoaders();
+            FontAtlasGenerator    = new SharpFontImageSharpFontAtlasGenerator();
+            Bootstrapable         = null;
         }
     }
 }

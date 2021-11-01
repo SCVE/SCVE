@@ -5,8 +5,4 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="UI" />
-    </ItemGroup>
-
 </Project>

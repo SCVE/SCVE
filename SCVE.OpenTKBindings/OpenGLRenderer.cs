@@ -39,6 +39,7 @@ namespace SCVE.OpenTKBindings
         public OpenGLRenderer()
         {
             Logger.Construct(nameof(OpenGLRenderer));
+            _clipRect = new Rect();
         }
 
         public void Init()
@@ -103,7 +104,7 @@ namespace SCVE.OpenTKBindings
         {
             SetViewport(0, 0, window.Width, window.Height);
 
-            _clipRect = new Rect(0, 0, window.Width, window.Height);
+            SetClipRect(0, 0, window.Width, window.Height);
 
             ProjectionMatrix
                 .MakeIdentity()

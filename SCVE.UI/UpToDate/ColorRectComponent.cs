@@ -1,5 +1,6 @@
 ﻿using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.UpToDate
 {
@@ -28,14 +29,14 @@ namespace SCVE.UI.UpToDate
             Height = Style.Height.Flatten(availableHeight);
         }
 
-        public override void PrintComponentTree(int indent)
-        {
-            Logger.WarnIndent($"{nameof(ColorRectComponent)} {X}:{Y}:{Width}:{Height}:{Style.PrimaryColor}", indent);
-        }
-
         public override void RenderSelf(IRenderer renderer)
         {
             renderer.RenderColorRect(X, Y, Width, Height, Style.PrimaryColor.Value);
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

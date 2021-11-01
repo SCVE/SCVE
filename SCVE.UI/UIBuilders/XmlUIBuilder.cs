@@ -130,7 +130,7 @@ namespace SCVE.UI.UIBuilders
 
         private static Component ProcessFpsCounterElement(XElement xElement)
         {
-            return new FpsCounter();
+            return new FpsComponent();
         }
 
         private static Component ProcessTextElement(XElement xElement)

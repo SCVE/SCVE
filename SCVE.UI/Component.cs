@@ -1,5 +1,6 @@
 ﻿using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI
 {
@@ -15,7 +16,7 @@ namespace SCVE.UI
 
         public float DesiredWidth { get; set; }
         public float DesiredHeight { get; set; }
-        
+
         public virtual bool HasConstMeasure { get; set; }
 
         /// <summary>
@@ -25,6 +26,11 @@ namespace SCVE.UI
 
         protected Component()
         {
+        }
+
+        public virtual void AcceptVisitor(IComponentVisitor visitor)
+        {
+            throw new ScveException($"Component {GetType().Name} Doesn't implement AcceptVisitor");
         }
 
         public virtual void OnSetStyle()
@@ -66,6 +72,10 @@ namespace SCVE.UI
         {
         }
 
+        public virtual void Init()
+        {
+        }
+
         /// <summary>
         /// Measure the desired component size in available space
         /// </summary>
@@ -83,8 +93,6 @@ namespace SCVE.UI
             Width  = availableWidth;
             Height = availableHeight;
         }
-
-        public abstract void PrintComponentTree(int indent);
 
         public abstract void RenderSelf(IRenderer renderer);
     }

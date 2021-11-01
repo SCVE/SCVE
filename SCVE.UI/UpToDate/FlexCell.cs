@@ -1,4 +1,5 @@
 ﻿using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.UpToDate
 {
@@ -9,10 +10,9 @@ namespace SCVE.UI.UpToDate
     {
         public float Flex { get; set; }
 
-        public override void PrintComponentTree(int indent)
+        public override void AcceptVisitor(IComponentVisitor visitor)
         {
-            Logger.WarnIndent($"{nameof(FlexCell)} {X}:{Y}:{Width}:{Height}", indent);
-            Component.PrintComponentTree(indent + 1);
+            visitor.Accept(this);
         }
     }
 }

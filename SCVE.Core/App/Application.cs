@@ -39,8 +39,9 @@ namespace SCVE.Core.App
 
         private Application(ApplicationInit init)
         {
-            _instance = this;
-            _scope = ApplicationScope.FromApplicationInit(init);
+            _instance     = this;
+            _scope        = ApplicationScope.FromApplicationInit(init);
+            Bootstrapable = init.Bootstrapable;
         }
 
         public static Application Init(ApplicationInit init)
@@ -54,6 +55,8 @@ namespace SCVE.Core.App
             application._state = AppState.Ready;
 
             application.Renderer.SetFromWindow(application.MainWindow);
+            
+            application.Bootstrapable.Init();
 
             _isInited = true;
 

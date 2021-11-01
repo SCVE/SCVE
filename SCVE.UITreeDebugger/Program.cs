@@ -5,17 +5,18 @@ using SCVE.Default;
 using SCVE.UI;
 using SCVE.UI.UIBuilders;
 
-namespace UITester
+namespace SCVE.UITreeDebugger
 {
-    public static class Program
+    class Program
     {
         static void Main(string[] args)
         {
             var xmlUIBuilder = new XmlUIBuilder(File.ReadAllText("assets/UI/simple.ui.xml"));
-            
+            var analyzeUI = new BootstrapableUI().WithBootstraped(xmlUIBuilder.Build());
+
             var application = Application.Init(new DefaultApplicationInit()
             {
-                Bootstrapable = new BootstrapableUI().WithBootstraped(xmlUIBuilder.Build())
+                Bootstrapable = new BootstrapableTreeViewer(analyzeUI)
             });
 
             application.Run();

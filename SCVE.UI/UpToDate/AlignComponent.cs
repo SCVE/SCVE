@@ -1,5 +1,6 @@
 ﻿using System;
 using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.UpToDate
 {
@@ -10,12 +11,6 @@ namespace SCVE.UI.UpToDate
     {
         public AlignmentBehavior Behavior { get; set; }
         public AlignmentDirection Direction { get; set; }
-
-        public override void PrintComponentTree(int indent)
-        {
-            Logger.WarnIndent($"{nameof(AlignComponent)} {X}:{Y}:{Width}:{Height}:{Direction}-{Behavior}", indent);
-            Component.PrintComponentTree(indent + 1);
-        }
 
         public override void Arrange(float x, float y, float availableWidth, float availableHeight)
         {
@@ -57,6 +52,11 @@ namespace SCVE.UI.UpToDate
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

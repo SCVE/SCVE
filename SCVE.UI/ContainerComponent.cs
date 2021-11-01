@@ -1,13 +1,18 @@
-﻿using SCVE.Core.Misc;
+﻿using System.Runtime.CompilerServices;
+using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
-using SCVE.Core.Utilities;
 
 namespace SCVE.UI
 {
     public abstract class ContainerComponent : Component
     {
         private bool _hasComponent;
-        protected Component Component;
+        public Component Component;
+
+        public override void Init()
+        {
+            Component.Init();
+        }
 
         public override void AddChild(Component child)
         {
@@ -59,12 +64,6 @@ namespace SCVE.UI
             base.Arrange(x, y, availableWidth, availableHeight);
 
             Component.Arrange(x, y, Width, Height);
-        }
-
-        public override void PrintComponentTree(int indent)
-        {
-            Logger.WarnIndent(nameof(ContainerComponent), indent);
-            Component.PrintComponentTree(indent + 1);
         }
 
         public override void RenderSelf(IRenderer renderer)

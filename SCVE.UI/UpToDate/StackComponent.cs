@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.UpToDate
 {
@@ -14,6 +15,14 @@ namespace SCVE.UI.UpToDate
         public StackComponent()
         {
             Children = new();
+        }
+
+        public override void Init()
+        {
+            for (var i = 0; i < Children.Count; i++)
+            {
+                Children[i].Init();
+            }
         }
 
         protected override void SubtreeUpdated()
@@ -50,21 +59,17 @@ namespace SCVE.UI.UpToDate
             }
         }
 
-        public override void PrintComponentTree(int indent)
-        {
-            Logger.WarnIndent($"{nameof(StackComponent)} {X}:{Y}:{Width}:{Height}", indent);
-            for (var i = 0; i < Children.Count; i++)
-            {
-                Children[i].PrintComponentTree(indent + 1);
-            }
-        }
-
         public override void RenderSelf(IRenderer renderer)
         {
             for (var i = 0; i < Children.Count; i++)
             {
                 Children[i].RenderSelf(renderer);
             }
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

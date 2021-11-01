@@ -1,5 +1,6 @@
 ﻿using System;
 using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.UpToDate
 {
@@ -8,12 +9,6 @@ namespace SCVE.UI.UpToDate
     /// </summary>
     public class BoxComponent : ContainerComponent
     {
-        public override void PrintComponentTree(int indent)
-        {
-            Logger.WarnIndent($"{nameof(BoxComponent)} {X}:{Y}:{Width}:{Height}", indent);
-            Component.PrintComponentTree(indent + 1);
-        }
-
         public override void Measure(float availableWidth, float availableHeight)
         {
             DesiredWidth  = Style.Width.Flatten(availableWidth);
@@ -31,6 +26,11 @@ namespace SCVE.UI.UpToDate
                 float destHeight = Component.DesiredHeight * downscaleFactor;
                 Component.Measure(destWidth, destHeight);
             }
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

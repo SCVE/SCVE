@@ -1,4 +1,5 @@
 ﻿using SCVE.Core.Rendering;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.UpToDate
 {
@@ -20,6 +21,11 @@ namespace SCVE.UI.UpToDate
             
             // restore clip to original
             renderer.SetClipRect(x, y, width, height);
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }
