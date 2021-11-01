@@ -47,11 +47,12 @@ namespace SCVE.Core.Utilities
         {
             if (MinLevel > LogLevel.Warn) return;
             Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("WARN: ");
             for (int i = 0; i < indent; i++)
             {
                 Console.Write("  ");
             }
-            Console.WriteLine($"WARN: {warn}");
+            Console.WriteLine($"{warn}");
             Console.ResetColor();
         }
 

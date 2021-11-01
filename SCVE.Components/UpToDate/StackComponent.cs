@@ -5,6 +5,9 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate
 {
+    /// <summary>
+    /// Stack takes all available space and align every child on top of each other
+    /// </summary>
     public class StackComponent : Component
     {
         public List<Component> Children;

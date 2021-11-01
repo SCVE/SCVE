@@ -56,7 +56,7 @@ namespace SCVE.Core.Utilities
         /// Max value is 120
         /// </remarks>
         /// </summary>
-        public static float ClosestFontSizeUp(float size)
+        public static int ClosestFontSizeUp(float size)
         {
             return size switch
             {
@@ -75,7 +75,7 @@ namespace SCVE.Core.Utilities
         }
 
         /// <summary>
-        /// Converts Line Height into FontSize
+        /// Converts Line Height into FontSize, Opposite to <see cref="FontSizeToLineHeight"/>
         /// </summary>
         /// <remarks>
         /// https://websemantics.uk/tools/font-size-conversion-pixel-point-em-rem-percent/
@@ -85,9 +85,15 @@ namespace SCVE.Core.Utilities
             return lineHeight * 3 / 4;
         }
 
-        public static float FontSizeToLineHeight(float lineHeight)
+        /// <summary>
+        /// Converts FontSize into Line Height, Opposite to <see cref="LineHeightToFontSize"/>
+        /// </summary>
+        /// <remarks>
+        /// https://websemantics.uk/tools/font-size-conversion-pixel-point-em-rem-percent/
+        /// </remarks>
+        public static float FontSizeToLineHeight(float fontSize)
         {
-            return lineHeight * 4 / 3;
+            return fontSize * 4 / 3;
         }
 
         public static bool PointInRect(float x, float y, float width, float height, float px, float py)

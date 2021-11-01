@@ -22,15 +22,17 @@ namespace Playground
 
                 atlasGenerator.Generate("arial.ttf", Alphabets.Default, 12);
             }
-            
-            var applicationInit = new ApplicationInitNull();
-            applicationInit.Renderer = new OpenGLRenderer();
-            applicationInit.DeltaTimeProvider = new GlfwDeltaTimeProvider();
-            applicationInit.Window = new GlfwWindow(new WindowProps("Super Cool Video Editor"));
-            applicationInit.Input = new GlfwInput();
-            applicationInit.RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
-            applicationInit.FileLoaders = new PlaygroundFileLoaders();
-            applicationInit.FontAtlasGenerator = new SharpFontImageSharpFontAtlasGenerator();
+
+            var applicationInit = new ApplicationInit()
+            {
+                Renderer = new OpenGLRenderer(),
+                DeltaTimeProvider = new GlfwDeltaTimeProvider(),
+                Window = new GlfwWindow(new WindowProps("Super Cool Video Editor")),
+                Input = new GlfwInput(),
+                RenderEntitiesCreator = new OpenGLRenderEntitiesCreator(),
+                FileLoaders = new PlaygroundFileLoaders(),
+                FontAtlasGenerator = new SharpFontImageSharpFontAtlasGenerator(),
+            };
 
             var application = Application.Init(applicationInit);
 

@@ -7,6 +7,9 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate
 {
+    /// <summary>
+    /// Flex occupies all available space, positions and resizes child Flex Cells to occupy space based on their Flex property
+    /// </summary>
     public class FlexComponent : Component
     {
         public List<FlexCell> Children { get; set; }

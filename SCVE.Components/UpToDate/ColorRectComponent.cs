@@ -4,7 +4,10 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate
 {
-    public class ColorRectComponent : RenderableComponent
+    /// <summary>
+    /// Color Rect Component is a basically a 2D rectangle, it occupies only the size specified in the style
+    /// </summary>
+    public class ColorRectComponent : Component
     {
         public ColorRectComponent()
         {

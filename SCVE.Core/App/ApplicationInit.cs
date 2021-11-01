@@ -33,7 +33,7 @@ namespace SCVE.Core.App
             FontAtlasGenerator = fontAtlasGenerator;
         }
 
-        protected ApplicationInit()
+        public ApplicationInit()
         {
         }
     }

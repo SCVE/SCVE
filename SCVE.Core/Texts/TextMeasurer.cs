@@ -4,6 +4,9 @@ namespace SCVE.Core.Texts
 {
     public static class TextMeasurer
     {
+        /// <summary>
+        /// Method measures the provided string with font and it's size. Be aware of the allocation for every call.
+        /// </summary>
         public static TextMeasurement MeasureText(ScveFont font, string text, float fontSize)
         {
             float x = 0;

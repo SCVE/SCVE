@@ -10,20 +10,20 @@ namespace SCVE.Core.Caches
         /// <summary>
         /// Name - Font dictionary
         /// </summary>
-        private Dictionary<string, Dictionary<float, ScveFont>> _cachedFonts;
+        private Dictionary<string, Dictionary<int, ScveFont>> _cachedFonts;
 
         public FontCache()
         {
-            _cachedFonts = new Dictionary<string, Dictionary<float, ScveFont>>();
+            _cachedFonts = new Dictionary<string, Dictionary<int, ScveFont>>();
         }
 
-        public ScveFont GetOrCache(string fontFileName, float fontSize)
+        public ScveFont GetOrCache(string fontFileName, int fontSize)
         {
             if (!_cachedFonts.ContainsKey(fontFileName))
             {
                 // The cache has no loaded fonts of this name and size
                 // So we add an empty dictionary here
-                _cachedFonts.Add(fontFileName, new Dictionary<float, ScveFont>());
+                _cachedFonts.Add(fontFileName, new Dictionary<int, ScveFont>());
             }
 
             var cachedFontsOfName = _cachedFonts[fontFileName];

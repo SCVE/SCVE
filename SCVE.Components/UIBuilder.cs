@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Xml.Linq;
 using SCVE.Components.UpToDate;
@@ -27,7 +26,6 @@ namespace SCVE.Components
             {
                 "color-rect" => ProcessColorRectElement(xElement),
                 "text" => ProcessTextElement(xElement),
-                "outline" => ProcessOutlineElement(xElement),
                 "fps-counter" => ProcessFpsCounterElement(xElement),
                 "flex" => ProcessFlexElement(xElement),
                 "flex-cell" => ProcessFlexCellElement(xElement),
@@ -127,11 +125,6 @@ namespace SCVE.Components
         private static Component ProcessFpsCounterElement(XElement xElement)
         {
             return new FpsCounter();
-        }
-
-        private static Component ProcessOutlineElement(XElement xElement)
-        {
-            return new OutlineComponent();
         }
 
         private static Component ProcessTextElement(XElement xElement)

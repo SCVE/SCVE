@@ -4,6 +4,9 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate
 {
+    /// <summary>
+    /// Align Component fills all given empty space and aligns single child inside it
+    /// </summary>
     public class AlignComponent : ContainerComponent
     {
         public AlignmentBehavior Behavior { get; set; }

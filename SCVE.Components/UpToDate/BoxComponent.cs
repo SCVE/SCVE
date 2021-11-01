@@ -4,6 +4,9 @@ using SCVE.Core.Utilities;
 
 namespace SCVE.Components.UpToDate
 {
+    /// <summary>
+    /// Box Component fills all given empty space and shrinks single child to a box
+    /// </summary>
     public class BoxComponent : ContainerComponent
     {
         public override void PrintComponentTree(int indent)

@@ -3,6 +3,9 @@ using SCVE.Core.UI;
 
 namespace SCVE.Components.UpToDate
 {
+    /// <summary>
+    /// Clip Component fills all available space and clips any rendering of it's child to the occupying space
+    /// </summary>
     public class ClipComponent : ContainerComponent
     {
         public override void RenderSelf(IRenderer renderer)

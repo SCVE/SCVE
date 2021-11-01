@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using SCVE.Core.App;
+﻿using SCVE.Core.App;
 using SCVE.Core.Loading;
 using SCVE.Core.Rendering;
 

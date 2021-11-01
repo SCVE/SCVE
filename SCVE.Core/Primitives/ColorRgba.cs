@@ -36,7 +36,7 @@ namespace SCVE.Core.Primitives
 
         public override string ToString()
         {
-            return $"{nameof(R)}: {R}, {nameof(G)}: {G}, {nameof(B)}: {B}, {nameof(A)}: {A}";
+            return $"ColorRgba{{{nameof(R)}: {R}, {nameof(G)}: {G}, {nameof(B)}: {B}, {nameof(A)}: {A}}}";
         }
     }
 }
