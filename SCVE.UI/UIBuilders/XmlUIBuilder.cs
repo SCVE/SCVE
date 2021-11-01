@@ -312,6 +312,39 @@ namespace SCVE.UI.UIBuilders
                             primaryColor.Value.B = b;
                             primaryColor.Value.A = a;
                         }
+                        else if (styleValue.StartsWith('#'))
+                        {
+                            var substring = styleValue.Substring("#".Length);
+                            if (substring.Length == 6)
+                            {
+                                // #AABBCCDD
+                                string rString = substring[0..2];
+                                string gString = substring[2..4];
+                                string bString = substring[4..6];
+                                
+                                primaryColor.Value.R = Convert.ToInt32(rString, 16) / 255f;
+                                primaryColor.Value.G = Convert.ToInt32(gString, 16) / 255f;
+                                primaryColor.Value.B = Convert.ToInt32(bString, 16) / 255f;
+                                primaryColor.Value.A = 1;
+                            }
+                            else if(substring.Length == 8)
+                            {
+                                // #AABBCCDD
+                                string rString = substring[0..2];
+                                string gString = substring[2..4];
+                                string bString = substring[4..6];
+                                string aString = substring[6..8];
+                                
+                                primaryColor.Value.R = Convert.ToInt32(rString, 16) / 255f;
+                                primaryColor.Value.G = Convert.ToInt32(gString, 16) / 255f;
+                                primaryColor.Value.B = Convert.ToInt32(bString, 16) / 255f;
+                                primaryColor.Value.A = Convert.ToInt32(aString, 16) / 255f;
+                            }
+                            else
+                            {
+                                throw new ScveException($"Failed to parse # values ({styleValue})");
+                            }
+                        }
 
                         break;
                     }
