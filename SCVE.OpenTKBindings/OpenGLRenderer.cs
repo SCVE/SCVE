@@ -41,7 +41,7 @@ namespace SCVE.OpenTKBindings
             Logger.Construct(nameof(OpenGLRenderer));
         }
 
-        public void OnInit()
+        public void Init()
         {
             Logger.Warn("OpenGLRenderer.OnInit");
 

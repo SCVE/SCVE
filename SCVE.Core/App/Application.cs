@@ -3,11 +3,11 @@ using System.Threading;
 using SCVE.Core.Caches;
 using SCVE.Core.Entities;
 using SCVE.Core.Input;
+using SCVE.Core.Lifecycle;
 using SCVE.Core.Loading.Loaders;
 using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
 using SCVE.Core.Services;
-using SCVE.Core.UI;
 using SCVE.Core.Utilities;
 
 namespace SCVE.Core.App
@@ -35,7 +35,7 @@ namespace SCVE.Core.App
 
         public CachesContainer Cache;
 
-        public ComponentRoot ComponentRoot { get; set; }
+        public IBootstrapable Bootstrapable { get; set; }
 
         private Application(ApplicationInit init)
         {
@@ -53,6 +53,8 @@ namespace SCVE.Core.App
             application._scope.Init();
             application._state = AppState.Ready;
 
+            application.Renderer.SetFromWindow(application.MainWindow);
+
             _isInited = true;
 
             return application;
@@ -65,7 +67,7 @@ namespace SCVE.Core.App
                 throw new ScveException("App is not ready");
             }
 
-            if (ComponentRoot is null)
+            if (Bootstrapable is null)
             {
                 throw new ScveException("No component root is present");
             }
@@ -80,8 +82,8 @@ namespace SCVE.Core.App
 
                 Renderer.Clear();
 
-                ComponentRoot.Update(deltaTime);
-                ComponentRoot.Render(Renderer);
+                Bootstrapable.Update(deltaTime);
+                Bootstrapable.Render(Renderer);
 
                 MainWindow.OnUpdate();
             }
@@ -101,7 +103,7 @@ namespace SCVE.Core.App
                 throw new ScveException("App is not ready");
             }
 
-            if (ComponentRoot is null)
+            if (Bootstrapable is null)
             {
                 throw new ScveException("No root component is present");
             }
@@ -115,9 +117,9 @@ namespace SCVE.Core.App
 
             Renderer.Clear();
             
-            ComponentRoot.Update(deltaTime);
+            Bootstrapable.Update(deltaTime);
 
-            ComponentRoot.Render(Renderer);
+            Bootstrapable.Render(Renderer);
 
             MainWindow.OnUpdate();
 
