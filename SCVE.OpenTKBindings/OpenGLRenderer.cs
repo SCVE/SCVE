@@ -34,6 +34,8 @@ namespace SCVE.OpenTKBindings
         public ScveMatrix4X4 ProjectionMatrix { get; private set; } = ScveMatrix4X4.Identity;
         public ScveMatrix4X4 ViewProjectionMatrix { get; private set; } = ScveMatrix4X4.Identity;
 
+        private Rect _clipRect;
+
         public OpenGLRenderer()
         {
             Logger.Construct(nameof(OpenGLRenderer));
@@ -62,11 +64,11 @@ namespace SCVE.OpenTKBindings
             Application.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
 
             _positiveUnitVertexArray = CreatePositiveUnitVertexArray();
-            _lineVertexArray = CreateLineVertexArray();
+            _lineVertexArray         = CreateLineVertexArray();
 
             _flatColorShaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("FlatColor");
-            _lineShaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("Line");
-            _textShaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("Text2D");
+            _lineShaderProgram      = Application.Instance.Cache.ShaderProgram.LoadOrCache("Line");
+            _textShaderProgram      = Application.Instance.Cache.ShaderProgram.LoadOrCache("Text2D");
         }
 
         private void OnOpenGLDebugMessageCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userparam)
@@ -100,7 +102,8 @@ namespace SCVE.OpenTKBindings
         public void SetFromWindow(ScveWindow window)
         {
             SetViewport(0, 0, window.Width, window.Height);
-            GL.Scissor(0, 0, window.Width, window.Height);
+
+            _clipRect = new Rect(0, 0, window.Width, window.Height);
 
             ProjectionMatrix
                 .MakeIdentity()
@@ -215,6 +218,21 @@ namespace SCVE.OpenTKBindings
             GL.DrawArrays(PrimitiveType.Lines, 0, 2);
         }
 
+        public void SetClipRect(float x, float y, float width, float height)
+        {
+            _clipRect.X      = x;
+            _clipRect.Y      = y;
+            _clipRect.Width  = width;
+            _clipRect.Height = height;
+
+            GL.Scissor((int)_clipRect.X, (int)( Application.Instance.MainWindow.Height - (y + height)), (int)_clipRect.Width, (int)_clipRect.Height);
+        }
+
+        public Rect GetClipRect()
+        {
+            return _clipRect;
+        }
+
         public void RenderText(ScveFont font, string text, float fontSize, float x, float y, ColorRgba color)
         {
             float destLineHeight = Maths.FontSizeToLineHeight(fontSize);
@@ -226,7 +244,7 @@ namespace SCVE.OpenTKBindings
                 if (text[i] == '\n')
                 {
                     y += destLineHeight;
-                    x = xStart;
+                    x =  xStart;
                     continue;
                 }
 
@@ -298,14 +316,6 @@ namespace SCVE.OpenTKBindings
 
                 x += chunk.Advance * lineHeightRel;
             }
-        }
-
-        // TODO: Extract clip component
-        public void RenderText(ScveFont font, string text, float fontSize, float x, float y, ColorRgba color, float clipWidth, float clipHeight)
-        {
-            GL.Scissor((int)x, (int)(Application.Instance.MainWindow.Height - (int)clipHeight - y), (int)clipWidth, (int)clipHeight);
-            RenderText(font, text, fontSize, x, y, color);
-            GL.Scissor(0, 0, Application.Instance.MainWindow.Width, Application.Instance.MainWindow.Height);
         }
 
         private static VertexArray CreatePositiveUnitVertexArray()

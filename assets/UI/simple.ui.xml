@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
-<align direction="vertical" behavior="start">
+<align direction="vertical" behavior="center">
     <box style="width=50%;height=80%">
         <flex direction="vertical">
             <flex-cell flex="1">
                 <stack>
-                    <color-rect style="width=100%; height=50; primary-color=rgba255(255,0,0,255)"/>
-                    <text font-file-name="arial.ttf" alignment="center" font-size="16"
-                          text="Bird Egop Is God Damn' Cool shit@@&#xA;more text"/>
+                    <color-rect style="width=100%; height=100%; primary-color=rgba255(255,0,0,255)"/>
+                    <clip>
+                        <text font-file-name="arial.ttf" alignment="center" font-size="16"
+                              text="Bird Egop Is God Damn' Cool shit@@&#xA;more text"/>
+                    </clip>
                 </stack>
             </flex-cell>
             <flex-cell flex="1">

@@ -22,5 +22,13 @@ namespace SCVE.Core.Primitives
             Width = width;
             Height = height;
         }
+
+        public void Deconstruct(out float x, out float y, out float width, out float height)
+        {
+            x      = X;
+            y      = Y;
+            width  = Width;
+            height = Height;
+        }
     }
 }

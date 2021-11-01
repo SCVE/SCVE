@@ -34,6 +34,7 @@ namespace SCVE.Components
                 "align" => ProcessAlignElement(xElement),
                 "box" => ProcessBoxElement(xElement),
                 "stack" => ProcessStackElement(xElement),
+                "clip" => ProcessClipElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             component.SetStyle(ExtractStyles(xElement));
@@ -43,6 +44,11 @@ namespace SCVE.Components
             }
 
             return component;
+        }
+
+        private static Component ProcessClipElement(XElement xElement)
+        {
+            return new ClipComponent();
         }
 
         private static Component ProcessStackElement(XElement xElement)

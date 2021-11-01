@@ -85,7 +85,7 @@ namespace SCVE.Components.UpToDate
                 case TextAlignment.Left:
                 {
                     // When rendering with left alignment, renderer will take care of line alignment (it's always zero)
-                    renderer.RenderText(Font, _text, _fontSize, X, Y, Style.PrimaryColor.Value, Width, Height);
+                    renderer.RenderText(Font, _text, _fontSize, X, Y, Style.PrimaryColor.Value);
                     break;
                 }
                 case TextAlignment.Center:
