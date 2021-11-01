@@ -1,6 +1,0 @@
-[submodule "opentk"]
-	path = opentk
-	url = https://github.com/opentk/opentk.git
-[submodule "Hazel"]
-	path = Hazel
-	url = https://github.com/TheCherno/Hazel.git
