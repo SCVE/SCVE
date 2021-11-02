@@ -25,6 +25,15 @@ namespace SCVE.UI.UpToDate
             // }
         }
 
+        public override void Arrange(float x, float y, float availableWidth, float availableHeight)
+        {
+            X      = x;
+            Y      = y;
+            Width  = Style.Width.Flatten(availableWidth);
+            Height = Style.Height.Flatten(availableHeight);
+            Component.Arrange(x, y, Width, Height);
+        }
+
         public override void AcceptVisitor(IComponentVisitor visitor)
         {
             visitor.Accept(this);
