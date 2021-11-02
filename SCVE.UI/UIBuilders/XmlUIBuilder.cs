@@ -12,12 +12,12 @@ namespace SCVE.UI.UIBuilders
     public class XmlUIBuilder : IUIBuilder
     {
         private string _xml;
-        
+
         public XmlUIBuilder(string xml)
         {
             _xml = xml;
         }
-        
+
         public Component Build()
         {
             var xDocument = XDocument.Parse(_xml);
@@ -39,6 +39,7 @@ namespace SCVE.UI.UIBuilders
                 "box" => ProcessBoxElement(xElement),
                 "stack" => ProcessStackElement(xElement),
                 "clip" => ProcessClipElement(xElement),
+                "padding" => ProcessPaddingElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             component.SetStyle(ExtractStyles(xElement));
@@ -48,6 +49,34 @@ namespace SCVE.UI.UIBuilders
             }
 
             return component;
+        }
+
+        private static Component ProcessPaddingElement(XElement xElement)
+        {
+            var paddingComponent = new PaddingComponent();
+
+            var topAttribute = xElement.Attribute("top");
+            if (topAttribute is not null)
+            {
+                TryParseFloatStyle(paddingComponent.Top, topAttribute.Value);
+            }
+            var rightAttribute = xElement.Attribute("right");
+            if (rightAttribute is not null)
+            {
+                TryParseFloatStyle(paddingComponent.Right, rightAttribute.Value);
+            }
+            var bottomAttribute = xElement.Attribute("bottom");
+            if (bottomAttribute is not null)
+            {
+                TryParseFloatStyle(paddingComponent.Bottom, bottomAttribute.Value);
+            }
+            var leftAttribute = xElement.Attribute("left");
+            if (leftAttribute is not null)
+            {
+                TryParseFloatStyle(paddingComponent.Left, leftAttribute.Value);
+            }
+
+            return paddingComponent;
         }
 
         private static Component ProcessClipElement(XElement xElement)
@@ -321,20 +350,20 @@ namespace SCVE.UI.UIBuilders
                                 string rString = substring[0..2];
                                 string gString = substring[2..4];
                                 string bString = substring[4..6];
-                                
+
                                 primaryColor.Value.R = Convert.ToInt32(rString, 16) / 255f;
                                 primaryColor.Value.G = Convert.ToInt32(gString, 16) / 255f;
                                 primaryColor.Value.B = Convert.ToInt32(bString, 16) / 255f;
                                 primaryColor.Value.A = 1;
                             }
-                            else if(substring.Length == 8)
+                            else if (substring.Length == 8)
                             {
                                 // #AABBCCDD
                                 string rString = substring[0..2];
                                 string gString = substring[2..4];
                                 string bString = substring[4..6];
                                 string aString = substring[6..8];
-                                
+
                                 primaryColor.Value.R = Convert.ToInt32(rString, 16) / 255f;
                                 primaryColor.Value.G = Convert.ToInt32(gString, 16) / 255f;
                                 primaryColor.Value.B = Convert.ToInt32(bString, 16) / 255f;

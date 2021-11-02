@@ -134,5 +134,15 @@ namespace SCVE.UITreeDebugger
             string info = $"{nameof(TextComponent)}";
             AddText(info);
         }
+
+        public void Accept(PaddingComponent component)
+        {
+            string info = $"{nameof(PaddingComponent)}";
+            AddText(info);
+            
+            _currentIndentLevel++;
+            component.Component.AcceptVisitor(this);
+            _currentIndentLevel--;
+        }
     }
 }
