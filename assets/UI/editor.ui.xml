@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<stack>
+    <color-rect style="width=100%; height=100%; primary-color=#424242"/>
+    <flex direction="vertical">
+        <flex-cell flex="2">
+            <flex direction="horizontal">
+                <flex-cell flex="1">
+                    <stack>
+                        <color-rect style="width=100%; height=100%; primary-color=#424242"/>
+                    </stack>
+                </flex-cell>
+                <flex-cell flex="2">
+                    <stack>
+                        <color-rect style="width=100%; height=100%; primary-color=#616161"/>
+                    </stack>
+                </flex-cell>
+            </flex>
+        </flex-cell>
+        <flex-cell flex="1">
+            <stack>
+                <color-rect style="width=100%; height=100%; primary-color=#212121"/>
+            </stack>
+        </flex-cell>
+    </flex>
+</stack>

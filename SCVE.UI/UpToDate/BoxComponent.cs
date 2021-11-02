@@ -14,18 +14,15 @@ namespace SCVE.UI.UpToDate
             DesiredWidth  = Style.Width.Flatten(availableWidth);
             DesiredHeight = Style.Height.Flatten(availableHeight);
 
-            if (!Component.HasConstMeasure)
-            {
-                Component.Measure(DesiredWidth, DesiredHeight);
-            }
+            Component.Measure(DesiredWidth, DesiredHeight);
 
-            if (Component.DesiredWidth > DesiredWidth || Component.DesiredHeight > DesiredHeight)
-            {
-                float downscaleFactor = MathF.Min(Component.DesiredWidth / DesiredWidth, Component.DesiredHeight / DesiredHeight);
-                float destWidth = Component.DesiredWidth * downscaleFactor;
-                float destHeight = Component.DesiredHeight * downscaleFactor;
-                Component.Measure(destWidth, destHeight);
-            }
+            // if (Component.DesiredWidth > DesiredWidth || Component.DesiredHeight > DesiredHeight)
+            // {
+            //     float downscaleFactor = MathF.Min(Component.DesiredWidth / DesiredWidth, Component.DesiredHeight / DesiredHeight);
+            //     float destWidth = Component.DesiredWidth * downscaleFactor;
+            //     float destHeight = Component.DesiredHeight * downscaleFactor;
+            //     Component.Measure(destWidth, destHeight);
+            // }
         }
 
         public override void AcceptVisitor(IComponentVisitor visitor)

@@ -50,10 +50,7 @@ namespace SCVE.UI
             DesiredWidth  = Application.Instance.MainWindow.Width;
             DesiredHeight = Application.Instance.MainWindow.Height;
 
-            if (!Component.HasConstMeasure)
-            {
-                Component.Measure(DesiredWidth, DesiredHeight);
-            }
+            Component.Measure(DesiredWidth, DesiredHeight);
 
             Component.Arrange(0, 0, DesiredWidth, DesiredHeight);
         }

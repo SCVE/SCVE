@@ -11,7 +11,7 @@ namespace UITester
     {
         static void Main(string[] args)
         {
-            var xmlUIBuilder = new XmlUIBuilder(File.ReadAllText("assets/UI/simple.ui.xml"));
+            var xmlUIBuilder = new XmlUIBuilder(File.ReadAllText("assets/UI/editor.ui.xml"));
             
             var application = Application.Init(new DefaultApplicationInit()
             {

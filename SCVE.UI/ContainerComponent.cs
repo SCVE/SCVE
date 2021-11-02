@@ -47,10 +47,7 @@ namespace SCVE.UI
         {
             if (!_hasComponent) return;
 
-            if (!Component.HasConstMeasure)
-            {
-                Component.Measure(availableWidth, availableHeight);
-            }
+            Component.Measure(availableWidth, availableHeight);
 
             // By default, any container wants all the available space
             DesiredWidth  = availableWidth;

@@ -17,8 +17,6 @@ namespace SCVE.UI
         public float DesiredWidth { get; set; }
         public float DesiredHeight { get; set; }
 
-        public virtual bool HasConstMeasure { get; set; }
-
         /// <summary>
         /// The style of the component
         /// </summary>

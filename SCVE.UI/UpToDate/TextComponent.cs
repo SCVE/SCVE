@@ -20,8 +20,6 @@ namespace SCVE.UI.UpToDate
 
         private TextAlignment _alignment;
 
-        public override bool HasConstMeasure { get; set; } = true;
-
         public TextComponent(string fontFileName, float fontSize, string text, TextAlignment alignment)
         {
             Logger.Construct(nameof(TextComponent));
