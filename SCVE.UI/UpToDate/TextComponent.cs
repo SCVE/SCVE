@@ -1,5 +1,5 @@
 ﻿using System;
-using SCVE.Core.App;
+using SCVE.Core.Main;
 using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
 using SCVE.Core.Utilities;
@@ -31,7 +31,7 @@ namespace SCVE.UI.UpToDate
 
         public override void Init()
         {
-            Font = Application.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
+            Font = Engine.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
 
             Rebuild();
         }

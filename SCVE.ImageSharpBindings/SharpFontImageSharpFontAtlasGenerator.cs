@@ -17,12 +17,11 @@ namespace SCVE.ImageSharpBindings
     public class SharpFontImageSharpFontAtlasGenerator : IFontAtlasGenerator
     {
         private const string BasePath = "assets/Font";
-        
+
         public void Generate(string fontFileName, string alphabet, float fontSize)
         {
             var fontName = Path.GetFileNameWithoutExtension(fontFileName);
             var font = new FontFace(File.OpenRead($"{BasePath}/{fontFileName}"));
-
 
             // https://websemantics.uk/tools/font-size-conversion-pixel-point-em-rem-percent/
             float lineHeight = Maths.FontSizeToLineHeight(fontSize);
@@ -54,7 +53,7 @@ namespace SCVE.ImageSharpBindings
                     0
                 ));
             usedChunks++;
-            
+
             for (int i = 0; i < alphabet.Length; i++)
             {
                 if (alphabet[i] == ' ') continue;
@@ -108,10 +107,10 @@ namespace SCVE.ImageSharpBindings
         {
             var surface = new Surface
             {
-                Bits = Marshal.AllocHGlobal(glyph.RenderWidth * glyph.RenderHeight),
-                Width = glyph.RenderWidth,
+                Bits   = Marshal.AllocHGlobal(glyph.RenderWidth * glyph.RenderHeight),
+                Width  = glyph.RenderWidth,
                 Height = glyph.RenderHeight,
-                Pitch = glyph.RenderWidth
+                Pitch  = glyph.RenderWidth
             };
 
             var stuff = (byte*)surface.Bits;
@@ -143,7 +142,7 @@ namespace SCVE.ImageSharpBindings
             }
 
             // TODO: Image allocation is out of scope here. We can extract SharpFont glyph rendering to RGBA byte array and then use the byte array in ImageSharp separately 
-            
+
             var image = Image.WrapMemory<Rgba32>(Configuration.Default, pixels, width, height);
 
             Marshal.FreeHGlobal(surface.Bits); //Give the memory back!

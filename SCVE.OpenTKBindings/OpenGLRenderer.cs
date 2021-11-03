@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
-using SCVE.Core.App;
 using SCVE.Core.Entities;
 using SCVE.Core.Loading;
+using SCVE.Core.Main;
 using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Texts;
@@ -62,14 +62,14 @@ namespace SCVE.OpenTKBindings
 
             GL.Enable(EnableCap.Multisample);
 
-            Application.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
+            Engine.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
 
             _positiveUnitVertexArray = CreatePositiveUnitVertexArray();
             _lineVertexArray         = CreateLineVertexArray();
 
-            _flatColorShaderProgram = Application.Instance.Cache.ShaderProgram.LoadOrCache("FlatColor");
-            _lineShaderProgram      = Application.Instance.Cache.ShaderProgram.LoadOrCache("Line");
-            _textShaderProgram      = Application.Instance.Cache.ShaderProgram.LoadOrCache("Text2D");
+            _flatColorShaderProgram = Engine.Instance.Cache.ShaderProgram.LoadOrCache("FlatColor");
+            _lineShaderProgram      = Engine.Instance.Cache.ShaderProgram.LoadOrCache("Line");
+            _textShaderProgram      = Engine.Instance.Cache.ShaderProgram.LoadOrCache("Text2D");
         }
 
         private void OnOpenGLDebugMessageCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userparam)
@@ -97,7 +97,7 @@ namespace SCVE.OpenTKBindings
 
         private void InputOnWindowSizeChanged(int width, int height)
         {
-            SetFromWindow(Application.Instance.MainWindow);
+            SetFromWindow(Engine.Instance.MainWindow);
         }
 
         public void SetFromWindow(ScveWindow window)
@@ -226,7 +226,7 @@ namespace SCVE.OpenTKBindings
             _clipRect.Width  = width;
             _clipRect.Height = height;
 
-            GL.Scissor((int)_clipRect.X, (int)( Application.Instance.MainWindow.Height - (y + height)), (int)_clipRect.Width, (int)_clipRect.Height);
+            GL.Scissor((int)_clipRect.X, (int)( Engine.Instance.MainWindow.Height - (y + height)), (int)_clipRect.Width, (int)_clipRect.Height);
         }
 
         public Rect GetClipRect()

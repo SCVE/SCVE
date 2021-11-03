@@ -5,9 +5,9 @@ using SCVE.Core.Loading.Loaders;
 using SCVE.Core.Rendering;
 using SCVE.Core.Services;
 
-namespace SCVE.Core.App
+namespace SCVE.Core.Main
 {
-    public class ApplicationInit
+    public class EngineInit
     {
         public IRenderer Renderer { get; set; }
 
@@ -23,9 +23,9 @@ namespace SCVE.Core.App
 
         public IFontAtlasGenerator FontAtlasGenerator { get; set; }
 
-        public IBootstrapable Bootstrapable { get; set; }
+        public IEngineRunnable Runnable { get; set; }
 
-        public ApplicationInit(IRenderer renderer, FileLoaders fileLoaders, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator, IFontAtlasGenerator fontAtlasGenerator, IBootstrapable bootstrapable)
+        public EngineInit(IRenderer renderer, FileLoaders fileLoaders, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator, IFontAtlasGenerator fontAtlasGenerator, IEngineRunnable runnable)
         {
             Renderer              = renderer;
             FileLoaders           = fileLoaders;
@@ -34,10 +34,10 @@ namespace SCVE.Core.App
             Input                 = input;
             RenderEntitiesCreator = renderEntitiesCreator;
             FontAtlasGenerator    = fontAtlasGenerator;
-            Bootstrapable         = bootstrapable;
+            Runnable              = runnable;
         }
 
-        public ApplicationInit()
+        public EngineInit()
         {
         }
     }

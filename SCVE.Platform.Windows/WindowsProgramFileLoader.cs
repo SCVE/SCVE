@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using SCVE.Core;
-using SCVE.Core.App;
 using SCVE.Core.Loading.Loaders;
+using SCVE.Core.Main;
 using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
@@ -29,13 +29,13 @@ namespace SCVE.Platform.Windows
                     var vertexShaderSourceGlsl = File.ReadAllText($"{BaseDirectory}/{fileName}/vertex.glsl");
                     var fragmentShaderSourceGlsl = File.ReadAllText($"{BaseDirectory}/{fileName}/fragment.glsl");
 
-                    using var vertexShader = Application.Instance.RenderEntitiesCreator.CreateShader(vertexShaderSourceGlsl, ScveShaderType.Vertex);
-                    using var fragmentShader = Application.Instance.RenderEntitiesCreator.CreateShader(fragmentShaderSourceGlsl, ScveShaderType.Fragment);
+                    using var vertexShader = Engine.Instance.RenderEntitiesCreator.CreateShader(vertexShaderSourceGlsl, ScveShaderType.Vertex);
+                    using var fragmentShader = Engine.Instance.RenderEntitiesCreator.CreateShader(fragmentShaderSourceGlsl, ScveShaderType.Fragment);
 
                     vertexShader.Compile();
                     fragmentShader.Compile();
 
-                    var program = Application.Instance.RenderEntitiesCreator.CreateProgram();
+                    var program = Engine.Instance.RenderEntitiesCreator.CreateProgram();
 
                     program.AttachShader(vertexShader);
                     program.AttachShader(fragmentShader);
@@ -57,7 +57,7 @@ namespace SCVE.Platform.Windows
                     int extension = Convert.ToInt32(substring, 16);
 
                     var bytes = File.ReadAllBytes($"{BaseDirectory}/{fileName}/compiled_{extension:X}.bin");
-                    var program = Application.Instance.RenderEntitiesCreator.CreateProgram(bytes, extension);
+                    var program = Engine.Instance.RenderEntitiesCreator.CreateProgram(bytes, extension);
 
                     return program;
                 }

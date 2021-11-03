@@ -1,5 +1,5 @@
-﻿using SCVE.Core.App;
-using SCVE.Core.Loading;
+﻿using SCVE.Core.Loading;
+using SCVE.Core.Main;
 using SCVE.Core.Rendering;
 
 namespace SCVE.Core.Texts
@@ -22,7 +22,7 @@ namespace SCVE.Core.Texts
         {
             LineHeight = lineHeight;
             Atlas = new FontAtlas(loadData.FontAtlasFileData);
-            Texture = Application.Instance.RenderEntitiesCreator.CreateTexture(loadData.AtlasTextureFileData);
+            Texture = Engine.Instance.RenderEntitiesCreator.CreateTexture(loadData.AtlasTextureFileData);
         }
     }
 }

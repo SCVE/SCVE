@@ -2,7 +2,7 @@
 
 namespace SCVE.Core.Lifecycle
 {
-    public interface IBootstrapable : IInitable, IRenderable, IUpdatable
+    public interface IEngineRunnable : IInitable, IRenderable, IUpdatable
     {
     }
 }

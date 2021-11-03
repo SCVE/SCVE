@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SCVE.Core.App;
+using SCVE.Core.Main;
 using SCVE.Core.Rendering;
 
 namespace SCVE.Core.Caches
@@ -12,7 +12,7 @@ namespace SCVE.Core.Caches
         {
             if (_programs.ContainsKey(name)) return _programs[name];
             
-            var program = Application.Instance.FileLoaders.ShaderProgram.Load(name);
+            var program = Engine.Instance.FileLoaders.ShaderProgram.Load(name);
             _programs.Add(name, program);
             return program;
         }

@@ -1,6 +1,6 @@
-﻿namespace SCVE.Core.App
+﻿namespace SCVE.Core.Main
 {
-    public enum AppState
+    public enum EngineState
     {
         Uninitialized,
         Starting,

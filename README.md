@@ -104,3 +104,5 @@ So each vertex(vec3) must be processed like this:
 When the model updates are seldom, we can extract the model matrix from MVP,
 so that we use only View-Projection as a constant, and supply vertex already multiplied by Model Matrix.
 But currently I don't do this. It requires more human-hours to understand.
+
+#### [How texts are rendered in OpenGL](https://ravesli.com/urok-45-rendering-teksta-v-opengl/)

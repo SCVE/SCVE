@@ -9,7 +9,7 @@ namespace SCVE.UI.Visitors
             component.AcceptVisitor(this);
         }
 
-        void Accept(BootstrapableUI component);
+        void Accept(EngineRunnableUI component);
         void Accept(AlignComponent component);
         void Accept(BoxComponent component);
         void Accept(ClipComponent component);

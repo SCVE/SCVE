@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text.Json;
 using SCVE.Core;
-using SCVE.Core.App;
 using SCVE.Core.Loading;
 using SCVE.Core.Loading.Loaders;
+using SCVE.Core.Main;
 using SCVE.Core.Misc;
 using SCVE.Core.Services;
 using SCVE.Core.Texts;
@@ -32,7 +32,7 @@ namespace SCVE.Platform.Windows
                 if (!File.Exists(fontAtlasFileDataPath))
                 {
                     // No atlas, so we need to create one
-                    Application.Instance.FontAtlasGenerator.Generate(fontFileName, Alphabets.Default, fontSize);
+                    Engine.Instance.FontAtlasGenerator.Generate(fontFileName, Alphabets.Default, fontSize);
                 }
             
                 string json = File.ReadAllText(fontAtlasFileDataPath);
@@ -40,14 +40,13 @@ namespace SCVE.Platform.Windows
             
                 var fontAtlasFileTexturePath = $"{BaseDirectory}/{fontName}/{fontSize}.png";
 
-                var textureFileData = Application.Instance.FileLoaders.Texture.Load(fontAtlasFileTexturePath);
+                var textureFileData = Engine.Instance.FileLoaders.Texture.Load(fontAtlasFileTexturePath);
 
                 return new FontLoadData(fontAtlasFileData, textureFileData);
             }
             else
             {
                 // Font even not exists in BaseDirectory
-                // TODO: Fallback to default
 
                 var defaultFontLoad = Load("default.ttf", lineHeight);
 

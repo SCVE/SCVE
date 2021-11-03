@@ -39,9 +39,9 @@ namespace SCVE.UITreeDebugger
             _flexComponent.AddChild(cellInfo);
         }
 
-        public void Accept(BootstrapableUI component)
+        public void Accept(EngineRunnableUI component)
         {
-            string info = $"{nameof(BootstrapableUI)}";
+            string info = $"{nameof(EngineRunnableUI)}";
             AddText(info);
 
             _currentIndentLevel++;

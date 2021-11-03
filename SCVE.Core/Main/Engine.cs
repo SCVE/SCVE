@@ -10,19 +10,17 @@ using SCVE.Core.Rendering;
 using SCVE.Core.Services;
 using SCVE.Core.Utilities;
 
-namespace SCVE.Core.App
+namespace SCVE.Core.Main
 {
-    public class Application
+    public class Engine
     {
-        private static bool _isInited;
+        private static Engine _instance;
 
-        private static Application _instance;
+        public static Engine Instance => _instance;
 
-        public static Application Instance => _instance;
+        private EngineState _state;
 
-        private AppState _state;
-
-        private ApplicationScope _scope;
+        private EngineScope _scope;
 
         public IRenderer Renderer => _scope.Renderer;
         public FileLoaders FileLoaders => _scope.FileLoaders;
@@ -35,83 +33,81 @@ namespace SCVE.Core.App
 
         public CachesContainer Cache;
 
-        public IBootstrapable Bootstrapable { get; set; }
+        public IEngineRunnable Runnable { get; set; }
 
-        private Application(ApplicationInit init)
+        private Engine(EngineInit init)
         {
-            _instance     = this;
-            _scope        = ApplicationScope.FromApplicationInit(init);
-            Bootstrapable = init.Bootstrapable;
+            _instance = this;
+            _scope    = EngineScope.FromEngineInit(init);
+            Runnable  = init.Runnable;
         }
 
-        public static Application Init(ApplicationInit init)
+        public static Engine Init(EngineInit init)
         {
-            var application = new Application(init);
+            var application = new Engine(init);
 
             application.Cache = new();
 
-            application._state = AppState.Starting;
+            application._state = EngineState.Starting;
             application._scope.Init();
-            application._state = AppState.Ready;
+            application._state = EngineState.Ready;
 
             application.Renderer.SetFromWindow(application.MainWindow);
-            
-            application.Bootstrapable.Init();
 
-            _isInited = true;
+            application.Runnable.Init();
 
             return application;
         }
 
         public void Run()
         {
-            if (_state != AppState.Ready)
+            if (_state != EngineState.Ready)
             {
                 throw new ScveException("App is not ready");
             }
 
-            if (Bootstrapable is null)
+            if (Runnable is null)
             {
                 throw new ScveException("No component root is present");
             }
 
-            _state = AppState.Running;
+            _state = EngineState.Running;
 
             Logger.Warn("Starting Main Loop");
-            while (_state == AppState.Running)
+            while (_state == EngineState.Running)
             {
                 float deltaTime = DeltaTimeProvider.Get();
                 _scope.Update(deltaTime);
 
                 Renderer.Clear();
 
-                Bootstrapable.Update(deltaTime);
-                Bootstrapable.Render(Renderer);
+                Runnable.Update(deltaTime);
+                Runnable.Render(Renderer);
 
                 MainWindow.OnUpdate();
             }
 
-            if (_state != AppState.TerminationRequested)
+            if (_state != EngineState.TerminationRequested)
             {
                 throw new ScveException("Invalid state was set, application terminated abnormally");
             }
 
-            _state = AppState.Terminating;
+            _state = EngineState.Terminating;
         }
 
         public void RunOnce()
         {
-            if (_state != AppState.Ready)
+            if (_state != EngineState.Ready)
             {
                 throw new ScveException("App is not ready");
             }
 
-            if (Bootstrapable is null)
+            if (Runnable is null)
             {
                 throw new ScveException("No root component is present");
             }
 
-            _state = AppState.Running;
+            _state = EngineState.Running;
 
             Logger.Warn("Starting Main Loop");
 
@@ -119,27 +115,27 @@ namespace SCVE.Core.App
             _scope.Update(deltaTime);
 
             Renderer.Clear();
-            
-            Bootstrapable.Update(deltaTime);
 
-            Bootstrapable.Render(Renderer);
+            Runnable.Update(deltaTime);
+
+            Runnable.Render(Renderer);
 
             MainWindow.OnUpdate();
 
-            _state = AppState.TerminationRequested;
+            _state = EngineState.TerminationRequested;
 
-            if (_state != AppState.TerminationRequested)
+            if (_state != EngineState.TerminationRequested)
             {
                 throw new ScveException("Invalid state was set, application terminated abnormally");
             }
 
-            _state = AppState.Terminating;
+            _state = EngineState.Terminating;
         }
 
         public void RequestTerminate()
         {
             Console.WriteLine($"Requesting app termination; Thread {Thread.CurrentThread.ManagedThreadId}");
-            _state = AppState.TerminationRequested;
+            _state = EngineState.TerminationRequested;
         }
     }
 }

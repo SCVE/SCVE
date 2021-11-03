@@ -6,9 +6,9 @@ using SCVE.Core.Loading.Loaders;
 using SCVE.Core.Rendering;
 using SCVE.Core.Services;
 
-namespace SCVE.Core.App
+namespace SCVE.Core.Main
 {
-    public class ApplicationScope
+    public class EngineScope
     {
         public IRenderer Renderer { get; private set; }
         public FileLoaders FileLoaders { get; private set; }
@@ -25,7 +25,7 @@ namespace SCVE.Core.App
         public IRenderEntitiesCreator RenderEntitiesCreator { get; private set; }
         public IFontAtlasGenerator FontAtlasGenerator { get; set; }
 
-        public ApplicationScope()
+        public EngineScope()
         {
             _initables = new List<IInitable>();
             _updatables = new List<IUpdatable>();
@@ -87,7 +87,7 @@ namespace SCVE.Core.App
             }
         }
 
-        public ApplicationScope WithRenderer(IRenderer renderer)
+        public EngineScope WithRenderer(IRenderer renderer)
         {
             if (Renderer is not null)
             {
@@ -99,7 +99,7 @@ namespace SCVE.Core.App
             return this;
         }
 
-        public ApplicationScope WithFileLoaders(FileLoaders fileLoaders)
+        public EngineScope WithFileLoaders(FileLoaders fileLoaders)
         {
             if (FileLoaders is not null)
             {
@@ -111,7 +111,7 @@ namespace SCVE.Core.App
             return this;
         }
 
-        public ApplicationScope WithDeltaTimeProvider(IDeltaTimeProvider deltaTimeProvider)
+        public EngineScope WithDeltaTimeProvider(IDeltaTimeProvider deltaTimeProvider)
         {
             if (DeltaTimeProvider is not null)
             {
@@ -122,33 +122,33 @@ namespace SCVE.Core.App
             return this;
         }
 
-        public ApplicationScope WithInput(InputBase input)
+        public EngineScope WithInput(InputBase input)
         {
             Input = input;
             return this;
         }
 
-        public ApplicationScope WithRenderEntitiesProvider(IRenderEntitiesCreator renderEntitiesCreator)
+        public EngineScope WithRenderEntitiesProvider(IRenderEntitiesCreator renderEntitiesCreator)
         {
             RenderEntitiesCreator = renderEntitiesCreator;
             return this;
         }
         
-        public ApplicationScope WithFontAtlasGenerator(IFontAtlasGenerator fontAtlasGenerator)
+        public EngineScope WithFontAtlasGenerator(IFontAtlasGenerator fontAtlasGenerator)
         {
             FontAtlasGenerator = fontAtlasGenerator;
             return this;
         }
 
-        public static ApplicationScope FromApplicationInit(ApplicationInit applicationInit)
+        public static EngineScope FromEngineInit(EngineInit engineInit)
         {
-            return new ApplicationScope()
-                .WithRenderer(applicationInit.Renderer)
-                .WithFileLoaders(applicationInit.FileLoaders)
-                .WithDeltaTimeProvider(applicationInit.DeltaTimeProvider)
-                .WithInput(applicationInit.Input)
-                .WithRenderEntitiesProvider(applicationInit.RenderEntitiesCreator)
-                .WithFontAtlasGenerator(applicationInit.FontAtlasGenerator);
+            return new EngineScope()
+                .WithRenderer(engineInit.Renderer)
+                .WithFileLoaders(engineInit.FileLoaders)
+                .WithDeltaTimeProvider(engineInit.DeltaTimeProvider)
+                .WithInput(engineInit.Input)
+                .WithRenderEntitiesProvider(engineInit.RenderEntitiesCreator)
+                .WithFontAtlasGenerator(engineInit.FontAtlasGenerator);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using SCVE.Core.App;
+using SCVE.Core.Main;
 using SCVE.Default;
 using SCVE.UI;
 using SCVE.UI.UIBuilders;
@@ -13,9 +13,9 @@ namespace UITester
         {
             var xmlUIBuilder = new XmlUIBuilder(File.ReadAllText("assets/UI/editor.ui.xml"));
             
-            var application = Application.Init(new DefaultApplicationInit()
+            var application = Engine.Init(new DefaultEngineInit()
             {
-                Bootstrapable = new BootstrapableUI().WithBootstraped(xmlUIBuilder.Build())
+                Runnable = new EngineRunnableUI().WithBootstraped(xmlUIBuilder.Build())
             });
 
             application.Run();

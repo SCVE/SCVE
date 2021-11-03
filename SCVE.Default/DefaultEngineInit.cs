@@ -1,13 +1,13 @@
-﻿using SCVE.Core.App;
-using SCVE.Core.Entities;
+﻿using SCVE.Core.Entities;
+using SCVE.Core.Main;
 using SCVE.ImageSharpBindings;
 using SCVE.OpenTKBindings;
 
 namespace SCVE.Default
 {
-    public class DefaultApplicationInit : ApplicationInit
+    public class DefaultEngineInit : EngineInit
     {
-        public DefaultApplicationInit()
+        public DefaultEngineInit()
         {
             Renderer              = new OpenGLRenderer();
             DeltaTimeProvider     = new GlfwDeltaTimeProvider();
@@ -16,7 +16,7 @@ namespace SCVE.Default
             RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
             FileLoaders           = new DefaultFileLoaders();
             FontAtlasGenerator    = new SharpFontImageSharpFontAtlasGenerator();
-            Bootstrapable         = null;
+            Runnable         = null;
         }
     }
 }

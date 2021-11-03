@@ -1,18 +1,18 @@
-﻿using SCVE.Core.App;
-using SCVE.Core.Lifecycle;
+﻿using SCVE.Core.Lifecycle;
+using SCVE.Core.Main;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 using SCVE.UI.Visitors;
 
 namespace SCVE.UI
 {
-    public class BootstrapableUI : ContainerComponent, IBootstrapable
+    public class EngineRunnableUI : ContainerComponent, IEngineRunnable
     {
-        public BootstrapableUI()
+        public EngineRunnableUI()
         {
         }
 
-        public BootstrapableUI WithBootstraped(Component bootstrappedComponent)
+        public EngineRunnableUI WithBootstraped(Component bootstrappedComponent)
         {
             AddChild(bootstrappedComponent);
             return this;
@@ -24,7 +24,7 @@ namespace SCVE.UI
 
             Reflow();
 
-            Application.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
+            Engine.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
         }
 
         public override void Update(float deltaTime)
@@ -39,7 +39,7 @@ namespace SCVE.UI
 
         protected override void SubtreeUpdated()
         {
-            Logger.Warn($"{nameof(BootstrapableUI)} Subtree Updated");
+            Logger.Warn($"{nameof(EngineRunnableUI)} Subtree Updated");
 
             Component.Measure(DesiredWidth, DesiredHeight);
             Component.Arrange(0, 0, DesiredWidth, DesiredHeight);
@@ -47,8 +47,8 @@ namespace SCVE.UI
 
         public void Reflow()
         {
-            DesiredWidth  = Application.Instance.MainWindow.Width;
-            DesiredHeight = Application.Instance.MainWindow.Height;
+            DesiredWidth  = Engine.Instance.MainWindow.Width;
+            DesiredHeight = Engine.Instance.MainWindow.Height;
 
             Component.Measure(DesiredWidth, DesiredHeight);
 

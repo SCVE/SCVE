@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using SCVE.Core.App;
+using SCVE.Core.Main;
 using SCVE.Default;
 using SCVE.UI;
 using SCVE.UI.UIBuilders;
@@ -12,11 +12,11 @@ namespace SCVE.UITreeDebugger
         static void Main(string[] args)
         {
             var xmlUIBuilder = new XmlUIBuilder(File.ReadAllText("assets/UI/editor.ui.xml"));
-            var analyzeUI = new BootstrapableUI().WithBootstraped(xmlUIBuilder.Build());
+            var analyzeUI = new EngineRunnableUI().WithBootstraped(xmlUIBuilder.Build());
 
-            var application = Application.Init(new DefaultApplicationInit()
+            var application = Engine.Init(new DefaultEngineInit()
             {
-                Bootstrapable = new BootstrapableTreeViewer(analyzeUI)
+                Runnable = new EngineRunnableTreeViewer(analyzeUI)
             });
 
             application.Run();

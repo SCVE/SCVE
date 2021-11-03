@@ -1,8 +1,8 @@
 ﻿using System;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using static OpenTK.Windowing.GraphicsLibraryFramework.GLFWCallbacks;
-using SCVE.Core.App;
 using SCVE.Core.Entities;
+using SCVE.Core.Main;
 using SCVE.Core.Utilities;
 
 namespace SCVE.OpenTKBindings
@@ -77,11 +77,11 @@ namespace SCVE.OpenTKBindings
             Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnWindowMaximized)}(maximized: {maximized})");
             if (maximized)
             {
-                Application.Instance.Input.RegisterWindowMaximized();
+                Engine.Instance.Input.RegisterWindowMaximized();
             }
             else
             {
-                Application.Instance.Input.RegisterWindowWindowed();
+                Engine.Instance.Input.RegisterWindowWindowed();
             }
         }
 
@@ -90,11 +90,11 @@ namespace SCVE.OpenTKBindings
             Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnWindowMinimized)}(iconified: {iconified})");
             if (iconified)
             {
-                Application.Instance.Input.RegisterWindowMinimized();
+                Engine.Instance.Input.RegisterWindowMinimized();
             }
             else
             {
-                Application.Instance.Input.RegisterWindowWindowed();
+                Engine.Instance.Input.RegisterWindowWindowed();
             }
         }
 
@@ -129,11 +129,11 @@ namespace SCVE.OpenTKBindings
 
             if (entered)
             {
-                Application.Instance.Input.RegisterCursorEnter();
+                Engine.Instance.Input.RegisterCursorEnter();
             }
             else
             {
-                Application.Instance.Input.RegisterCursorLeave();
+                Engine.Instance.Input.RegisterCursorLeave();
             }
         }
 
@@ -141,14 +141,14 @@ namespace SCVE.OpenTKBindings
         {
             Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnCursorMoved)}(x: {x}, y: {y})");
 
-            Application.Instance.Input.RegisterCursorMoved((float)x, (float)y);
+            Engine.Instance.Input.RegisterCursorMoved((float)x, (float)y);
         }
 
         private unsafe void OnScroll(Window* window, double offsetx, double offsety)
         {
             Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnScroll)}(offsetx: {offsetx}, offsety: {offsety})");
 
-            Application.Instance.Input.RegisterScroll((float)offsetx, (float)offsety);
+            Engine.Instance.Input.RegisterScroll((float)offsetx, (float)offsety);
         }
 
         private unsafe void OnMouseButtonClick(Window* window, MouseButton button, InputAction action, KeyModifiers mods)
@@ -158,10 +158,10 @@ namespace SCVE.OpenTKBindings
             switch (action)
             {
                 case InputAction.Press:
-                    Application.Instance.Input.RegisterMouseButtonDown(button.ToScveCode());
+                    Engine.Instance.Input.RegisterMouseButtonDown(button.ToScveCode());
                     break;
                 case InputAction.Release:
-                    Application.Instance.Input.RegisterMouseButtonUp(button.ToScveCode());
+                    Engine.Instance.Input.RegisterMouseButtonUp(button.ToScveCode());
                     break;
                 case InputAction.Repeat:
                     // This is never called
@@ -186,13 +186,13 @@ namespace SCVE.OpenTKBindings
             switch (action)
             {
                 case InputAction.Press:
-                    Application.Instance.Input.RegisterKeyDown(key.ToScveCode());
+                    Engine.Instance.Input.RegisterKeyDown(key.ToScveCode());
                     break;
                 case InputAction.Release:
-                    Application.Instance.Input.RegisterKeyUp(key.ToScveCode());
+                    Engine.Instance.Input.RegisterKeyUp(key.ToScveCode());
                     break;
                 case InputAction.Repeat:
-                    Application.Instance.Input.RegisterKeyRepeat(key.ToScveCode());
+                    Engine.Instance.Input.RegisterKeyRepeat(key.ToScveCode());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);
@@ -202,7 +202,7 @@ namespace SCVE.OpenTKBindings
         private unsafe void OnWindowClose(Window* window)
         {
             Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnWindowClose)}()");
-            Application.Instance.RequestTerminate();
+            Engine.Instance.RequestTerminate();
         }
 
         private unsafe void OnWindowSizeChanged(Window* window, int width, int height)
@@ -212,7 +212,7 @@ namespace SCVE.OpenTKBindings
             Width = width;
             Height = height;
             
-            Application.Instance.Input.RegisterWindowSizeChanged(width, height);
+            Engine.Instance.Input.RegisterWindowSizeChanged(width, height);
         }
 
         public override void SetVSync(bool vSync)
@@ -223,7 +223,7 @@ namespace SCVE.OpenTKBindings
         private static void OnGlfwError(ErrorCode error, string description)
         {
             Logger.Error($"GLFW - {description}");
-            Application.Instance.RequestTerminate();
+            Engine.Instance.RequestTerminate();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SCVE.Core.App;
+using SCVE.Core.Main;
 using SCVE.Core.Texts;
 using SCVE.Core.Utilities;
 
@@ -30,7 +30,7 @@ namespace SCVE.Core.Caches
             if (!cachedFontsOfName.ContainsKey(fontSize))
             {
                 var lineHeight = Maths.FontSizeToLineHeight(fontSize);
-                var fontLoadData = Application.Instance.FileLoaders.Font.Load(
+                var fontLoadData = Engine.Instance.FileLoaders.Font.Load(
                     fontFileName,
                     lineHeight
                 );

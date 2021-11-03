@@ -1,5 +1,4 @@
 ﻿using System;
-using SCVE.Core.App;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 
