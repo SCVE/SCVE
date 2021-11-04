@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using SCVE.Core.Rendering;
-using SCVE.Core.Utilities;
 using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Groups
 {
     /// <summary>
     /// Stack takes all available space and align every child on top of each other
@@ -56,6 +55,14 @@ namespace SCVE.UI.UpToDate
             for (var i = 0; i < Children.Count; i++)
             {
                 Children[i].Arrange(x, y, availableWidth, availableHeight);
+            }
+        }
+
+        public override void Update(float deltaTime)
+        {
+            for (var i = 0; i < Children.Count; i++)
+            {
+                Children[i].Update(deltaTime);
             }
         }
 

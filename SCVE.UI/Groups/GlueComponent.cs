@@ -4,7 +4,7 @@ using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Groups
 {
     /// <summary>
     /// Glue component takes all available space and glues it's children horizontally or vertically 
@@ -18,6 +18,11 @@ namespace SCVE.UI.UpToDate
         public GlueComponent()
         {
             Children = new();
+        }
+
+        protected override void SubtreeUpdated()
+        {
+            Arrange(X, Y, Width, Height);
         }
 
         public override void Init()
@@ -70,7 +75,8 @@ namespace SCVE.UI.UpToDate
 
                     break;
                 }
-                case AlignmentDirection.Vertical:{
+                case AlignmentDirection.Vertical:
+                {
                     float usedHeight = 0f;
                     for (var i = 0; i < Children.Count; i++)
                     {
@@ -96,7 +102,7 @@ namespace SCVE.UI.UpToDate
         public override void Arrange(float x, float y, float availableWidth, float availableHeight)
         {
             base.Arrange(x, y, availableWidth, availableHeight);
-            
+
             switch (Direction)
             {
                 case AlignmentDirection.Horizontal:
@@ -110,7 +116,8 @@ namespace SCVE.UI.UpToDate
 
                     break;
                 }
-                case AlignmentDirection.Vertical:{
+                case AlignmentDirection.Vertical:
+                {
                     float usedHeight = 0f;
                     for (var i = 0; i < Children.Count; i++)
                     {

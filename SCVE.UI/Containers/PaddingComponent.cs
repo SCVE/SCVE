@@ -1,7 +1,7 @@
 ﻿using SCVE.UI.StyleValues;
 using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Containers
 {
     public class PaddingComponent : ContainerComponent
     {

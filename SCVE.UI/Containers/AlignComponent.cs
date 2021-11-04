@@ -1,8 +1,7 @@
 ﻿using System;
-using SCVE.Core.Utilities;
 using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Containers
 {
     /// <summary>
     /// Align Component fills all given empty space and aligns single child inside it

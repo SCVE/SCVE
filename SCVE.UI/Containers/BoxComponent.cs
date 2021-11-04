@@ -1,8 +1,6 @@
-﻿using System;
-using SCVE.Core.Utilities;
-using SCVE.UI.Visitors;
+﻿using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Containers
 {
     /// <summary>
     /// Box Component fills all given empty space and shrinks single child to a box

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
-using SCVE.Core.Utilities;
+using SCVE.UI.Containers;
 using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Groups
 {
     /// <summary>
     /// Flex occupies all available space, positions and resizes child Flex Cells to occupy space based on their Flex property

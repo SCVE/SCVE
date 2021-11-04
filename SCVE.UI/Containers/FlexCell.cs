@@ -1,7 +1,6 @@
-﻿using SCVE.Core.Utilities;
-using SCVE.UI.Visitors;
+﻿using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Containers
 {
     /// <summary>
     /// Flex Cell occupies all space, provided by Flex Component, based on Flex property

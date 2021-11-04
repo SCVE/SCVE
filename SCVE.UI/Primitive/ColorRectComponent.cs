@@ -2,7 +2,7 @@
 using SCVE.Core.Utilities;
 using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Primitive
 {
     /// <summary>
     /// Color Rect Component is a basically a 2D rectangle, it occupies only the size specified in the style

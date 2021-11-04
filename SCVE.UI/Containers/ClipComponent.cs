@@ -1,7 +1,7 @@
 ﻿using SCVE.Core.Rendering;
 using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Containers
 {
     /// <summary>
     /// Clip Component fills all available space and clips any rendering of it's child to the occupying space

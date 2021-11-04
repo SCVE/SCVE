@@ -1,6 +1,6 @@
 ﻿using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Primitive
 {
     /// <summary>
     /// FPS Counter is an fps counter (haha). Derivative from Text. It process the update event and displays FPS

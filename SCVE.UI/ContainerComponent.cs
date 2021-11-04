@@ -66,6 +66,11 @@ namespace SCVE.UI
             Component.Arrange(x, y, Width, Height);
         }
 
+        public override void Update(float deltaTime)
+        {
+            Component.Update(deltaTime);
+        }
+
         public override void RenderSelf(IRenderer renderer)
         {
             if (!_hasComponent) return;

@@ -5,7 +5,7 @@ using SCVE.Core.Texts;
 using SCVE.Core.Utilities;
 using SCVE.UI.Visitors;
 
-namespace SCVE.UI.UpToDate
+namespace SCVE.UI.Primitive
 {
     public class TextComponent : Component
     {
