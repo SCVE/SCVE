@@ -7,7 +7,7 @@ namespace SCVE.UI.Primitive
     /// </summary>
     public class FpsComponent : TextComponent
     {
-        public FpsComponent() : base("arial.ttf", 24, "", TextAlignment.Left)
+        public FpsComponent() : base("arial.ttf", 12, "", TextAlignment.Left)
         {
         }
 
