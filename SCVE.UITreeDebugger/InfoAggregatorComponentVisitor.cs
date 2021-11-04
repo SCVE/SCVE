@@ -144,5 +144,19 @@ namespace SCVE.UITreeDebugger
             component.Component.AcceptVisitor(this);
             _currentIndentLevel--;
         }
+
+        public void Accept(GlueComponent component)
+        {
+            string info = $"{nameof(GlueComponent)}";
+            AddText(info);
+
+            _currentIndentLevel++;
+            for (var i = 0; i < component.Children.Count; i++)
+            {
+                component.Children[i].AcceptVisitor(this);
+            }
+
+            _currentIndentLevel--;
+        }
     }
 }

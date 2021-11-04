@@ -15,6 +15,9 @@ namespace SCVE.UI.UpToDate
         private float _fontSize;
         private string _text;
 
+        private float _desiredWidth = 0f;
+        private float _desiredHeight = 0f;
+
         private string[] _lines;
         private float[] _lineWidths;
 
@@ -40,6 +43,7 @@ namespace SCVE.UI.UpToDate
         {
             _text = text;
             Rebuild();
+            SubtreeUpdated();
         }
 
         private void Rebuild()
@@ -57,10 +61,22 @@ namespace SCVE.UI.UpToDate
                 }
             }
 
-            DesiredWidth  = maxLineWidth;
-            DesiredHeight = _lines.Length * Maths.FontSizeToLineHeight(_fontSize);
+            _desiredWidth  = maxLineWidth;
+            _desiredHeight = _lines.Length * Maths.FontSizeToLineHeight(_fontSize);
+        }
 
-            SubtreeUpdated();
+        public override void Measure(float availableWidth, float availableHeight)
+        {
+            DesiredWidth  = _desiredWidth;
+            DesiredHeight = _desiredHeight;
+        }
+
+        public override void Arrange(float x, float y, float availableWidth, float availableHeight)
+        {
+            X      = x;
+            Y      = y;
+            Width  = _desiredWidth;
+            Height = _desiredHeight;
         }
 
         public override void RenderSelf(IRenderer renderer)

@@ -9,25 +9,19 @@
                     <padding left="5" right="5" top="5" bottom="5">
                         <stack>
                             <color-rect style="width=100%; height=100%; primary-color=#424242"/>
-                            <box style="width=100%;height=90">
-                                <flex direction="vertical">
-                                    <flex-cell flex="1">
-                                        <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Bird"/>
-                                    </flex-cell>
-                                    <flex-cell flex="1">
-                                        <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Egop"/>
-                                    </flex-cell>
-                                    <flex-cell flex="1">
-                                        <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Is"/>
-                                    </flex-cell>
-                                    <flex-cell flex="1">
-                                        <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Super"/>
-                                    </flex-cell>
-                                    <flex-cell flex="1">
-                                        <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Cool"/>
-                                    </flex-cell>
-                                </flex>
-                            </box>
+                            <padding left="5" right="5" top="5" bottom="5">
+                                <glue direction="vertical">
+                                    <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Bird"/>
+                                    <color-rect style="width=100%; height=10%; primary-color=#ABCDEF"/>
+                                    <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Egop"/>
+
+                                    <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Is"/>
+
+                                    <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Super"/>
+
+                                    <text font-file-name="arial.ttf" alignment="left" font-size="12" text="Cool"/>
+                                </glue>
+                            </padding>
                         </stack>
                     </padding>
                 </flex-cell>

@@ -40,6 +40,7 @@ namespace SCVE.UI.UIBuilders
                 "stack" => ProcessStackElement(xElement),
                 "clip" => ProcessClipElement(xElement),
                 "padding" => ProcessPaddingElement(xElement),
+                "glue" => ProcessGlueElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             component.SetStyle(ExtractStyles(xElement));
@@ -51,6 +52,31 @@ namespace SCVE.UI.UIBuilders
             return component;
         }
 
+        private static Component ProcessGlueElement(XElement xElement)
+        {
+            var glueComponent = new GlueComponent();
+
+            var directionAttribute = xElement.Attribute("direction");
+            if (directionAttribute is not null)
+            {
+                if (TryParseRawEnum(directionAttribute.Value, out AlignmentDirection direction))
+                {
+                    glueComponent.Direction = direction;
+                }
+                else
+                {
+                    Logger.Warn("Failed to parse direction of GlueComponent");
+                }
+            }
+            else
+            {
+                // default to horizontal
+                glueComponent.Direction = AlignmentDirection.Horizontal;
+            }
+
+            return glueComponent;
+        }
+
         private static Component ProcessPaddingElement(XElement xElement)
         {
             var paddingComponent = new PaddingComponent();
@@ -60,16 +86,19 @@ namespace SCVE.UI.UIBuilders
             {
                 TryParseFloatStyle(paddingComponent.Top, topAttribute.Value);
             }
+
             var rightAttribute = xElement.Attribute("right");
             if (rightAttribute is not null)
             {
                 TryParseFloatStyle(paddingComponent.Right, rightAttribute.Value);
             }
+
             var bottomAttribute = xElement.Attribute("bottom");
             if (bottomAttribute is not null)
             {
                 TryParseFloatStyle(paddingComponent.Bottom, bottomAttribute.Value);
             }
+
             var leftAttribute = xElement.Attribute("left");
             if (leftAttribute is not null)
             {

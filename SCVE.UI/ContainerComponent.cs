@@ -9,6 +9,9 @@ namespace SCVE.UI
         private bool _hasComponent;
         public Component Component;
 
+        /// <summary>
+        /// Initializes the contained component
+        /// </summary>
         public override void Init()
         {
             Component.Init();

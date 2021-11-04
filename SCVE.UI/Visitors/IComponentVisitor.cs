@@ -20,5 +20,6 @@ namespace SCVE.UI.Visitors
         void Accept(StackComponent component);
         void Accept(TextComponent component);
         void Accept(PaddingComponent component);
+        void Accept(GlueComponent component);
     }
 }
