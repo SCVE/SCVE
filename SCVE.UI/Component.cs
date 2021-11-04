@@ -51,6 +51,9 @@ namespace SCVE.UI
             throw new ScveException($"Unsupported RemoveChild for component ({GetType().Name})");
         }
 
+        /// <summary>
+        /// Bubbles up the event, when a subtree of current component was updated
+        /// </summary>
         protected virtual void SubtreeUpdated()
         {
             this.Parent?.SubtreeUpdated();
