@@ -25,6 +25,7 @@
                         </stack>
                     </padding>
                 </flex-cell>
+                <color-rect/>
                 <flex-cell flex="2">
                     <padding left="5" right="5" top="5" bottom="5">
                         <stack>

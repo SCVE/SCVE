@@ -12,6 +12,8 @@ namespace SCVE.UI.UpToDate
     /// </summary>
     public class FlexComponent : Component
     {
+        private float _totalFlex = 0f;
+
         public List<FlexCell> Children { get; set; }
 
         public AlignmentDirection Direction { get; set; }
@@ -34,12 +36,12 @@ namespace SCVE.UI.UpToDate
             if (child is FlexCell flexCell)
             {
                 Children.Add(flexCell);
-                child.Parent = this;
-                SubtreeUpdated();
+                child.Parent =  this;
+                _totalFlex   += flexCell.Flex;
             }
             else
             {
-                throw new ScveException($"Flex component may not contain any elements except FlexCell.{child.GetType().Name}");
+                throw new ScveException($"Flex component may not contain any elements except FlexCell. Provided {child.GetType().Name}");
             }
         }
 
@@ -48,12 +50,12 @@ namespace SCVE.UI.UpToDate
             if (child is FlexCell flexCell)
             {
                 Children.Remove(flexCell);
-                child.Parent = null;
-                SubtreeUpdated();
+                child.Parent =  null;
+                _totalFlex   -= flexCell.Flex;
             }
             else
             {
-                throw new ScveException($"Flex component may not contain any elements except FlexCell.{child.GetType().Name}");
+                throw new ScveException($"Flex component may not contain any elements except FlexCell. Provided {child.GetType().Name}");
             }
         }
 
@@ -67,13 +69,11 @@ namespace SCVE.UI.UpToDate
 
         public override void Measure(float availableWidth, float availableHeight)
         {
-            var childrenSumFlex = Children.Sum(c => c.Flex);
-
             if (Direction == AlignmentDirection.Horizontal)
             {
                 float widthPerFlexUnit;
                 float heightPerFlexUnit;
-                widthPerFlexUnit  = availableWidth / childrenSumFlex;
+                widthPerFlexUnit  = availableWidth / _totalFlex;
                 heightPerFlexUnit = availableHeight;
                 for (var i = 0; i < Children.Count; i++)
                 {
@@ -84,7 +84,7 @@ namespace SCVE.UI.UpToDate
             else if (Direction == AlignmentDirection.Vertical)
             {
                 var widthPerFlexUnit = availableWidth;
-                var heightPerFlexUnit = availableHeight / childrenSumFlex;
+                var heightPerFlexUnit = availableHeight / _totalFlex;
                 for (var i = 0; i < Children.Count; i++)
                 {
                     var childHeight = Children[i].Flex * heightPerFlexUnit;
@@ -104,8 +104,6 @@ namespace SCVE.UI.UpToDate
         {
             base.Arrange(x, y, availableWidth, availableHeight);
 
-            var childrenSumFlex = Children.Sum(c => c.Flex);
-
             float offsetX = x;
             float offsetY = y;
 
@@ -113,7 +111,7 @@ namespace SCVE.UI.UpToDate
             {
                 float widthPerFlexUnit;
                 float heightPerFlexUnit;
-                widthPerFlexUnit  = availableWidth / childrenSumFlex;
+                widthPerFlexUnit  = availableWidth / _totalFlex;
                 heightPerFlexUnit = availableHeight;
                 for (var i = 0; i < Children.Count; i++)
                 {
@@ -125,7 +123,7 @@ namespace SCVE.UI.UpToDate
             else if (Direction == AlignmentDirection.Vertical)
             {
                 var widthPerFlexUnit = availableWidth;
-                var heightPerFlexUnit = availableHeight / childrenSumFlex;
+                var heightPerFlexUnit = availableHeight / _totalFlex;
                 for (var i = 0; i < Children.Count; i++)
                 {
                     var childHeight = Children[i].Flex * heightPerFlexUnit;
