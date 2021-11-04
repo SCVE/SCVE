@@ -197,7 +197,7 @@ namespace SCVE.UI.UIBuilders
         {
             string fontFileName = xElement.Attribute("font-file-name")?.Value ?? "arial.ttf";
             float fontSize = float.Parse(xElement.Attribute("font-size")?.Value ?? "14", NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-            string text = xElement.Attribute("text")?.Value ?? "unknown";
+            string text = xElement.Value;
 
             TextAlignment alignment = Enum.Parse<TextAlignment>(xElement.Attribute("alignment")?.Value ?? "left", true);
 
