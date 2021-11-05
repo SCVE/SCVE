@@ -2,6 +2,6 @@
 {
     public interface IUIBuilder
     {
-        public Component Build();
+        public Component Build(string filePath);
     }
 }

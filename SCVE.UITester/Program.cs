@@ -11,11 +11,11 @@ namespace UITester
     {
         static void Main(string[] args)
         {
-            var xmlUIBuilder = new XmlUIBuilder(File.ReadAllText("assets/UI/editor.ui.xml"));
-            
+            var xmlUIBuilder = new XmlUIBuilder();
+            var component = xmlUIBuilder.Build("assets/UI/editor.ui.xml");
             var application = Engine.Init(new DefaultEngineInit()
             {
-                Runnable = new EngineRunnableUI().WithBootstraped(xmlUIBuilder.Build())
+                Runnable = new EngineRunnableUI().WithBootstraped(component)
             });
 
             application.Run();

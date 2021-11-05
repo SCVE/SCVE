@@ -11,8 +11,9 @@ namespace SCVE.UITreeDebugger
     {
         static void Main(string[] args)
         {
-            var xmlUIBuilder = new XmlUIBuilder(File.ReadAllText("assets/UI/editor.ui.xml"));
-            var analyzeUI = new EngineRunnableUI().WithBootstraped(xmlUIBuilder.Build());
+            var xmlUIBuilder = new XmlUIBuilder();
+            var component = xmlUIBuilder.Build("assets/UI/editor.ui.xml");
+            var analyzeUI = new EngineRunnableUI().WithBootstraped(component);
 
             var application = Engine.Init(new DefaultEngineInit()
             {

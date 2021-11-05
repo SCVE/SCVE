@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Xml.Linq;
 using SCVE.Core.Misc;
 using SCVE.Core.Primitives;
@@ -13,20 +15,19 @@ namespace SCVE.UI.UIBuilders
 {
     public class XmlUIBuilder : IUIBuilder
     {
-        private string _xml;
+        private int _id = 1;
+        private List<int> _usedIds = new();
 
-        public XmlUIBuilder(string xml)
+        public Component Build(string filePath)
         {
-            _xml = xml;
-        }
-
-        public Component Build()
-        {
-            var xDocument = XDocument.Parse(_xml);
+            var xml = File.ReadAllText(filePath);
+            var xDocument = XDocument.Parse(xml);
+            _id = 1;
+            _usedIds.Clear();
             return Build(xDocument.Root);
         }
 
-        private static Component Build(XElement xElement)
+        private Component Build(XElement xElement)
         {
             var localName = xElement.Name.LocalName;
 
@@ -45,6 +46,7 @@ namespace SCVE.UI.UIBuilders
                 "glue" => ProcessGlueElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
+            ExtractId(component, xElement);
             component.SetStyle(ExtractStyles(xElement));
             foreach (var element in xElement.Elements())
             {
@@ -207,6 +209,35 @@ namespace SCVE.UI.UIBuilders
                 text,
                 alignment
             );
+        }
+
+        private void ExtractId(Component destination, XElement source)
+        {
+            var idAttribute = source.Attribute("id");
+            if (idAttribute is not null)
+            {
+                var elementId = int.Parse(idAttribute.Value);
+                int destId = elementId;
+                while (_usedIds.Contains(destId))
+                {
+                    destId++;
+                }
+
+                _usedIds.Add(destId);
+                destination.Id = destId;
+                Logger.Warn($"Found Id for {destination.GetType().Name} element: {elementId}. Set to {destId}");
+            }
+            else
+            {
+                while (_usedIds.Contains(_id))
+                {
+                    _id++;
+                }
+
+                _usedIds.Add(_id);
+                destination.Id = _id;
+                Logger.Warn($"No Id specified for {destination.GetType().Name} element. Set to {_id}");
+            }
         }
 
         private static ColorRectComponent ProcessColorRectElement(XElement xElement)

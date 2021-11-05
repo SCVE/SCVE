@@ -6,6 +6,8 @@ namespace SCVE.UI
 {
     public abstract class Component
     {
+        public int Id { get; set; }
+        
         public Component Parent;
 
         public float X { get; set; }

@@ -43,7 +43,7 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(EngineRunnableUI component)
         {
-            string info = $"{nameof(EngineRunnableUI)}";
+            string info = $"{nameof(EngineRunnableUI)} - {component.Id}";
             AddText(info);
 
             _currentIndentLevel++;
@@ -53,7 +53,7 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(AlignComponent component)
         {
-            string info = $"{nameof(AlignComponent)}";
+            string info = $"{nameof(AlignComponent)} - {component.Id}";
             AddText(info);
 
             _currentIndentLevel++;
@@ -63,7 +63,7 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(BoxComponent component)
         {
-            string info = $"{nameof(BoxComponent)}";
+            string info = $"{nameof(BoxComponent)} - {component.Id}";
             AddText(info);
 
             _currentIndentLevel++;
@@ -73,7 +73,7 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(ClipComponent component)
         {
-            string info = $"{nameof(ClipComponent)}";
+            string info = $"{nameof(ClipComponent)} - {component.Id}";
             AddText(info);
 
             _currentIndentLevel++;
@@ -83,13 +83,13 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(ColorRectComponent component)
         {
-            string info = $"{nameof(ColorRectComponent)}";
+            string info = $"{nameof(ColorRectComponent)} - {component.Id}";
             AddText(info);
         }
 
         public void Accept(FlexCell component)
         {
-            string info = $"{nameof(FlexCell)}";
+            string info = $"{nameof(FlexCell)} - {component.Id}";
             AddText(info);
 
             _currentIndentLevel++;
@@ -99,7 +99,7 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(FlexComponent component)
         {
-            string info = $"{nameof(FlexComponent)}";
+            string info = $"{nameof(FlexComponent)} - {component.Id}";
             AddText(info);
 
             _currentIndentLevel++;
@@ -113,13 +113,13 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(FpsComponent component)
         {
-            string info = $"{nameof(FpsComponent)}";
+            string info = $"{nameof(FpsComponent)} - {component.Id}";
             AddText(info);
         }
 
         public void Accept(StackComponent component)
         {
-            string info = $"{nameof(StackComponent)}";
+            string info = $"{nameof(StackComponent)} - {component.Id}";
             AddText(info);
 
             _currentIndentLevel++;
@@ -133,13 +133,13 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(TextComponent component)
         {
-            string info = $"{nameof(TextComponent)}";
+            string info = $"{nameof(TextComponent)} - {component.Id}";
             AddText(info);
         }
 
         public void Accept(PaddingComponent component)
         {
-            string info = $"{nameof(PaddingComponent)}";
+            string info = $"{nameof(PaddingComponent)} - {component.Id}";
             AddText(info);
             
             _currentIndentLevel++;
@@ -149,7 +149,7 @@ namespace SCVE.UITreeDebugger
 
         public void Accept(GlueComponent component)
         {
-            string info = $"{nameof(GlueComponent)}";
+            string info = $"{nameof(GlueComponent)} - {component.Id}";
             AddText(info);
 
             _currentIndentLevel++;
