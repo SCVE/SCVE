@@ -1,6 +1,7 @@
 ﻿using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.Elements
 {
@@ -62,6 +63,11 @@ namespace SCVE.UI.Elements
         public override void RenderSelf(IRenderer renderer)
         {
             Component.RenderSelf(renderer);
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

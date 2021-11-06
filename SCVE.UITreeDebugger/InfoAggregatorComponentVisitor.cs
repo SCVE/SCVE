@@ -1,5 +1,6 @@
 ﻿using SCVE.UI;
 using SCVE.UI.Containers;
+using SCVE.UI.Elements;
 using SCVE.UI.Groups;
 using SCVE.UI.Primitive;
 using SCVE.UI.Visitors;
@@ -170,6 +171,22 @@ namespace SCVE.UITreeDebugger
             _currentIndentLevel++;
             component.Component.AcceptVisitor(this);
             _currentIndentLevel--;
+        }
+
+        public void Accept(ButtonContainerComponent component)
+        {
+            string info = $"{nameof(ButtonContainerComponent)}";
+            AddText(info);
+
+            _currentIndentLevel++;
+            component.Component.AcceptVisitor(this);
+            _currentIndentLevel--;
+        }
+
+        public void Accept(ButtonComponent component)
+        {
+            string info = $"{nameof(ButtonComponent)} - \"{component.Text}\"";
+            AddText(info);
         }
     }
 }

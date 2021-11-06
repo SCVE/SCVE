@@ -3,6 +3,7 @@ using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 using SCVE.UI.Primitive;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.Elements
 {
@@ -124,6 +125,11 @@ namespace SCVE.UI.Elements
         {
             _backgroundRect.RenderSelf(renderer);
             _textComponent.RenderSelf(renderer);
+        }
+
+        public override void AcceptVisitor(IComponentVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }
