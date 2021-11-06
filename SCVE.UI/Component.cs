@@ -10,6 +10,8 @@ namespace SCVE.UI
     {
         public int Id { get; set; }
 
+        public bool Initialized { get; set; }
+
         public Component Parent;
 
         public float X { get; set; }
@@ -60,6 +62,8 @@ namespace SCVE.UI
         /// </summary>
         protected virtual void SubtreeUpdated()
         {
+            if (!Initialized) return;
+
             this.Parent?.SubtreeUpdated();
         }
 
@@ -87,6 +91,7 @@ namespace SCVE.UI
 
         public virtual void Init()
         {
+            Initialized = true;
         }
 
         /// <summary>
@@ -109,6 +114,9 @@ namespace SCVE.UI
 
         public abstract void RenderSelf(IRenderer renderer);
 
+        /// <summary>
+        /// Defines, how the component must bubble the event. By default - do nothing
+        /// </summary>
         public virtual void BubbleEvent(string name)
         {
         }

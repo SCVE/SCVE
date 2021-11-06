@@ -24,6 +24,7 @@ namespace SCVE.UI.Groups
 
         public override void Init()
         {
+            base.Init();
             for (var i = 0; i < Children.Count; i++)
             {
                 Children[i].Init();

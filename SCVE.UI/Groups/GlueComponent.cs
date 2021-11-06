@@ -22,6 +22,7 @@ namespace SCVE.UI.Groups
 
         protected override void SubtreeUpdated()
         {
+            if(!Initialized) return;
             Arrange(X, Y, Width, Height);
         }
 
@@ -50,6 +51,7 @@ namespace SCVE.UI.Groups
 
         public override void Init()
         {
+            base.Init();
             for (var i = 0; i < Children.Count; i++)
             {
                 Children[i].Init();

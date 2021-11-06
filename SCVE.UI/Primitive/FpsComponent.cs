@@ -8,10 +8,6 @@ namespace SCVE.UI.Primitive
     /// </summary>
     public class FpsComponent : TextComponent
     {
-        public FpsComponent() : base("arial.ttf", 12, "", TextAlignment.Left)
-        {
-        }
-
         public override void BubbleEvent(string name)
         {
             Logger.Warn($"Clicked on FPS: Bubbling event ({name})");

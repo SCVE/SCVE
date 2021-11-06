@@ -27,13 +27,6 @@ namespace SCVE.UI.Primitive
             }
         }
 
-
-        public override void BubbleEvent(string name)
-        {
-            Logger.Warn($"Clicked on ColorRect: Bubbling event ({name})");
-            this.Parent.BubbleEvent(name);
-        }
-
         public override void Measure(float availableWidth, float availableHeight)
         {
             DesiredWidth  = Style.Width.Flatten(availableWidth);

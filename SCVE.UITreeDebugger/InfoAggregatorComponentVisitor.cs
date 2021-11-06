@@ -32,8 +32,9 @@ namespace SCVE.UITreeDebugger
             };
 
             string indent = new string(IndentChar, _currentIndentLevel * 2);
-            var textComponent = new TextComponent("arial.ttf", 14, indent + text, TextAlignment.Left);
+            var textComponent = new TextComponent();
             textComponent.SetStyle(ComponentStyle.Default);
+            textComponent.SetText(indent + text);
             cellInfo.AddChild(textComponent);
             var flex = new FlexComponent();
             flex.AddChild(cellSpace);

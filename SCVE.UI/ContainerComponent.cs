@@ -16,6 +16,7 @@ namespace SCVE.UI
         /// </summary>
         public override void Init()
         {
+            base.Init();
             Component.Init();
         }
 
