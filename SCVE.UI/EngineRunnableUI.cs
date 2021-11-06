@@ -9,7 +9,8 @@ namespace SCVE.UI
 {
     public class EngineRunnableUI : ContainerComponent, IEngineRunnable
     {
-        private Component _mouseOverComponent;
+        private Component _lastMouseOverComponent;
+        private Component _focusedComponent;
 
         public EngineRunnableUI()
         {
@@ -30,13 +31,34 @@ namespace SCVE.UI
             Engine.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
             Engine.Instance.Input.CursorMoved       += InputOnCursorMoved;
             Engine.Instance.Input.MouseButtonDown   += InputOnMouseButtonDown;
+            Engine.Instance.Input.MouseButtonUp     += InputOnMouseButtonUp;
+        }
+
+        private void InputOnMouseButtonUp(MouseCode code)
+        {
+            if (_lastMouseOverComponent is not null)
+            {
+                _lastMouseOverComponent.DispatchMouseUp();
+            }
+            else
+            {
+                Logger.Warn("Mouse is not over any component");
+            }
         }
 
         private void InputOnMouseButtonDown(MouseCode code)
         {
-            if (_mouseOverComponent is not null)
+            if (_focusedComponent is not null && _focusedComponent != _lastMouseOverComponent)
             {
-                _mouseOverComponent.MouseDown();
+                _focusedComponent.DispatchLostFocus();
+                
+                _lastMouseOverComponent.DispatchFocus();
+                _focusedComponent = _lastMouseOverComponent;
+            }
+
+            if (_lastMouseOverComponent is not null)
+            {
+                _lastMouseOverComponent.DispatchMouseDown();
             }
             else
             {
@@ -46,8 +68,37 @@ namespace SCVE.UI
 
         private void InputOnCursorMoved(float x, float y)
         {
-            _mouseOverComponent = PickComponentByPosition(x, y);
-            Logger.Warn($"Cursor moved to {x}-{y}. Picked {_mouseOverComponent?.GetType().Name}");
+            var nowMouseOverComponent = PickComponentByPosition(x, y);
+            if (nowMouseOverComponent is null)
+            {
+                return;
+            }
+            if (_focusedComponent is not null)
+            {
+                if (_focusedComponent == nowMouseOverComponent)
+                {
+                    _focusedComponent.DispatchMouseMove(x, y);
+                    Logger.Warn($"Cursor moved to {x}-{y}. Over focused {_lastMouseOverComponent?.GetType().Name}");
+                }
+                else
+                {
+                    
+                }
+            }
+            else
+            {
+                if (nowMouseOverComponent != _lastMouseOverComponent)
+                {
+                    _lastMouseOverComponent?.DispatchMouseLeave();
+                    nowMouseOverComponent.DispatchMouseEnter();
+                    Logger.Warn($"Cursor moved to {x}-{y}. Now over {nowMouseOverComponent?.GetType().Name}");
+                }
+                else
+                {
+                    nowMouseOverComponent.DispatchMouseMove(x, y);
+                }
+                _lastMouseOverComponent = nowMouseOverComponent;
+            }
         }
 
         public override void Update(float deltaTime)

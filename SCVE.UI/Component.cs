@@ -1,4 +1,5 @@
-﻿using SCVE.Core.Misc;
+﻿using System;
+using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
 using SCVE.UI.Visitors;
 
@@ -21,6 +22,16 @@ namespace SCVE.UI
         public float DesiredWidth { get; set; }
         public float DesiredHeight { get; set; }
 
+        public bool IsFocused { get; set; }
+
+        public event Action MouseDown;
+        public event Action MouseUp;
+        public event Action<float, float> MouseMove;
+        public event Action MouseEnter;
+        public event Action MouseLeave;
+        public event Action Focused;
+        public event Action LostFocus;
+
         /// <summary>
         /// The style of the component
         /// </summary>
@@ -35,6 +46,7 @@ namespace SCVE.UI
         public abstract Component PickComponentByPosition(float x, float y);
 
         public abstract void RenderSelf(IRenderer renderer);
+
 
         public virtual void AcceptVisitor(IComponentVisitor visitor)
         {
@@ -70,12 +82,6 @@ namespace SCVE.UI
 
             this.Parent?.SubtreeUpdated();
         }
-
-        // ReSharper disable once InvalidXmlDocComment
-        /// <summary>
-        /// Down to top event bubbling
-        /// </summary>
-        // public abstract void BubbleEvent<T>(T ev) where T : UIEvent;
 
         /// <summary>
         /// Set a parent component for current component
@@ -114,8 +120,42 @@ namespace SCVE.UI
             Height = availableHeight;
         }
 
-        public virtual void MouseDown()
+        public virtual void DispatchMouseDown()
         {
+            MouseDown?.Invoke();
+        }
+
+        public void DispatchFocus()
+        {
+            IsFocused = true;
+            Focused?.Invoke();
+        }
+
+
+        public void DispatchLostFocus()
+        {
+            IsFocused = false;
+            LostFocus?.Invoke();
+        }
+
+        public virtual void DispatchMouseMove(float x, float y)
+        {
+            MouseMove?.Invoke(x, y);
+        }
+
+        public virtual void DispatchMouseUp()
+        {
+            MouseUp?.Invoke();
+        }
+
+        public virtual void DispatchMouseEnter()
+        {
+            MouseEnter?.Invoke();
+        }
+        
+        public virtual void DispatchMouseLeave()
+        {
+            MouseLeave?.Invoke();
         }
     }
 }

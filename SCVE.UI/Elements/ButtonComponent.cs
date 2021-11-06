@@ -8,9 +8,10 @@ namespace SCVE.UI.Elements
 {
     public class ButtonComponent : Component
     {
+        private ColorRgba _mouseOverColor = new ColorRgba(1, 0, 0, 1);
+        private ColorRgba _normalColor;
         private ColorRectComponent _backgroundRect;
         private TextComponent _textComponent;
-        public event Action OnMouseDown;
 
         public ColorRgba BackgroundColor
         {
@@ -28,6 +29,34 @@ namespace SCVE.UI.Elements
                     _textComponent.SetText(value);
                 }
             }
+        }
+
+        public ButtonComponent()
+        {
+            _backgroundRect =  new ColorRectComponent();
+            _textComponent  =  new TextComponent();
+            MouseEnter      += OnMouseEnter;
+            MouseLeave      += OnMouseLeave;
+            MouseMove       += OnMouseMove;
+        }
+
+        private void OnMouseMove(float arg1, float arg2)
+        {
+            Logger.Warn("Button: Mouse Moved");
+        }
+
+        private void OnMouseLeave()
+        {
+            (_backgroundRect.Style.PrimaryColor.Value, _mouseOverColor) =
+                (_mouseOverColor, _backgroundRect.Style.PrimaryColor.Value);
+            Logger.Warn("Button: MouseLeave");
+        }
+
+        private void OnMouseEnter()
+        {
+            (_backgroundRect.Style.PrimaryColor.Value, _mouseOverColor) =
+                (_mouseOverColor, _backgroundRect.Style.PrimaryColor.Value);
+            Logger.Warn("Button: MouseEnter");
         }
 
         public override void Init()
@@ -52,12 +81,7 @@ namespace SCVE.UI.Elements
             base.OnSetStyle();
             _backgroundRect.SetStyle(Style);
             _textComponent.SetStyle(Style);
-        }
-
-        public ButtonComponent()
-        {
-            _backgroundRect = new ColorRectComponent();
-            _textComponent  = new TextComponent();
+            _normalColor = Style.PrimaryColor.Value;
         }
 
         public override void Measure(float availableWidth, float availableHeight)
@@ -94,11 +118,6 @@ namespace SCVE.UI.Elements
         {
             Measure(Width, Height);
             Arrange(X, Y, Width, Height);
-        }
-
-        public override void MouseDown()
-        {
-            OnMouseDown?.Invoke();
         }
 
         public override void RenderSelf(IRenderer renderer)

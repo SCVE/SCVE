@@ -13,7 +13,7 @@ namespace SCVE.UI.Elements
 
             var button = FindComponentById<ButtonComponent>("button");
             
-            button.OnMouseDown += () => { Logger.Warn("Button Clicked");};
+            button.MouseDown += () => { Logger.Warn("Button Clicked");};
         }
 
         public override void AddChild(Component child)
