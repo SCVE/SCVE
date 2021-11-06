@@ -44,6 +44,7 @@ namespace SCVE.UI.UIBuilders
                 "clip" => ProcessClipElement(xElement),
                 "padding" => ProcessPaddingElement(xElement),
                 "glue" => ProcessGlueElement(xElement),
+                "template" => ProcessTemplateElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             ExtractId(component, xElement);
@@ -54,6 +55,35 @@ namespace SCVE.UI.UIBuilders
             }
 
             return component;
+        }
+
+        private Component ProcessTemplateElement(XElement xElement)
+        {
+            var nameAttribute = xElement.Attribute("name");
+            if (nameAttribute is not null)
+            {
+                var templateName = nameAttribute.Value;
+                var templateComponent = new TemplateComponent
+                {
+                    Name = templateName
+                };
+                var builder = new XmlUIBuilder();
+                var templateUiFilePath = $"assets/UI/templates/{templateName}.ui.xml";
+                if (File.Exists(templateUiFilePath))
+                {
+                    var build = builder.Build(templateUiFilePath);
+                    templateComponent.Component = build;
+                    return templateComponent;
+                }
+                else
+                {
+                    throw new ScveException($"Template with a given name ({templateName}) was not found in 'templates' directory");
+                }
+            }
+            else
+            {
+                throw new ScveException("Template Component must declare a name attribute");
+            }
         }
 
         private static Component ProcessGlueElement(XElement xElement)

@@ -1,9 +1,11 @@
-﻿using System.Runtime.CompilerServices;
-using SCVE.Core.Misc;
+﻿using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
 
 namespace SCVE.UI
 {
+    /// <summary>
+    /// Container component contains a single component. occupies all available space
+    /// </summary>
     public abstract class ContainerComponent : Component
     {
         private bool _hasComponent;
@@ -46,6 +48,9 @@ namespace SCVE.UI
             _hasComponent = false;
         }
 
+        /// <summary>
+        /// Measures the contained component as-is, occupies all available space
+        /// </summary>
         public override void Measure(float availableWidth, float availableHeight)
         {
             if (!_hasComponent) return;

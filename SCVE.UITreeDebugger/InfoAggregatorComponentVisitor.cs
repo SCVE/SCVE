@@ -160,5 +160,15 @@ namespace SCVE.UITreeDebugger
 
             _currentIndentLevel--;
         }
+
+        public void Accept(TemplateComponent component)
+        {
+            string info = $"{nameof(TemplateComponent)} - {component.Name}";
+            AddText(info);
+
+            _currentIndentLevel++;
+            component.Component.AcceptVisitor(this);
+            _currentIndentLevel--;
+        }
     }
 }

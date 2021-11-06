@@ -13,14 +13,6 @@ namespace SCVE.UI.Containers
             DesiredHeight = Style.Height.Flatten(availableHeight);
 
             Component.Measure(DesiredWidth, DesiredHeight);
-
-            // if (Component.DesiredWidth > DesiredWidth || Component.DesiredHeight > DesiredHeight)
-            // {
-            //     float downscaleFactor = MathF.Min(Component.DesiredWidth / DesiredWidth, Component.DesiredHeight / DesiredHeight);
-            //     float destWidth = Component.DesiredWidth * downscaleFactor;
-            //     float destHeight = Component.DesiredHeight * downscaleFactor;
-            //     Component.Measure(destWidth, destHeight);
-            // }
         }
 
         public override void Arrange(float x, float y, float availableWidth, float availableHeight)
