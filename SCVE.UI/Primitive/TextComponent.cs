@@ -32,6 +32,25 @@ namespace SCVE.UI.Primitive
             _alignment    = alignment;
         }
 
+        public override Component PickComponentByPosition(float x, float y)
+        {
+            if (x > X && x < X + Width &&
+                y > Y && y < Y + Height)
+            {
+                return this;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override void BubbleEvent(string name)
+        {
+            Logger.Warn($"Clicked on Text ({_text}): Bubbling event ({name})");
+            this.Parent?.BubbleEvent(name);
+        }
+
         public override void Init()
         {
             Font = Engine.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));

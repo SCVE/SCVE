@@ -1,5 +1,7 @@
-﻿using SCVE.Core.Misc;
+﻿using SCVE.Core.Input;
+using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
+using SCVE.UI.Events;
 using SCVE.UI.Visitors;
 
 namespace SCVE.UI
@@ -7,7 +9,7 @@ namespace SCVE.UI
     public abstract class Component
     {
         public int Id { get; set; }
-        
+
         public Component Parent;
 
         public float X { get; set; }
@@ -61,6 +63,14 @@ namespace SCVE.UI
             this.Parent?.SubtreeUpdated();
         }
 
+        public abstract Component PickComponentByPosition(float x, float y);
+
+        // ReSharper disable once InvalidXmlDocComment
+        /// <summary>
+        /// Down to top event bubbling
+        /// </summary>
+        // public abstract void BubbleEvent<T>(T ev) where T : UIEvent;
+
         /// <summary>
         /// Set a parent component for current component
         /// </summary>
@@ -98,5 +108,9 @@ namespace SCVE.UI
         }
 
         public abstract void RenderSelf(IRenderer renderer);
+
+        public virtual void BubbleEvent(string name)
+        {
+        }
     }
 }

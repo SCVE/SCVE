@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SCVE.Core.Input
 {
-    public abstract class InputBase
+    public abstract class EngineInput
     {
         public event Action<int, int> WindowSizeChanged;
         public event Action<KeyCode> KeyDown;
@@ -29,7 +29,7 @@ namespace SCVE.Core.Input
         private Dictionary<KeyCode, bool> _keyboardState;
         private Dictionary<MouseCode, bool> _mouseState;
 
-        protected InputBase()
+        protected EngineInput()
         {
             _keyboardState = new(Enum.GetValues<KeyCode>().Distinct().ToDictionary(x => x, _ => false));
             _mouseState = new(Enum.GetValues<MouseCode>().Distinct().ToDictionary(x => x, _ => false));

@@ -71,6 +71,28 @@ namespace SCVE.UI
             Component.Arrange(x, y, Width, Height);
         }
 
+        public override Component PickComponentByPosition(float x, float y)
+        {
+            if (x > X && x < X + Width &&
+                y > Y && y < Y + Height)
+            {
+                var component = Component.PickComponentByPosition(x, y);
+
+                if (component is not null)
+                {
+                    return component;
+                }
+                else
+                {
+                    return this;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public override void Update(float deltaTime)
         {
             Component.Update(deltaTime);

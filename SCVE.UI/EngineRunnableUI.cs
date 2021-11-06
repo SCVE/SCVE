@@ -1,4 +1,5 @@
-﻿using SCVE.Core.Lifecycle;
+﻿using SCVE.Core.Input;
+using SCVE.Core.Lifecycle;
 using SCVE.Core.Main;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
@@ -8,6 +9,8 @@ namespace SCVE.UI
 {
     public class EngineRunnableUI : ContainerComponent, IEngineRunnable
     {
+        private Component _mouseOverComponent;
+
         public EngineRunnableUI()
         {
         }
@@ -25,6 +28,26 @@ namespace SCVE.UI
             Reflow();
 
             Engine.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
+            Engine.Instance.Input.CursorMoved       += InputOnCursorMoved;
+            Engine.Instance.Input.MouseButtonDown   += InputOnMouseButtonDown;
+        }
+
+        private void InputOnMouseButtonDown(MouseCode obj)
+        {
+            if (_mouseOverComponent is not null)
+            {
+                _mouseOverComponent.BubbleEvent("click");
+            }
+            else
+            {
+                Logger.Warn("Mouse is not over any component");
+            }
+        }
+
+        private void InputOnCursorMoved(float x, float y)
+        {
+            _mouseOverComponent = PickComponentByPosition(x, y);
+            Logger.Warn($"Cursor moved to {x}-{y}. Picked {_mouseOverComponent?.GetType().Name}");
         }
 
         public override void Update(float deltaTime)
@@ -53,6 +76,8 @@ namespace SCVE.UI
             Component.Measure(DesiredWidth, DesiredHeight);
 
             Component.Arrange(0, 0, DesiredWidth, DesiredHeight);
+
+            base.Arrange(0, 0, DesiredWidth, DesiredHeight);
         }
 
         public void Render(IRenderer renderer)

@@ -26,7 +26,7 @@ namespace SCVE.Core.Main
         public FileLoaders FileLoaders => _scope.FileLoaders;
         public IDeltaTimeProvider DeltaTimeProvider => _scope.DeltaTimeProvider;
         public ScveWindow MainWindow => _scope.MainWindow;
-        public InputBase Input => _scope.Input;
+        public EngineInput Input => _scope.EngineInput;
         public IRenderEntitiesCreator RenderEntitiesCreator => _scope.RenderEntitiesCreator;
 
         public IFontAtlasGenerator FontAtlasGenerator => _scope.FontAtlasGenerator;

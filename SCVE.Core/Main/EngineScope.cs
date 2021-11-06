@@ -20,7 +20,7 @@ namespace SCVE.Core.Main
         
         public ScveWindow MainWindow => ScveWindow.Instance;
         
-        public InputBase Input { get; private set; }
+        public EngineInput EngineInput { get; private set; }
         
         public IRenderEntitiesCreator RenderEntitiesCreator { get; private set; }
         public IFontAtlasGenerator FontAtlasGenerator { get; set; }
@@ -122,9 +122,9 @@ namespace SCVE.Core.Main
             return this;
         }
 
-        public EngineScope WithInput(InputBase input)
+        public EngineScope WithInput(EngineInput engineInput)
         {
-            Input = input;
+            EngineInput = engineInput;
             return this;
         }
 
@@ -146,7 +146,7 @@ namespace SCVE.Core.Main
                 .WithRenderer(engineInit.Renderer)
                 .WithFileLoaders(engineInit.FileLoaders)
                 .WithDeltaTimeProvider(engineInit.DeltaTimeProvider)
-                .WithInput(engineInit.Input)
+                .WithInput(engineInit.EngineInput)
                 .WithRenderEntitiesProvider(engineInit.RenderEntitiesCreator)
                 .WithFontAtlasGenerator(engineInit.FontAtlasGenerator);
         }

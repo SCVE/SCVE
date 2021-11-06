@@ -1,4 +1,5 @@
-﻿using SCVE.UI.Visitors;
+﻿using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.Primitive
 {
@@ -11,9 +12,15 @@ namespace SCVE.UI.Primitive
         {
         }
 
+        public override void BubbleEvent(string name)
+        {
+            Logger.Warn($"Clicked on FPS: Bubbling event ({name})");
+            this.Parent?.BubbleEvent(name);
+        }
+
         public override void Update(float deltaTime)
         {
-            SetText($"{1 / deltaTime :F} FPS");
+            SetText($"{1 / deltaTime:F} FPS");
         }
 
         public override void AcceptVisitor(IComponentVisitor visitor)

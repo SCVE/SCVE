@@ -25,6 +25,29 @@ namespace SCVE.UI.Groups
             Arrange(X, Y, Width, Height);
         }
 
+        public override Component PickComponentByPosition(float x, float y)
+        {
+            if (x > X && x < X + Width &&
+                y > Y && y < Y + Height)
+            {
+                for (var i = 0; i < Children.Count; i++)
+                {
+                    var component = Children[i].PickComponentByPosition(x, y);
+
+                    if (component is not null)
+                    {
+                        return component;
+                    }
+                }
+
+                return this;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public override void Init()
         {
             for (var i = 0; i < Children.Count; i++)
