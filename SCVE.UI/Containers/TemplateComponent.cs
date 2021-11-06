@@ -38,6 +38,16 @@ namespace SCVE.UI.Containers
             Component.Update(deltaTime);
         }
 
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                return this as T;
+            }
+
+            return Component.FindComponentById<T>(id);
+        }
+
         public override void AcceptVisitor(IComponentVisitor visitor)
         {
             visitor.Accept(this);

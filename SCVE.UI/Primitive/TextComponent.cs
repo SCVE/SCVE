@@ -27,7 +27,7 @@ namespace SCVE.UI.Primitive
             Logger.Construct(nameof(TextComponent));
         }
 
-        public override void OnSetStyle()
+        protected override void OnSetStyle()
         {
             base.OnSetStyle();
 
@@ -47,7 +47,7 @@ namespace SCVE.UI.Primitive
         public override void Init()
         {
             base.Init();
-            
+
             Font = Engine.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
         }
 
@@ -137,6 +137,16 @@ namespace SCVE.UI.Primitive
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_alignment));
             }
+        }
+
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                return this as T;
+            }
+
+            return null;
         }
 
         public override void AcceptVisitor(IComponentVisitor visitor)

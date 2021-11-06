@@ -1,4 +1,5 @@
-﻿using SCVE.Core.Primitives;
+﻿using System;
+using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 using SCVE.UI.Primitive;
@@ -9,6 +10,7 @@ namespace SCVE.UI.Elements
     {
         private ColorRectComponent _backgroundRect;
         private TextComponent _textComponent;
+        public event Action OnMouseDown;
 
         public ColorRgba BackgroundColor
         {
@@ -35,7 +37,17 @@ namespace SCVE.UI.Elements
             _textComponent.Init();
         }
 
-        public override void OnSetStyle()
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                return this as T;
+            }
+
+            return null;
+        }
+
+        protected override void OnSetStyle()
         {
             base.OnSetStyle();
             _backgroundRect.SetStyle(Style);
@@ -84,10 +96,9 @@ namespace SCVE.UI.Elements
             Arrange(X, Y, Width, Height);
         }
 
-        public override void BubbleEvent(string name)
+        public override void MouseDown()
         {
-            base.BubbleEvent(name);
-            Logger.Warn($"Button received: {name}");
+            OnMouseDown?.Invoke();
         }
 
         public override void RenderSelf(IRenderer renderer)

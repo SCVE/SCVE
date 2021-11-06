@@ -8,12 +8,6 @@ namespace SCVE.UI.Primitive
     /// </summary>
     public class FpsComponent : TextComponent
     {
-        public override void BubbleEvent(string name)
-        {
-            Logger.Warn($"Clicked on FPS: Bubbling event ({name})");
-            this.Parent?.BubbleEvent(name);
-        }
-
         public override void Update(float deltaTime)
         {
             SetText($"{1 / deltaTime:F} FPS");

@@ -32,11 +32,11 @@ namespace SCVE.UI
             Engine.Instance.Input.MouseButtonDown   += InputOnMouseButtonDown;
         }
 
-        private void InputOnMouseButtonDown(MouseCode obj)
+        private void InputOnMouseButtonDown(MouseCode code)
         {
             if (_mouseOverComponent is not null)
             {
-                _mouseOverComponent.BubbleEvent("click");
+                _mouseOverComponent.MouseDown();
             }
             else
             {

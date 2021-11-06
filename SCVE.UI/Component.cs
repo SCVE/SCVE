@@ -1,14 +1,12 @@
-﻿using SCVE.Core.Input;
-using SCVE.Core.Misc;
+﻿using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
-using SCVE.UI.Events;
 using SCVE.UI.Visitors;
 
 namespace SCVE.UI
 {
     public abstract class Component
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public bool Initialized { get; set; }
 
@@ -32,12 +30,18 @@ namespace SCVE.UI
         {
         }
 
+        public abstract T FindComponentById<T>(string id) where T : Component;
+
+        public abstract Component PickComponentByPosition(float x, float y);
+
+        public abstract void RenderSelf(IRenderer renderer);
+
         public virtual void AcceptVisitor(IComponentVisitor visitor)
         {
             throw new ScveException($"Component {GetType().Name} Doesn't implement AcceptVisitor");
         }
 
-        public virtual void OnSetStyle()
+        protected virtual void OnSetStyle()
         {
         }
 
@@ -66,8 +70,6 @@ namespace SCVE.UI
 
             this.Parent?.SubtreeUpdated();
         }
-
-        public abstract Component PickComponentByPosition(float x, float y);
 
         // ReSharper disable once InvalidXmlDocComment
         /// <summary>
@@ -112,12 +114,7 @@ namespace SCVE.UI
             Height = availableHeight;
         }
 
-        public abstract void RenderSelf(IRenderer renderer);
-
-        /// <summary>
-        /// Defines, how the component must bubble the event. By default - do nothing
-        /// </summary>
-        public virtual void BubbleEvent(string name)
+        public virtual void MouseDown()
         {
         }
     }

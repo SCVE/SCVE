@@ -16,15 +16,10 @@ namespace SCVE.UI.UIBuilders
 {
     public class XmlUIBuilder : IUIBuilder
     {
-        private int _id = 1;
-        private List<int> _usedIds = new();
-
         public Component Build(string filePath)
         {
             var xml = File.ReadAllText(filePath);
             var xDocument = XDocument.Parse(xml);
-            _id = 1;
-            _usedIds.Clear();
             return Build(xDocument.Root);
         }
 
@@ -47,6 +42,7 @@ namespace SCVE.UI.UIBuilders
                 "glue" => ProcessGlueElement(xElement),
                 "template" => ProcessTemplateElement(xElement),
                 "button" => ProcessButtonElement(xElement),
+                "button-container" => ProcessButtonContainerElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             ExtractId(component, xElement);
@@ -57,6 +53,11 @@ namespace SCVE.UI.UIBuilders
             }
 
             return component;
+        }
+
+        private Component ProcessButtonContainerElement(XElement xElement)
+        {
+            return new ButtonContainerComponent();
         }
 
         private Component ProcessButtonElement(XElement xElement)
@@ -246,27 +247,14 @@ namespace SCVE.UI.UIBuilders
             var idAttribute = source.Attribute("id");
             if (idAttribute is not null)
             {
-                var elementId = int.Parse(idAttribute.Value);
-                int destId = elementId;
-                while (_usedIds.Contains(destId))
-                {
-                    destId++;
-                }
-
-                _usedIds.Add(destId);
-                destination.Id = destId;
-                Logger.Warn($"Found Id for {destination.GetType().Name} element: {elementId}. Set to {destId}");
+                var elementId = idAttribute.Value;
+                destination.Id = elementId;
+                Logger.Warn($"Found Id for {destination.GetType().Name} element: {elementId}.");
             }
             else
             {
-                while (_usedIds.Contains(_id))
-                {
-                    _id++;
-                }
-
-                _usedIds.Add(_id);
-                destination.Id = _id;
-                Logger.Warn($"No Id specified for {destination.GetType().Name} element. Set to {_id}");
+                destination.Id = "";
+                Logger.Warn($"No Id specified for {destination.GetType().Name} element.");
             }
         }
 

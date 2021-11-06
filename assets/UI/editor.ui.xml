@@ -21,7 +21,10 @@
                                     <template name="color-text"/>
                                     <color-rect style="width=100%; height=2; primary-color=#00000000"/>
                                     <template name="color-text"/>
-                                    <button style="width=150;height=50;primary-color=#ABCDEF">Click me</button>
+                                    <color-rect style="width=100%; height=2; primary-color=#00000000"/>
+                                    <button-container>
+                                        <button id="button" style="width=150;height=50;primary-color=#ABCDEF">Click me</button>
+                                    </button-container>
                                 </glue>
                             </padding>
                         </stack>

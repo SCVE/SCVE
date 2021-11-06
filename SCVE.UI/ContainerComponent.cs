@@ -20,6 +20,20 @@ namespace SCVE.UI
             Component.Init();
         }
 
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                if (typeof(T) != this.GetType())
+                {
+                    return null;
+                }
+                return this as T;
+            }
+
+            return Component.FindComponentById<T>(id);
+        }
+
         public override void AddChild(Component child)
         {
             if (_hasComponent)

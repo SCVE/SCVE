@@ -47,6 +47,16 @@ namespace SCVE.UI.Primitive
             renderer.RenderColorRect(X, Y, Width, Height, Style.PrimaryColor.Value);
         }
 
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                return this as T;
+            }
+
+            return null;
+        }
+
         public override void AcceptVisitor(IComponentVisitor visitor)
         {
             visitor.Accept(this);

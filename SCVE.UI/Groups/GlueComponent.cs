@@ -165,6 +165,25 @@ namespace SCVE.UI.Groups
             }
         }
 
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                return this as T;
+            }
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                var findComponentById = Children[i].FindComponentById<T>(id);
+                if (findComponentById is not null)
+                {
+                    return findComponentById;
+                }
+            }
+
+            return null;
+        }
+
         public override void AcceptVisitor(IComponentVisitor visitor)
         {
             visitor.Accept(this);
