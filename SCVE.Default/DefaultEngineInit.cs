@@ -12,11 +12,11 @@ namespace SCVE.Default
             Renderer              = new OpenGLRenderer();
             DeltaTimeProvider     = new GlfwDeltaTimeProvider();
             Window                = new GlfwWindow(new WindowProps("Super Cool Video Editor", 1600, 900));
-            EngineInput                 = new GlfwEngineInput();
+            EngineInput           = new GlfwEngineInput();
             RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
             FileLoaders           = new DefaultFileLoaders();
             FontAtlasGenerator    = new SharpFontImageSharpFontAtlasGenerator();
-            Runnable         = null;
+            Runnable              = null;
         }
     }
 }

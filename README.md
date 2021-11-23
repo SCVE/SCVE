@@ -55,6 +55,8 @@ In Progress:
 
 ## TODO
 
+- Problem after updating graphic drivers - compiled shaders stop working.
+
 ## Possible backends
 - Silk.Net
 - glfw-net
