@@ -37,5 +37,10 @@ namespace SCVE.Engine.Core.Main
         public EngineInit()
         {
         }
+
+        public EngineInit(IEngineRunnable runnable) : this()
+        {
+            Runnable = runnable;
+        }
     }
 }

@@ -9,8 +9,6 @@ namespace SCVE.Engine.OpenTKBindings
 {
     public class OpenGLContext : Context
     {
-        private DebugProc _openGLMessageCallback;
-
         public OpenGLContext(ScveWindow window) : base(window)
         {
             Logger.Construct(nameof(OpenGLContext));

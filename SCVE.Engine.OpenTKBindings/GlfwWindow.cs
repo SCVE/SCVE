@@ -50,6 +50,8 @@ namespace SCVE.Engine.OpenTKBindings
             _window = GLFW.CreateWindow(props.Width, props.Height, props.Title, null, null);
             
             GLFW.WindowHint(WindowHintInt.Samples, 4);
+            GLFW.WindowHint(WindowHintInt.ContextVersionMajor, 4);
+            GLFW.WindowHint(WindowHintInt.ContextVersionMinor, 5);
             
             Handle = new IntPtr(_window);
             GLFW.MakeContextCurrent(_window);

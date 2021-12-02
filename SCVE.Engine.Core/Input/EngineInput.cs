@@ -26,6 +26,9 @@ namespace SCVE.Engine.Core.Input
         private float _cursorPositionX;
         private float _cursorPositionY;
 
+        public IReadOnlyDictionary<KeyCode, bool> KeyboardState => _keyboardState;
+        public IReadOnlyDictionary<MouseCode, bool> MouseState => _mouseState;
+
         private Dictionary<KeyCode, bool> _keyboardState;
         private Dictionary<MouseCode, bool> _mouseState;
 

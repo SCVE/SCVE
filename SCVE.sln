@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Engine.Platform.Window
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Engine.Default", "SCVE.Engine.Default\SCVE.Engine.Default.csproj", "{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Editor", "SCVE.Editor\SCVE.Editor.csproj", "{B60E63C3-A9E6-4697-B197-E913E8114D79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B60E63C3-A9E6-4697-B197-E913E8114D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B60E63C3-A9E6-4697-B197-E913E8114D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B60E63C3-A9E6-4697-B197-E913E8114D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B60E63C3-A9E6-4697-B197-E913E8114D79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
