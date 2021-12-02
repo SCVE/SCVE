@@ -11,7 +11,7 @@
                             <padding left="5" right="5" top="5" bottom="5">
                                 <glue direction="vertical">
                                     <fps-counter style="font-size=24"/>
-                                    <text style="font-file-name=arial.ttf;text-alignment=left;font-size=12">Bird</text>
+                                    <text style="font-file-name=arial.ttf;text-alignment=left;font-size=36">Bird</text>
                                     <color-rect style="width=100%; height=1; primary-color=#ABCDEF"/>
                                     <text style="font-file-name=arial.ttf;text-alignment=left;font-size=12">Egop</text>
                                     <template name="color-text"/>

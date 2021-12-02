@@ -1,4 +1,5 @@
 ﻿using SCVE.Core.Misc;
+using SCVE.Core.Primitives;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
 using SCVE.UI.Visitors;
@@ -13,8 +14,10 @@ namespace SCVE.UI.Elements
             Component.Init();
 
             var button = FindComponentById<ButtonComponent>("button");
-            
-            button.MouseDown += () => { Logger.Warn("Button Clicked");};
+
+            button.MouseDown  += () => { Logger.Warn("Button Clicked"); };
+            button.MouseEnter += () => { button.BackgroundColor = ColorRgba.White; };
+            button.MouseLeave += () => { button.BackgroundColor = new ColorRgba(1, 0, 0, 1); };
         }
 
         public override void AddChild(Component child)
