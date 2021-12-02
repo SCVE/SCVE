@@ -9,7 +9,5 @@ namespace SCVE.Default
         public override IShaderProgramLoader ShaderProgram { get; protected set; } = new WindowsProgramFileLoader();
 
         public override ITextureLoader Texture { get; protected set; } = new ImageSharpTextureLoader();
-
-        public override IFontLoader Font { get; protected set; } = new WindowsFontFileLoader();
     }
 }

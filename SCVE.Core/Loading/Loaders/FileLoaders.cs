@@ -5,7 +5,5 @@
         public abstract IShaderProgramLoader ShaderProgram { get; protected set; }
         
         public abstract ITextureLoader Texture { get; protected set; }
-
-        public abstract IFontLoader Font { get; protected set; }
     }
 }

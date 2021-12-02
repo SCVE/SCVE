@@ -23,7 +23,6 @@ namespace SCVE.Core.Main
         public EngineInput EngineInput { get; private set; }
         
         public IRenderEntitiesCreator RenderEntitiesCreator { get; private set; }
-        public IFontAtlasGenerator FontAtlasGenerator { get; set; }
 
         public EngineScope()
         {
@@ -133,12 +132,6 @@ namespace SCVE.Core.Main
             RenderEntitiesCreator = renderEntitiesCreator;
             return this;
         }
-        
-        public EngineScope WithFontAtlasGenerator(IFontAtlasGenerator fontAtlasGenerator)
-        {
-            FontAtlasGenerator = fontAtlasGenerator;
-            return this;
-        }
 
         public static EngineScope FromEngineInit(EngineInit engineInit)
         {
@@ -147,8 +140,7 @@ namespace SCVE.Core.Main
                 .WithFileLoaders(engineInit.FileLoaders)
                 .WithDeltaTimeProvider(engineInit.DeltaTimeProvider)
                 .WithInput(engineInit.EngineInput)
-                .WithRenderEntitiesProvider(engineInit.RenderEntitiesCreator)
-                .WithFontAtlasGenerator(engineInit.FontAtlasGenerator);
+                .WithRenderEntitiesProvider(engineInit.RenderEntitiesCreator);
         }
     }
 }

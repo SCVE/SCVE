@@ -15,7 +15,6 @@ namespace SCVE.Default
             EngineInput           = new GlfwEngineInput();
             RenderEntitiesCreator = new OpenGLRenderEntitiesCreator();
             FileLoaders           = new DefaultFileLoaders();
-            FontAtlasGenerator    = new SharpFontImageSharpFontAtlasGenerator();
             Runnable              = null;
         }
     }

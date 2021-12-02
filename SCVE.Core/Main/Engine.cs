@@ -29,8 +29,6 @@ namespace SCVE.Core.Main
         public EngineInput Input => _scope.EngineInput;
         public IRenderEntitiesCreator RenderEntitiesCreator => _scope.RenderEntitiesCreator;
 
-        public IFontAtlasGenerator FontAtlasGenerator => _scope.FontAtlasGenerator;
-
         public CachesContainer Cache;
 
         public IEngineRunnable Runnable { get; set; }

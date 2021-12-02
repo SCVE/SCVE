@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<box style="width=150;height=50">
-    <stack>
-        <color-rect style="width=100%;height=100%;primary-color=#AABBCC"/>
-        <align direction="vertical" behavior="center">
-            <text style="font-file-name=arial.ttf;text-alignment=left;font-size=12">Hi from template</text>
-        </align>
-    </stack>
-</box>

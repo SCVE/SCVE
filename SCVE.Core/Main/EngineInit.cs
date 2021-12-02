@@ -21,19 +21,16 @@ namespace SCVE.Core.Main
 
         public IRenderEntitiesCreator RenderEntitiesCreator { get; set; }
 
-        public IFontAtlasGenerator FontAtlasGenerator { get; set; }
-
         public IEngineRunnable Runnable { get; set; }
 
-        public EngineInit(IRenderer renderer, FileLoaders fileLoaders, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, EngineInput engineInput, IRenderEntitiesCreator renderEntitiesCreator, IFontAtlasGenerator fontAtlasGenerator, IEngineRunnable runnable)
+        public EngineInit(IRenderer renderer, FileLoaders fileLoaders, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, EngineInput engineInput, IRenderEntitiesCreator renderEntitiesCreator, IEngineRunnable runnable)
         {
             Renderer              = renderer;
             FileLoaders           = fileLoaders;
             DeltaTimeProvider     = deltaTimeProvider;
             Window                = window;
-            EngineInput                 = engineInput;
+            EngineInput           = engineInput;
             RenderEntitiesCreator = renderEntitiesCreator;
-            FontAtlasGenerator    = fontAtlasGenerator;
             Runnable              = runnable;
         }
 
