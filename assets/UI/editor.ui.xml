@@ -10,10 +10,10 @@
                             <color-rect style="width=100%; height=100%; primary-color=#424242"/>
                             <padding left="5" right="5" top="5" bottom="5">
                                 <glue direction="vertical">
-                                    <fps-counter/>
-                                    <text font-file-name="arial.ttf" alignment="left" font-size="12">Bird</text>
+                                    <fps-counter style="font-size=24"/>
+                                    <text style="font-file-name=arial.ttf;text-alignment=left;font-size=36">Bird</text>
                                     <color-rect style="width=100%; height=1; primary-color=#ABCDEF"/>
-                                    <text font-file-name="arial.ttf" alignment="left" font-size="12">Egop</text>
+                                    <text style="font-file-name=arial.ttf;text-alignment=left;font-size=12">Egop</text>
                                     <template name="color-text"/>
                                     <color-rect style="width=100%; height=2; primary-color=#00000000"/>
                                     <template name="color-text"/>
@@ -21,6 +21,10 @@
                                     <template name="color-text"/>
                                     <color-rect style="width=100%; height=2; primary-color=#00000000"/>
                                     <template name="color-text"/>
+                                    <color-rect style="width=100%; height=2; primary-color=#00000000"/>
+                                    <button-container>
+                                        <button id="button" style="width=150;height=50;primary-color=#ABCDEF">Click me</button>
+                                    </button-container>
                                 </glue>
                             </padding>
                         </stack>

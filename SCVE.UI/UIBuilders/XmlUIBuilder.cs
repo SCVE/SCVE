@@ -7,6 +7,7 @@ using SCVE.Core.Misc;
 using SCVE.Core.Primitives;
 using SCVE.Core.Utilities;
 using SCVE.UI.Containers;
+using SCVE.UI.Elements;
 using SCVE.UI.Groups;
 using SCVE.UI.Primitive;
 using SCVE.UI.StyleValues;
@@ -15,15 +16,10 @@ namespace SCVE.UI.UIBuilders
 {
     public class XmlUIBuilder : IUIBuilder
     {
-        private int _id = 1;
-        private List<int> _usedIds = new();
-
         public Component Build(string filePath)
         {
             var xml = File.ReadAllText(filePath);
             var xDocument = XDocument.Parse(xml);
-            _id = 1;
-            _usedIds.Clear();
             return Build(xDocument.Root);
         }
 
@@ -45,6 +41,8 @@ namespace SCVE.UI.UIBuilders
                 "padding" => ProcessPaddingElement(xElement),
                 "glue" => ProcessGlueElement(xElement),
                 "template" => ProcessTemplateElement(xElement),
+                "button" => ProcessButtonElement(xElement),
+                "button-container" => ProcessButtonContainerElement(xElement),
                 _ => throw new ScveException($"Unknown component type ({localName})")
             };
             ExtractId(component, xElement);
@@ -55,6 +53,18 @@ namespace SCVE.UI.UIBuilders
             }
 
             return component;
+        }
+
+        private Component ProcessButtonContainerElement(XElement xElement)
+        {
+            return new ButtonContainerComponent();
+        }
+
+        private Component ProcessButtonElement(XElement xElement)
+        {
+            var buttonComponent = new ButtonComponent();
+            buttonComponent.Text = xElement.Value;
+            return buttonComponent;
         }
 
         private Component ProcessTemplateElement(XElement xElement)
@@ -227,18 +237,9 @@ namespace SCVE.UI.UIBuilders
 
         private static Component ProcessTextElement(XElement xElement)
         {
-            string fontFileName = xElement.Attribute("font-file-name")?.Value ?? "arial.ttf";
-            float fontSize = float.Parse(xElement.Attribute("font-size")?.Value ?? "14", NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-            string text = xElement.Value;
-
-            TextAlignment alignment = Enum.Parse<TextAlignment>(xElement.Attribute("alignment")?.Value ?? "left", true);
-
-            return new TextComponent(
-                fontFileName,
-                fontSize,
-                text,
-                alignment
-            );
+            var textComponent = new TextComponent();
+            textComponent._text = xElement.Value;
+            return textComponent;
         }
 
         private void ExtractId(Component destination, XElement source)
@@ -246,27 +247,14 @@ namespace SCVE.UI.UIBuilders
             var idAttribute = source.Attribute("id");
             if (idAttribute is not null)
             {
-                var elementId = int.Parse(idAttribute.Value);
-                int destId = elementId;
-                while (_usedIds.Contains(destId))
-                {
-                    destId++;
-                }
-
-                _usedIds.Add(destId);
-                destination.Id = destId;
-                Logger.Warn($"Found Id for {destination.GetType().Name} element: {elementId}. Set to {destId}");
+                var elementId = idAttribute.Value;
+                destination.Id = elementId;
+                Logger.Warn($"Found Id for {destination.GetType().Name} element: {elementId}.");
             }
             else
             {
-                while (_usedIds.Contains(_id))
-                {
-                    _id++;
-                }
-
-                _usedIds.Add(_id);
-                destination.Id = _id;
-                Logger.Warn($"No Id specified for {destination.GetType().Name} element. Set to {_id}");
+                destination.Id = "";
+                Logger.Warn($"No Id specified for {destination.GetType().Name} element.");
             }
         }
 
@@ -288,6 +276,10 @@ namespace SCVE.UI.UIBuilders
             StyleValue<AlignmentBehavior> horizontalAlignmentBehavior = new StyleValue<AlignmentBehavior>(defaultStyle.HorizontalAlignmentBehavior.Value);
             StyleValue<AlignmentBehavior> verticalAlignmentBehavior = new StyleValue<AlignmentBehavior>(defaultStyle.VerticalAlignmentBehavior.Value);
             ColorStyleValue primaryColor = new ColorStyleValue(new ColorRgba(defaultStyle.PrimaryColor.Value));
+            ColorStyleValue textColor = new ColorStyleValue(new ColorRgba(defaultStyle.TextColor.Value));
+            StringStyleValue fontFileName = new StringStyleValue(defaultStyle.FontFileName.Value);
+            FloatStyleValue fontSize = new FloatStyleValue(defaultStyle.FontSize.Value);
+            StyleValue<TextAlignment> textAlignment = new StyleValue<TextAlignment>(defaultStyle.TextAlignment.Value);
 
             if (xElement.Attribute("style") is not { } attribute)
             {
@@ -393,78 +385,45 @@ namespace SCVE.UI.UIBuilders
                     }
                     case "primary-color":
                     {
-                        if (styleValue.StartsWith("rgba255"))
+                        if (!TryParseColor(primaryColor, styleValue))
                         {
-                            var substring = styleValue.Substring("rgba255".Length + 1);
-                            substring = substring.Substring(0, substring.LastIndexOf(')'));
-                            var values = substring.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                            float r, g, b, a;
-                            if (!TryParseRawFloat(values[0], out r) ||
-                                !TryParseRawFloat(values[1], out g) ||
-                                !TryParseRawFloat(values[2], out b) ||
-                                !TryParseRawFloat(values[3], out a)
-                            )
-                            {
-                                throw new ScveException($"Failed to parse rgba255 values ({styleValue})");
-                            }
-
-                            primaryColor.Value.R = r / 255;
-                            primaryColor.Value.G = g / 255;
-                            primaryColor.Value.B = b / 255;
-                            primaryColor.Value.A = a / 255;
+                            Logger.Warn($"Failed to parse primary-color style value ({styleValue})");
                         }
-                        else if (styleValue.StartsWith("rgba01"))
-                        {
-                            var substring = styleValue.Substring("rgba01".Length + 1);
-                            substring = substring.Substring(0, substring.LastIndexOf(')'));
-                            var values = substring.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                            float r, g, b, a;
-                            if (!TryParseRawFloat(values[0], out r) ||
-                                !TryParseRawFloat(values[1], out g) ||
-                                !TryParseRawFloat(values[2], out b) ||
-                                !TryParseRawFloat(values[3], out a)
-                            )
-                            {
-                                throw new ScveException($"Failed to parse rgba01 values ({styleValue})");
-                            }
 
-                            primaryColor.Value.R = r;
-                            primaryColor.Value.G = g;
-                            primaryColor.Value.B = b;
-                            primaryColor.Value.A = a;
+                        break;
+                    }
+                    case "text-color":
+                    {
+                        if (!TryParseColor(textColor, styleValue))
+                        {
+                            Logger.Warn($"Failed to parse text-color style value ({styleValue})");
                         }
-                        else if (styleValue.StartsWith('#'))
+
+                        break;
+                    }
+                    case "font-file-name":
+                    {
+                        fontFileName.Value = styleValue;
+                        break;
+                    }
+                    case "font-size":
+                    {
+                        if (TryParseRawFloat(styleValue, out var fontSizeParsed))
                         {
-                            var substring = styleValue.Substring("#".Length);
-                            if (substring.Length == 6)
-                            {
-                                // #AABBCCDD
-                                string rString = substring[0..2];
-                                string gString = substring[2..4];
-                                string bString = substring[4..6];
+                            fontSize.Value = fontSizeParsed;
+                        }
+                        else
+                        {
+                            Logger.Warn("Failed to parse font-size style value");
+                        }
 
-                                primaryColor.Value.R = Convert.ToInt32(rString, 16) / 255f;
-                                primaryColor.Value.G = Convert.ToInt32(gString, 16) / 255f;
-                                primaryColor.Value.B = Convert.ToInt32(bString, 16) / 255f;
-                                primaryColor.Value.A = 1;
-                            }
-                            else if (substring.Length == 8)
-                            {
-                                // #AABBCCDD
-                                string rString = substring[0..2];
-                                string gString = substring[2..4];
-                                string bString = substring[4..6];
-                                string aString = substring[6..8];
-
-                                primaryColor.Value.R = Convert.ToInt32(rString, 16) / 255f;
-                                primaryColor.Value.G = Convert.ToInt32(gString, 16) / 255f;
-                                primaryColor.Value.B = Convert.ToInt32(bString, 16) / 255f;
-                                primaryColor.Value.A = Convert.ToInt32(aString, 16) / 255f;
-                            }
-                            else
-                            {
-                                throw new ScveException($"Failed to parse # values ({styleValue})");
-                            }
+                        break;
+                    }
+                    case "text-alignment":
+                    {
+                        if (!TryParseEnumStyle(textAlignment, styleValue))
+                        {
+                            Logger.Warn("Failed to parse text-alignment style value");
                         }
 
                         break;
@@ -473,8 +432,8 @@ namespace SCVE.UI.UIBuilders
             }
 
             return new(
-                width,
-                height,
+                width: width,
+                height: height,
                 maxWidth: maxWidth,
                 maxHeight: maxHeight,
                 minWidth: minWidth,
@@ -482,8 +441,100 @@ namespace SCVE.UI.UIBuilders
                 alignmentDirection: alignmentDirection,
                 horizontalAlignmentBehavior: horizontalAlignmentBehavior,
                 verticalAlignmentBehavior: verticalAlignmentBehavior,
-                primaryColor: primaryColor
+                primaryColor: primaryColor,
+                textColor: textColor,
+                fontFileName: fontFileName,
+                fontSize: fontSize,
+                textAlignment: textAlignment
             );
+        }
+
+        private static bool TryParseColor(ColorStyleValue colorStyleValue, string styleValue)
+        {
+            if (styleValue.StartsWith("rgba255"))
+            {
+                var substring = styleValue.Substring("rgba255".Length + 1);
+                substring = substring.Substring(0, substring.LastIndexOf(')'));
+                var values = substring.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                float r, g, b, a;
+                if (!TryParseRawFloat(values[0], out r) ||
+                    !TryParseRawFloat(values[1], out g) ||
+                    !TryParseRawFloat(values[2], out b) ||
+                    !TryParseRawFloat(values[3], out a)
+                )
+                {
+                    Logger.Warn($"Failed to parse rgba255 values ({styleValue})");
+                    return false;
+                }
+
+                colorStyleValue.Value.R = r / 255;
+                colorStyleValue.Value.G = g / 255;
+                colorStyleValue.Value.B = b / 255;
+                colorStyleValue.Value.A = a / 255;
+                return true;
+            }
+            else if (styleValue.StartsWith("rgba01"))
+            {
+                var substring = styleValue.Substring("rgba01".Length + 1);
+                substring = substring.Substring(0, substring.LastIndexOf(')'));
+                var values = substring.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                float r, g, b, a;
+                if (!TryParseRawFloat(values[0], out r) ||
+                    !TryParseRawFloat(values[1], out g) ||
+                    !TryParseRawFloat(values[2], out b) ||
+                    !TryParseRawFloat(values[3], out a)
+                )
+                {
+                    Logger.Warn($"Failed to parse rgba01 values ({styleValue})");
+                    return false;
+                }
+
+                colorStyleValue.Value.R = r;
+                colorStyleValue.Value.G = g;
+                colorStyleValue.Value.B = b;
+                colorStyleValue.Value.A = a;
+                return true;
+            }
+            else if (styleValue.StartsWith('#'))
+            {
+                var substring = styleValue.Substring("#".Length);
+                if (substring.Length == 6)
+                {
+                    // #AABBCCDD
+                    string rString = substring[0..2];
+                    string gString = substring[2..4];
+                    string bString = substring[4..6];
+
+                    colorStyleValue.Value.R = Convert.ToInt32(rString, 16) / 255f;
+                    colorStyleValue.Value.G = Convert.ToInt32(gString, 16) / 255f;
+                    colorStyleValue.Value.B = Convert.ToInt32(bString, 16) / 255f;
+                    colorStyleValue.Value.A = 1;
+                    return true;
+                }
+                else if (substring.Length == 8)
+                {
+                    // #AABBCCDD
+                    string rString = substring[0..2];
+                    string gString = substring[2..4];
+                    string bString = substring[4..6];
+                    string aString = substring[6..8];
+
+                    colorStyleValue.Value.R = Convert.ToInt32(rString, 16) / 255f;
+                    colorStyleValue.Value.G = Convert.ToInt32(gString, 16) / 255f;
+                    colorStyleValue.Value.B = Convert.ToInt32(bString, 16) / 255f;
+                    colorStyleValue.Value.A = Convert.ToInt32(aString, 16) / 255f;
+                    return true;
+                }
+                else
+                {
+                    Logger.Warn($"Failed to parse # values ({styleValue})");
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private static bool TryParseRawFloat(string styleValue, out float value)

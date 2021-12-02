@@ -1,4 +1,5 @@
-﻿using SCVE.Core.Misc;
+﻿using System;
+using SCVE.Core.Misc;
 using SCVE.Core.Rendering;
 using SCVE.UI.Visitors;
 
@@ -6,8 +7,10 @@ namespace SCVE.UI
 {
     public abstract class Component
     {
-        public int Id { get; set; }
-        
+        public string Id { get; set; }
+
+        public bool Initialized { get; set; }
+
         public Component Parent;
 
         public float X { get; set; }
@@ -19,6 +22,16 @@ namespace SCVE.UI
         public float DesiredWidth { get; set; }
         public float DesiredHeight { get; set; }
 
+        public bool IsFocused { get; set; }
+
+        public event Action MouseDown;
+        public event Action MouseUp;
+        public event Action<float, float> MouseMove;
+        public event Action MouseEnter;
+        public event Action MouseLeave;
+        public event Action Focused;
+        public event Action LostFocus;
+
         /// <summary>
         /// The style of the component
         /// </summary>
@@ -28,12 +41,19 @@ namespace SCVE.UI
         {
         }
 
+        public abstract T FindComponentById<T>(string id) where T : Component;
+
+        public abstract Component PickComponentByPosition(float x, float y);
+
+        public abstract void RenderSelf(IRenderer renderer);
+
+
         public virtual void AcceptVisitor(IComponentVisitor visitor)
         {
             throw new ScveException($"Component {GetType().Name} Doesn't implement AcceptVisitor");
         }
 
-        public virtual void OnSetStyle()
+        protected virtual void OnSetStyle()
         {
         }
 
@@ -58,6 +78,8 @@ namespace SCVE.UI
         /// </summary>
         protected virtual void SubtreeUpdated()
         {
+            if (!Initialized) return;
+
             this.Parent?.SubtreeUpdated();
         }
 
@@ -77,6 +99,7 @@ namespace SCVE.UI
 
         public virtual void Init()
         {
+            Initialized = true;
         }
 
         /// <summary>
@@ -97,6 +120,42 @@ namespace SCVE.UI
             Height = availableHeight;
         }
 
-        public abstract void RenderSelf(IRenderer renderer);
+        public virtual void DispatchMouseDown()
+        {
+            MouseDown?.Invoke();
+        }
+
+        public void DispatchFocus()
+        {
+            IsFocused = true;
+            Focused?.Invoke();
+        }
+
+
+        public void DispatchLostFocus()
+        {
+            IsFocused = false;
+            LostFocus?.Invoke();
+        }
+
+        public virtual void DispatchMouseMove(float x, float y)
+        {
+            MouseMove?.Invoke(x, y);
+        }
+
+        public virtual void DispatchMouseUp()
+        {
+            MouseUp?.Invoke();
+        }
+
+        public virtual void DispatchMouseEnter()
+        {
+            MouseEnter?.Invoke();
+        }
+        
+        public virtual void DispatchMouseLeave()
+        {
+            MouseLeave?.Invoke();
+        }
     }
 }

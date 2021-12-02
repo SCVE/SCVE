@@ -1,4 +1,5 @@
-﻿using SCVE.Core.Lifecycle;
+﻿using SCVE.Core.Input;
+using SCVE.Core.Lifecycle;
 using SCVE.Core.Main;
 using SCVE.Core.Rendering;
 using SCVE.Core.Utilities;
@@ -8,6 +9,9 @@ namespace SCVE.UI
 {
     public class EngineRunnableUI : ContainerComponent, IEngineRunnable
     {
+        private Component _lastMouseOverComponent;
+        private Component _focusedComponent;
+
         public EngineRunnableUI()
         {
         }
@@ -25,6 +29,76 @@ namespace SCVE.UI
             Reflow();
 
             Engine.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
+            Engine.Instance.Input.CursorMoved       += InputOnCursorMoved;
+            Engine.Instance.Input.MouseButtonDown   += InputOnMouseButtonDown;
+            Engine.Instance.Input.MouseButtonUp     += InputOnMouseButtonUp;
+        }
+
+        private void InputOnMouseButtonUp(MouseCode code)
+        {
+            if (_lastMouseOverComponent is not null)
+            {
+                _lastMouseOverComponent.DispatchMouseUp();
+            }
+            else
+            {
+                Logger.Warn("Mouse is not over any component");
+            }
+        }
+
+        private void InputOnMouseButtonDown(MouseCode code)
+        {
+            if (_focusedComponent is not null && _focusedComponent != _lastMouseOverComponent)
+            {
+                _focusedComponent.DispatchLostFocus();
+                
+                _lastMouseOverComponent.DispatchFocus();
+                _focusedComponent = _lastMouseOverComponent;
+            }
+
+            if (_lastMouseOverComponent is not null)
+            {
+                _lastMouseOverComponent.DispatchMouseDown();
+            }
+            else
+            {
+                Logger.Warn("Mouse is not over any component");
+            }
+        }
+
+        private void InputOnCursorMoved(float x, float y)
+        {
+            var nowMouseOverComponent = PickComponentByPosition(x, y);
+            if (nowMouseOverComponent is null)
+            {
+                return;
+            }
+            if (_focusedComponent is not null)
+            {
+                if (_focusedComponent == nowMouseOverComponent)
+                {
+                    _focusedComponent.DispatchMouseMove(x, y);
+                    Logger.Warn($"Cursor moved to {x}-{y}. Over focused {_lastMouseOverComponent?.GetType().Name}");
+                }
+                else
+                {
+                    
+                }
+            }
+            else
+            {
+                if (nowMouseOverComponent != _lastMouseOverComponent)
+                {
+                    _lastMouseOverComponent?.DispatchMouseLeave();
+                    nowMouseOverComponent.DispatchMouseEnter();
+                    Logger.Warn($"Cursor moved to {x}-{y}. Now over {nowMouseOverComponent?.GetType().Name}");
+                }
+                else
+                {
+                    nowMouseOverComponent.DispatchMouseMove(x, y);
+                }
+                _lastMouseOverComponent = nowMouseOverComponent;
+            }
         }
 
         public override void Update(float deltaTime)
@@ -53,6 +127,8 @@ namespace SCVE.UI
             Component.Measure(DesiredWidth, DesiredHeight);
 
             Component.Arrange(0, 0, DesiredWidth, DesiredHeight);
+
+            base.Arrange(0, 0, DesiredWidth, DesiredHeight);
         }
 
         public void Render(IRenderer renderer)

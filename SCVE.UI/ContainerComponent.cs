@@ -16,7 +16,22 @@ namespace SCVE.UI
         /// </summary>
         public override void Init()
         {
+            base.Init();
             Component.Init();
+        }
+
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                if (typeof(T) != this.GetType())
+                {
+                    return null;
+                }
+                return this as T;
+            }
+
+            return Component.FindComponentById<T>(id);
         }
 
         public override void AddChild(Component child)
@@ -69,6 +84,28 @@ namespace SCVE.UI
             base.Arrange(x, y, availableWidth, availableHeight);
 
             Component.Arrange(x, y, Width, Height);
+        }
+
+        public override Component PickComponentByPosition(float x, float y)
+        {
+            if (x > X && x < X + Width &&
+                y > Y && y < Y + Height)
+            {
+                var component = Component.PickComponentByPosition(x, y);
+
+                if (component is not null)
+                {
+                    return component;
+                }
+                else
+                {
+                    return this;
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override void Update(float deltaTime)

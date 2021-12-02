@@ -1,5 +1,6 @@
 ﻿using SCVE.UI;
 using SCVE.UI.Containers;
+using SCVE.UI.Elements;
 using SCVE.UI.Groups;
 using SCVE.UI.Primitive;
 using SCVE.UI.Visitors;
@@ -32,8 +33,9 @@ namespace SCVE.UITreeDebugger
             };
 
             string indent = new string(IndentChar, _currentIndentLevel * 2);
-            var textComponent = new TextComponent("arial.ttf", 14, indent + text, TextAlignment.Left);
+            var textComponent = new TextComponent();
             textComponent.SetStyle(ComponentStyle.Default);
+            textComponent.SetText(indent + text);
             cellInfo.AddChild(textComponent);
             var flex = new FlexComponent();
             flex.AddChild(cellSpace);
@@ -169,6 +171,22 @@ namespace SCVE.UITreeDebugger
             _currentIndentLevel++;
             component.Component.AcceptVisitor(this);
             _currentIndentLevel--;
+        }
+
+        public void Accept(ButtonContainerComponent component)
+        {
+            string info = $"{nameof(ButtonContainerComponent)}";
+            AddText(info);
+
+            _currentIndentLevel++;
+            component.Component.AcceptVisitor(this);
+            _currentIndentLevel--;
+        }
+
+        public void Accept(ButtonComponent component)
+        {
+            string info = $"{nameof(ButtonComponent)} - \"{component.Text}\"";
+            AddText(info);
         }
     }
 }

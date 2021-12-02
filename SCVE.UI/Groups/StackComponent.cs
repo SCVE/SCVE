@@ -18,6 +18,7 @@ namespace SCVE.UI.Groups
 
         public override void Init()
         {
+            base.Init();
             for (var i = 0; i < Children.Count; i++)
             {
                 Children[i].Init();
@@ -26,8 +27,32 @@ namespace SCVE.UI.Groups
 
         protected override void SubtreeUpdated()
         {
+            if(!Initialized) return;
             Measure(Width, Height);
             Arrange(X, Y, Width, Height);
+        }
+
+        public override Component PickComponentByPosition(float x, float y)
+        {
+            if (x > X && x < X + Width &&
+                y > Y && y < Y + Height)
+            {
+                for (var i = Children.Count - 1; i >= 0; i--)
+                {
+                    var component = Children[i].PickComponentByPosition(x, y);
+
+                    if (component is not null)
+                    {
+                        return component;
+                    }
+                }
+
+                return this;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public override void AddChild(Component child)
@@ -72,6 +97,25 @@ namespace SCVE.UI.Groups
             {
                 Children[i].RenderSelf(renderer);
             }
+        }
+
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                return this as T;
+            }
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                var findComponentById = Children[i].FindComponentById<T>(id);
+                if (findComponentById is not null)
+                {
+                    return findComponentById;
+                }
+            }
+
+            return null;
         }
 
         public override void AcceptVisitor(IComponentVisitor visitor)

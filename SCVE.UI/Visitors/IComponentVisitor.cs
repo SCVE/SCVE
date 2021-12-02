@@ -1,4 +1,5 @@
 ﻿using SCVE.UI.Containers;
+using SCVE.UI.Elements;
 using SCVE.UI.Groups;
 using SCVE.UI.Primitive;
 
@@ -24,5 +25,7 @@ namespace SCVE.UI.Visitors
         void Accept(PaddingComponent component);
         void Accept(GlueComponent component);
         void Accept(TemplateComponent component);
+        void Accept(ButtonContainerComponent component);
+        void Accept(ButtonComponent component);
     }
 }

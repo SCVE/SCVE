@@ -17,7 +17,7 @@ namespace SCVE.Core.Main
 
         public ScveWindow Window { get; set; }
 
-        public InputBase Input { get; set; }
+        public EngineInput EngineInput { get; set; }
 
         public IRenderEntitiesCreator RenderEntitiesCreator { get; set; }
 
@@ -25,13 +25,13 @@ namespace SCVE.Core.Main
 
         public IEngineRunnable Runnable { get; set; }
 
-        public EngineInit(IRenderer renderer, FileLoaders fileLoaders, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, InputBase input, IRenderEntitiesCreator renderEntitiesCreator, IFontAtlasGenerator fontAtlasGenerator, IEngineRunnable runnable)
+        public EngineInit(IRenderer renderer, FileLoaders fileLoaders, IDeltaTimeProvider deltaTimeProvider, ScveWindow window, EngineInput engineInput, IRenderEntitiesCreator renderEntitiesCreator, IFontAtlasGenerator fontAtlasGenerator, IEngineRunnable runnable)
         {
             Renderer              = renderer;
             FileLoaders           = fileLoaders;
             DeltaTimeProvider     = deltaTimeProvider;
             Window                = window;
-            Input                 = input;
+            EngineInput                 = engineInput;
             RenderEntitiesCreator = renderEntitiesCreator;
             FontAtlasGenerator    = fontAtlasGenerator;
             Runnable              = runnable;

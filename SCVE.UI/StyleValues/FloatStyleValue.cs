@@ -25,15 +25,5 @@
                 return Value;
             }
         }
-
-        public static implicit operator float(FloatStyleValue value)
-        {
-            return value.Value;
-        }
-
-        public static implicit operator FloatStyleValue(float value)
-        {
-            return new FloatStyleValue(value);
-        }
     }
 }

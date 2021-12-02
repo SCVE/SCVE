@@ -1,4 +1,5 @@
-﻿using SCVE.UI.Visitors;
+﻿using SCVE.Core.Utilities;
+using SCVE.UI.Visitors;
 
 namespace SCVE.UI.Primitive
 {
@@ -7,13 +8,9 @@ namespace SCVE.UI.Primitive
     /// </summary>
     public class FpsComponent : TextComponent
     {
-        public FpsComponent() : base("arial.ttf", 12, "", TextAlignment.Left)
-        {
-        }
-
         public override void Update(float deltaTime)
         {
-            SetText($"{1 / deltaTime :F} FPS");
+            SetText($"{1 / deltaTime:F} FPS");
         }
 
         public override void AcceptVisitor(IComponentVisitor visitor)

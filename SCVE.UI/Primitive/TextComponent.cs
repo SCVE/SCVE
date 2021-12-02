@@ -13,36 +13,53 @@ namespace SCVE.UI.Primitive
 
         private string _fontFileName;
         private float _fontSize;
-        private string _text;
-
-        private float _desiredWidth = 0f;
-        private float _desiredHeight = 0f;
+        internal string _text = "";
 
         private string[] _lines;
         private float[] _lineWidths;
 
         private TextAlignment _alignment;
 
-        public TextComponent(string fontFileName, float fontSize, string text, TextAlignment alignment)
+        private bool _measureValid;
+
+        public TextComponent()
         {
             Logger.Construct(nameof(TextComponent));
-            _fontFileName = fontFileName;
-            _fontSize     = fontSize;
-            _text         = text;
-            _alignment    = alignment;
+        }
+
+        protected override void OnSetStyle()
+        {
+            base.OnSetStyle();
+
+            _measureValid = false;
+            _fontFileName = Style.FontFileName.Value;
+            _fontSize     = Style.FontSize.Value;
+            _alignment    = Style.TextAlignment.Value;
+        }
+
+        public override Component PickComponentByPosition(float x, float y)
+        {
+            // By default, raw text can not receive any inputs and therefore be picked, because it's just a text.
+            // TODO: Wrap into a label component
+            return null;
         }
 
         public override void Init()
         {
-            Font = Engine.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
+            base.Init();
 
-            Rebuild();
+            Font = Engine.Instance.Cache.Font.GetOrCache(_fontFileName, Maths.ClosestFontSizeUp(_fontSize));
+        }
+
+        public string GetText()
+        {
+            return _text;
         }
 
         public void SetText(string text)
         {
-            _text = text;
-            Rebuild();
+            _text         = text;
+            _measureValid = false;
             SubtreeUpdated();
         }
 
@@ -61,22 +78,29 @@ namespace SCVE.UI.Primitive
                 }
             }
 
-            _desiredWidth  = maxLineWidth;
-            _desiredHeight = _lines.Length * Maths.FontSizeToLineHeight(_fontSize);
+            DesiredWidth  = maxLineWidth;
+            DesiredHeight = _lines.Length * Maths.FontSizeToLineHeight(_fontSize);
         }
 
         public override void Measure(float availableWidth, float availableHeight)
         {
-            DesiredWidth  = _desiredWidth;
-            DesiredHeight = _desiredHeight;
+            if (!_measureValid)
+            {
+                Rebuild();
+                _measureValid = true;
+            }
+            else
+            {
+                // All measures are done in Rebuild()
+            }
         }
 
         public override void Arrange(float x, float y, float availableWidth, float availableHeight)
         {
             X      = x;
             Y      = y;
-            Width  = _desiredWidth;
-            Height = _desiredHeight;
+            Width  = DesiredWidth;
+            Height = DesiredHeight;
         }
 
         public override void RenderSelf(IRenderer renderer)
@@ -87,7 +111,7 @@ namespace SCVE.UI.Primitive
                 case TextAlignment.Left:
                 {
                     // When rendering with left alignment, renderer will take care of line alignment (it's always zero)
-                    renderer.RenderText(Font, _text, _fontSize, X, Y, Style.PrimaryColor.Value);
+                    renderer.RenderText(Font, _text, _fontSize, X, Y, Style.TextColor.Value);
                     break;
                 }
                 case TextAlignment.Center:
@@ -95,7 +119,7 @@ namespace SCVE.UI.Primitive
                     // When rendering with center alignment, we need to render line by line, telling renderer where to start
                     for (var i = 0; i < _lines.Length; i++)
                     {
-                        renderer.RenderText(Font, _lines[i], _fontSize, X + Width / 2 - _lineWidths[i] / 2, Y + lineHeight * i, Style.PrimaryColor.Value);
+                        renderer.RenderText(Font, _lines[i], _fontSize, X + Width / 2 - _lineWidths[i] / 2, Y + lineHeight * i, Style.TextColor.Value);
                     }
 
                     break;
@@ -105,7 +129,7 @@ namespace SCVE.UI.Primitive
                     // When rendering with right alignment, we need to render line by line, telling renderer where to start
                     for (var i = 0; i < _lines.Length; i++)
                     {
-                        renderer.RenderText(Font, _lines[i], _fontSize, X + Width - _lineWidths[i], Y + lineHeight * i, Style.PrimaryColor.Value);
+                        renderer.RenderText(Font, _lines[i], _fontSize, X + Width - _lineWidths[i], Y + lineHeight * i, Style.TextColor.Value);
                     }
 
                     break;
@@ -113,6 +137,16 @@ namespace SCVE.UI.Primitive
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_alignment));
             }
+        }
+
+        public override T FindComponentById<T>(string id)
+        {
+            if (Id == id)
+            {
+                return this as T;
+            }
+
+            return null;
         }
 
         public override void AcceptVisitor(IComponentVisitor visitor)

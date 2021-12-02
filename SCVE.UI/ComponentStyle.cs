@@ -58,7 +58,27 @@ namespace SCVE.UI
         /// </summary>
         public ColorStyleValue PrimaryColor { get; set; }
         
-        public ComponentStyle(FloatStyleValue width, FloatStyleValue height, FloatStyleValue maxWidth, FloatStyleValue maxHeight, FloatStyleValue minWidth, FloatStyleValue minHeight, StyleValue<AlignmentDirection> alignmentDirection, StyleValue<AlignmentBehavior> horizontalAlignmentBehavior, StyleValue<AlignmentBehavior> verticalAlignmentBehavior, ColorStyleValue primaryColor)
+        /// <summary>
+        /// Primary text color, default White
+        /// </summary>
+        public ColorStyleValue TextColor { get; set; }
+
+        /// <summary>
+        /// What font should the component use to render texts
+        /// </summary>
+        public StringStyleValue FontFileName { get; set; }
+
+        /// <summary>
+        /// What font size should the component use to render texts
+        /// </summary>
+        public FloatStyleValue FontSize { get; set; }
+
+        /// <summary>
+        /// Text alignment of the component's text
+        /// </summary>
+        public StyleValue<TextAlignment> TextAlignment { get; set; }
+
+        public ComponentStyle(FloatStyleValue width, FloatStyleValue height, FloatStyleValue maxWidth, FloatStyleValue maxHeight, FloatStyleValue minWidth, FloatStyleValue minHeight, StyleValue<AlignmentDirection> alignmentDirection, StyleValue<AlignmentBehavior> horizontalAlignmentBehavior, StyleValue<AlignmentBehavior> verticalAlignmentBehavior, ColorStyleValue primaryColor, ColorStyleValue textColor, StringStyleValue fontFileName, FloatStyleValue fontSize, StyleValue<TextAlignment> textAlignment)
         {
             Width                       = width;
             Height                      = height;
@@ -70,6 +90,10 @@ namespace SCVE.UI
             HorizontalAlignmentBehavior = horizontalAlignmentBehavior;
             VerticalAlignmentBehavior   = verticalAlignmentBehavior;
             PrimaryColor                = primaryColor;
+            TextColor                   = textColor;
+            FontFileName                = fontFileName;
+            FontSize                    = fontSize;
+            TextAlignment               = textAlignment;
         }
 
         public ComponentStyle(ComponentStyle componentStyle)
@@ -84,6 +108,10 @@ namespace SCVE.UI
             HorizontalAlignmentBehavior = componentStyle.HorizontalAlignmentBehavior;
             VerticalAlignmentBehavior   = componentStyle.VerticalAlignmentBehavior;
             PrimaryColor                = componentStyle.PrimaryColor;
+            TextColor                = componentStyle.TextColor;
+            FontFileName                = componentStyle.FontFileName;
+            FontSize                    = componentStyle.FontSize;
+            TextAlignment               = componentStyle.TextAlignment;
         }
 
         public static ComponentStyle Default = new(
@@ -96,7 +124,11 @@ namespace SCVE.UI
             alignmentDirection: new StyleValue<AlignmentDirection>(UI.AlignmentDirection.Horizontal),
             horizontalAlignmentBehavior: new StyleValue<AlignmentBehavior>(AlignmentBehavior.Start),
             verticalAlignmentBehavior: new StyleValue<AlignmentBehavior>(AlignmentBehavior.Start),
-            primaryColor: new ColorStyleValue(ColorRgba.White)
+            primaryColor: new ColorStyleValue(ColorRgba.White),
+            textColor: new ColorStyleValue(ColorRgba.White),
+            fontFileName: new StringStyleValue("arial.ttf"),
+            fontSize: new FloatStyleValue(12),
+            textAlignment: new StyleValue<TextAlignment>(UI.TextAlignment.Left)
         );
     }
 }
