@@ -1,17 +1,15 @@
-﻿using ImGuiNET;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using SCVE.Engine.Core.Input;
 using SCVE.Engine.Core.Main;
 using SCVE.Engine.Core.Primitives;
 using SCVE.Engine.Core.Rendering;
 using SCVE.Engine.OpenTKBindings;
 
-namespace Dear_ImGui_Sample
+namespace SCVE.Editor
 {
     /// <summary>
     /// A modified version of Veldrid.ImGui's ImGuiRenderer.
@@ -29,27 +27,25 @@ namespace Dear_ImGui_Sample
 
         private Texture _fontTexture;
         private ShaderProgram _shader;
-        
+
         private int _windowWidth;
         private int _windowHeight;
 
-        private System.Numerics.Vector2 _scaleFactor = System.Numerics.Vector2.One;
-
-        public ImFontPtr arialFont; 
+        public ImFontPtr arialFont;
 
         /// <summary>
         /// Constructs a new ImGuiController.
         /// </summary>
         public ImGuiController(int width, int height)
         {
-            _windowWidth = width;
+            _windowWidth  = width;
             _windowHeight = height;
 
             IntPtr context = ImGui.CreateContext();
             ImGui.SetCurrentContext(context);
             var io = ImGui.GetIO();
             //io.Fonts.AddFontDefault();
-            arialFont = io.Fonts.AddFontFromFileTTF("arial.ttf", 18);
+            arialFont = io.Fonts.AddFontFromFileTTF("assets/Font/arial.ttf", 18);
 
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
@@ -58,15 +54,51 @@ namespace Dear_ImGui_Sample
             CreateDeviceResources();
             SetKeyMappings();
 
+            ImGui.StyleColorsDark();
+            SetDarkTheme();
+
             SetPerFrameImGuiData(1f / 60f);
 
             ImGui.NewFrame();
             _frameBegun = true;
         }
 
+        private void SetDarkTheme()
+        {
+            var colors = ImGui.GetStyle().Colors;
+            colors[(int)ImGuiCol.WindowBg] = new System.Numerics.Vector4(0.1f, 0.105f, 0.11f, 1.0f);
+
+            // Headers
+            colors[(int)ImGuiCol.Header]        = new System.Numerics.Vector4(0.2f, 0.205f, 0.21f, 1.0f);
+            colors[(int)ImGuiCol.HeaderHovered] = new System.Numerics.Vector4(0.3f, 0.305f, 0.31f, 1.0f);
+            colors[(int)ImGuiCol.HeaderActive]  = new System.Numerics.Vector4(0.15f, 0.1505f, 0.151f, 1.0f);
+
+            // Buttons
+            colors[(int)ImGuiCol.Button]        = new System.Numerics.Vector4(0.2f, 0.205f, 0.21f, 1.0f);
+            colors[(int)ImGuiCol.ButtonHovered] = new System.Numerics.Vector4(0.3f, 0.305f, 0.31f, 1.0f);
+            colors[(int)ImGuiCol.ButtonActive]  = new System.Numerics.Vector4(0.15f, 0.1505f, 0.151f, 1.0f);
+
+            // Frame BG
+            colors[(int)ImGuiCol.FrameBg]        = new System.Numerics.Vector4(0.2f, 0.205f, 0.21f, 1.0f);
+            colors[(int)ImGuiCol.FrameBgHovered] = new System.Numerics.Vector4(0.3f, 0.305f, 0.31f, 1.0f);
+            colors[(int)ImGuiCol.FrameBgActive]  = new System.Numerics.Vector4(0.15f, 0.1505f, 0.151f, 1.0f);
+
+            // Tabs
+            colors[(int)ImGuiCol.Tab]                = new System.Numerics.Vector4(0.15f, 0.1505f, 0.151f, 1.0f);
+            colors[(int)ImGuiCol.TabHovered]         = new System.Numerics.Vector4(0.38f, 0.3805f, 0.381f, 1.0f);
+            colors[(int)ImGuiCol.TabActive]          = new System.Numerics.Vector4(0.28f, 0.2805f, 0.281f, 1.0f);
+            colors[(int)ImGuiCol.TabUnfocused]       = new System.Numerics.Vector4(0.15f, 0.1505f, 0.151f, 1.0f);
+            colors[(int)ImGuiCol.TabUnfocusedActive] = new System.Numerics.Vector4(0.2f, 0.205f, 0.21f, 1.0f);
+
+            // Title
+            colors[(int)ImGuiCol.TitleBg]          = new System.Numerics.Vector4(0.15f, 0.1505f, 0.151f, 1.0f);
+            colors[(int)ImGuiCol.TitleBgActive]    = new System.Numerics.Vector4(0.15f, 0.1505f, 0.151f, 1.0f);
+            colors[(int)ImGuiCol.TitleBgCollapsed] = new System.Numerics.Vector4(0.15f, 0.1505f, 0.151f, 1.0f);
+        }
+
         public void WindowResized(int width, int height)
         {
-            _windowWidth = width;
+            _windowWidth  = width;
             _windowHeight = height;
         }
 
@@ -80,7 +112,7 @@ namespace Dear_ImGui_Sample
             GL.CreateVertexArrays(1, out _vertexArray);
 
             _vertexBufferSize = 10000;
-            _indexBufferSize = 2000;
+            _indexBufferSize  = 2000;
             GL.CreateBuffers(1, out _vertexBuffer);
             GL.CreateBuffers(1, out _indexBuffer);
             // Util.CreateVertexBuffer("ImGui", out _vertexBuffer);
@@ -150,13 +182,13 @@ void main()
         /// </summary>
         public void RecreateFontDeviceTexture()
         {
-            ImGuiIOPtr io = ImGui.GetIO();
-            io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height, out int bytesPerPixel);
+            var io = ImGui.GetIO();
+            io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out var width, out var height, out var bytesPerPixel);
 
             _fontTexture = new OpenGLTexture(width, height, pixels);
             // _fontTexture.SetMagFilter(TextureMagFilter.Linear);
             // _fontTexture.SetMinFilter(TextureMinFilter.Linear);
-            
+
             io.Fonts.SetTexID((IntPtr)_fontTexture.Id);
 
             io.Fonts.ClearTexData();
@@ -202,10 +234,14 @@ void main()
         private void SetPerFrameImGuiData(float deltaSeconds)
         {
             ImGuiIOPtr io = ImGui.GetIO();
-            io.DisplaySize = new System.Numerics.Vector2(
-                _windowWidth / _scaleFactor.X,
-                _windowHeight / _scaleFactor.Y);
-            io.DisplayFramebufferScale = _scaleFactor;
+
+            io.DisplaySize.X = _windowWidth;
+            io.DisplaySize.Y = _windowHeight;
+
+            // TODO: Apply DPI here
+            io.DisplayFramebufferScale.X = 1;
+            io.DisplayFramebufferScale.Y = 1;
+
             io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
         }
 
@@ -215,30 +251,33 @@ void main()
         {
             ImGuiIOPtr io = ImGui.GetIO();
 
-            var MouseState = ScveEngine.Instance.Input.MouseState;
+            var MouseState    = ScveEngine.Instance.Input.MouseState;
             var KeyboardState = ScveEngine.Instance.Input.KeyboardState;
 
             io.MouseDown[0] = MouseState[MouseCode.Left];
             io.MouseDown[1] = MouseState[MouseCode.Right];
             io.MouseDown[2] = MouseState[MouseCode.Middle];
 
-            var screenPoint = new Vector2i((int)ScveEngine.Instance.Input.GetCursorX(), (int)ScveEngine.Instance.Input.GetCursorY());
-            var point       = screenPoint;//wnd.PointToClient(screenPoint);
-            io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
-            
-            foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            // var screenPoint = new Vector2i((int)ScveEngine.Instance.Input.GetCursorX(), (int)ScveEngine.Instance.Input.GetCursorY());
+            // var point       = screenPoint; //wnd.PointToClient(screenPoint);
+            io.MousePos.X = ScveEngine.Instance.Input.GetCursorX();
+            io.MousePos.Y = ScveEngine.Instance.Input.GetCursorY();
+
+            foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
             {
-                if (key == Keys.Unknown)
+                if (key == KeyCode.Unknown)
                 {
                     continue;
                 }
-                io.KeysDown[(int)key] = KeyboardState[(KeyCode)key];
+
+                io.KeysDown[(int)key] = KeyboardState[key];
             }
 
             foreach (var c in PressedChars)
             {
                 io.AddInputCharacter(c);
             }
+
             PressedChars.Clear();
 
             io.KeyCtrl  = KeyboardState[KeyCode.LeftControl] || KeyboardState[KeyCode.RightControl];
@@ -252,37 +291,39 @@ void main()
             PressedChars.Add(keyChar);
         }
 
-        internal void MouseScroll(Vector2 offset)
+        internal void MouseScroll(float x, float y)
         {
             ImGuiIOPtr io = ImGui.GetIO();
-            
-            io.MouseWheel = offset.Y;
-            io.MouseWheelH = offset.X;
+
+            io.MouseWheel  = y;
+            io.MouseWheelH = x;
         }
 
         private static void SetKeyMappings()
         {
             ImGuiIOPtr io = ImGui.GetIO();
-            io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab;
-            io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left;
-            io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right;
-            io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Keys.Up;
-            io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Keys.Down;
-            io.KeyMap[(int)ImGuiKey.PageUp] = (int)Keys.PageUp;
-            io.KeyMap[(int)ImGuiKey.PageDown] = (int)Keys.PageDown;
-            io.KeyMap[(int)ImGuiKey.Home] = (int)Keys.Home;
-            io.KeyMap[(int)ImGuiKey.End] = (int)Keys.End;
-            io.KeyMap[(int)ImGuiKey.Delete] = (int)Keys.Delete;
-            io.KeyMap[(int)ImGuiKey.Backspace] = (int)Keys.Backspace;
-            io.KeyMap[(int)ImGuiKey.Enter] = (int)Keys.Enter;
-            io.KeyMap[(int)ImGuiKey.Escape] = (int)Keys.Escape;
-            io.KeyMap[(int)ImGuiKey.A] = (int)Keys.A;
-            io.KeyMap[(int)ImGuiKey.C] = (int)Keys.C;
-            io.KeyMap[(int)ImGuiKey.V] = (int)Keys.V;
-            io.KeyMap[(int)ImGuiKey.X] = (int)Keys.X;
-            io.KeyMap[(int)ImGuiKey.Y] = (int)Keys.Y;
-            io.KeyMap[(int)ImGuiKey.Z] = (int)Keys.Z;
+            io.KeyMap[(int)ImGuiKey.Tab]        = (int)KeyCode.Tab;
+            io.KeyMap[(int)ImGuiKey.LeftArrow]  = (int)KeyCode.Left;
+            io.KeyMap[(int)ImGuiKey.RightArrow] = (int)KeyCode.Right;
+            io.KeyMap[(int)ImGuiKey.UpArrow]    = (int)KeyCode.Up;
+            io.KeyMap[(int)ImGuiKey.DownArrow]  = (int)KeyCode.Down;
+            io.KeyMap[(int)ImGuiKey.PageUp]     = (int)KeyCode.PageUp;
+            io.KeyMap[(int)ImGuiKey.PageDown]   = (int)KeyCode.PageDown;
+            io.KeyMap[(int)ImGuiKey.Home]       = (int)KeyCode.Home;
+            io.KeyMap[(int)ImGuiKey.End]        = (int)KeyCode.End;
+            io.KeyMap[(int)ImGuiKey.Delete]     = (int)KeyCode.Delete;
+            io.KeyMap[(int)ImGuiKey.Backspace]  = (int)KeyCode.Backspace;
+            io.KeyMap[(int)ImGuiKey.Enter]      = (int)KeyCode.Enter;
+            io.KeyMap[(int)ImGuiKey.Escape]     = (int)KeyCode.Escape;
+            io.KeyMap[(int)ImGuiKey.A]          = (int)KeyCode.A;
+            io.KeyMap[(int)ImGuiKey.C]          = (int)KeyCode.C;
+            io.KeyMap[(int)ImGuiKey.V]          = (int)KeyCode.V;
+            io.KeyMap[(int)ImGuiKey.X]          = (int)KeyCode.X;
+            io.KeyMap[(int)ImGuiKey.Y]          = (int)KeyCode.Y;
+            io.KeyMap[(int)ImGuiKey.Z]          = (int)KeyCode.Z;
         }
+
+        private ScveMatrix4X4 _mvpMatrix = ScveMatrix4X4.Identity;
 
         private void RenderImDrawData(ImDrawDataPtr draw_data)
         {
@@ -318,7 +359,7 @@ void main()
 
             // Setup orthographic projection matrix into our constant buffer
             ImGuiIOPtr io = ImGui.GetIO();
-            ScveMatrix4X4 mvp = ScveMatrix4X4.CreateOrthographicOffCenter(
+            _mvpMatrix.MakeIdentity().MakeOrthographicOffCenter(
                 0.0f,
                 io.DisplaySize.X,
                 io.DisplaySize.Y,
@@ -327,7 +368,7 @@ void main()
                 1.0f);
 
             _shader.Bind();
-            _shader.SetMatrix4("projection_matrix", mvp);
+            _shader.SetMatrix4("projection_matrix", _mvpMatrix);
             _shader.SetInt("in_fontTexture", 0);
             // Util.CheckGLError("Projection");
 
@@ -388,6 +429,7 @@ void main()
 
                     idx_offset += (int)pcmd.ElemCount;
                 }
+
                 vtx_offset += cmd_list.VtxBuffer.Size;
             }
 

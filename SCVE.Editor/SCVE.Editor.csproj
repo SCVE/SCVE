@@ -6,12 +6,31 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ImGui.NET\src\ImGui.NET\ImGui.NET.csproj" />
       <ProjectReference Include="..\SCVE.Engine.Core\SCVE.Engine.Core.csproj" />
       <ProjectReference Include="..\SCVE.Engine.Default\SCVE.Engine.Default.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <PackageReference Include="ImGui.NET" Version="1.78.0" />
+        <Content Include="..\ImGui.Net\deps\cimgui\win-x86\cimgui.dll">
+            <PackagePath>runtimes/win-x86/native</PackagePath>
+            <Pack>true</Pack>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\ImGui.Net\deps\cimgui\win-x64\cimgui.dll">
+            <PackagePath>runtimes/win-x64/native</PackagePath>
+            <Pack>true</Pack>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\ImGui.Net\deps\cimgui\linux-x64\cimgui.so">
+            <PackagePath>runtimes/linux-x64/native/libcimgui.so</PackagePath>
+            <Pack>true</Pack>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\ImGui.Net\deps\cimgui\osx-x64\cimgui.dylib">
+            <PackagePath>runtimes/osx-x64/native/libcimgui.dylib</PackagePath>
+            <Pack>true</Pack>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
-
 </Project>
