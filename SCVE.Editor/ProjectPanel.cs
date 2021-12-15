@@ -101,13 +101,13 @@ namespace SCVE.Editor
                 if (_project is not null)
                 {
                     ImGui.Text(_project.Name);
+
+                    PushImGuiAssetTreeFolder(_project.RootFolder.GetDirectChildFolder("assets"));
                 }
                 else
                 {
                     ImGui.Text("Project is not loaded");
                 }
-
-                PushImGuiAssetTreeFolder(_project.RootFolder.GetDirectChildFolder("assets"));
 
                 ImGui.End();
             }
@@ -119,7 +119,7 @@ namespace SCVE.Editor
                 if (ImGui.BeginPopupModal("Asset Preview", ref previewVisible))
                 {
                     ImGui.TextDisabled($"Previewing asset {_openedAsset.InternalName}");
-                    
+
                     ImGui.TextUnformatted(_openedAssetPreviewContent);
 
                     if (ImGui.Button("Close"))
