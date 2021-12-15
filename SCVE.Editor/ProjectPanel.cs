@@ -9,8 +9,12 @@ namespace SCVE.Editor
     {
         private Project _project;
 
-        private ProjectAsset _openedAsset;
-        private string _openedAssetPreviewContent;
+        private AssetPreviewModalPanel _assetPreviewModalPanel;
+
+        public ProjectPanel()
+        {
+            _assetPreviewModalPanel = new AssetPreviewModalPanel();
+        }
 
         public void LoadProject(string path)
         {
@@ -46,10 +50,6 @@ namespace SCVE.Editor
 
                 if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
                 {
-                    ShowHint(subfolder.FileSystemFullPath);
-                }
-                else
-                {
                     ShowHint(subfolder.InternalFullPath);
                 }
 
@@ -63,19 +63,10 @@ namespace SCVE.Editor
             foreach (var asset in folder.Assets)
             {
                 var treeExpanded = ImGui.TreeNodeEx(asset.InternalName, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-
-                if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                
+                if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
                 {
-                    _openedAsset = asset;
-                    if (_openedAsset.Type == "TEXT")
-                    {
-                        _openedAssetPreviewContent = File.ReadAllText(_openedAsset.FileSystemFullPath);
-                    }
-                    else
-                    {
-                        _openedAssetPreviewContent = $"Asset of type {_openedAsset.Type} is not currently supported for preview" +
-                                                     $"{_openedAsset.FileSystemFullPath}";
-                    }
+                    _assetPreviewModalPanel.SetOpenedAsset(asset);
                 }
 
                 if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
@@ -111,26 +102,8 @@ namespace SCVE.Editor
 
                 ImGui.End();
             }
-
-            bool previewVisible = true;
-            if (_openedAsset is not null)
-            {
-                ImGui.OpenPopup("Asset Preview");
-                if (ImGui.BeginPopupModal("Asset Preview", ref previewVisible))
-                {
-                    ImGui.TextDisabled($"Previewing asset {_openedAsset.InternalName}");
-
-                    ImGui.TextUnformatted(_openedAssetPreviewContent);
-
-                    if (ImGui.Button("Close"))
-                    {
-                        _openedAsset = null;
-                        ImGui.CloseCurrentPopup();
-                    }
-
-                    ImGui.EndPopup();
-                }
-            }
+            
+            _assetPreviewModalPanel.OnImGuiRender();
         }
     }
 }

@@ -26,7 +26,7 @@ namespace SCVE.Editor
             window.Load += () =>
             {
                 controller = new ImGuiController(
-                    gl = window.CreateOpenGL(), // load OpenGL
+                    gl = editorApp.GL = window.CreateOpenGL(), // load OpenGL
                     window, // pass in our window
                     inputContext = window.CreateInput(), // create an input context
                     () =>

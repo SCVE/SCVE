@@ -1,10 +1,15 @@
 ﻿using ImGuiNET;
+using Silk.NET.OpenGL;
 using Vector2 = System.Numerics.Vector2;
 
 namespace SCVE.Editor
 {
     public class EditorApp
     {
+        public GL GL { get; set; }
+
+        public static EditorApp Instance;
+        
         private static bool _dockspaceOpen = true;
         private static bool _optFullscreenPersistant = true;
         private static bool _optFullscreen = _optFullscreenPersistant;
@@ -20,6 +25,7 @@ namespace SCVE.Editor
             Project.Delete("abc", "testdata/projects/");
             Utils.CreateDummyProject("abc", "testdata/projects/");
             projectPanel.LoadProject("testdata/projects/abc.scve");
+            Instance = this;
         }
 
         public void OnImGuiRender()
