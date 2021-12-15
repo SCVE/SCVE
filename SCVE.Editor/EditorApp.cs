@@ -1,53 +1,30 @@
-﻿using System;
-using System.Numerics;
-using ImGuiNET;
-using OpenTK.Mathematics;
-using SCVE.Engine.Core.Input;
-using SCVE.Engine.Core.Lifecycle;
-using SCVE.Engine.Core.Main;
-using SCVE.Engine.Core.Rendering;
+﻿using ImGuiNET;
 using Vector2 = System.Numerics.Vector2;
 
 namespace SCVE.Editor
 {
-    public class EditorApp : IEngineRunnable
+    public class EditorApp
     {
-        ImGuiController _controller;
-
-        public void Init()
-        {
-            ScveEngine.Instance.Input.WindowSizeChanged += InputOnWindowSizeChanged;
-            ScveEngine.Instance.Input.Scroll            += InputOnScroll;
-            ScveEngine.Instance.Input.CharTyped         += InputOnCharTyped;
-
-            _controller = new ImGuiController(ScveEngine.Instance.MainWindow.Width, ScveEngine.Instance.MainWindow.Height);
-        }
-
-        private void InputOnCharTyped(char obj)
-        {
-            _controller.PressChar(obj);
-        }
-
-        private void InputOnScroll(float x, float y)
-        {
-            _controller.MouseScroll(x, y);
-        }
-
-        private void InputOnWindowSizeChanged(int width, int height)
-        {
-            // Tell ImGui of the new size
-            _controller.WindowResized(width, height);
-        }
-
-        private static bool dockspaceOpen = true;
+        private static bool _dockspaceOpen = true;
         private static bool _optFullscreenPersistant = true;
         private static bool _optFullscreen = _optFullscreenPersistant;
 
         private static ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags.None;
 
-        public void Render(IRenderer renderer)
+        ProjectPanel projectPanel = new();
+        
+        public ImFontPtr openSansFont;
+
+        public EditorApp()
         {
-            ImGui.PushFont(_controller.arialFont);
+            Project.Delete("abc", "testdata/projects/");
+            Project.Create("abc", "testdata/projects/");
+            projectPanel.LoadProject("testdata/projects/abc.scve");
+        }
+
+        public void OnImGuiRender()
+        {
+            ImGui.PushFont(openSansFont);
 
             // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
             // because it would be confusing to have two docking targets within each others.
@@ -74,7 +51,7 @@ namespace SCVE.Editor
             // We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
             // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0.0f, 0.0f));
-            ImGui.Begin("DockSpace Demo", ref dockspaceOpen, window_flags);
+            ImGui.Begin("DockSpace Demo", ref _dockspaceOpen, window_flags);
             ImGui.PopStyleVar();
 
             if (_optFullscreen)
@@ -117,26 +94,20 @@ namespace SCVE.Editor
 
                     if (ImGui.MenuItem("Exit"))
                     {
-                        ScveEngine.Instance.RequestTerminate();
                     }
+
                     ImGui.EndMenu();
                 }
 
                 ImGui.EndMenuBar();
             }
-            
-            // TODO: Render separate panels
-            
-            
 
+            // TODO: Render separate panels
+
+            projectPanel.OnImGuiRender();
+            
             ImGui.ShowDemoWindow();
             ImGui.ShowMetricsWindow();
-            _controller.Render();
-        }
-
-        public void Update(float deltaTime)
-        {
-            _controller.Update(deltaTime);
         }
     }
 }
