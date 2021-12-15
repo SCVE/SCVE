@@ -3,6 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net5.0</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\SCVE.Engine.Core\SCVE.Engine.Core.csproj" />
+      <ProjectReference Include="..\SCVE.Engine.ImageSharpBindings\SCVE.Engine.ImageSharpBindings.csproj" />
       <ProjectReference Include="..\Silk.NET\src\OpenGL\Extensions\Silk.NET.OpenGL.Extensions.ImGui\Silk.NET.OpenGL.Extensions.ImGui.csproj" />
     </ItemGroup>
 </Project>

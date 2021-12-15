@@ -40,18 +40,44 @@ namespace SCVE.Editor
                 var projectMetaFileData = new ProjectMetaFileData("Test Project ABC", "SCVE PROJECT", "1.0");
                 var metaFileContent     = JsonSerializer.Serialize(projectMetaFileData);
                 metaWriter.WriteLine(metaFileContent);
-
-                var       assetEntry  = zipProjectArchive.CreateEntry("assets\\folder\\readme.scveasset");
-                using var assetWriter = new StreamWriter(assetEntry.Open());
-
-                var assetFileData    = new ProjectAssetFileData("TEXT", "C:\\Projects\\CSharp\\SCVE\\testdata\\readme.txt");
-                var assetFileContent = JsonSerializer.Serialize(assetFileData);
-                assetWriter.WriteLine(assetFileContent);
+                AppendTextAsset(zipProjectArchive);
+                AppendImageAsset(zipProjectArchive);
+                AppendMP3Asset(zipProjectArchive);
             }
             else
             {
                 throw new ScveException("Path was not a directory");
             }
+        }
+
+        private static void AppendImageAsset(ZipArchive zipProjectArchive)
+        {
+            var       assetEntry  = zipProjectArchive.CreateEntry("assets\\images\\image.scveasset");
+            using var assetWriter = new StreamWriter(assetEntry.Open());
+
+            var assetFileData    = new ProjectAssetFileData("IMAGE", "C:\\Projects\\CSharp\\SCVE\\testdata\\runner2.png");
+            var assetFileContent = JsonSerializer.Serialize(assetFileData);
+            assetWriter.WriteLine(assetFileContent);
+        }
+
+        private static void AppendMP3Asset(ZipArchive zipProjectArchive)
+        {
+            var       assetEntry  = zipProjectArchive.CreateEntry("assets\\audio.scveasset");
+            using var assetWriter = new StreamWriter(assetEntry.Open());
+
+            var assetFileData    = new ProjectAssetFileData("MP3", "C:\\Projects\\CSharp\\SCVE\\testdata\\rukoblud.mp3");
+            var assetFileContent = JsonSerializer.Serialize(assetFileData);
+            assetWriter.WriteLine(assetFileContent);
+        }
+
+        private static void AppendTextAsset(ZipArchive zipProjectArchive)
+        {
+            var       assetEntry  = zipProjectArchive.CreateEntry("assets\\folder\\readme.scveasset");
+            using var assetWriter = new StreamWriter(assetEntry.Open());
+
+            var assetFileData    = new ProjectAssetFileData("TEXT", "C:\\Projects\\CSharp\\SCVE\\testdata\\readme.txt");
+            var assetFileContent = JsonSerializer.Serialize(assetFileData);
+            assetWriter.WriteLine(assetFileContent);
         }
     }
 }
