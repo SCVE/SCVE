@@ -13,69 +13,71 @@ namespace SCVE.Editor
         public IReadOnlyList<ProjectAssetFolder> Subfolders => _subfolders;
         private readonly List<ProjectAssetFolder> _subfolders;
 
-        public ProjectAssetFolder(string name) : base(name)
+        public ProjectAssetFolder(string internalName, string internalFullPath) : base(internalName, internalFullPath, "", "FOLDER")
         {
             _assets     = new();
             _subfolders = new();
         }
 
-        private bool HasFolder(string name)
+        private bool HasDirectChildFolder(string name)
         {
-            return _subfolders.Any(f => f.Name == name);
+            return _subfolders.Any(f => f.InternalName == name);
         }
 
-        private ProjectAssetFolder GetFolder(string name)
+        public ProjectAssetFolder GetDirectChildFolder(string name)
         {
-            return _subfolders.First(f => f.Name == name);
+            return _subfolders.First(f => f.InternalName == name);
         }
 
-        private void AppendFolder(string name)
+        private void AppendFolder(string name, string projectFullPath)
         {
-            _subfolders.Add(new ProjectAssetFolder(name));
+            _subfolders.Add(new ProjectAssetFolder(name, projectFullPath));
         }
 
-        public void AppendEmptyFolder(string name)
+        public void AppendEmptyFolder(string name, string internalFullPath)
         {
-            _subfolders.Add(new ProjectAssetFolder(name));
+            _subfolders.Add(new ProjectAssetFolder(name, internalFullPath));
         }
 
-        private void AppendRawAsset(string name)
+        private void AppendRawAsset(string name, string internalFullPath, string fileSystemFullPath, string type)
         {
-            _assets.Add(new ProjectAsset(name));
+            _assets.Add(new ProjectAsset(name, internalFullPath, fileSystemFullPath, type));
         }
 
-        /// <summary>
-        /// Path must end with /
-        /// </summary>
-        public void AppendAsset(string path, string name)
+        public void AppendAsset(string internalRelativePath, string internalName, string internalFullPath, string fileSystemFullPath, string type)
         {
-            if (path == Path.DirectorySeparatorChar.ToString())
+            if (internalRelativePath == Path.DirectorySeparatorChar.ToString())
             {
-                AppendRawAsset(name);
+                AppendRawAsset(internalName, internalFullPath, fileSystemFullPath, type);
             }
-            else if (!path.Contains(Path.DirectorySeparatorChar))
+            else if (!internalRelativePath.Contains(Path.DirectorySeparatorChar))
             {
-                if (path == "")
+                string folderName = internalRelativePath;
+                if (folderName == "")
                 {
-                    AppendRawAsset(name);
-                    return;
+                    // if name is empty - we are adding an empty folder
+                    AppendRawAsset(internalName, internalFullPath, fileSystemFullPath, type);
                 }
-                if (!HasFolder(path))
+                else
                 {
-                    AppendFolder(path);
+                    if (!HasDirectChildFolder(folderName))
+                    {
+                        AppendFolder(folderName, InternalFullPath + internalRelativePath);
+                    }
+
+                    GetDirectChildFolder(folderName).AppendRawAsset(internalName, internalFullPath, fileSystemFullPath, type);
                 }
-                GetFolder(path).AppendRawAsset(name);
             }
             else
             {
-                string nextPath = path.Substring(path.IndexOf(Path.DirectorySeparatorChar) + 1);
-                string folder   = path.Substring(0, path.IndexOf(Path.DirectorySeparatorChar));
-                if (!HasFolder(folder))
+                string nextPath = internalRelativePath.Substring(internalRelativePath.IndexOf(Path.DirectorySeparatorChar) + 1);
+                string folderName   = internalRelativePath.Substring(0, internalRelativePath.IndexOf(Path.DirectorySeparatorChar));
+                if (!HasDirectChildFolder(folderName))
                 {
-                    AppendFolder(folder);
+                    AppendFolder(folderName, InternalFullPath + folderName);
                 }
 
-                GetFolder(folder).AppendAsset(nextPath, name);
+                GetDirectChildFolder(folderName).AppendAsset(nextPath, internalName, internalFullPath, fileSystemFullPath, type);
             }
         }
     }

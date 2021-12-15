@@ -1,14 +1,30 @@
-﻿using System.IO.Compression;
-
-namespace SCVE.Editor
+﻿namespace SCVE.Editor
 {
     public class ProjectAsset
     {
-        public virtual string Name { get; }
+        /// <summary>
+        /// Name of an asset, local to this project
+        /// </summary>
+        public string InternalName { get; }
 
-        public ProjectAsset(string name)
+        /// <summary>
+        /// Full path of an asset, relative to the project root
+        /// </summary>
+        public string InternalFullPath { get; }
+
+        /// <summary>
+        /// Full path of an asset in a file system
+        /// </summary>
+        public string FileSystemFullPath { get; }
+
+        public string Type { get; }
+
+        public ProjectAsset(string internalName, string internalFullPath, string fileSystemFullPath, string type)
         {
-            Name = name;
+            InternalName       = internalName;
+            InternalFullPath   = internalFullPath;
+            FileSystemFullPath = fileSystemFullPath;
+            Type               = type;
         }
     }
 }

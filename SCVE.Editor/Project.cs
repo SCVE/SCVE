@@ -3,26 +3,35 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using SCVE.Engine.Core.Misc;
 
 namespace SCVE.Editor
 {
-    public class Project : ProjectAssetFolder, IDisposable
+    public class Project : IDisposable
     {
         private Stream _archiveStream;
         private ZipArchive _archive;
 
         public string Name { get; set; }
 
+        public string Type { get; set; }
+
+        public string Version { get; set; }
+
+        public readonly ProjectAssetFolder RootFolder;
+
         public Project(string path) : this(new FileStream(path, FileMode.Open))
         {
         }
 
-        public Project(Stream stream) : base("")
+        public Project(Stream stream)
         {
             _archiveStream = stream;
 
-            _archive = new ZipArchive(_archiveStream, ZipArchiveMode.Read);
+            _archive   = new ZipArchive(_archiveStream, ZipArchiveMode.Read);
+            RootFolder = new("", "");
             ReadMetaFile();
             ReadAssetsFolder();
         }
@@ -37,54 +46,50 @@ namespace SCVE.Editor
 
         private void AppendAssetFromArchive(ZipArchiveEntry entry)
         {
+            string type               = "";
+            string fileSystemFullPath = "";
+            if (entry.Name.EndsWith(".scveasset"))
+            {
+                var assetContent         = ReadAssetContent(entry);
+                var projectAssetFileData = JsonSerializer.Deserialize<ProjectAssetFileData>(assetContent);
+
+                type               = projectAssetFileData.Type;
+                fileSystemFullPath = projectAssetFileData.FileSystemPath;
+            }
+
             if (entry.FullName.Contains("\\"))
             {
                 var entryPath = entry.FullName;
                 entryPath = entryPath.Substring(0, entryPath.LastIndexOf(Path.DirectorySeparatorChar));
                 if (entry.Name == "")
                 {
-                    AppendEmptyFolder(entryPath);
+                    RootFolder.AppendEmptyFolder(entryPath, entry.FullName);
                 }
                 else
                 {
-                    AppendAsset(entryPath, entry.Name);
+                    RootFolder.AppendAsset(entryPath, entry.Name, entry.FullName, fileSystemFullPath, type);
                 }
             }
             else
             {
-                AppendAsset("", entry.Name);
+                RootFolder.AppendAsset("", entry.Name, entry.FullName, fileSystemFullPath, type);
             }
+        }
+
+        private string ReadAssetContent(ZipArchiveEntry entry)
+        {
+            using var entryStream = entry.Open();
+            using var entryReader = new StreamReader(entryStream);
+            return entryReader.ReadToEnd();
         }
 
         private void ReadMetaFile()
         {
             var metaFileContent = GetMetaFileContent();
 
-            string name = metaFileContent.Split('\n')[1];
-            Name = name;
-        }
-
-        public static void Create(string name, string path)
-        {
-            if (path.IsDirectoryPath())
-            {
-                var       projectPath       = Path.Combine(path, name + ".scve");
-                using var zipStream         = new FileStream(projectPath, FileMode.CreateNew);
-                using var zipProjectArchive = new ZipArchive(zipStream, ZipArchiveMode.Update);
-                var       metaEntry         = zipProjectArchive.CreateEntry("project.meta");
-                zipProjectArchive.CreateEntry("assets\\");
-                using var metaWriter = new StreamWriter(metaEntry.Open());
-                metaWriter.WriteLine("SCVE 1.0 Project");
-                metaWriter.WriteLine(name);
-
-                var       addEntry  = zipProjectArchive.CreateEntry("assets\\folder\\readme.txt");
-                using var addWriter = new StreamWriter(addEntry.Open());
-                addWriter.WriteLine("I am awesome");
-            }
-            else
-            {
-                throw new ScveException("Path was not a directory");
-            }
+            Name    = metaFileContent.Name;
+            Type    = metaFileContent.Type;
+            Version = metaFileContent.Version;
         }
 
         public static bool PathIsProject(string path)
@@ -100,8 +105,9 @@ namespace SCVE.Editor
             using var metaFileStream    = metaFileEntry.Open();
             using var metaFileReader    = new StreamReader(metaFileStream);
 
-            var firstLine = metaFileReader.ReadLine();
-            if (firstLine == "SCVE 1.0 Project")
+            var projectMetaFileData = JsonSerializer.Deserialize<ProjectMetaFileData>(metaFileReader.ReadToEnd());
+
+            if (projectMetaFileData.Type == "SCVE PROJECT")
             {
                 return true;
             }
@@ -114,12 +120,13 @@ namespace SCVE.Editor
             return new Project(path);
         }
 
-        public string GetMetaFileContent()
+        public ProjectMetaFileData GetMetaFileContent()
         {
-            var       metaFileEntry  = _archive.GetEntry("project.meta");
-            using var metaFileStream = metaFileEntry.Open();
-            using var metaFileReader = new StreamReader(metaFileStream);
-            return metaFileReader.ReadToEnd();
+            var       metaFileEntry       = _archive.GetEntry("project.meta");
+            using var metaFileStream      = metaFileEntry.Open();
+            using var metaFileReader      = new StreamReader(metaFileStream);
+            var       projectMetaFileData = JsonSerializer.Deserialize<ProjectMetaFileData>(metaFileReader.ReadToEnd());
+            return projectMetaFileData;
         }
 
         public void Dispose()
