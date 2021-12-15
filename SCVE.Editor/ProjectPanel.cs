@@ -42,7 +42,7 @@ namespace SCVE.Editor
         {
             foreach (var subfolder in folder.Subfolders)
             {
-                var treeExpanded = ImGui.TreeNodeEx(subfolder.InternalName);
+                var treeExpanded = ImGui.TreeNodeEx(subfolder.InternalName, ImGuiTreeNodeFlags.SpanFullWidth);
 
                 if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
                 {
@@ -62,7 +62,7 @@ namespace SCVE.Editor
 
             foreach (var asset in folder.Assets)
             {
-                var treeExpanded = ImGui.TreeNodeEx(asset.InternalName, ImGuiTreeNodeFlags.Leaf);
+                var treeExpanded = ImGui.TreeNodeEx(asset.InternalName, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
 
                 if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
                 {
