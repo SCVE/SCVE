@@ -18,7 +18,7 @@ namespace SCVE.Editor
         public EditorApp()
         {
             Project.Delete("abc", "testdata/projects/");
-            Project.Create("abc", "testdata/projects/");
+            Utils.CreateDummyProject("abc", "testdata/projects/");
             projectPanel.LoadProject("testdata/projects/abc.scve");
         }
 
@@ -102,11 +102,12 @@ namespace SCVE.Editor
                 ImGui.EndMenuBar();
             }
 
+            ImGui.ShowDemoWindow();
+            
             // TODO: Render separate panels
 
             projectPanel.OnImGuiRender();
             
-            ImGui.ShowDemoWindow();
             ImGui.ShowMetricsWindow();
         }
     }
