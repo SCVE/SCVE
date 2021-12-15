@@ -48,26 +48,24 @@ namespace SCVE.Editor
                     ImGui.SameLine(ImGui.GetWindowContentRegionWidth() - textSize.X);
                     ImGui.TextDisabled(typeStr);
 
-                    ImGui.CalcItemWidth();
-
                     ImGui.Separator();
 
                     _activePreviewLayout.OnImGuiRender();
 
                     if (ImGui.Button("Close"))
                     {
+                        ImGui.CloseCurrentPopup();
                         _activePreviewLayout.DisposeResources();
                         _openedAsset = null;
-                        ImGui.CloseCurrentPopup();
                     }
 
                     ImGui.EndPopup();
                 }
                 else
                 {
+                    ImGui.CloseCurrentPopup();
                     _activePreviewLayout.DisposeResources();
                     _openedAsset = null;
-                    ImGui.CloseCurrentPopup();
                 }
             }
         }
