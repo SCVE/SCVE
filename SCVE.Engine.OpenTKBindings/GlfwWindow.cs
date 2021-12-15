@@ -37,7 +37,7 @@ namespace SCVE.Engine.OpenTKBindings
                 _sizeCallback = OnWindowSizeChanged;
                 _windowCloseCallback = OnWindowClose;
                 _keyCallback = OnKeyPressed;
-                _charCallback = OnKeyTyped;
+                _charCallback = OnCharTyped;
                 _mouseButtonCallback = OnMouseButtonClick;
                 _scrollCallback = OnScroll;
                 _cursorPosCallback = OnCursorMoved;
@@ -50,6 +50,8 @@ namespace SCVE.Engine.OpenTKBindings
             _window = GLFW.CreateWindow(props.Width, props.Height, props.Title, null, null);
             
             GLFW.WindowHint(WindowHintInt.Samples, 4);
+            GLFW.WindowHint(WindowHintInt.ContextVersionMajor, 4);
+            GLFW.WindowHint(WindowHintInt.ContextVersionMinor, 5);
             
             Handle = new IntPtr(_window);
             GLFW.MakeContextCurrent(_window);
@@ -172,10 +174,10 @@ namespace SCVE.Engine.OpenTKBindings
             }
         }
 
-        private unsafe void OnKeyTyped(Window* window, uint codepoint)
+        private unsafe void OnCharTyped(Window* window, uint codepoint)
         {
-            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnKeyTyped)}(codepoint: {codepoint})");
-            
+            Logger.Trace($"{nameof(GlfwWindow)}.{nameof(OnCharTyped)}(codepoint: {codepoint})");
+            ScveEngine.Instance.Input.RegisterCharTyped((char)codepoint);
             // TODO: figure out what to do with this thing
         }
 

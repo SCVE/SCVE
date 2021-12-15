@@ -19,12 +19,17 @@ namespace SCVE.Engine.Core.Input
         public event Action<float, float> Scroll;
         public event Action<MouseCode> MouseButtonDown;
         public event Action<MouseCode> MouseButtonUp;
-        
+
+        public event Action<char> CharTyped;
+
         private int _windowSizeX;
         private int _windowSizeY;
 
         private float _cursorPositionX;
         private float _cursorPositionY;
+
+        public IReadOnlyDictionary<KeyCode, bool> KeyboardState => _keyboardState;
+        public IReadOnlyDictionary<MouseCode, bool> MouseState => _mouseState;
 
         private Dictionary<KeyCode, bool> _keyboardState;
         private Dictionary<MouseCode, bool> _mouseState;
@@ -32,14 +37,14 @@ namespace SCVE.Engine.Core.Input
         protected EngineInput()
         {
             _keyboardState = new(Enum.GetValues<KeyCode>().Distinct().ToDictionary(x => x, _ => false));
-            _mouseState = new(Enum.GetValues<MouseCode>().Distinct().ToDictionary(x => x, _ => false));
+            _mouseState    = new(Enum.GetValues<MouseCode>().Distinct().ToDictionary(x => x, _ => false));
         }
 
         public virtual float GetWindowSizeX()
         {
             return _windowSizeX;
         }
-        
+
         public virtual float GetWindowSizeY()
         {
             return _windowSizeY;
@@ -49,12 +54,12 @@ namespace SCVE.Engine.Core.Input
         {
             return _cursorPositionX;
         }
-        
+
         public virtual float GetCursorY()
         {
             return _cursorPositionY;
         }
-        
+
         public virtual void RegisterWindowSizeChanged(int width, int height)
         {
             _windowSizeX = width;
@@ -126,6 +131,11 @@ namespace SCVE.Engine.Core.Input
         {
             _mouseState[code] = false;
             MouseButtonUp?.Invoke(code);
+        }
+
+        public void RegisterCharTyped(char code)
+        {
+            CharTyped?.Invoke(code);
         }
     }
 }
