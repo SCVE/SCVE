@@ -9,6 +9,7 @@ namespace SCVE.Editor
         private static TextAssetPreviewLayout _textAssetPreviewLayout = new();
         private static ImageAssetPreviewLayout _imageAssetPreviewLayout = new();
         private static UnknownTypeAssetPreviewLayout _unknownTypeAssetPreviewLayout = new();
+        private static NotFoundAssetPreviewLayout _notFoundAssetPreviewLayout = new();
         
         private AssetPreviewLayout _activePreviewLayout;
 
@@ -16,7 +17,12 @@ namespace SCVE.Editor
         {
             _openedAsset = asset;
 
-            if (_openedAsset.Type == "TEXT")
+            if (!asset.ExistsInFileSystem)
+            {
+                _notFoundAssetPreviewLayout.SetFromAsset(asset);
+                _activePreviewLayout = _notFoundAssetPreviewLayout;
+            }
+            else if (_openedAsset.Type == "TEXT")
             {
                 _textAssetPreviewLayout.SetFromAsset(asset);
                 _activePreviewLayout = _textAssetPreviewLayout;

@@ -14,7 +14,7 @@ namespace SCVE.Editor
         {
             // Create a Silk.NET window as usual
             using var window = Window.Create(WindowOptions.Default);
-            
+
             // Declare some variables
             ImGuiController controller   = null;
             GL              gl           = null;
@@ -61,7 +61,7 @@ namespace SCVE.Editor
                 // Make sure ImGui renders too!
                 controller.Render();
             };
-            
+
             // The closing function
             window.Closing += () =>
             {

@@ -80,6 +80,25 @@ namespace SCVE.Editor
         }
     }
 
+    public class NotFoundAssetPreviewLayout : AssetPreviewLayout
+    {
+        private string _text;
+        public override void SetFromAsset(ProjectAsset asset)
+        {
+            _text = $"Asset of type {asset.Type} was not found on the disk\n" +
+                    $"{asset.FileSystemFullPath}";
+        }
+
+        public override void OnImGuiRender()
+        {
+            ImGui.TextUnformatted(_text);
+        }
+
+        public override void DisposeResources()
+        {
+        }
+    }
+
     public enum LayoutMode
     {
         Text,
