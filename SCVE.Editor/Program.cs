@@ -1,10 +1,9 @@
-﻿using System.Drawing;
-using ImGuiNET;
-using Silk.NET.GLFW;
+﻿using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
+using Color = System.Drawing.Color;
 
 namespace SCVE.Editor
 {
