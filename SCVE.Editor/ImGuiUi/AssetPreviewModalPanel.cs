@@ -1,8 +1,8 @@
 ﻿using ImGuiNET;
 
-namespace SCVE.Editor
+namespace SCVE.Editor.ImGuiUi
 {
-    public class AssetPreviewModalPanel
+    public class AssetPreviewModalPanel : IImGuiRenderable
     {
         private ProjectAsset _openedAsset;
 

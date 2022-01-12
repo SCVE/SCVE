@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Numerics;
+﻿using System.Numerics;
 using ImGuiNET;
 
-namespace SCVE.Editor
+namespace SCVE.Editor.ImGuiUi
 {
-    public class ProjectPanel
+    public class ProjectPanel : IImGuiRenderable
     {
         private Project _project;
 

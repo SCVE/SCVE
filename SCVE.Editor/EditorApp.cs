@@ -1,4 +1,6 @@
 ﻿using ImGuiNET;
+using SCVE.Editor.Editing;
+using SCVE.Editor.ImGuiUi;
 using Silk.NET.OpenGL;
 using Vector2 = System.Numerics.Vector2;
 
@@ -9,7 +11,7 @@ namespace SCVE.Editor
         public GL GL { get; set; }
 
         public static EditorApp Instance;
-        
+
         private static bool _dockspaceOpen = true;
         private static bool _optFullscreenPersistant = true;
         private static bool _optFullscreen = _optFullscreenPersistant;
@@ -17,7 +19,57 @@ namespace SCVE.Editor
         private static ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags.None;
 
         ProjectPanel projectPanel = new();
-        
+
+        SequencePanel sequencePanel = new SequencePanel(new Sequence()
+        {
+            Tracks = new()
+            {
+                new Track()
+                {
+                    Clips = new()
+                    {
+                        new Clip()
+                        {
+                            StartFrame  = 0,
+                            FrameLength = 10
+                        },
+                        new Clip()
+                        {
+                            StartFrame  = 30,
+                            FrameLength = 30
+                        },
+                        new Clip()
+                        {
+                            StartFrame  = 60,
+                            FrameLength = 30
+                        },
+                    }
+                },
+                new Track()
+                {
+                    Clips = new()
+                    {
+                        new Clip()
+                        {
+                            StartFrame  = 10,
+                            FrameLength = 10
+                        },
+                        new Clip()
+                        {
+                            StartFrame  = 20,
+                            FrameLength = 10
+                        },
+                        new Clip()
+                        {
+                            StartFrame  = 40,
+                            FrameLength = 15
+                        },
+                    }
+                },
+                new Track(),
+            }
+        });
+
         public ImFontPtr openSansFont;
 
         public EditorApp()
@@ -109,11 +161,12 @@ namespace SCVE.Editor
             }
 
             ImGui.ShowDemoWindow();
-            
+
             // TODO: Render separate panels
 
             projectPanel.OnImGuiRender();
-            
+            sequencePanel.OnImGuiRender();
+
             ImGui.ShowMetricsWindow();
         }
     }
