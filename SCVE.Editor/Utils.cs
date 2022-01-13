@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Text.Json;
+using SCVE.Editor.ProjectStructure;
 using SCVE.Engine.Core.Misc;
 
 namespace SCVE.Editor

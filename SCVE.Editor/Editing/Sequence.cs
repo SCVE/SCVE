@@ -12,12 +12,13 @@ namespace SCVE.Editor.Editing
             Tracks = new List<Track>();
         }
 
-        public int FrameLength
+        // Existent Frames 
+        public int MaxFrame
         {
             get
             {
                 if (Tracks.Count == 0) return 0;
-                else return Tracks.Max(t => t.FrameLength);
+                else return Tracks.Max(t => t.EndFrame);
             }
         }
     }

@@ -50,7 +50,7 @@ namespace SCVE.Editor.ImGuiUi
 
                 ImGui.PushClipRect(new Vector2(0, 0), new Vector2(200, 5000), false);
 
-                var sequenceLength = _sequence.FrameLength;
+                var sequenceLength = _sequence.MaxFrame;
                 for (var i = 0; i < _sequence.Tracks.Count; i++)
                 {
                     painter.AddRectFilled(

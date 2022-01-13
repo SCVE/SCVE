@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SCVE.Editor
+namespace SCVE.Editor.ProjectStructure
 {
     public class ProjectAsset
     {

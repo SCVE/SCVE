@@ -2,6 +2,7 @@
 using System.IO;
 using System.Numerics;
 using ImGuiNET;
+using SCVE.Editor.ProjectStructure;
 using SCVE.Engine.ImageSharpBindings;
 
 namespace SCVE.Editor.ImGuiUi

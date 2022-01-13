@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using SCVE.Editor.Editing;
 using SCVE.Editor.ImGuiUi;
+using SCVE.Editor.ProjectStructure;
 using Silk.NET.OpenGL;
 using Vector2 = System.Numerics.Vector2;
 
@@ -28,17 +29,17 @@ namespace SCVE.Editor
                 {
                     Clips = new()
                     {
-                        new Clip()
+                        new EmptyClip()
                         {
                             StartFrame  = 0,
                             FrameLength = 10
                         },
-                        new Clip()
+                        new EmptyClip()
                         {
                             StartFrame  = 30,
                             FrameLength = 30
                         },
-                        new Clip()
+                        new EmptyClip()
                         {
                             StartFrame  = 60,
                             FrameLength = 30
@@ -49,17 +50,17 @@ namespace SCVE.Editor
                 {
                     Clips = new()
                     {
-                        new Clip()
+                        new EmptyClip()
                         {
                             StartFrame  = 10,
                             FrameLength = 10
                         },
-                        new Clip()
+                        new EmptyClip()
                         {
                             StartFrame  = 20,
                             FrameLength = 10
                         },
-                        new Clip()
+                        new EmptyClip()
                         {
                             StartFrame  = 40,
                             FrameLength = 15
