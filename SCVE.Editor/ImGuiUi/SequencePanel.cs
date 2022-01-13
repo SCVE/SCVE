@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Editing;
-using Silk.NET.Maths;
 
 namespace SCVE.Editor.ImGuiUi
 {
     public class SequencePanel : IImGuiRenderable
     {
-        private float _currentScale = 1f;
-        private static float HeaderHeight = 24f;
-
         private Sequence _sequence;
 
         private ClipImGuiRenderer _clipRenderer;
@@ -37,24 +32,33 @@ namespace SCVE.Editor.ImGuiUi
 
                 var contentRegionAvail = ImGui.GetContentRegionAvail();
 
-                var fullWidth = contentRegionAvail.X;
+                var drawOriginX = windowPos.X + contentRegionMin.X;
+                var drawOriginY = windowPos.Y + contentRegionMin.Y;
+
+                var windowContentWidth = contentRegionAvail.X;
 
                 var trackHeight = 20;
 
                 var trackMargin = 5;
 
-                var drawOriginX = windowPos.X + contentRegionMin.X;
-                var drawOriginY = windowPos.Y + contentRegionMin.Y;
+                var trackHeaderWidth  = 50;
+                var trackContentWidth = windowContentWidth - trackHeaderWidth;
 
                 var mousePos = ImGui.GetMousePos();
 
-                ImGui.PushClipRect(new Vector2(0, 0), new Vector2(200, 5000), false);
-
-                var sequenceLength = _sequence.MaxFrame;
+                var sequenceLength = _sequence.FrameLength;
                 for (var i = 0; i < _sequence.Tracks.Count; i++)
                 {
+                    // Track header
                     painter.AddRectFilled(
                         new Vector2(drawOriginX, drawOriginY + i * (trackHeight + trackMargin)),
+                        new Vector2(drawOriginX + trackHeaderWidth, drawOriginY + (i + 1) * trackHeight + i * trackMargin),
+                        0xFF444444
+                    );
+
+                    // track content background
+                    painter.AddRectFilled(
+                        new Vector2(drawOriginX + trackHeaderWidth, drawOriginY + i * (trackHeight + trackMargin)),
                         new Vector2(drawOriginX + contentRegionAvail.X, drawOriginY + (i + 1) * trackHeight + i * trackMargin),
                         0xFF222222
                     );
@@ -64,11 +68,11 @@ namespace SCVE.Editor.ImGuiUi
                         var clip = _sequence.Tracks[i].Clips[j];
 
                         var clipTopLeft = new Vector2(
-                            drawOriginX + fullWidth * ((float)(clip.StartFrame) / sequenceLength),
+                            drawOriginX + trackHeaderWidth + trackContentWidth * ((float)(clip.StartFrame) / sequenceLength),
                             drawOriginY + i * (trackHeight + trackMargin)
                         );
                         var clipBottomRight = new Vector2(
-                            drawOriginX + fullWidth * ((float)(clip.StartFrame + clip.FrameLength) / sequenceLength),
+                            drawOriginX + trackHeaderWidth + trackContentWidth * ((float)(clip.StartFrame + clip.FrameLength) / sequenceLength),
                             drawOriginY + (i + 1) * trackHeight + i * trackMargin
                         );
                         _clipRenderer.Render(ref painter, clip, ref clipTopLeft, ref clipBottomRight);

@@ -12,7 +12,12 @@ namespace SCVE.Editor.Editing
             Tracks = new List<Track>();
         }
 
-        // Existent Frames 
+        // Sequence length, independent of it's content
+        public int FrameLength { get; set; }
+
+        /// <summary>
+        /// Content max frame
+        /// </summary>
         public int MaxFrame
         {
             get

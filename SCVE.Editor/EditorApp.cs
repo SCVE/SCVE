@@ -23,6 +23,7 @@ namespace SCVE.Editor
 
         SequencePanel sequencePanel = new SequencePanel(new Sequence()
         {
+            FrameLength = 150,
             Tracks = new()
             {
                 new Track()
