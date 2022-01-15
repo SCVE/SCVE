@@ -16,9 +16,32 @@ namespace SCVE.Editor.ImGuiUi
 
         private Clip _draggedClip;
 
-        private bool _dragging;
+        private bool _isDraggingClip;
+        private bool _isDraggingCursor;
 
         private GhostClip _ghostClip = new();
+
+        private int _cursorTimeFrame = 0;
+        private int _cursorDragFrames = 0;
+
+        private static Vector2 _cursorSize = new Vector2(10, 20);
+
+        // clockwise order
+        private Vector2[] _cursorShapePoints =
+        {
+            // top-left
+            new(),
+            // top-right
+            new(_cursorSize.X, 0),
+            // right mid
+            new(_cursorSize.X, _cursorSize.Y / 2f),
+            // bottom mid
+            new(_cursorSize.X / 2, _cursorSize.Y),
+            // left mid
+            new(0, _cursorSize.Y / 2f),
+        };
+
+        private Vector2[] _cursorCurrentPoints = new Vector2[5];
 
         public void OnImGuiRender()
         {
@@ -38,7 +61,6 @@ namespace SCVE.Editor.ImGuiUi
                 var contentRegionMin = ImGui.GetWindowContentRegionMin();
 
                 var contentRegionAvail = ImGui.GetContentRegionAvail();
-                var mousePos           = ImGui.GetMousePos();
 
                 var drawOriginX = windowPos.X + contentRegionMin.X;
                 var drawOriginY = windowPos.Y + contentRegionMin.Y;
@@ -52,24 +74,56 @@ namespace SCVE.Editor.ImGuiUi
                 var trackHeaderWidth  = 50;
                 var trackContentWidth = windowContentWidth - trackHeaderWidth;
 
+                var sequenceHeaderHeight = 20;
+
                 var widthPerFrame = trackContentWidth / EditorApp.Instance.OpenedSequence.FrameLength;
 
                 var sequenceLength = EditorApp.Instance.OpenedSequence.FrameLength;
+
+                // Sequence header
+                painter.AddRectFilled(
+                    new Vector2(drawOriginX, drawOriginY),
+                    new Vector2(drawOriginX + windowContentWidth, drawOriginY + sequenceHeaderHeight),
+                    0xFF333333
+                );
+
+                var cursorPosition = new Vector2(drawOriginX + trackHeaderWidth + (_cursorTimeFrame + _cursorDragFrames) * widthPerFrame - _cursorSize.X / 2, drawOriginY);
+
+                ImGui.SetCursorPos(cursorPosition - windowPos);
+                ImGui.SetItemAllowOverlap();
+                ImGui.InvisibleButton($"##cursor", _cursorSize);
+
+                if (ImGui.IsItemActive())
+                {
+                    var mouseDragDelta = ImGui.GetMouseDragDelta();
+                    _cursorDragFrames = (int)(mouseDragDelta.X / widthPerFrame);
+                    _cursorDragFrames = Math.Clamp(_cursorDragFrames, -_cursorTimeFrame, sequenceLength - _cursorTimeFrame);
+                    _isDraggingCursor = true;
+                }
+
+                for (var i = 0; i < _cursorShapePoints.Length; i++)
+                {
+                    _cursorCurrentPoints[i].X = _cursorShapePoints[i].X + cursorPosition.X;
+                    _cursorCurrentPoints[i].Y = _cursorShapePoints[i].Y + cursorPosition.Y;
+                }
+
+                painter.AddConvexPolyFilled(ref _cursorCurrentPoints[0], 5, 0xFFAA6666);
+
                 for (var i = 0; i < EditorApp.Instance.OpenedSequence.Tracks.Count; i++)
                 {
                     var track = EditorApp.Instance.OpenedSequence.Tracks[i];
 
                     // Track header
                     painter.AddRectFilled(
-                        new Vector2(drawOriginX, drawOriginY + i * (trackHeight + trackMargin)),
-                        new Vector2(drawOriginX + trackHeaderWidth, drawOriginY + (i + 1) * trackHeight + i * trackMargin),
+                        new Vector2(drawOriginX, drawOriginY + sequenceHeaderHeight + i * (trackHeight + trackMargin)),
+                        new Vector2(drawOriginX + trackHeaderWidth, drawOriginY + sequenceHeaderHeight + (i + 1) * trackHeight + i * trackMargin),
                         0xFF444444
                     );
 
                     // track content background
                     painter.AddRectFilled(
-                        new Vector2(drawOriginX + trackHeaderWidth, drawOriginY + i * (trackHeight + trackMargin)),
-                        new Vector2(drawOriginX + contentRegionAvail.X, drawOriginY + (i + 1) * trackHeight + i * trackMargin),
+                        new Vector2(drawOriginX + trackHeaderWidth, drawOriginY + sequenceHeaderHeight + i * (trackHeight + trackMargin)),
+                        new Vector2(drawOriginX + contentRegionAvail.X, drawOriginY + sequenceHeaderHeight + (i + 1) * trackHeight + i * trackMargin),
                         0xFF222222
                     );
 
@@ -79,11 +133,11 @@ namespace SCVE.Editor.ImGuiUi
 
                         var clipTopLeft = new Vector2(
                             drawOriginX + trackHeaderWidth + trackContentWidth * ((float)(clip.StartFrame) / sequenceLength),
-                            drawOriginY + (track.Id) * (trackHeight + trackMargin)
+                            drawOriginY + sequenceHeaderHeight + (track.Id) * (trackHeight + trackMargin)
                         );
                         var clipBottomRight = new Vector2(
                             drawOriginX + trackHeaderWidth + trackContentWidth * ((float)(clip.StartFrame + clip.FrameLength) / sequenceLength),
-                            drawOriginY + (track.Id + 1) * trackHeight + (track.Id) * trackMargin
+                            drawOriginY + sequenceHeaderHeight + (track.Id + 1) * trackHeight + (track.Id) * trackMargin
                         );
 
                         _clipRenderer.Render(ref painter, clip, ref clipTopLeft, ref clipBottomRight);
@@ -94,12 +148,12 @@ namespace SCVE.Editor.ImGuiUi
 
                         if (ImGui.IsItemActive())
                         {
-                            _draggedClip           = clip;
+                            _draggedClip = clip;
                             var mouseDragDelta = ImGui.GetMouseDragDelta();
-                            
-                            _ghostClip.StartFrame  = clip.StartFrame + (int)(mouseDragDelta.X / widthPerFrame);
-                            int deltaTracks = (int)(mouseDragDelta.Y/ (trackHeight + trackMargin));
-                            
+
+                            _ghostClip.StartFrame = clip.StartFrame + (int)(mouseDragDelta.X / widthPerFrame);
+                            int deltaTracks = (int)(mouseDragDelta.Y / (trackHeight + trackMargin));
+
                             int newTrackId = clip.Track.Id + deltaTracks;
                             if (newTrackId >= 0 &&
                                 newTrackId < EditorApp.Instance.OpenedSequence.Tracks.Count)
@@ -110,9 +164,10 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 _ghostClip.Track = clip.Track;
                             }
+
                             _ghostClip.FrameLength = clip.FrameLength;
                             _ghostClip.Visible     = true;
-                            _dragging              = true;
+                            _isDraggingClip        = true;
                         }
                     }
                 }
@@ -122,29 +177,40 @@ namespace SCVE.Editor.ImGuiUi
                     var clip = _ghostClip;
                     var clipTopLeft = new Vector2(
                         drawOriginX + trackHeaderWidth + trackContentWidth * ((float)(clip.StartFrame) / sequenceLength),
-                        drawOriginY + (_ghostClip.Track.Id) * (trackHeight + trackMargin)
+                        drawOriginY + sequenceHeaderHeight + (_ghostClip.Track.Id) * (trackHeight + trackMargin)
                     );
                     var clipBottomRight = new Vector2(
                         drawOriginX + trackHeaderWidth + trackContentWidth * ((float)(clip.StartFrame + clip.FrameLength) / sequenceLength),
-                        drawOriginY + (_ghostClip.Track.Id + 1) * trackHeight + (_ghostClip.Track.Id) * trackMargin
+                        drawOriginY + sequenceHeaderHeight + (_ghostClip.Track.Id + 1) * trackHeight + (_ghostClip.Track.Id) * trackMargin
                     );
 
                     _clipRenderer.RenderGhost(ref painter, clip, ref clipTopLeft, ref clipBottomRight);
                 }
 
-                if (!ImGui.IsMouseDown(ImGuiMouseButton.Left))
+                if (_isDraggingClip)
                 {
-                    if (_dragging)
+                    if (!ImGui.IsMouseDown(ImGuiMouseButton.Left))
                     {
                         // TODO: Check overlap with other clips in current track
-                        _draggedClip.StartFrame = _ghostClip.StartFrame;
                         if (_ghostClip.Track != _draggedClip.Track)
                         {
                             _draggedClip.Track.RemoveClip(_draggedClip);
                             _ghostClip.Track.AddClip(_draggedClip);
-                            
                         }
+
+                        _draggedClip.StartFrame = _ghostClip.StartFrame;
                         _ghostClip.Visible      = false;
+                        _isDraggingClip         = false;
+                    }
+                }
+
+                if (_isDraggingCursor)
+                {
+                    if (!ImGui.IsMouseDown(ImGuiMouseButton.Left))
+                    {
+                        _cursorTimeFrame  += _cursorDragFrames;
+                        _cursorDragFrames =  0;
+                        _isDraggingCursor =  false;
                     }
                 }
 
