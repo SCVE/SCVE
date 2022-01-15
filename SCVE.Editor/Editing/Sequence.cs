@@ -5,11 +5,18 @@ namespace SCVE.Editor.Editing
 {
     public class Sequence
     {
-        public List<Track> Tracks;
+        public IReadOnlyList<Track> Tracks => _tracks;
+        private List<Track> _tracks;
 
         public Sequence()
         {
-            Tracks = new List<Track>();
+            _tracks = new List<Track>();
+        }
+
+        public void AddTrack(Track track)
+        {
+            track.Id = _tracks.Count;
+            _tracks.Add(track);
         }
 
         // Sequence length, independent of it's content
@@ -22,8 +29,8 @@ namespace SCVE.Editor.Editing
         {
             get
             {
-                if (Tracks.Count == 0) return 0;
-                else return Tracks.Max(t => t.EndFrame);
+                if (_tracks.Count == 0) return 0;
+                else return _tracks.Max(t => t.EndFrame);
             }
         }
     }

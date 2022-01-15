@@ -6,21 +6,11 @@ namespace SCVE.Editor.ImGuiUi
 {
     public class ProjectPanel : IImGuiRenderable
     {
-        private Project _project;
-
         private AssetPreviewModalPanel _assetPreviewModalPanel;
 
         public ProjectPanel()
         {
             _assetPreviewModalPanel = new AssetPreviewModalPanel();
-        }
-
-        public void LoadProject(string path)
-        {
-            if (Project.PathIsProject(path))
-            {
-                _project = Project.LoadFrom(path);
-            }
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
@@ -88,11 +78,11 @@ namespace SCVE.Editor.ImGuiUi
         {
             if (ImGui.Begin("Project Panel"))
             {
-                if (_project is not null)
+                if (EditorApp.Instance.OpenedProject is not null)
                 {
-                    ImGui.Text(_project.Name);
+                    ImGui.Text(EditorApp.Instance.OpenedProject.Name);
 
-                    PushImGuiAssetTreeFolder(_project.RootFolder.GetDirectChildFolder("assets"));
+                    PushImGuiAssetTreeFolder(EditorApp.Instance.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
                 }
                 else
                 {

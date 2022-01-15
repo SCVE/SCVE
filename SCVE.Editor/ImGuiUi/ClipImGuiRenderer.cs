@@ -50,12 +50,41 @@ namespace SCVE.Editor.ImGuiUi
                 );
             }
 
-            var clipTextSize = ImGui.CalcTextSize("CLIP");
+            var clipTextSize = ImGui.CalcTextSize($"{clip.ShortName()}");
             painter.AddText(
                 topLeft + new Vector2(clipPadding + clipRounding, clipPadding) +
                 new Vector2(0, ((bottomRight.Y - clipPadding) - (topLeft.Y + clipPadding)) / 2 - clipTextSize.Y / 2),
                 0xFF000000,
-                "CLIP"
+                clip.ShortName()
+            );
+        }
+
+        public void RenderGhost(ref ImDrawListPtr painter, Clip clip, ref Vector2 topLeft, ref Vector2 bottomRight)
+        {
+            var clipPadding  = 3;
+            var clipRounding = 3;
+
+            painter.AddRectFilled(
+                topLeft,
+                bottomRight,
+                0xFF888888,
+                clipRounding
+            );
+
+            // clip border
+            painter.AddRect(
+                topLeft,
+                bottomRight,
+                0xFFAAAAAA,
+                clipRounding
+            );
+
+            var clipTextSize = ImGui.CalcTextSize($"{clip.ShortName()}");
+            painter.AddText(
+                topLeft + new Vector2(clipPadding + clipRounding, clipPadding) +
+                new Vector2(0, ((bottomRight.Y - clipPadding) - (topLeft.Y + clipPadding)) / 2 - clipTextSize.Y / 2),
+                0xFF000000,
+                clip.ShortName()
             );
         }
     }
