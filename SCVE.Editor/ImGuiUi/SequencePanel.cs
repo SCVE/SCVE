@@ -84,6 +84,8 @@ namespace SCVE.Editor.ImGuiUi
 
                 var sequenceFrameLength = EditorApp.Instance.OpenedSequence.FrameLength;
 
+                #region Detect click on timeline (not on cursor)
+
                 ImGui.SetCursorPos(new Vector2(drawOriginX + trackHeaderWidth, drawOriginY) - windowPos);
                 ImGui.SetItemAllowOverlap();
                 ImGui.InvisibleButton($"##timeline-header", new Vector2(windowContentWidth - trackHeaderWidth, sequenceHeaderHeight));
@@ -98,27 +100,33 @@ namespace SCVE.Editor.ImGuiUi
                     }
                 }
 
-                // Sequence header
+                #endregion
+
+                #region Sequence header
+
                 painter.AddRectFilled(
                     new Vector2(drawOriginX + trackHeaderWidth, drawOriginY),
                     new Vector2(drawOriginX + windowContentWidth, drawOriginY + sequenceHeaderHeight),
                     0xFF333333
                 );
 
-                // Timeline frames markers
+                #endregion
+
+                #region Timeline frames markers
+
                 for (int i = 0; i < sequenceFrameLength; i++)
                 {
                     int height;
                     if (i % sequenceFPS == 0)
                     {
                         height = timelineSecondsMarkerHeight;
-                        var text         = $"{i / sequenceFPS}";
+                        var text     = $"{i / sequenceFPS}";
                         var textSize = ImGui.CalcTextSize(text);
-                        
+
                         // seconds text markers
                         painter.AddText(
                             new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame - textSize.X / 2, drawOriginY + ((sequenceHeaderHeight - timelineSecondsMarkerHeight) / 2f) - textSize.Y / 2),
-                            0xFFFFFFFF, 
+                            0xFFFFFFFF,
                             text
                         );
                     }
@@ -132,6 +140,10 @@ namespace SCVE.Editor.ImGuiUi
                         new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame, drawOriginY + sequenceHeaderHeight), 0xFFFFFFFF
                     );
                 }
+
+                #endregion
+
+                #region Cursor
 
                 var cursorPosition = new Vector2(drawOriginX + trackHeaderWidth + (_cursorTimeFrame + _cursorDragFrames) * widthPerFrame - _cursorSize.X / 2, drawOriginY);
 
@@ -153,8 +165,9 @@ namespace SCVE.Editor.ImGuiUi
                     _cursorCurrentPoints[i].Y = _cursorShapePoints[i].Y + cursorPosition.Y;
                 }
 
-                // Cursor
                 painter.AddConvexPolyFilled(ref _cursorCurrentPoints[0], 5, 0xFFAA6666);
+
+                #endregion
 
                 for (var i = 0; i < EditorApp.Instance.OpenedSequence.Tracks.Count; i++)
                 {
