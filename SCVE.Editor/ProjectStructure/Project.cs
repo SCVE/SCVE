@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using SCVE.Engine.Core.Misc;
 
-namespace SCVE.Editor
+namespace SCVE.Editor.ProjectStructure
 {
     public class Project : IDisposable
     {
@@ -123,7 +120,7 @@ namespace SCVE.Editor
         public ProjectMetaFileData GetMetaFileContent()
         {
             var       metaFileEntry       = _archive.GetEntry("project.meta");
-            using var metaFileStream      = metaFileEntry.Open();
+            using var metaFileStream      = metaFileEntry?.Open() ?? throw new ScveException("project.meta not found ");
             using var metaFileReader      = new StreamReader(metaFileStream);
             var       projectMetaFileData = JsonSerializer.Deserialize<ProjectMetaFileData>(metaFileReader.ReadToEnd());
             return projectMetaFileData;

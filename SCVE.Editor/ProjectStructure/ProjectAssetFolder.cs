@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 
-namespace SCVE.Editor
+namespace SCVE.Editor.ProjectStructure
 {
     public class ProjectAssetFolder : ProjectAsset
     {

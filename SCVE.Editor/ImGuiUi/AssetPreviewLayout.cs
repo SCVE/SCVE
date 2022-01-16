@@ -2,16 +2,16 @@
 using System.IO;
 using System.Numerics;
 using ImGuiNET;
+using SCVE.Editor.ProjectStructure;
 using SCVE.Engine.ImageSharpBindings;
 
-namespace SCVE.Editor
+namespace SCVE.Editor.ImGuiUi
 {
-    public abstract class AssetPreviewLayout
+    public abstract class AssetPreviewLayout : IImGuiRenderable
     {
         public abstract void SetFromAsset(ProjectAsset asset);
 
         public abstract void OnImGuiRender();
-
         public abstract void DisposeResources();
     }
 
@@ -77,6 +77,26 @@ namespace SCVE.Editor
         public override void DisposeResources()
         {
             _texture?.Dispose();
+        }
+    }
+
+    public class NotFoundAssetPreviewLayout : AssetPreviewLayout
+    {
+        private string _text;
+
+        public override void SetFromAsset(ProjectAsset asset)
+        {
+            _text = $"Asset of type {asset.Type} was not found on the disk\n" +
+                    $"{asset.FileSystemFullPath}";
+        }
+
+        public override void OnImGuiRender()
+        {
+            ImGui.TextUnformatted(_text);
+        }
+
+        public override void DisposeResources()
+        {
         }
     }
 

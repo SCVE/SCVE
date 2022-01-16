@@ -1,4 +1,6 @@
-﻿namespace SCVE.Editor
+﻿using System.IO;
+
+namespace SCVE.Editor.ProjectStructure
 {
     public class ProjectAsset
     {
@@ -18,6 +20,8 @@
         public string FileSystemFullPath { get; }
 
         public string Type { get; }
+
+        public bool ExistsInFileSystem => File.Exists(FileSystemFullPath);
 
         public ProjectAsset(string internalName, string internalFullPath, string fileSystemFullPath, string type)
         {

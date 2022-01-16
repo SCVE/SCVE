@@ -1,4 +1,7 @@
 ﻿using ImGuiNET;
+using SCVE.Editor.Editing;
+using SCVE.Editor.ImGuiUi;
+using SCVE.Editor.ProjectStructure;
 using Silk.NET.OpenGL;
 using Vector2 = System.Numerics.Vector2;
 
@@ -9,28 +12,81 @@ namespace SCVE.Editor
         public GL GL { get; set; }
 
         public static EditorApp Instance;
-        
+
         private static bool _dockspaceOpen = true;
         private static bool _optFullscreenPersistant = true;
         private static bool _optFullscreen = _optFullscreenPersistant;
 
         private static ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags.None;
 
+        public readonly Project OpenedProject;
+        public readonly Sequence OpenedSequence;
+
         ProjectPanel projectPanel = new();
-        
-        public ImFontPtr openSansFont;
+
+        private readonly SequencePanel _sequencePanel = new();
+
+        public ImFontPtr OpenSansFont;
+
+        private static Sequence CreateTestingSequence()
+        {
+            var sequence = new Sequence(30)
+            {
+                FrameLength = 150
+            };
+            sequence.AddTrack(new Track());
+            sequence.AddTrack(new Track());
+            sequence.AddTrack(new Track());
+            sequence.Tracks[0].AddClip(new EmptyClip()
+            {
+                StartFrame  = 0,
+                FrameLength = 10
+            });
+            sequence.Tracks[0].AddClip(new EmptyClip()
+            {
+                StartFrame  = 30,
+                FrameLength = 30
+            });
+            sequence.Tracks[0].AddClip(new EmptyClip()
+            {
+                StartFrame  = 60,
+                FrameLength = 30
+            });
+            sequence.Tracks[1].AddClip(new EmptyClip()
+            {
+                StartFrame  = 10,
+                FrameLength = 10
+            });
+            sequence.Tracks[1].AddClip(new EmptyClip()
+            {
+                StartFrame  = 20,
+                FrameLength = 10
+            });
+            sequence.Tracks[1].AddClip(new EmptyClip()
+            {
+                StartFrame  = 40,
+                FrameLength = 15
+            });
+
+            return sequence;
+        }
 
         public EditorApp()
         {
-            Project.Delete("abc", "testdata/projects/");
-            Utils.CreateDummyProject("abc", "testdata/projects/");
-            projectPanel.LoadProject("testdata/projects/abc.scve");
+            if (!Project.PathIsProject("testdata/projects/abc.scve"))
+            {
+                Utils.CreateDummyProject("abc", "testdata/projects/");
+            }
+
+            OpenedProject  = Project.LoadFrom("testdata/projects/abc.scve");
+            OpenedSequence = CreateTestingSequence();
+
             Instance = this;
         }
 
         public void OnImGuiRender()
         {
-            ImGui.PushFont(openSansFont);
+            ImGui.PushFont(OpenSansFont);
 
             // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
             // because it would be confusing to have two docking targets within each others.
@@ -109,11 +165,12 @@ namespace SCVE.Editor
             }
 
             ImGui.ShowDemoWindow();
-            
+
             // TODO: Render separate panels
 
             projectPanel.OnImGuiRender();
-            
+            _sequencePanel.OnImGuiRender();
+
             ImGui.ShowMetricsWindow();
         }
     }

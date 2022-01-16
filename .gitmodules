@@ -1,6 +1,0 @@
-[submodule "ImGui.NET"]
-	path = ImGui.NET
-	url = https://github.com/SCVE/ImGui.NET.git
-[submodule "Silk.NET"]
-	path = Silk.NET
-	url = https://github.com/SCVE/Silk.NET.git

@@ -7,12 +7,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Silk.NET" Version="2.11.0" />
+      <PackageReference Include="Silk.NET" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.Core" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.Input.Common" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.Input.Extensions" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.Input.Glfw" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.Maths" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.OpenGL" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.Windowing" Version="2.12.0" />
+      <PackageReference Include="Silk.NET.Windowing.Common" Version="2.12.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\SCVE.Engine.Core\SCVE.Engine.Core.csproj" />
       <ProjectReference Include="..\SCVE.Engine.ImageSharpBindings\SCVE.Engine.ImageSharpBindings.csproj" />
-      <ProjectReference Include="..\Silk.NET\src\OpenGL\Extensions\Silk.NET.OpenGL.Extensions.ImGui\Silk.NET.OpenGL.Extensions.ImGui.csproj" />
     </ItemGroup>
+
 </Project>

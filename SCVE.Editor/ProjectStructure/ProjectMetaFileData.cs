@@ -1,4 +1,4 @@
-﻿namespace SCVE.Editor
+﻿namespace SCVE.Editor.ProjectStructure
 {
     public class ProjectMetaFileData
     {

@@ -1,10 +1,9 @@
-﻿using System.Drawing;
-using ImGuiNET;
-using Silk.NET.GLFW;
+﻿using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
+using Color = System.Drawing.Color;
 
 namespace SCVE.Editor
 {
@@ -14,7 +13,7 @@ namespace SCVE.Editor
         {
             // Create a Silk.NET window as usual
             using var window = Window.Create(WindowOptions.Default);
-            
+
             // Declare some variables
             ImGuiController controller   = null;
             GL              gl           = null;
@@ -33,7 +32,7 @@ namespace SCVE.Editor
                     {
                         var io = ImGui.GetIO();
                         io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-                        editorApp.openSansFont = io.Fonts.AddFontFromFileTTF("assets/Font/OpenSans-Regular.ttf", 18);
+                        editorApp.OpenSansFont = io.Fonts.AddFontFromFileTTF("assets/Font/OpenSans-Regular.ttf", 18);
                     }
                 );
             };
@@ -61,7 +60,7 @@ namespace SCVE.Editor
                 // Make sure ImGui renders too!
                 controller.Render();
             };
-            
+
             // The closing function
             window.Closing += () =>
             {
