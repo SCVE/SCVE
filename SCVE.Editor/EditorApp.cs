@@ -30,7 +30,7 @@ namespace SCVE.Editor
 
         private static Sequence CreateTestingSequence()
         {
-            var sequence = new Sequence()
+            var sequence = new Sequence(30)
             {
                 FrameLength = 150
             };

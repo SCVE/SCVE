@@ -8,9 +8,12 @@ namespace SCVE.Editor.Editing
         public IReadOnlyList<Track> Tracks => _tracks;
         private List<Track> _tracks;
 
-        public Sequence()
+        public int FPS;
+
+        public Sequence(int fps)
         {
             _tracks = new List<Track>();
+            FPS     = fps;
         }
 
         public void AddTrack(Track track)
