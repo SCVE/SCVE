@@ -108,7 +108,24 @@ namespace SCVE.Editor.ImGuiUi
                 // Timeline frames markers
                 for (int i = 0; i < sequenceFrameLength; i++)
                 {
-                    var height = i % sequenceFPS == 0 ? timelineSecondsMarkerHeight : timelineFramesMarkerHeight;
+                    int height;
+                    if (i % sequenceFPS == 0)
+                    {
+                        height = timelineSecondsMarkerHeight;
+                        var text         = $"{i / sequenceFPS}";
+                        var textSize = ImGui.CalcTextSize(text);
+                        
+                        // seconds text markers
+                        painter.AddText(
+                            new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame - textSize.X / 2, drawOriginY + ((sequenceHeaderHeight - timelineSecondsMarkerHeight) / 2f) - textSize.Y / 2),
+                            0xFFFFFFFF, 
+                            text
+                        );
+                    }
+                    else
+                    {
+                        height = timelineFramesMarkerHeight;
+                    }
 
                     painter.AddLine(
                         new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame, drawOriginY + sequenceHeaderHeight - height),

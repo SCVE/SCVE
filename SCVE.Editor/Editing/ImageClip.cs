@@ -19,5 +19,10 @@ namespace SCVE.Editor.Editing
         {
             return new(Guid.NewGuid(), startFrame, frameLength, referencedImageGuid);
         }
+
+        public override string ShortName()
+        {
+            return "Image Clip";
+        }
     }
 }
