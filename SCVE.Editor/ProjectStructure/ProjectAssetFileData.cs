@@ -13,8 +13,9 @@ namespace SCVE.Editor.ProjectStructure
         {
         }
 
-        public ProjectAssetFileData(string type, string fileSystemPath)
+        public ProjectAssetFileData(Guid guid, string type, string fileSystemPath)
         {
+            Guid           = guid;
             Type           = type;
             FileSystemPath = fileSystemPath;
         }

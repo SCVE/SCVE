@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 using System.Text.Json;
 using SCVE.Editor.Editing;
@@ -76,7 +77,7 @@ namespace SCVE.Editor
             var       assetEntry  = zipProjectArchive.CreateEntry("assets\\images\\image.scveasset");
             using var assetWriter = new StreamWriter(assetEntry.Open());
 
-            var assetFileData    = new ProjectAssetFileData("IMAGE", "C:\\Projects\\CSharp\\SCVE\\testdata\\runner2.png");
+            var assetFileData    = new ProjectAssetFileData(Guid.NewGuid(), "IMAGE", "C:\\Projects\\CSharp\\SCVE\\testdata\\runner2.png");
             var assetFileContent = JsonSerializer.Serialize(assetFileData);
             assetWriter.WriteLine(assetFileContent);
         }
@@ -86,7 +87,7 @@ namespace SCVE.Editor
             var       assetEntry  = zipProjectArchive.CreateEntry("assets\\audio.scveasset");
             using var assetWriter = new StreamWriter(assetEntry.Open());
 
-            var assetFileData    = new ProjectAssetFileData("MP3", "C:\\Projects\\CSharp\\SCVE\\testdata\\rukoblud.mp3");
+            var assetFileData    = new ProjectAssetFileData(Guid.NewGuid(), "MP3", "C:\\Projects\\CSharp\\SCVE\\testdata\\rukoblud.mp3");
             var assetFileContent = JsonSerializer.Serialize(assetFileData);
             assetWriter.WriteLine(assetFileContent);
         }
@@ -96,7 +97,7 @@ namespace SCVE.Editor
             var       assetEntry  = zipProjectArchive.CreateEntry("assets\\folder\\readme.scveasset");
             using var assetWriter = new StreamWriter(assetEntry.Open());
 
-            var assetFileData    = new ProjectAssetFileData("TEXT", "C:\\Projects\\CSharp\\SCVE\\testdata\\readme.txt");
+            var assetFileData    = new ProjectAssetFileData(Guid.NewGuid(), "TEXT", "C:\\Projects\\CSharp\\SCVE\\testdata\\readme.txt");
             var assetFileContent = JsonSerializer.Serialize(assetFileData);
             assetWriter.WriteLine(assetFileContent);
         }
