@@ -19,7 +19,7 @@ namespace SCVE.Editor.ImGuiUi
         private bool _isDraggingClip;
         private bool _isDraggingCursor;
 
-        private GhostClip _ghostClip = new();
+        private GhostClip _ghostClip = GhostClip.CreateNew(0, 1);
 
         private int _cursorTimeFrame = 0;
         private int _cursorDragFrames = 0;

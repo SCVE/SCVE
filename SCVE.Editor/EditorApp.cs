@@ -22,54 +22,11 @@ namespace SCVE.Editor
         public readonly Project OpenedProject;
         public readonly Sequence OpenedSequence;
 
-        ProjectPanel projectPanel = new();
+        private readonly ProjectPanel _projectPanel = new();
 
         private readonly SequencePanel _sequencePanel = new();
 
         public ImFontPtr OpenSansFont;
-
-        private static Sequence CreateTestingSequence()
-        {
-            var sequence = new Sequence(30)
-            {
-                FrameLength = 150
-            };
-            sequence.AddTrack(new Track());
-            sequence.AddTrack(new Track());
-            sequence.AddTrack(new Track());
-            sequence.Tracks[0].AddClip(new EmptyClip()
-            {
-                StartFrame  = 0,
-                FrameLength = 10
-            });
-            sequence.Tracks[0].AddClip(new EmptyClip()
-            {
-                StartFrame  = 30,
-                FrameLength = 30
-            });
-            sequence.Tracks[0].AddClip(new EmptyClip()
-            {
-                StartFrame  = 60,
-                FrameLength = 30
-            });
-            sequence.Tracks[1].AddClip(new EmptyClip()
-            {
-                StartFrame  = 10,
-                FrameLength = 10
-            });
-            sequence.Tracks[1].AddClip(new EmptyClip()
-            {
-                StartFrame  = 20,
-                FrameLength = 10
-            });
-            sequence.Tracks[1].AddClip(new EmptyClip()
-            {
-                StartFrame  = 40,
-                FrameLength = 15
-            });
-
-            return sequence;
-        }
 
         public EditorApp()
         {
@@ -79,7 +36,7 @@ namespace SCVE.Editor
             }
 
             OpenedProject  = Project.LoadFrom("testdata/projects/abc.scve");
-            OpenedSequence = CreateTestingSequence();
+            OpenedSequence = Utils.CreateTestingSequence();
 
             Instance = this;
         }
@@ -168,7 +125,7 @@ namespace SCVE.Editor
 
             // TODO: Render separate panels
 
-            projectPanel.OnImGuiRender();
+            _projectPanel.OnImGuiRender();
             _sequencePanel.OnImGuiRender();
 
             ImGui.ShowMetricsWindow();

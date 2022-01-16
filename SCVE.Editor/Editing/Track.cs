@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SCVE.Engine.Core.Misc;
 
@@ -7,10 +8,20 @@ namespace SCVE.Editor.Editing
     // Track is a single line, existent for the whole length of the sequence
     public class Track
     {
+        public Guid Guid { get; set; }
         public int Id { get; set; }
 
         public IReadOnlyList<Clip> Clips => _clips;
         private List<Clip> _clips = new();
+
+        private Track(Guid guid)
+        {
+        }
+
+        public static Track CreateNew()
+        {
+            return new(Guid.NewGuid());
+        }
 
         public void AddClip(Clip clip)
         {

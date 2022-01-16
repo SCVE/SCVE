@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Text.Json;
+using SCVE.Editor.Editing;
 using SCVE.Editor.ProjectStructure;
 using SCVE.Engine.Core.Misc;
 
@@ -19,13 +20,32 @@ namespace SCVE.Editor
             else
                 return false;
         }
-        
+
         public static bool IsDirectoryPath(this string path)
         {
             return Directory.Exists(path);
         }
-        
-        
+
+        public static Sequence CreateTestingSequence()
+        {
+            var sequence = Sequence.CreateNew(30);
+            sequence.FrameLength = 150;
+            sequence.AddTrack(Track.CreateNew());
+            sequence.AddTrack(Track.CreateNew());
+            sequence.AddTrack(Track.CreateNew());
+
+            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(0, 10));
+            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(30, 30));
+            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(60, 30));
+
+            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(10, 10));
+            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(20, 10));
+            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(40, 15));
+
+            return sequence;
+        }
+
+
         public static void CreateDummyProject(string name, string path)
         {
             if (path.IsDirectoryPath())

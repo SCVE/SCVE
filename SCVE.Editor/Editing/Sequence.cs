@@ -1,19 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SCVE.Editor.Editing
 {
     public class Sequence
     {
+        public Guid Guid { get; set; }
+
         public IReadOnlyList<Track> Tracks => _tracks;
         private List<Track> _tracks;
 
-        public int FPS;
+        public int FPS { get; private set; }
 
-        public Sequence(int fps)
+        private Sequence(Guid guid, int fps)
         {
             _tracks = new List<Track>();
             FPS     = fps;
+            Guid    = guid;
+        }
+
+        public static Sequence CreateNew(int fps)
+        {
+            return new(Guid.NewGuid(), fps);
         }
 
         public void AddTrack(Track track)
