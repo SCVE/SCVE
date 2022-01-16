@@ -91,8 +91,11 @@ namespace SCVE.Editor.ImGuiUi
                 if (ImGui.IsItemActive())
                 {
                     int timelineClickedFrame = (int)((ImGui.GetMousePos().X - drawOriginX - trackHeaderWidth) / widthPerFrame);
-                    _cursorTimeFrame  = timelineClickedFrame;
-                    _cursorTimeFrame = Math.Clamp(_cursorTimeFrame, 0, sequenceFrameLength);
+                    if (_cursorTimeFrame != timelineClickedFrame)
+                    {
+                        _cursorTimeFrame = timelineClickedFrame;
+                        _cursorTimeFrame = Math.Clamp(_cursorTimeFrame, 0, sequenceFrameLength);
+                    }
                 }
 
                 // Sequence header
