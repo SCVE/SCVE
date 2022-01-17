@@ -1,14 +1,13 @@
 ﻿using ImGuiNET;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
 namespace SCVE.Editor.Effects
 {
-    public class TranslateEffect : IEffect
+    public class ScaleEffect : IEffect
     {
-        public int X { get; set; }
+        public float X { get; set; } = 1;
 
-        public int Y { get; set; }
+        public float Y { get; set; } = 1;
 
         public ImageFrame Apply(EffectApplicationContext effectApplicationContext)
         {
@@ -16,21 +15,24 @@ namespace SCVE.Editor.Effects
             var dstImageFrame = new ImageFrame(srcImageFrame.Width, srcImageFrame.Height);
             dstImageFrame.CreateImageSharpWrapper();
 
-            dstImageFrame.ImageSharpImage.Mutate(i => i.DrawImage(srcImageFrame.ImageSharpImage, new Point(X, Y), 1));
+            var clone = srcImageFrame.ImageSharpImage.Clone();
+            clone.Mutate(i => i.Resize((int)(srcImageFrame.Width * X), (int)(srcImageFrame.Height * Y)));
+
+            dstImageFrame.ImageSharpImage.Mutate(i => i.DrawImage(clone, 1));
 
             return dstImageFrame;
         }
 
         public void OnImGuiRender()
         {
-            int x = X;
-            if (ImGui.SliderInt("X", ref x, -1000, 1000))
+            float x = X;
+            if (ImGui.SliderFloat("X", ref x, 0, 5))
             {
                 X = x;
             }
 
-            int y = Y;
-            if (ImGui.SliderInt("Y", ref y, -1000, 1000))
+            float y = Y;
+            if (ImGui.SliderFloat("Y", ref y, 0, 5))
             {
                 Y = y;
             }

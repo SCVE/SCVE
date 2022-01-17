@@ -45,9 +45,7 @@ namespace SCVE.Editor
             sequence.Tracks[1].AddClip(EmptyClip.CreateNew(20, 10));
             sequence.Tracks[1].AddClip(EmptyClip.CreateNew(40, 15));
 
-            var imageClip = ImageClip.CreateNew(10, 30, Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25"));
-            imageClip.Effects.Add(new TranslateEffect());
-            sequence.Tracks[2].AddClip(imageClip);
+            sequence.Tracks[2].AddClip(ImageClip.CreateNew(10, 30, Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25")));
 
             return sequence;
         }
