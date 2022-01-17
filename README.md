@@ -20,11 +20,16 @@ Based on:
 
 For now the app will display Project, Sequence, Preview and Sequence Info Panels.
 
-![image](https://user-images.githubusercontent.com/44116740/149787908-913eba1c-d647-4af5-9538-4042ff7daf2b.png)
+<details>
+<summary>Small preview</summary>
+
+https://user-images.githubusercontent.com/44116740/149838459-65471b04-2960-4ba9-83f4-7fea665ee06b.mp4
+
+</details>
 
 In Progress:
 
-Frame Sampling
+Caching
 
 ## TODO
 

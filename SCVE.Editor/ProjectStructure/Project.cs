@@ -62,16 +62,34 @@ namespace SCVE.Editor.ProjectStructure
                 entryPath = entryPath.Substring(0, entryPath.LastIndexOf(Path.DirectorySeparatorChar));
                 if (entry.Name == "")
                 {
-                    RootFolder.AppendEmptyFolder(guid, entryPath, entry.FullName);
+                    RootFolder.AppendEmptyFolder(entryPath, entry.FullName);
                 }
                 else
                 {
-                    RootFolder.AppendAsset(guid, entryPath, entry.Name, entry.FullName, fileSystemFullPath, type);
+                    ProjectAsset asset;
+                    if (type == "IMAGE")
+                    {
+                        asset = new ImageAsset(guid, entry.Name, entry.FullName, fileSystemFullPath, type);
+                    }
+                    else
+                    {
+                        asset = new ProjectAsset(guid, entry.Name, entry.FullName, fileSystemFullPath, type);
+                    }
+                    RootFolder.AppendAsset(entryPath, asset);
                 }
             }
             else
             {
-                RootFolder.AppendAsset(guid, "", entry.Name, entry.FullName, fileSystemFullPath, type);
+                ProjectAsset asset;
+                if (type == "IMAGE")
+                {
+                    asset = new ImageAsset(guid, entry.Name, entry.FullName, fileSystemFullPath, type);
+                }
+                else
+                {
+                    asset = new ProjectAsset(guid, entry.Name, entry.FullName, fileSystemFullPath, type);
+                }
+                RootFolder.AppendAsset("", asset);
             }
         }
 

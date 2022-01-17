@@ -21,6 +21,7 @@ namespace SCVE.Editor
 
         public readonly Project OpenedProject;
         public readonly Sequence OpenedSequence;
+        public Clip SelectedClip { get; set; }
 
         private readonly ProjectPanel _projectPanel = new();
 
@@ -28,6 +29,7 @@ namespace SCVE.Editor
 
         private readonly PreviewPanel _previewPanel = new();
         private readonly SequenceInfoPanel _sequenceInfoPanel = new();
+        private readonly ClipEffectsPanel _clipEffectsPanel = new();
 
         public readonly SequenceSampler Sampler = new();
 
@@ -135,6 +137,7 @@ namespace SCVE.Editor
             _sequencePanel.OnImGuiRender();
             _previewPanel.OnImGuiRender();
             _sequenceInfoPanel.OnImGuiRender();
+            _clipEffectsPanel.OnImGuiRender();
 
             ImGui.ShowMetricsWindow();
         }
