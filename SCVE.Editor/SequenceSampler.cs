@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using SCVE.Editor.Editing;
+using SCVE.Editor.Effects;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -16,6 +17,8 @@ namespace SCVE.Editor
         FontCollection fontCollection = new FontCollection();
         private Font font;
 
+        private ClipEvaluator _clipEvaluator = new ClipEvaluator();
+
         public SequenceSampler()
         {
             fontCollection.Install("assets/Font/arial.ttf");
@@ -29,7 +32,7 @@ namespace SCVE.Editor
 
             image.Mutate(i => i.Fill(Color.Black));
 
-            for (var i = 0; i < sequence.Tracks.Count; i++)
+            for (var i = sequence.Tracks.Count - 1; i >= 0; i--)
             {
                 var track = sequence.Tracks[i];
                 if (track.StartFrame > timeFrame || track.EndFrame <= timeFrame)
@@ -45,12 +48,9 @@ namespace SCVE.Editor
                         continue;
                     }
 
-                    if (clip is ImageClip imageClip)
+                    if (_clipEvaluator.Evaluate(sequence, clip, timeFrame - clip.StartFrame))
                     {
-                        var imageBytes     = File.ReadAllBytes(imageClip.ReferencedImageAsset.FileSystemFullPath);
-                        var imageClipImage = Image.Load(imageBytes);
-
-                        image.Mutate(i => i.DrawImage(imageClipImage, new Point(image.Width / 2 - imageClipImage.Width / 2, image.Height / 2 - imageClipImage.Height / 2),  1f));
+                        image.Mutate(i => i.DrawImage(_clipEvaluator.ResultFrame.ImageSharpImage, 1f));
                     }
                 }
             }

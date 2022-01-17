@@ -78,9 +78,9 @@ namespace SCVE.Editor.ImGuiUi
                 var timelineFramesMarkerHeight  = 3;
                 var timelineSecondsMarkerHeight = 8;
 
-                var widthPerFrame = trackContentWidth / EditorApp.Instance.OpenedSequence.FrameLength;
-                var sequenceFPS   = EditorApp.Instance.OpenedSequence.FPS;
-                var sequenceCursorTimeFrame   = EditorApp.Instance.OpenedSequence.CursorTimeFrame;
+                var widthPerFrame           = trackContentWidth / EditorApp.Instance.OpenedSequence.FrameLength;
+                var sequenceFPS             = EditorApp.Instance.OpenedSequence.FPS;
+                var sequenceCursorTimeFrame = EditorApp.Instance.OpenedSequence.CursorTimeFrame;
 
                 var sequenceFrameLength = EditorApp.Instance.OpenedSequence.FrameLength;
 
@@ -205,7 +205,10 @@ namespace SCVE.Editor.ImGuiUi
 
                         ImGui.SetCursorPos(clipTopLeft - windowPos);
                         ImGui.SetItemAllowOverlap();
-                        ImGui.InvisibleButton($"##clip{clip.Guid:N}", new Vector2(clipBottomRight.X - clipTopLeft.X, clipBottomRight.Y - clipTopLeft.Y));
+                        if (ImGui.InvisibleButton($"##clip{clip.Guid:N}", new Vector2(clipBottomRight.X - clipTopLeft.X, clipBottomRight.Y - clipTopLeft.Y)))
+                        {
+                            EditorApp.Instance.SelectedClip = clip;
+                        }
 
                         if (ImGui.IsItemActive())
                         {
@@ -281,8 +284,8 @@ namespace SCVE.Editor.ImGuiUi
                     if (!ImGui.IsMouseDown(ImGuiMouseButton.Left))
                     {
                         EditorApp.Instance.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
-                        _cursorDragFrames       =  0;
-                        _isDraggingCursor       =  false;
+                        _cursorDragFrames                                 =  0;
+                        _isDraggingCursor                                 =  false;
                     }
                 }
 

@@ -19,21 +19,21 @@ namespace SCVE.Editor.ProjectStructure
             _subfolders = new();
         }
 
-        public ProjectAsset FindAsset(Guid guid)
+        public T FindAsset<T>(Guid guid) where T : ProjectAsset
         {
-            var asset = _assets.FirstOrDefault(a => a.Guid == guid);
-            if (asset is not null)
+            var directAsset = _assets.FirstOrDefault(a => a.Guid == guid);
+            if (directAsset is not null)
             {
-                return asset;
+                return directAsset as T;
             }
             else
             {
                 foreach (var subfolder in _subfolders)
                 {
-                    asset = subfolder.FindAsset(guid);
-                    if (asset is not null)
+                    var subfolderAsset = subfolder.FindAsset<T>(guid);
+                    if (subfolderAsset is not null)
                     {
-                        return asset;
+                        return subfolderAsset;
                     }
                 }
 
@@ -51,26 +51,26 @@ namespace SCVE.Editor.ProjectStructure
             return _subfolders.First(f => f.InternalName == name);
         }
 
-        private void AppendFolder(Guid guid, string name, string projectFullPath)
+        private void AppendFolder(string name, string projectFullPath)
         {
-            _subfolders.Add(new ProjectAssetFolder(guid, name, projectFullPath));
+            _subfolders.Add(new ProjectAssetFolder(Guid.Empty, name, projectFullPath));
         }
 
-        public void AppendEmptyFolder(Guid guid, string name, string internalFullPath)
+        public void AppendEmptyFolder(string name, string internalFullPath)
         {
-            _subfolders.Add(new ProjectAssetFolder(guid, name, internalFullPath));
+            _subfolders.Add(new ProjectAssetFolder(Guid.Empty, name, internalFullPath));
         }
 
-        private void AppendRawAsset(Guid guid, string name, string internalFullPath, string fileSystemFullPath, string type)
+        private void AppendRawAsset(ProjectAsset asset)
         {
-            _assets.Add(new ProjectAsset(guid, name, internalFullPath, fileSystemFullPath, type));
+            _assets.Add(asset);
         }
 
-        public void AppendAsset(Guid guid, string internalRelativePath, string internalName, string internalFullPath, string fileSystemFullPath, string type)
+        public void AppendAsset(string internalRelativePath, ProjectAsset asset)
         {
             if (internalRelativePath == Path.DirectorySeparatorChar.ToString())
             {
-                AppendRawAsset(guid, internalName, internalFullPath, fileSystemFullPath, type);
+                AppendRawAsset(asset);
             }
             else if (!internalRelativePath.Contains(Path.DirectorySeparatorChar))
             {
@@ -78,16 +78,16 @@ namespace SCVE.Editor.ProjectStructure
                 if (folderName == "")
                 {
                     // if name is empty - we are adding an empty folder
-                    AppendRawAsset(guid, internalName, internalFullPath, fileSystemFullPath, type);
+                    AppendRawAsset(asset);
                 }
                 else
                 {
                     if (!HasDirectChildFolder(folderName))
                     {
-                        AppendFolder(guid, folderName, InternalFullPath + internalRelativePath);
+                        AppendFolder(folderName, InternalFullPath + internalRelativePath);
                     }
 
-                    GetDirectChildFolder(folderName).AppendRawAsset(guid, internalName, internalFullPath, fileSystemFullPath, type);
+                    GetDirectChildFolder(folderName).AppendRawAsset(asset);
                 }
             }
             else
@@ -96,10 +96,10 @@ namespace SCVE.Editor.ProjectStructure
                 string folderName   = internalRelativePath.Substring(0, internalRelativePath.IndexOf(Path.DirectorySeparatorChar));
                 if (!HasDirectChildFolder(folderName))
                 {
-                    AppendFolder(guid, folderName, InternalFullPath + folderName);
+                    AppendFolder(folderName, InternalFullPath + folderName);
                 }
 
-                GetDirectChildFolder(folderName).AppendAsset(guid, nextPath, internalName, internalFullPath, fileSystemFullPath, type);
+                GetDirectChildFolder(folderName).AppendAsset(nextPath, asset);
             }
         }
     }
