@@ -21,7 +21,6 @@ namespace SCVE.Editor.ImGuiUi
 
         private readonly GhostClip _ghostClip = GhostClip.CreateNew(0, 1);
 
-        private int _cursorTimeFrame = 0;
         private int _cursorDragFrames = 0;
 
         private static readonly Vector2 _cursorSize = new(10, 20);
@@ -81,6 +80,7 @@ namespace SCVE.Editor.ImGuiUi
 
                 var widthPerFrame = trackContentWidth / EditorApp.Instance.OpenedSequence.FrameLength;
                 var sequenceFPS   = EditorApp.Instance.OpenedSequence.FPS;
+                var sequenceCursorTimeFrame   = EditorApp.Instance.OpenedSequence.CursorTimeFrame;
 
                 var sequenceFrameLength = EditorApp.Instance.OpenedSequence.FrameLength;
 
@@ -93,10 +93,9 @@ namespace SCVE.Editor.ImGuiUi
                 if (ImGui.IsItemActive())
                 {
                     int timelineClickedFrame = (int)((ImGui.GetMousePos().X - drawOriginX - trackHeaderWidth) / widthPerFrame);
-                    if (_cursorTimeFrame != timelineClickedFrame)
+                    if (sequenceCursorTimeFrame != timelineClickedFrame)
                     {
-                        _cursorTimeFrame = timelineClickedFrame;
-                        _cursorTimeFrame = Math.Clamp(_cursorTimeFrame, 0, sequenceFrameLength);
+                        EditorApp.Instance.OpenedSequence.CursorTimeFrame = Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength);
                     }
                 }
 
@@ -145,7 +144,7 @@ namespace SCVE.Editor.ImGuiUi
 
                 #region Cursor
 
-                var cursorPosition = new Vector2(drawOriginX + trackHeaderWidth + (_cursorTimeFrame + _cursorDragFrames) * widthPerFrame - _cursorSize.X / 2, drawOriginY);
+                var cursorPosition = new Vector2(drawOriginX + trackHeaderWidth + (sequenceCursorTimeFrame + _cursorDragFrames) * widthPerFrame - _cursorSize.X / 2, drawOriginY);
 
                 ImGui.SetCursorPos(cursorPosition - windowPos);
                 ImGui.SetItemAllowOverlap();
@@ -155,7 +154,7 @@ namespace SCVE.Editor.ImGuiUi
                 {
                     var mouseDragDelta = ImGui.GetMouseDragDelta();
                     _cursorDragFrames = (int)(mouseDragDelta.X / widthPerFrame);
-                    _cursorDragFrames = Math.Clamp(_cursorDragFrames, -_cursorTimeFrame, sequenceFrameLength - _cursorTimeFrame);
+                    _cursorDragFrames = Math.Clamp(_cursorDragFrames, -sequenceCursorTimeFrame, sequenceFrameLength - sequenceCursorTimeFrame);
                     _isDraggingCursor = true;
                 }
 
@@ -281,9 +280,9 @@ namespace SCVE.Editor.ImGuiUi
                 {
                     if (!ImGui.IsMouseDown(ImGuiMouseButton.Left))
                     {
-                        _cursorTimeFrame  += _cursorDragFrames;
-                        _cursorDragFrames =  0;
-                        _isDraggingCursor =  false;
+                        EditorApp.Instance.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
+                        _cursorDragFrames       =  0;
+                        _isDraggingCursor       =  false;
                     }
                 }
 

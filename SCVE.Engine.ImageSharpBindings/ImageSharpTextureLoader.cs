@@ -26,7 +26,7 @@ namespace SCVE.Engine.ImageSharpBindings
             return new TextureFileData(image.Width, image.Height, pixels);
         }
 
-        private static byte[] ImageToBytes(Image<Rgba32> image)
+        public static byte[] ImageToBytes(Image<Rgba32> image)
         {
             var pixels = new byte[4 * image.Width * image.Height];
             int index  = 0;

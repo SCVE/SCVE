@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Numerics;
 using System.Text.Json;
 using SCVE.Editor.Editing;
 using SCVE.Editor.ProjectStructure;
@@ -29,7 +30,7 @@ namespace SCVE.Editor
 
         public static Sequence CreateTestingSequence()
         {
-            var sequence = Sequence.CreateNew(30);
+            var sequence = Sequence.CreateNew(30, new Vector2(1920, 1080));
             sequence.FrameLength = 100;
             sequence.AddTrack(Track.CreateNew());
             sequence.AddTrack(Track.CreateNew());

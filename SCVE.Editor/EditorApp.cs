@@ -27,6 +27,9 @@ namespace SCVE.Editor
         private readonly SequencePanel _sequencePanel = new();
 
         private readonly PreviewPanel _previewPanel = new();
+        private readonly SequenceInfoPanel _sequenceInfoPanel = new();
+
+        public readonly SequenceSampler Sampler = new();
 
         public ImFontPtr OpenSansFont;
 
@@ -131,6 +134,7 @@ namespace SCVE.Editor
             _projectPanel.OnImGuiRender();
             _sequencePanel.OnImGuiRender();
             _previewPanel.OnImGuiRender();
+            _sequenceInfoPanel.OnImGuiRender();
 
             ImGui.ShowMetricsWindow();
         }
