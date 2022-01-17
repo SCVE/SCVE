@@ -19,15 +19,15 @@ namespace SCVE.Editor.ImGuiUi
         private bool _isDraggingClip;
         private bool _isDraggingCursor;
 
-        private GhostClip _ghostClip = GhostClip.CreateNew(0, 1);
+        private readonly GhostClip _ghostClip = GhostClip.CreateNew(0, 1);
 
         private int _cursorTimeFrame = 0;
         private int _cursorDragFrames = 0;
 
-        private static Vector2 _cursorSize = new Vector2(10, 20);
+        private static readonly Vector2 _cursorSize = new(10, 20);
 
         // clockwise order
-        private Vector2[] _cursorShapePoints =
+        private readonly Vector2[] _cursorShapePoints =
         {
             // top-left
             new(),
@@ -41,7 +41,7 @@ namespace SCVE.Editor.ImGuiUi
             new(0, _cursorSize.Y / 2f),
         };
 
-        private Vector2[] _cursorCurrentPoints = new Vector2[5];
+        private readonly Vector2[] _cursorCurrentPoints = new Vector2[5];
 
         public void OnImGuiRender()
         {
@@ -206,7 +206,7 @@ namespace SCVE.Editor.ImGuiUi
 
                         ImGui.SetCursorPos(clipTopLeft - windowPos);
                         ImGui.SetItemAllowOverlap();
-                        ImGui.InvisibleButton($"##clip{track.Id}{clip.Id}", new Vector2(clipBottomRight.X - clipTopLeft.X, clipBottomRight.Y - clipTopLeft.Y));
+                        ImGui.InvisibleButton($"##clip{clip.Guid:N}", new Vector2(clipBottomRight.X - clipTopLeft.X, clipBottomRight.Y - clipTopLeft.Y));
 
                         if (ImGui.IsItemActive())
                         {

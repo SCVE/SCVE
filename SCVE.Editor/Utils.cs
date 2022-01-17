@@ -30,7 +30,7 @@ namespace SCVE.Editor
         public static Sequence CreateTestingSequence()
         {
             var sequence = Sequence.CreateNew(30);
-            sequence.FrameLength = 150;
+            sequence.FrameLength = 100;
             sequence.AddTrack(Track.CreateNew());
             sequence.AddTrack(Track.CreateNew());
             sequence.AddTrack(Track.CreateNew());
