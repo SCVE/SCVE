@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
+using System.Numerics;
 using System.Text.Json;
+using SCVE.Editor.Editing;
 using SCVE.Editor.ProjectStructure;
 using SCVE.Engine.Core.Misc;
 
@@ -19,13 +22,34 @@ namespace SCVE.Editor
             else
                 return false;
         }
-        
+
         public static bool IsDirectoryPath(this string path)
         {
             return Directory.Exists(path);
         }
-        
-        
+
+        public static Sequence CreateTestingSequence()
+        {
+            var sequence = Sequence.CreateNew(30, new Vector2(1920, 1080));
+            sequence.FrameLength = 100;
+            sequence.AddTrack(Track.CreateNew());
+            sequence.AddTrack(Track.CreateNew());
+            sequence.AddTrack(Track.CreateNew());
+
+            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(0, 10));
+            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(30, 30));
+            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(60, 30));
+
+            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(10, 10));
+            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(20, 10));
+            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(40, 15));
+
+            sequence.Tracks[2].AddClip(ImageClip.CreateNew(10,30, Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25")));
+
+            return sequence;
+        }
+
+
         public static void CreateDummyProject(string name, string path)
         {
             if (path.IsDirectoryPath())
@@ -56,7 +80,7 @@ namespace SCVE.Editor
             var       assetEntry  = zipProjectArchive.CreateEntry("assets\\images\\image.scveasset");
             using var assetWriter = new StreamWriter(assetEntry.Open());
 
-            var assetFileData    = new ProjectAssetFileData("IMAGE", "C:\\Projects\\CSharp\\SCVE\\testdata\\runner2.png");
+            var assetFileData    = new ProjectAssetFileData(Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25"), "IMAGE", "C:\\Projects\\CSharp\\SCVE\\testdata\\EuupAELWQAQH3-S.jpg");
             var assetFileContent = JsonSerializer.Serialize(assetFileData);
             assetWriter.WriteLine(assetFileContent);
         }
@@ -66,7 +90,7 @@ namespace SCVE.Editor
             var       assetEntry  = zipProjectArchive.CreateEntry("assets\\audio.scveasset");
             using var assetWriter = new StreamWriter(assetEntry.Open());
 
-            var assetFileData    = new ProjectAssetFileData("MP3", "C:\\Projects\\CSharp\\SCVE\\testdata\\rukoblud.mp3");
+            var assetFileData    = new ProjectAssetFileData(Guid.Parse("1cff5fe5-e8a4-4e74-828f-32c947ad9e66"), "MP3", "C:\\Projects\\CSharp\\SCVE\\testdata\\rukoblud.mp3");
             var assetFileContent = JsonSerializer.Serialize(assetFileData);
             assetWriter.WriteLine(assetFileContent);
         }
@@ -76,7 +100,7 @@ namespace SCVE.Editor
             var       assetEntry  = zipProjectArchive.CreateEntry("assets\\folder\\readme.scveasset");
             using var assetWriter = new StreamWriter(assetEntry.Open());
 
-            var assetFileData    = new ProjectAssetFileData("TEXT", "C:\\Projects\\CSharp\\SCVE\\testdata\\readme.txt");
+            var assetFileData    = new ProjectAssetFileData(Guid.Parse("bd32eda7-9027-4f0b-9e81-ba7f763507c3"), "TEXT", "C:\\Projects\\CSharp\\SCVE\\testdata\\readme.txt");
             var assetFileContent = JsonSerializer.Serialize(assetFileData);
             assetWriter.WriteLine(assetFileContent);
         }

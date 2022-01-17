@@ -18,13 +18,13 @@ Based on:
 
 ## Current state
 
-For now the app will display Project Panel and Sequence Panel.
+For now the app will display Project, Sequence, Preview and Sequence Info Panels.
 
-![image](https://user-images.githubusercontent.com/44116740/149679630-72f7c1e4-bd63-402a-aedf-40fb9575650a.png)
+![image](https://user-images.githubusercontent.com/44116740/149787908-913eba1c-d647-4af5-9538-4042ff7daf2b.png)
 
 In Progress:
 
-Clip referencing assets
+Frame Sampling
 
 ## TODO
 

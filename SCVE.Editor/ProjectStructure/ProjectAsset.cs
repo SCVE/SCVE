@@ -1,9 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace SCVE.Editor.ProjectStructure
 {
     public class ProjectAsset
     {
+        public Guid Guid { get; set; }
+        
         /// <summary>
         /// Name of an asset, local to this project
         /// </summary>
@@ -23,8 +26,14 @@ namespace SCVE.Editor.ProjectStructure
 
         public bool ExistsInFileSystem => File.Exists(FileSystemFullPath);
 
-        public ProjectAsset(string internalName, string internalFullPath, string fileSystemFullPath, string type)
+        private ProjectAsset()
         {
+            Guid = new Guid();
+        }
+
+        public ProjectAsset(Guid guid, string internalName, string internalFullPath, string fileSystemFullPath, string type)
+        {
+            Guid               = guid;
             InternalName       = internalName;
             InternalFullPath   = internalFullPath;
             FileSystemFullPath = fileSystemFullPath;

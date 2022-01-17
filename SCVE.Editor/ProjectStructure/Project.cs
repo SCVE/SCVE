@@ -28,7 +28,7 @@ namespace SCVE.Editor.ProjectStructure
             _archiveStream = stream;
 
             _archive   = new ZipArchive(_archiveStream, ZipArchiveMode.Read);
-            RootFolder = new("", "");
+            RootFolder = new(Guid.Empty, "", "");
             ReadMetaFile();
             ReadAssetsFolder();
         }
@@ -45,6 +45,7 @@ namespace SCVE.Editor.ProjectStructure
         {
             string type               = "";
             string fileSystemFullPath = "";
+            Guid   guid = Guid.Empty;
             if (entry.Name.EndsWith(".scveasset"))
             {
                 var assetContent         = ReadAssetContent(entry);
@@ -52,6 +53,7 @@ namespace SCVE.Editor.ProjectStructure
 
                 type               = projectAssetFileData.Type;
                 fileSystemFullPath = projectAssetFileData.FileSystemPath;
+                guid               = projectAssetFileData.Guid;
             }
 
             if (entry.FullName.Contains("\\"))
@@ -60,16 +62,16 @@ namespace SCVE.Editor.ProjectStructure
                 entryPath = entryPath.Substring(0, entryPath.LastIndexOf(Path.DirectorySeparatorChar));
                 if (entry.Name == "")
                 {
-                    RootFolder.AppendEmptyFolder(entryPath, entry.FullName);
+                    RootFolder.AppendEmptyFolder(guid, entryPath, entry.FullName);
                 }
                 else
                 {
-                    RootFolder.AppendAsset(entryPath, entry.Name, entry.FullName, fileSystemFullPath, type);
+                    RootFolder.AppendAsset(guid, entryPath, entry.Name, entry.FullName, fileSystemFullPath, type);
                 }
             }
             else
             {
-                RootFolder.AppendAsset("", entry.Name, entry.FullName, fileSystemFullPath, type);
+                RootFolder.AppendAsset(guid, "", entry.Name, entry.FullName, fileSystemFullPath, type);
             }
         }
 

@@ -48,7 +48,7 @@ namespace SCVE.Editor
             _gl.TexParameterI(GLEnum.Texture2D, TextureParameterName.TextureMaxLevel, MipmapLevels - 1);
         }
 
-        public unsafe Texture(GL gl, int width, int height, byte[] data, bool generateMipmaps = false, bool srgb = false)
+        public unsafe Texture(GL gl, int width, int height, byte[] data,  bool generateMipmaps = false, bool srgb = false)
         {
             _gl            =   gl;
             MaxAniso       ??= gl.GetFloat(MaxTextureMaxAnisotropy);
@@ -63,6 +63,30 @@ namespace SCVE.Editor
             _gl.TexStorage2D(GLEnum.Texture2D, MipmapLevels, InternalFormat, Width, Height);
             fixed (void* dataPtr = data)
                 _gl.TexSubImage2D(GLEnum.Texture2D, 0, 0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedByte, dataPtr);
+
+            if (generateMipmaps) _gl.GenerateTextureMipmap(GlTexture);
+
+            SetWrap(TextureCoordinate.S, TextureWrapMode.Repeat);
+            SetWrap(TextureCoordinate.T, TextureWrapMode.Repeat);
+
+            _gl.TexParameterI(GLEnum.Texture2D, TextureParameterName.TextureMaxLevel, MipmapLevels - 1);
+        }
+
+        public unsafe Texture(GL gl, int width, int height, byte[] data, PixelFormat pixelFormat, bool generateMipmaps = false, bool srgb = false)
+        {
+            _gl            =   gl;
+            MaxAniso       ??= gl.GetFloat(MaxTextureMaxAnisotropy);
+            Width          =   (uint)width;
+            Height         =   (uint)height;
+            InternalFormat =   srgb ? Srgb8Alpha8 : SizedInternalFormat.Rgba8;
+            MipmapLevels   =   (uint)(generateMipmaps == false ? 1 : (int)Math.Floor(Math.Log(Math.Max(Width, Height), 2)));
+
+            GlTexture = _gl.GenTexture();
+            Bind();
+
+            _gl.TexStorage2D(GLEnum.Texture2D, MipmapLevels, InternalFormat, Width, Height);
+            fixed (void* dataPtr = data)
+                _gl.TexSubImage2D(GLEnum.Texture2D, 0, 0, 0, Width, Height, pixelFormat, PixelType.UnsignedByte, dataPtr);
 
             if (generateMipmaps) _gl.GenerateTextureMipmap(GlTexture);
 

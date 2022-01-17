@@ -1,19 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace SCVE.Editor.Editing
 {
     public class Sequence
     {
+        public Guid Guid { get; private set; }
+
         public IReadOnlyList<Track> Tracks => _tracks;
         private List<Track> _tracks;
 
-        public int FPS;
+        public int FPS { get; private set; }
 
-        public Sequence(int fps)
+        public int CursorTimeFrame { get; set; }
+
+        public Vector2 Resolution { get; private set; }
+
+        private Sequence(Guid guid, int fps, Vector2 resolution)
         {
-            _tracks = new List<Track>();
-            FPS     = fps;
+            _tracks    = new List<Track>();
+            FPS        = fps;
+            Guid       = guid;
+            Resolution = resolution;
+        }
+
+        public static Sequence CreateNew(int fps, Vector2 resolution)
+        {
+            return new(Guid.NewGuid(), fps, resolution);
         }
 
         public void AddTrack(Track track)
