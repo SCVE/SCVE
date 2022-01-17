@@ -80,7 +80,7 @@ namespace SCVE.Editor
             var       assetEntry  = zipProjectArchive.CreateEntry("assets\\images\\image.scveasset");
             using var assetWriter = new StreamWriter(assetEntry.Open());
 
-            var assetFileData    = new ProjectAssetFileData(Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25"), "IMAGE", "C:\\Projects\\CSharp\\SCVE\\testdata\\runner2.png");
+            var assetFileData    = new ProjectAssetFileData(Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25"), "IMAGE", "C:\\Projects\\CSharp\\SCVE\\testdata\\Jessei.png");
             var assetFileContent = JsonSerializer.Serialize(assetFileData);
             assetWriter.WriteLine(assetFileContent);
         }

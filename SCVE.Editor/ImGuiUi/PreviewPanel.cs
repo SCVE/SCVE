@@ -2,6 +2,7 @@
 using System.Numerics;
 using ImGuiNET;
 using SCVE.Engine.ImageSharpBindings;
+using Silk.NET.OpenGL;
 
 namespace SCVE.Editor.ImGuiUi
 {
@@ -55,7 +56,7 @@ namespace SCVE.Editor.ImGuiUi
 
             var bytes = ImageSharpTextureLoader.ImageToBytes(EditorApp.Instance.Sampler.PreviewImage);
 
-            _activeTexture = new Texture(EditorApp.Instance.GL, EditorApp.Instance.Sampler.PreviewImage.Width, EditorApp.Instance.Sampler.PreviewImage.Height, bytes, false, false);
+            _activeTexture = new Texture(EditorApp.Instance.GL, EditorApp.Instance.Sampler.PreviewImage.Width, EditorApp.Instance.Sampler.PreviewImage.Height, bytes, PixelFormat.Rgba, false, false);
         }
     }
 }
