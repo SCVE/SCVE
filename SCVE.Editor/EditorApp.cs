@@ -32,15 +32,16 @@ namespace SCVE.Editor
 
         public EditorApp()
         {
+            Instance = this;
+
             if (!Project.PathIsProject("testdata/projects/abc.scve"))
             {
                 Utils.CreateDummyProject("abc", "testdata/projects/");
             }
 
-            OpenedProject  = Project.LoadFrom("testdata/projects/abc.scve");
-            OpenedSequence = Utils.CreateTestingSequence();
+            OpenedProject = Project.LoadFrom("testdata/projects/abc.scve");
 
-            Instance = this;
+            OpenedSequence = Utils.CreateTestingSequence();
         }
 
         public void OnImGuiRender()

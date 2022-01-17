@@ -22,7 +22,7 @@ namespace SCVE.Editor.Editing
 
         public override string ShortName()
         {
-            return "Image Clip";
+            return $"Image {ReferencedImageAsset.InternalName}";
         }
     }
 }
