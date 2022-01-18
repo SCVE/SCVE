@@ -1,4 +1,7 @@
 ﻿using ImGuiNET;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace SCVE.Editor.Effects
@@ -11,16 +14,16 @@ namespace SCVE.Editor.Effects
 
         public ImageFrame Apply(EffectApplicationContext effectApplicationContext)
         {
-            var srcImageFrame = effectApplicationContext.ImageFrame;
-            var dstImageFrame = new ImageFrame(srcImageFrame.Width, srcImageFrame.Height);
-            dstImageFrame.CreateImageSharpWrapper();
+            var srcImageFrame = effectApplicationContext.SourceImageFrame;
+            var dstSizeX = (int)(srcImageFrame.Width * X);
+            var dstSizeY = (int)(srcImageFrame.Height * Y);
 
-            var clone = srcImageFrame.ImageSharpImage.Clone();
-            clone.Mutate(i => i.Resize((int)(srcImageFrame.Width * X), (int)(srcImageFrame.Height * Y)));
+            using (var clone = srcImageFrame.ImageSharpImage.Clone(i => i.Resize(dstSizeX, dstSizeY)))
+            {
+                srcImageFrame.ImageSharpImage.Mutate(i => i.Clear(Color.Transparent).DrawImage(clone, 1));
+            }
 
-            dstImageFrame.ImageSharpImage.Mutate(i => i.DrawImage(clone, 1));
-
-            return dstImageFrame;
+            return srcImageFrame;
         }
 
         public void OnImGuiRender()
@@ -29,12 +32,14 @@ namespace SCVE.Editor.Effects
             if (ImGui.SliderFloat("X", ref x, 0, 5))
             {
                 X = x;
+                EditorApp.Instance.MarkPreviewDirty();
             }
 
             float y = Y;
             if (ImGui.SliderFloat("Y", ref y, 0, 5))
             {
                 Y = y;
+                EditorApp.Instance.MarkPreviewDirty();
             }
         }
     }

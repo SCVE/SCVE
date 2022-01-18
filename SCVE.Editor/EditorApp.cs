@@ -23,10 +23,10 @@ namespace SCVE.Editor
         public readonly Sequence OpenedSequence;
         public Clip SelectedClip { get; set; }
 
+        public bool PreviewUpdateRequired { get; private set; }
+
         private readonly ProjectPanel _projectPanel = new();
-
         private readonly SequencePanel _sequencePanel = new();
-
         private readonly PreviewPanel _previewPanel = new();
         private readonly SequenceInfoPanel _sequenceInfoPanel = new();
         private readonly ClipEffectsPanel _clipEffectsPanel = new();
@@ -34,6 +34,16 @@ namespace SCVE.Editor
         public readonly SequenceSampler Sampler = new();
 
         public ImFontPtr OpenSansFont;
+
+        public void MarkPreviewDirty()
+        {
+            PreviewUpdateRequired = true;
+        }
+
+        public void ClearPreviewDirty()
+        {
+            PreviewUpdateRequired = false;
+        }
 
         public EditorApp()
         {
@@ -47,6 +57,7 @@ namespace SCVE.Editor
             OpenedProject = Project.LoadFrom("testdata/projects/abc.scve");
 
             OpenedSequence = Utils.CreateTestingSequence();
+            MarkPreviewDirty();
         }
 
         public void OnImGuiRender()
@@ -132,6 +143,13 @@ namespace SCVE.Editor
             ImGui.ShowDemoWindow();
 
             // TODO: Render separate panels
+
+            if (PreviewUpdateRequired)
+            {
+                Sampler.Sample(OpenedSequence, OpenedSequence.CursorTimeFrame);
+                Sampler.PreviewImage.UploadGpuData();
+                ClearPreviewDirty();
+            }
 
             _projectPanel.OnImGuiRender();
             _sequencePanel.OnImGuiRender();

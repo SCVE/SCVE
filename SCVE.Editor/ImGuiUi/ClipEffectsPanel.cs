@@ -70,6 +70,7 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 _addEffectExpanded = false;
                                 clip.Effects.Add(Activator.CreateInstance(AllKnownEffects[i]) as IEffect);
+                                EditorApp.Instance.MarkPreviewDirty();
                             }
                         }
 
@@ -83,6 +84,7 @@ namespace SCVE.Editor.ImGuiUi
                     {
                         clip.Effects.RemoveAt(_lastSelectedEffect);
                         _lastSelectedEffect = -1;
+                        EditorApp.Instance.MarkPreviewDirty();
                     }
                 }
             }

@@ -10,7 +10,7 @@ namespace SCVE.Editor
         R = TextureParameterName.TextureWrapR
     }
 
-    class Texture : IDisposable
+    public class Texture : IDisposable
     {
         public const SizedInternalFormat Srgb8Alpha8 = (SizedInternalFormat)GLEnum.Srgb8Alpha8;
         public const SizedInternalFormat Rgb32F = (SizedInternalFormat)GLEnum.Rgb32f;
@@ -94,6 +94,14 @@ namespace SCVE.Editor
             SetWrap(TextureCoordinate.T, TextureWrapMode.Repeat);
 
             _gl.TexParameterI(GLEnum.Texture2D, TextureParameterName.TextureMaxLevel, MipmapLevels - 1);
+        }
+
+        public unsafe void UpdateData(byte[] data, PixelFormat pixelFormat)
+        {
+            Bind();
+
+            fixed (void* dataPtr = data)
+                _gl.TexSubImage2D(GLEnum.Texture2D, 0, 0, 0, Width, Height, pixelFormat, PixelType.UnsignedByte, dataPtr);
         }
 
         public void Bind()

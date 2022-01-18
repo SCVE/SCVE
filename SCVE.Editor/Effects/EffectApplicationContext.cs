@@ -8,6 +8,6 @@ namespace SCVE.Editor.Effects
 
         public Clip Clip { get; set; }
 
-        public ImageFrame ImageFrame { get; set; }
+        public ImageFrame SourceImageFrame { get; set; }
     }
 }
