@@ -2,6 +2,7 @@
 using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Editing;
+using SCVE.Editor.Modules;
 
 namespace SCVE.Editor.ImGuiUi
 {
@@ -9,9 +10,14 @@ namespace SCVE.Editor.ImGuiUi
     {
         private ClipImGuiRenderer _clipRenderer;
 
+        private EditingModule _editingModule;
+        private PreviewModule _previewModule;
+
         public SequencePanel()
         {
-            _clipRenderer = new ClipImGuiRenderer();
+            _clipRenderer  = new ClipImGuiRenderer();
+            _editingModule = EditorApp.Modules.Get<EditingModule>();
+            _previewModule = EditorApp.Modules.Get<PreviewModule>();
         }
 
         private Clip _draggedClip;
@@ -46,7 +52,7 @@ namespace SCVE.Editor.ImGuiUi
         {
             if (ImGui.Begin("Sequence Panel"))
             {
-                if (EditorApp.Instance.OpenedSequence is null)
+                if (_editingModule.OpenedSequence is null)
                 {
                     ImGui.Text("No sequence is opened");
                     ImGui.End();
@@ -78,11 +84,11 @@ namespace SCVE.Editor.ImGuiUi
                 var timelineFramesMarkerHeight  = 3;
                 var timelineSecondsMarkerHeight = 8;
 
-                var widthPerFrame           = trackContentWidth / EditorApp.Instance.OpenedSequence.FrameLength;
-                var sequenceFPS             = EditorApp.Instance.OpenedSequence.FPS;
-                var sequenceCursorTimeFrame = EditorApp.Instance.OpenedSequence.CursorTimeFrame;
+                var widthPerFrame           = trackContentWidth / _editingModule.OpenedSequence.FrameLength;
+                var sequenceFPS             = _editingModule.OpenedSequence.FPS;
+                var sequenceCursorTimeFrame = _editingModule.OpenedSequence.CursorTimeFrame;
 
-                var sequenceFrameLength = EditorApp.Instance.OpenedSequence.FrameLength;
+                var sequenceFrameLength = _editingModule.OpenedSequence.FrameLength;
 
                 #region Detect click on timeline (not on cursor)
 
@@ -95,8 +101,8 @@ namespace SCVE.Editor.ImGuiUi
                     int timelineClickedFrame = (int)((ImGui.GetMousePos().X - drawOriginX - trackHeaderWidth) / widthPerFrame);
                     if (sequenceCursorTimeFrame != timelineClickedFrame)
                     {
-                        EditorApp.Instance.OpenedSequence.CursorTimeFrame = Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength);
-                        EditorApp.Instance.MarkPreviewDirty();
+                        _editingModule.OpenedSequence.CursorTimeFrame = Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength);
+                        _previewModule.MarkPreviewDirty();
                     }
                 }
 
@@ -169,9 +175,9 @@ namespace SCVE.Editor.ImGuiUi
 
                 #endregion
 
-                for (var i = 0; i < EditorApp.Instance.OpenedSequence.Tracks.Count; i++)
+                for (var i = 0; i < _editingModule.OpenedSequence.Tracks.Count; i++)
                 {
-                    var track = EditorApp.Instance.OpenedSequence.Tracks[i];
+                    var track = _editingModule.OpenedSequence.Tracks[i];
 
                     // Track header
                     painter.AddRectFilled(
@@ -189,9 +195,9 @@ namespace SCVE.Editor.ImGuiUi
                         0xFF222222
                     );
 
-                    for (int j = 0; j < EditorApp.Instance.OpenedSequence.Tracks[i].Clips.Count; j++)
+                    for (int j = 0; j < _editingModule.OpenedSequence.Tracks[i].Clips.Count; j++)
                     {
-                        var clip = EditorApp.Instance.OpenedSequence.Tracks[i].Clips[j];
+                        var clip = _editingModule.OpenedSequence.Tracks[i].Clips[j];
 
                         var clipTopLeft = new Vector2(
                             drawOriginX + trackHeaderWidth + trackContentWidth * ((float)(clip.StartFrame) / sequenceFrameLength),
@@ -208,7 +214,7 @@ namespace SCVE.Editor.ImGuiUi
                         ImGui.SetItemAllowOverlap();
                         if (ImGui.InvisibleButton($"##clip{clip.Guid:N}", new Vector2(clipBottomRight.X - clipTopLeft.X, clipBottomRight.Y - clipTopLeft.Y)))
                         {
-                            EditorApp.Instance.SelectedClip = clip;
+                            _editingModule.SelectedClip = clip;
                         }
 
                         if (ImGui.IsItemActive())
@@ -220,9 +226,9 @@ namespace SCVE.Editor.ImGuiUi
 
                             int newTrackId = clip.Track.Id + deltaTracks;
                             if (newTrackId >= 0 &&
-                                newTrackId < EditorApp.Instance.OpenedSequence.Tracks.Count)
+                                newTrackId < _editingModule.OpenedSequence.Tracks.Count)
                             {
-                                _ghostClip.Track = EditorApp.Instance.OpenedSequence.Tracks[newTrackId];
+                                _ghostClip.Track = _editingModule.OpenedSequence.Tracks[newTrackId];
                             }
                             else
                             {
@@ -277,7 +283,7 @@ namespace SCVE.Editor.ImGuiUi
                         _draggedClip.StartFrame = _ghostClip.StartFrame;
                         _ghostClip.Visible      = false;
                         _isDraggingClip         = false;
-                        EditorApp.Instance.MarkPreviewDirty();
+                        _previewModule.MarkPreviewDirty();
                     }
                 }
 
@@ -285,10 +291,10 @@ namespace SCVE.Editor.ImGuiUi
                 {
                     if (!ImGui.IsMouseDown(ImGuiMouseButton.Left))
                     {
-                        EditorApp.Instance.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
-                        _cursorDragFrames                                 =  0;
-                        _isDraggingCursor                                 =  false;
-                        EditorApp.Instance.MarkPreviewDirty();
+                        _editingModule.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
+                        _cursorDragFrames                             =  0;
+                        _isDraggingCursor                             =  false;
+                        _previewModule.MarkPreviewDirty();
                     }
                 }
 

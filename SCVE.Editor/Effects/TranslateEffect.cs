@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using SCVE.Editor.Modules;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Processing;
@@ -10,6 +11,15 @@ namespace SCVE.Editor.Effects
         public int X { get; set; }
 
         public int Y { get; set; }
+
+        private EditingModule _editingModule;
+        private PreviewModule _previewModule;
+
+        public TranslateEffect()
+        {
+            _editingModule = EditorApp.Modules.Get<EditingModule>();
+            _previewModule = EditorApp.Modules.Get<PreviewModule>();
+        }
 
         public ImageFrame Apply(EffectApplicationContext effectApplicationContext)
         {
@@ -31,14 +41,16 @@ namespace SCVE.Editor.Effects
             if (ImGui.SliderInt("X", ref x, -1000, 1000))
             {
                 X = x;
-                EditorApp.Instance.MarkPreviewDirty();
+                _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
+                _previewModule.MarkPreviewDirty();
             }
 
             int y = Y;
             if (ImGui.SliderInt("Y", ref y, -1000, 1000))
             {
                 Y = y;
-                EditorApp.Instance.MarkPreviewDirty();
+                _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
+                _previewModule.MarkPreviewDirty();
             }
         }
     }

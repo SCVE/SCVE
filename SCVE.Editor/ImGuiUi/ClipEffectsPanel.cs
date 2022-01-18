@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Reflection;
 using ImGuiNET;
 using SCVE.Editor.Effects;
+using SCVE.Editor.Modules;
 using Silk.NET.GLFW;
 
 namespace SCVE.Editor.ImGuiUi
@@ -14,10 +15,15 @@ namespace SCVE.Editor.ImGuiUi
         private List<Type> AllKnownEffects;
         private string[] AllKnownEffectsLabels;
 
+        private EditingModule _editingModule;
+        private PreviewModule _previewModule;
+
         public ClipEffectsPanel()
         {
             AllKnownEffects       = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.IsAssignableTo(typeof(IEffect)) && !t.IsInterface).ToList();
             AllKnownEffectsLabels = AllKnownEffects.Select(t => EffectsVisibleNames.Names[t]).ToArray();
+            _editingModule        = EditorApp.Modules.Get<EditingModule>();
+            _previewModule        = EditorApp.Modules.Get<PreviewModule>();
         }
 
         private bool _addEffectExpanded;
@@ -28,7 +34,7 @@ namespace SCVE.Editor.ImGuiUi
         {
             if (ImGui.Begin("Clip Effects"))
             {
-                var clip = EditorApp.Instance.SelectedClip;
+                var clip = _editingModule.SelectedClip;
                 if (clip is null)
                 {
                     ImGui.Text("No Clip Is Selected");
@@ -70,7 +76,7 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 _addEffectExpanded = false;
                                 clip.Effects.Add(Activator.CreateInstance(AllKnownEffects[i]) as IEffect);
-                                EditorApp.Instance.MarkPreviewDirty();
+                                _previewModule.MarkPreviewDirty();
                             }
                         }
 
@@ -84,7 +90,7 @@ namespace SCVE.Editor.ImGuiUi
                     {
                         clip.Effects.RemoveAt(_lastSelectedEffect);
                         _lastSelectedEffect = -1;
-                        EditorApp.Instance.MarkPreviewDirty();
+                        _previewModule.MarkPreviewDirty();
                     }
                 }
             }

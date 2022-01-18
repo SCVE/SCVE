@@ -26,13 +26,26 @@ namespace SCVE.Editor.Effects
             ImageSharpImage = Image.WrapMemory<Rgba32>(RawBytes, Width, Height);
         }
 
-        public void UploadToGpu()
+        public void Dispose()
+        {
+            if (ImageSharpImage is not null)
+            {
+                ImageSharpImage.Dispose();
+            }
+
+            if (GpuTexture is not null)
+            {
+                GpuTexture.Dispose();
+            }
+        }
+
+        private void UploadToGpu()
         {
             GpuTexture = new Texture(
                 gl: EditorApp.Instance.GL,
-                width: EditorApp.Instance.Sampler.PreviewImage.Width,
-                height: EditorApp.Instance.Sampler.PreviewImage.Height,
-                data: EditorApp.Instance.Sampler.PreviewImage.RawBytes,
+                width: Width,
+                height: Height,
+                data: RawBytes,
                 pixelFormat: PixelFormat.Rgba
             );
         }

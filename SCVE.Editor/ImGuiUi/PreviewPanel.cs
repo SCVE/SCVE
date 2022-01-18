@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Numerics;
 using ImGuiNET;
-using Silk.NET.OpenGL;
+using SCVE.Editor.Modules;
 
 namespace SCVE.Editor.ImGuiUi
 {
     public class PreviewPanel : IImGuiRenderable
     {
+        private readonly PreviewModule _previewModule;
+
+        public PreviewPanel()
+        {
+            _previewModule = EditorApp.Modules.Get<PreviewModule>();
+        }
+        
         public void OnImGuiRender()
         {
             if (ImGui.Begin("Preview Panel"))
             {
                 var contentRegionAvail = ImGui.GetContentRegionAvail();
                 
-                var image = EditorApp.Instance.Sampler.PreviewImage;
+                var image = _previewModule.PreviewImage;
                 if (image is null)
                 {
                     ImGui.Text("No preview is available right now");
@@ -34,11 +41,11 @@ namespace SCVE.Editor.ImGuiUi
 
                 ImGui.SetCursorPos((contentRegionAvail - imageSize) * 0.5f);
 
-                ImGui.Image((IntPtr)EditorApp.Instance.Sampler.PreviewImage.GpuTexture.GlTexture, imageSize);
+                ImGui.Image((IntPtr)image.GpuTexture.GlTexture, imageSize);
 
                 if (ImGui.Button("Re Render Current Frame"))
                 {
-                    EditorApp.Instance.MarkPreviewDirty();
+                    _previewModule.MarkPreviewDirty();
                 }
 
                 ImGui.End();
