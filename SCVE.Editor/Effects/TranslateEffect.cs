@@ -26,7 +26,6 @@ namespace SCVE.Editor.Effects
             var srcImageFrame = effectApplicationContext.SourceImageFrame;
 
             var clone = srcImageFrame.ImageSharpImage.Clone();
-            clone.Mutate(i => i.Resize((int)(srcImageFrame.Width * X), (int)(srcImageFrame.Height * Y)));
 
             srcImageFrame.ImageSharpImage.Mutate(i => i.Clear(Color.Transparent));
 
