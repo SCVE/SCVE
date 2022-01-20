@@ -4,6 +4,7 @@ using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.ProjectStructure;
 using SCVE.Engine.ImageSharpBindings;
+using Silk.NET.OpenGL;
 
 namespace SCVE.Editor.ImGuiUi
 {
@@ -66,7 +67,7 @@ namespace SCVE.Editor.ImGuiUi
 
             _imageWidth  = textureFileData.Width;
             _imageHeight = textureFileData.Height;
-            _texture     = new Texture(EditorApp.Instance.GL, _imageWidth, _imageHeight, textureFileData.RgbaPixels);
+            _texture     = new Texture(EditorApp.Instance.GL, _imageWidth, _imageHeight, textureFileData.RgbaPixels, PixelFormat.Rgba);
         }
 
         public override void OnImGuiRender()
