@@ -35,6 +35,7 @@ namespace SCVE.Editor
                         editorApp.OpenSansFont = io.Fonts.AddFontFromFileTTF("assets/Font/OpenSans-Regular.ttf", 18);
                     }
                 );
+                editorApp.Init();
             };
 
             // Handle resizes

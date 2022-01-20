@@ -1,19 +1,15 @@
-﻿using System;
-using System.IO;
-using SCVE.Editor.Editing;
+﻿using SCVE.Editor.Editing;
 using SCVE.Editor.Effects;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using ImageFrame = SCVE.Editor.Effects.ImageFrame;
 
 namespace SCVE.Editor
 {
     public class SequenceSampler
     {
-        public Image<Rgba32> PreviewImage;
-
         FontCollection fontCollection = new FontCollection();
         private Font font;
 
@@ -22,15 +18,17 @@ namespace SCVE.Editor
         public SequenceSampler()
         {
             fontCollection.Install("assets/Font/arial.ttf");
-            font         = fontCollection.CreateFont("arial", 72);
-            PreviewImage = new Image<Rgba32>(30, 30);
+            font = fontCollection.CreateFont("arial", 72);
         }
 
-        public void Sample(Sequence sequence, int timeFrame)
+        public ImageFrame Sample(Sequence sequence, int timeFrame)
         {
-            var image = new Image<Rgba32>((int)sequence.Resolution.X, (int)sequence.Resolution.Y);
+            var previewImage = new ImageFrame((int)sequence.Resolution.X, (int)sequence.Resolution.Y);
+            var clipImage   = new ImageFrame((int)sequence.Resolution.X, (int)sequence.Resolution.Y);
+            previewImage.CreateImageSharpWrapper();
+            clipImage.CreateImageSharpWrapper();
 
-            image.Mutate(i => i.Fill(Color.Black));
+            previewImage.ImageSharpImage.Mutate(i => i.Clear(Color.Transparent));
 
             for (var i = sequence.Tracks.Count - 1; i >= 0; i--)
             {
@@ -48,16 +46,18 @@ namespace SCVE.Editor
                         continue;
                     }
 
-                    if (_clipEvaluator.Evaluate(sequence, clip, timeFrame - clip.StartFrame))
+                    if (_clipEvaluator.Evaluate(sequence, clip, timeFrame - clip.StartFrame, clipImage))
                     {
-                        image.Mutate(i => i.DrawImage(_clipEvaluator.ResultFrame.ImageSharpImage, 1f));
+                        previewImage.ImageSharpImage.Mutate(i => i.DrawImage(clipImage.ImageSharpImage, 1f));
+
+                        clipImage.ImageSharpImage.Mutate(i => i.Clear(Color.Transparent));
                     }
                 }
             }
 
-            image.Mutate(i => i.DrawText($"DEBUG FRAME RENDER: {timeFrame}", font, Color.Red, new PointF(0, 0)));
+            previewImage.ImageSharpImage.Mutate(i => i.DrawText($"DEBUG FRAME RENDER: {timeFrame}", font, Color.Red, new PointF(0, 0)));
 
-            PreviewImage = image;
+            return previewImage;
         }
     }
 }

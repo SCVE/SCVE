@@ -1,16 +1,20 @@
 ﻿using System.Numerics;
 using ImGuiNET;
+using SCVE.Editor.Modules;
 using SCVE.Editor.ProjectStructure;
 
 namespace SCVE.Editor.ImGuiUi
 {
     public class ProjectPanel : IImGuiRenderable
     {
+        private EditingModule _editingModule;
+        
         private AssetPreviewModalPanel _assetPreviewModalPanel;
 
         public ProjectPanel()
         {
             _assetPreviewModalPanel = new AssetPreviewModalPanel();
+            _editingModule          = EditorApp.Modules.Get<EditingModule>();
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
@@ -78,11 +82,11 @@ namespace SCVE.Editor.ImGuiUi
         {
             if (ImGui.Begin("Project Panel"))
             {
-                if (EditorApp.Instance.OpenedProject is not null)
+                if (_editingModule.OpenedProject is not null)
                 {
-                    ImGui.Text(EditorApp.Instance.OpenedProject.Name);
+                    ImGui.Text(_editingModule.OpenedProject.Name);
 
-                    PushImGuiAssetTreeFolder(EditorApp.Instance.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+                    PushImGuiAssetTreeFolder(_editingModule.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
                 }
                 else
                 {

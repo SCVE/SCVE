@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
 using SCVE.Editor.Editing;
+using SCVE.Editor.Effects;
 using SCVE.Editor.ImGuiUi;
+using SCVE.Editor.Modules;
 using SCVE.Editor.ProjectStructure;
 using Silk.NET.OpenGL;
 using Vector2 = System.Numerics.Vector2;
@@ -13,40 +15,45 @@ namespace SCVE.Editor
 
         public static EditorApp Instance;
 
+        private Modules.Modules _modules;
+        public static Modules.Modules Modules => Instance._modules;
+
         private static bool _dockspaceOpen = true;
         private static bool _optFullscreenPersistant = true;
         private static bool _optFullscreen = _optFullscreenPersistant;
 
         private static ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags.None;
 
-        public readonly Project OpenedProject;
-        public readonly Sequence OpenedSequence;
-        public Clip SelectedClip { get; set; }
-
-        private readonly ProjectPanel _projectPanel = new();
-
-        private readonly SequencePanel _sequencePanel = new();
-
-        private readonly PreviewPanel _previewPanel = new();
-        private readonly SequenceInfoPanel _sequenceInfoPanel = new();
-        private readonly ClipEffectsPanel _clipEffectsPanel = new();
-
-        public readonly SequenceSampler Sampler = new();
+        private ProjectPanel _projectPanel;
+        private SequencePanel _sequencePanel;
+        private PreviewPanel _previewPanel;
+        private SequenceInfoPanel _sequenceInfoPanel;
+        private ClipEffectsPanel _clipEffectsPanel;
 
         public ImFontPtr OpenSansFont;
 
         public EditorApp()
         {
             Instance = this;
+        }
 
-            if (!Project.PathIsProject("testdata/projects/abc.scve"))
-            {
-                Utils.CreateDummyProject("abc", "testdata/projects/");
-            }
+        public void Init()
+        {
+            _modules = new Modules.Modules();
+            _modules.Add(new PreviewModule());
+            _modules.Add(new SamplerModule());
+            _modules.Add(new EditingModule());
+            _modules.CrossReference();
 
-            OpenedProject = Project.LoadFrom("testdata/projects/abc.scve");
+            _modules.Init();
 
-            OpenedSequence = Utils.CreateTestingSequence();
+            _projectPanel      = new();
+            _sequencePanel     = new();
+            _previewPanel      = new();
+            _sequenceInfoPanel = new();
+            _clipEffectsPanel  = new();
+
+            _modules.Get<PreviewModule>().SetVisibleFrame(0);
         }
 
         public void OnImGuiRender()
@@ -131,7 +138,7 @@ namespace SCVE.Editor
 
             ImGui.ShowDemoWindow();
 
-            // TODO: Render separate panels
+            Modules.Update();
 
             _projectPanel.OnImGuiRender();
             _sequencePanel.OnImGuiRender();
