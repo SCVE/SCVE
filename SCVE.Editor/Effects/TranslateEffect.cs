@@ -42,7 +42,6 @@ namespace SCVE.Editor.Effects
             {
                 X = x;
                 _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
-                _previewModule.MarkPreviewDirty();
             }
 
             int y = Y;
@@ -50,7 +49,6 @@ namespace SCVE.Editor.Effects
             {
                 Y = y;
                 _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
-                _previewModule.MarkPreviewDirty();
             }
         }
     }

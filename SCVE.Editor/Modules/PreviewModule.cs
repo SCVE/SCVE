@@ -4,10 +4,6 @@ namespace SCVE.Editor.Modules
 {
     public class PreviewModule : IModule
     {
-        private ImageFrame _displayedImage;
-
-        public bool PreviewUpdateRequired { get; private set; }
-
         public readonly InMemoryFrameCache PreviewCache = new();
 
         public ImageFrame PreviewImage;
@@ -25,16 +21,6 @@ namespace SCVE.Editor.Modules
             _samplerModule = modules.Get<SamplerModule>();
         }
 
-        public void MarkPreviewDirty()
-        {
-            PreviewUpdateRequired = true;
-        }
-
-        public void ClearPreviewDirty()
-        {
-            PreviewUpdateRequired = false;
-        }
-
         public void InvalidateSampledFrame(int index)
         {
             if (index == _editingModule.OpenedSequence.CursorTimeFrame)
@@ -43,26 +29,31 @@ namespace SCVE.Editor.Modules
             }
 
             PreviewCache.InvalidateSampledFrame(index);
+            PreviewCurrentFrame();
+        }
+
+        public void PreviewCurrentFrame()
+        {
+            SetVisibleFrame(_editingModule.OpenedSequence.CursorTimeFrame);
+        }
+
+        public void SetVisibleFrame(int index)
+        {
+            if (PreviewCache.Frames.ContainsKey(index))
+            {
+                PreviewImage = PreviewCache.Frames[index];
+            }
+            else
+            {
+                var sampledFrame = _samplerModule.Sampler.Sample(_editingModule.OpenedSequence, index);
+                PreviewCache.AddSampledFrame(index, sampledFrame);
+                sampledFrame.UploadGpuData();
+                PreviewImage = sampledFrame;
+            }
         }
 
         public void OnUpdate()
         {
-            if (PreviewUpdateRequired)
-            {
-                if (PreviewCache.Frames.ContainsKey(_editingModule.OpenedSequence.CursorTimeFrame))
-                {
-                    PreviewImage = PreviewCache.Frames[_editingModule.OpenedSequence.CursorTimeFrame];
-                }
-                else
-                {
-                    var sampledFrame = _samplerModule.Sampler.Sample(_editingModule.OpenedSequence, _editingModule.OpenedSequence.CursorTimeFrame);
-                    sampledFrame.UploadGpuData();
-                    PreviewCache.AddSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame, sampledFrame);
-                    PreviewImage = sampledFrame;
-                }
-
-                ClearPreviewDirty();
-            }
         }
     }
 }

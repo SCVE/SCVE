@@ -102,7 +102,8 @@ namespace SCVE.Editor.ImGuiUi
                     if (sequenceCursorTimeFrame != timelineClickedFrame)
                     {
                         _editingModule.OpenedSequence.CursorTimeFrame = Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength);
-                        _previewModule.MarkPreviewDirty();
+                        
+                        _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
                     }
                 }
 
@@ -283,7 +284,8 @@ namespace SCVE.Editor.ImGuiUi
                         _draggedClip.StartFrame = _ghostClip.StartFrame;
                         _ghostClip.Visible      = false;
                         _isDraggingClip         = false;
-                        _previewModule.MarkPreviewDirty();
+                        
+                        _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
                     }
                 }
 
@@ -294,7 +296,8 @@ namespace SCVE.Editor.ImGuiUi
                         _editingModule.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
                         _cursorDragFrames                             =  0;
                         _isDraggingCursor                             =  false;
-                        _previewModule.MarkPreviewDirty();
+                        
+                        _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
                     }
                 }
 

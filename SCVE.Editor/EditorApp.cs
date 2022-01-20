@@ -24,18 +24,21 @@ namespace SCVE.Editor
 
         private static ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags.None;
 
-        private readonly ProjectPanel _projectPanel;
-        private readonly SequencePanel _sequencePanel;
-        private readonly PreviewPanel _previewPanel;
-        private readonly SequenceInfoPanel _sequenceInfoPanel;
-        private readonly ClipEffectsPanel _clipEffectsPanel;
+        private ProjectPanel _projectPanel;
+        private SequencePanel _sequencePanel;
+        private PreviewPanel _previewPanel;
+        private SequenceInfoPanel _sequenceInfoPanel;
+        private ClipEffectsPanel _clipEffectsPanel;
 
         public ImFontPtr OpenSansFont;
 
         public EditorApp()
         {
             Instance = this;
+        }
 
+        public void Init()
+        {
             _modules = new Modules.Modules();
             _modules.Add(new PreviewModule());
             _modules.Add(new SamplerModule());
@@ -50,7 +53,7 @@ namespace SCVE.Editor
             _sequenceInfoPanel = new();
             _clipEffectsPanel  = new();
 
-            _modules.Get<PreviewModule>().MarkPreviewDirty();
+            _modules.Get<PreviewModule>().SetVisibleFrame(0);
         }
 
         public void OnImGuiRender()

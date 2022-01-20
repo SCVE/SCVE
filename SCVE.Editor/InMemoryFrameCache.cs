@@ -14,6 +14,7 @@ namespace SCVE.Editor
 
         public void AddSampledFrame(int index, ImageFrame frame)
         {
+            InvalidateSampledFrame(index);
             Frames[index] = frame;
         }
 

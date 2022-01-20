@@ -7,11 +7,13 @@ namespace SCVE.Editor.ImGuiUi
 {
     public class PreviewPanel : IImGuiRenderable
     {
+        private readonly EditingModule _editingModule;
         private readonly PreviewModule _previewModule;
 
         public PreviewPanel()
         {
             _previewModule = EditorApp.Modules.Get<PreviewModule>();
+            _editingModule = EditorApp.Modules.Get<EditingModule>();
         }
         
         public void OnImGuiRender()
@@ -45,7 +47,7 @@ namespace SCVE.Editor.ImGuiUi
 
                 if (ImGui.Button("Re Render Current Frame"))
                 {
-                    _previewModule.MarkPreviewDirty();
+                    _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
                 }
 
                 ImGui.End();
