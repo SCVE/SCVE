@@ -45,11 +45,6 @@ namespace SCVE.Editor.ImGuiUi
 
                 ImGui.Image((IntPtr)image.GpuTexture.GlTexture, imageSize);
 
-                if (ImGui.Button("Re Render Current Frame"))
-                {
-                    _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
-                }
-
                 ImGui.End();
             }
         }

@@ -102,8 +102,9 @@ namespace SCVE.Editor.ImGuiUi
                     if (sequenceCursorTimeFrame != timelineClickedFrame)
                     {
                         _editingModule.OpenedSequence.CursorTimeFrame = Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength);
-                        
-                        _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
+
+                        // no sequence data has changed, so we just need to preview new frame
+                        _previewModule.RenderCurrentFrame();
                     }
                 }
 
@@ -123,10 +124,10 @@ namespace SCVE.Editor.ImGuiUi
 
                 for (int i = 0; i < sequenceFrameLength; i++)
                 {
-                    int height;
+                    int markerStripHeight;
                     if (i % sequenceFPS == 0)
                     {
-                        height = timelineSecondsMarkerHeight;
+                        markerStripHeight = timelineSecondsMarkerHeight;
                         var text     = $"{i / sequenceFPS}";
                         var textSize = ImGui.CalcTextSize(text);
 
@@ -139,13 +140,23 @@ namespace SCVE.Editor.ImGuiUi
                     }
                     else
                     {
-                        height = timelineFramesMarkerHeight;
+                        markerStripHeight = timelineFramesMarkerHeight;
                     }
 
                     painter.AddLine(
-                        new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame, drawOriginY + sequenceHeaderHeight - height),
-                        new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame, drawOriginY + sequenceHeaderHeight), 0xFFFFFFFF
+                        new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame, drawOriginY + sequenceHeaderHeight - markerStripHeight),
+                        new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame, drawOriginY + sequenceHeaderHeight),
+                        0xFFFFFFFF
                     );
+
+                    if (_previewModule.HasCached(i))
+                    {
+                        painter.AddRectFilled(
+                            new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame + 1, drawOriginY + sequenceHeaderHeight - markerStripHeight),
+                            new Vector2(drawOriginX + trackHeaderWidth + (i + 1) * widthPerFrame - 1, drawOriginY + sequenceHeaderHeight),
+                            0xFF00FF00
+                        );
+                    }
                 }
 
                 #endregion
@@ -281,11 +292,15 @@ namespace SCVE.Editor.ImGuiUi
                             _ghostClip.Track.AddClip(_draggedClip);
                         }
 
-                        _draggedClip.StartFrame = _ghostClip.StartFrame;
+                        if (_ghostClip.StartFrame != _draggedClip.StartFrame)
+                        {
+                            _previewModule.InvalidateRange(_draggedClip.StartFrame, _draggedClip.FrameLength);
+                            _previewModule.InvalidateRange(_ghostClip.StartFrame, _ghostClip.FrameLength);
+                            _draggedClip.StartFrame = _ghostClip.StartFrame;
+                        }
+
                         _ghostClip.Visible      = false;
                         _isDraggingClip         = false;
-                        
-                        _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
                     }
                 }
 
@@ -296,8 +311,8 @@ namespace SCVE.Editor.ImGuiUi
                         _editingModule.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
                         _cursorDragFrames                             =  0;
                         _isDraggingCursor                             =  false;
-                        
-                        _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
+
+                        _previewModule.RenderCurrentFrame();
                     }
                 }
 

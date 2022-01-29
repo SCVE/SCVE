@@ -75,8 +75,8 @@ namespace SCVE.Editor.ImGuiUi
                             if (ImGui.Selectable(AllKnownEffectsLabels[i]))
                             {
                                 _addEffectExpanded = false;
-                                clip.Effects.Add(Activator.CreateInstance(AllKnownEffects[i]) as IEffect);
-                                _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
+                                clip.AddEffect(Activator.CreateInstance(AllKnownEffects[i]) as IEffect);
+                                _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
                             }
                         }
 
@@ -88,9 +88,9 @@ namespace SCVE.Editor.ImGuiUi
                 {
                     if (_lastSelectedEffect != -1)
                     {
-                        clip.Effects.RemoveAt(_lastSelectedEffect);
+                        clip.RemoveEffect(_lastSelectedEffect);
                         _lastSelectedEffect = -1;
-                        _previewModule.InvalidateSampledFrame(_editingModule.OpenedSequence.CursorTimeFrame);
+                        _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
                     }
                 }
             }

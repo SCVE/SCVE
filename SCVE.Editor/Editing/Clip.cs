@@ -20,19 +20,33 @@ namespace SCVE.Editor.Editing
         public Track Track { get; set; }
         public int EndFrame => StartFrame + FrameLength;
 
-        public List<IEffect> Effects { get; set; }
+        public IReadOnlyList<IEffect> Effects => _effects;
+
+        private List<IEffect> _effects;
 
         protected Clip(Guid guid, int startFrame, int frameLength)
         {
             Guid        = guid;
             StartFrame  = startFrame;
             FrameLength = frameLength;
-            Effects     = new List<IEffect>();
+            _effects     = new List<IEffect>();
+        }
+
+        public void AddEffect(IEffect effect)
+        {
+            effect.AttachToClip(this);
+            _effects.Add(effect);
         }
 
         public virtual string ShortName()
         {
             return "Base clip";
+        }
+
+        public void RemoveEffect(int index)
+        {
+            _effects[index].DeAttachFromClip();
+            _effects.RemoveAt(index);
         }
     }
 }

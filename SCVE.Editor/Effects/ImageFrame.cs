@@ -28,15 +28,9 @@ namespace SCVE.Editor.Effects
 
         public void Dispose()
         {
-            if (ImageSharpImage is not null)
-            {
-                ImageSharpImage.Dispose();
-            }
+            ImageSharpImage?.Dispose();
 
-            if (GpuTexture is not null)
-            {
-                GpuTexture.Dispose();
-            }
+            GpuTexture?.Dispose();
         }
 
         private void UploadToGpu()
