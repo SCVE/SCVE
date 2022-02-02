@@ -11,7 +11,7 @@ namespace SCVE.Editor.Modules
         private EditingModule _editingModule;
         private SamplerModule _samplerModule;
 
-        public void Init()
+        public void OnInit()
         {
         }
 

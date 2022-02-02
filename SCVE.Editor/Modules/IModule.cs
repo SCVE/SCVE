@@ -3,7 +3,7 @@
     public interface IModule
     {
         void OnUpdate();
-        void Init();
+        void OnInit();
 
         /// <summary>
         /// The only place where modules should reference each other

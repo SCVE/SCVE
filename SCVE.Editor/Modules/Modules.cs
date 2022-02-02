@@ -25,7 +25,7 @@ namespace SCVE.Editor.Modules
         {
             foreach (var module in _modules)
             {
-                module.Init();
+                module.OnInit();
             }
         }
 

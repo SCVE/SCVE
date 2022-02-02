@@ -4,7 +4,7 @@
     {
         public readonly SequenceSampler Sampler = new();
 
-        public void Init()
+        public void OnInit()
         {
         }
 

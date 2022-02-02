@@ -13,7 +13,7 @@ namespace SCVE.Editor.Modules
         {
         }
 
-        public void Init()
+        public void OnInit()
         {
             if (!Project.PathIsProject("testdata/projects/abc.scve"))
             {
