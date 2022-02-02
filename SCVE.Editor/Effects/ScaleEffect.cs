@@ -1,9 +1,6 @@
 ﻿using ImGuiNET;
 using SCVE.Editor.Editing;
 using SCVE.Editor.Modules;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.Processing;
 
 namespace SCVE.Editor.Effects
 {

@@ -104,7 +104,7 @@ namespace SCVE.Editor.ImGuiUi
                         _editingModule.OpenedSequence.CursorTimeFrame = Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength);
 
                         // no sequence data has changed, so we just need to preview new frame
-                        _previewModule.RenderCurrentFrame();
+                        _previewModule.SyncVisiblePreview();
                     }
                 }
 
@@ -312,7 +312,7 @@ namespace SCVE.Editor.ImGuiUi
                         _cursorDragFrames                             =  0;
                         _isDraggingCursor                             =  false;
 
-                        _previewModule.RenderCurrentFrame();
+                        _previewModule.SyncVisiblePreview();
                     }
                 }
 

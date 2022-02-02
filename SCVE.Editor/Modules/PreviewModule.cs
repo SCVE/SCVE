@@ -26,30 +26,34 @@ namespace SCVE.Editor.Modules
             PreviewCache.InvalidateSampledFrame(index);
             if (index == _editingModule.OpenedSequence.CursorTimeFrame)
             {
-                PreviewImage = null;
-                RenderCurrentFrame();
+                SyncVisiblePreview();
             }
         }
 
+        /// <summary>
+        /// Invalidates A range of sampled frames and performs preview sync if necessary
+        /// </summary>
         public void InvalidateRange(int start, int length)
         {
             for (int i = start; i < start + length; i++)
             {
                 PreviewCache.InvalidateSampledFrame(i);
             }
-            
-            if(_editingModule.OpenedSequence.CursorTimeFrame.IsWithinInclusive(start, start + length - 1))
+
+            var cursorTimeFrame = _editingModule.OpenedSequence.CursorTimeFrame;
+
+            if(start <= cursorTimeFrame && cursorTimeFrame <= start + length)
             {
-                RenderCurrentFrame();
+                SyncVisiblePreview();
             }
         }
 
-        public void RenderCurrentFrame()
+        public void SyncVisiblePreview()
         {
             SetVisibleFrame(_editingModule.OpenedSequence.CursorTimeFrame);
         }
 
-        public void SetVisibleFrame(int index)
+        private void SetVisibleFrame(int index)
         {
             if (HasCached(index))
             {

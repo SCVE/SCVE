@@ -53,7 +53,7 @@ namespace SCVE.Editor
             _sequenceInfoPanel = new();
             _clipEffectsPanel  = new();
 
-            _modules.Get<PreviewModule>().SetVisibleFrame(0);
+            _modules.Get<PreviewModule>().SyncVisiblePreview();
         }
 
         public void OnImGuiRender()

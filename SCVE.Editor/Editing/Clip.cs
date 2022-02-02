@@ -13,6 +13,9 @@ namespace SCVE.Editor.Editing
         /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Absolute index of start frame
+        /// </summary>
         public int StartFrame { get; set; }
 
         public int FrameLength { get; set; }
