@@ -4,21 +4,22 @@ namespace SCVE.Editor.Modules
 {
     public class PreviewModule : IModule
     {
-        public readonly InMemoryFrameCache PreviewCache = new();
+        // TODO: Replace with threeway image 
+        private readonly InMemoryFrameCache PreviewCache = new();
 
         public ImageFrame PreviewImage;
 
         private EditingModule _editingModule;
         private SamplerModule _samplerModule;
 
-        public void OnInit()
-        {
-        }
-
         public void CrossReference(Modules modules)
         {
             _editingModule = modules.Get<EditingModule>();
             _samplerModule = modules.Get<SamplerModule>();
+        }
+
+        public void OnInit()
+        {
         }
 
         public void InvalidateFrame(int index)
