@@ -3,7 +3,9 @@ using SCVE.Editor.Editing;
 using SCVE.Editor.Modules;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using IImage = SCVE.Editor.Imaging.IImage;
 
 namespace SCVE.Editor.Effects
 {
@@ -33,17 +35,19 @@ namespace SCVE.Editor.Effects
             _clip = null;
         }
 
-        public ImageFrame Apply(EffectApplicationContext effectApplicationContext)
+        public IImage Apply(EffectApplicationContext effectApplicationContext)
         {
-            var srcImageFrame = effectApplicationContext.SourceImageFrame;
+            var srcImage = effectApplicationContext.SourceImageFrame;
 
-            var clone = srcImageFrame.ImageSharpImage.Clone();
+            using var srcImageSharpImage = Image.WrapMemory<Rgba32>(srcImage.ToByteArray(), srcImage.Width, srcImage.Height);
 
-            srcImageFrame.ImageSharpImage.Mutate(i => i.Clear(Color.Transparent));
+            var clone = srcImageSharpImage.Clone();
 
-            srcImageFrame.ImageSharpImage.Mutate(i => i.DrawImage(clone, new Point(X, Y), 1));
+            srcImageSharpImage.Mutate(i => i.Clear(Color.Transparent));
 
-            return srcImageFrame;
+            srcImageSharpImage.Mutate(i => i.DrawImage(clone, new Point(X, Y), 1));
+
+            return srcImage;
         }
 
         public void OnImGuiRender()

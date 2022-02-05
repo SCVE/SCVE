@@ -1,6 +1,8 @@
 ﻿using SCVE.Editor.Editing;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using IImage = SCVE.Editor.Imaging.IImage;
 
 namespace SCVE.Editor.Effects
 {
@@ -9,7 +11,7 @@ namespace SCVE.Editor.Effects
         /// <summary>
         /// time must be in clip space
         /// </summary>
-        public bool Evaluate(Sequence sequence, Clip clip, int time, ImageFrame clipResultImageFrame)
+        public bool Evaluate(Sequence sequence, Clip clip, int time, IImage clipResultImage)
         {
             if (clip is EmptyClip)
             {
@@ -20,13 +22,15 @@ namespace SCVE.Editor.Effects
             {
                 var imageAsset = Image.Load(imageClip.ReferencedImageAsset.FileSystemFullPath);
 
-                clipResultImageFrame.ImageSharpImage.Mutate(i => i.DrawImage(imageAsset, 1));
+                using var clipResultImageSharpImage = Image.WrapMemory<Rgba32>(clipResultImage.ToByteArray(), clipResultImage.Width, clipResultImage.Height);
+
+                clipResultImageSharpImage.Mutate(i => i.DrawImage(imageAsset, 1));
 
                 EffectApplicationContext effectApplicationContext = new EffectApplicationContext()
                 {
                     Sequence         = sequence,
                     Clip             = clip,
-                    SourceImageFrame = clipResultImageFrame
+                    SourceImageFrame = clipResultImage
                 };
 
                 for (var i = 0; i < clip.Effects.Count; i++)

@@ -23,12 +23,12 @@ namespace SCVE.Editor.ImGuiUi
                 var contentRegionAvail = ImGui.GetContentRegionAvail();
                 
                 var image = _previewModule.PreviewImage;
-                if (image is null)
-                {
-                    ImGui.Text("No preview is available right now");
-                    ImGui.End();
-                    return;
-                }
+                // if (image is null)
+                // {
+                //     ImGui.Text("No preview is available right now");
+                //     ImGui.End();
+                //     return;
+                // }
 
                 var downscaleFactor = 1f;
                 if (image.Width > contentRegionAvail.X)
@@ -43,7 +43,8 @@ namespace SCVE.Editor.ImGuiUi
 
                 ImGui.SetCursorPos((contentRegionAvail - imageSize) * 0.5f);
 
-                ImGui.Image((IntPtr)image.GpuTexture.GlTexture, imageSize);
+                image.ToGpu();
+                ImGui.Image((IntPtr)image.GpuImage.GpuId, imageSize);
 
                 ImGui.End();
             }

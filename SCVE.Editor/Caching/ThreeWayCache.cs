@@ -15,9 +15,9 @@ namespace SCVE.Editor.Caching
         public ThreeWayCache(int length, int width, int height)
         {
             _images = new List<ThreeWayImage>();
-            Resize(length);
             Width   = width;
             Height  = height;
+            Resize(length);
         }
 
         public void Resize(int newSize)
@@ -37,8 +37,25 @@ namespace SCVE.Editor.Caching
 
         public void Put(int index, ThreeWayImage image)
         {
-            _images[index].ToNo();
-            _images[index].ReplaceContent(image);
+            _images[index].Dispose();
+            _images[index] = image;
         }
+
+        public bool HasAnyPresence(int index)
+        {
+            return _images[index].Presence != ImagePresence.NO;
+        }
+
+        public bool TryMakeFromDisk(int index)
+        {
+            return _images[index].TryMakeFromDisk();
+        }
+
+        public void Invalidate(int index)
+        {
+            _images[index].ToNo();
+        }
+
+        public ThreeWayImage this[int index] => _images[index];
     }
 }

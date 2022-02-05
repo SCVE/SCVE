@@ -9,9 +9,13 @@ namespace SCVE.Editor.Imaging
         public int Width { get; set; }
         public int Height { get; set; }
 
-        private IImage _cpuImage;
-        private IImage _gpuImage;
-        private IImage _diskImage;
+        public CpuImage CpuImage => _cpuImage;
+        public GpuImage GpuImage => _gpuImage;
+        public DiskImage DiskImage => _diskImage;
+
+        private CpuImage _cpuImage;
+        private GpuImage _gpuImage;
+        private DiskImage _diskImage;
 
         public ImagePresence Presence => _presence;
 
@@ -32,6 +36,8 @@ namespace SCVE.Editor.Imaging
         {
             _name     = name;
             _cpuImage = cpuImage;
+            Width     = cpuImage.Width;
+            Height    = cpuImage.Height;
             _presence = ImagePresence.CPU;
         }
 
@@ -39,32 +45,18 @@ namespace SCVE.Editor.Imaging
         {
             _name     = name;
             _gpuImage = gpuImage;
+            Width     = gpuImage.Width;
+            Height    = gpuImage.Height;
             _presence = ImagePresence.GPU;
         }
 
-        public ThreeWayImage(DiskCachedImage diskImage, string name)
+        public ThreeWayImage(DiskImage diskImage, string name)
         {
             _name      = name;
             _diskImage = diskImage;
+            Width      = diskImage.Width;
+            Height     = diskImage.Height;
             _presence  = ImagePresence.DISK;
-        }
-
-        public void ReplaceContent(ThreeWayImage image)
-        {
-            if (_presence == ImagePresence.NO)
-            {
-                _cpuImage  = image._cpuImage;
-                _gpuImage  = image._gpuImage;
-                _diskImage = image._diskImage;
-
-                Width     = image.Width;
-                Height    = image.Height;
-                _presence = image._presence;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("The image was not fully unloaded.");
-            }
         }
 
         public void ToCpu()
@@ -128,12 +120,12 @@ namespace SCVE.Editor.Imaging
                 case ImagePresence.NO:
                     throw new ArgumentOutOfRangeException("Image instance has a ImagePresence.NO value and can't be uploaded to disk");
                 case ImagePresence.CPU:
-                    _diskImage = new GpuImage(_cpuImage);
+                    _diskImage = new DiskImage(_cpuImage, $"cached/{_name}.uncompressed");
                     _cpuImage.Dispose();
                     _cpuImage = null;
                     break;
                 case ImagePresence.GPU:
-                    _diskImage = new DiskCachedImage(_gpuImage, $"cached/{_name}.uncompressed");
+                    _diskImage = new DiskImage(_gpuImage, $"cached/{_name}.uncompressed");
                     _gpuImage.Dispose();
                     _gpuImage = null;
                     break;
@@ -170,6 +162,38 @@ namespace SCVE.Editor.Imaging
             }
 
             _presence = ImagePresence.NO;
+        }
+
+        public bool TryMakeFromDisk()
+        {
+            switch (_presence)
+            {
+                case ImagePresence.NO:
+                    _diskImage = new DiskImage(Width, Height, $"cached/{_name}.uncompressed");
+                    if (_diskImage.Exists())
+                    {
+                        _presence = ImagePresence.DISK;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                case ImagePresence.CPU:
+                case ImagePresence.GPU:
+                case ImagePresence.DISK:
+                    if (_diskImage.Exists())
+                    {
+                        _presence = ImagePresence.DISK;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public byte[] ToByteArray()

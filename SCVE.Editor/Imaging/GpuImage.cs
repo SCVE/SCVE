@@ -11,6 +11,8 @@ namespace SCVE.Editor.Imaging
 
         public int Height { get; set; }
 
+        public uint GpuId => _texture.GlTexture; 
+
         /// <summary>
         /// Constructs a new image from an existing 
         /// </summary>

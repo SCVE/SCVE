@@ -1,4 +1,5 @@
 ﻿using SCVE.Editor.Editing;
+using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Effects
 {
@@ -8,6 +9,6 @@ namespace SCVE.Editor.Effects
 
         public Clip Clip { get; set; }
 
-        public ImageFrame SourceImageFrame { get; set; }
+        public IImage SourceImageFrame { get; set; }
     }
 }

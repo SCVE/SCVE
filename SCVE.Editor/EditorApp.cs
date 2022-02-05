@@ -40,9 +40,9 @@ namespace SCVE.Editor
         public void Init()
         {
             _modules = new Modules.Modules();
-            _modules.Add(new PreviewModule());
             _modules.Add(new SamplerModule());
             _modules.Add(new EditingModule());
+            _modules.Add(new PreviewModule());
             _modules.CrossReference();
 
             _modules.Init();

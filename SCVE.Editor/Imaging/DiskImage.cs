@@ -2,7 +2,7 @@
 
 namespace SCVE.Editor.Imaging
 {
-    public class DiskCachedImage : IImage
+    public class DiskImage : IImage
     {
         /// <summary>
         /// Path, where the image is stored
@@ -15,7 +15,7 @@ namespace SCVE.Editor.Imaging
         /// <summary>
         /// Creates and stores an image into a path
         /// </summary>
-        public DiskCachedImage(IImage image, string path)
+        public DiskImage(IImage image, string path)
         {
             Path   = path;
             Width  = image.Width;
@@ -26,11 +26,16 @@ namespace SCVE.Editor.Imaging
         /// <summary>
         /// Creates an empty on disk image, but doesn't download or upload any data
         /// </summary>
-        public DiskCachedImage(int width, int height, string path)
+        public DiskImage(int width, int height, string path)
         {
             Path   = path;
             Width  = width;
             Height = height;
+        }
+
+        public bool Exists()
+        {
+            return File.Exists(Path);
         }
 
         public byte[] ToByteArray()
