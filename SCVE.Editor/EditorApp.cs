@@ -41,6 +41,7 @@ namespace SCVE.Editor
         public void Init()
         {
             _modules = new ModulesContainer();
+            _modules.Add<AssetCacheModule>();
             _modules.Add<SamplerModule>();
             _modules.Add<EditingModule>();
             _modules.Add<PreviewModule>();
