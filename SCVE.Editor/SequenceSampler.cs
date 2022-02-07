@@ -59,7 +59,7 @@ namespace SCVE.Editor
                 }
             }
 
-            previewImageSharpImage.Mutate(i => i.DrawText($"DEBUG FRAME RENDER: {timeFrame}", font, Color.Red, new PointF(0, 0)));
+            previewImageSharpImage.Mutate(i => i.DrawText($"DEBUG FRAME RENDER: {timeFrame}", font, Color.Red, new PointF(10, 0)));
 
             return new ThreeWayImage(previewImage, timeFrame.ToString());
         }

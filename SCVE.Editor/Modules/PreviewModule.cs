@@ -21,9 +21,9 @@ namespace SCVE.Editor.Modules
         public void OnInit()
         {
             _previewCache = new ThreeWayCache(
-                _editingModule.OpenedSequence?.FrameLength ?? 0,
-                (int)(_editingModule.OpenedSequence?.Resolution.X ?? 1),
-                (int)(_editingModule.OpenedSequence?.Resolution.Y ?? 1)
+                _editingModule.OpenedSequence.FrameLength,
+                (int)_editingModule.OpenedSequence.Resolution.X,
+                (int)_editingModule.OpenedSequence.Resolution.Y
             );
         }
 
