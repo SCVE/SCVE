@@ -2,6 +2,7 @@
 using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Editing;
+using SCVE.Editor.Imaging;
 using SCVE.Editor.Modules;
 
 namespace SCVE.Editor.ImGuiUi
@@ -149,12 +150,20 @@ namespace SCVE.Editor.ImGuiUi
                         0xFFFFFFFF
                     );
 
-                    if (_previewModule.HasCached(i))
+                    if (_previewModule.HasCached(i, ImagePresence.GPU))
                     {
                         painter.AddRectFilled(
                             new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame + 1, drawOriginY + sequenceHeaderHeight - markerStripHeight),
                             new Vector2(drawOriginX + trackHeaderWidth + (i + 1) * widthPerFrame - 1, drawOriginY + sequenceHeaderHeight),
                             0xFF00FF00
+                        );
+                    }
+                    else if (_previewModule.HasCached(i, ImagePresence.DISK))
+                    {
+                        painter.AddRectFilled(
+                            new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame + 1, drawOriginY + sequenceHeaderHeight - markerStripHeight),
+                            new Vector2(drawOriginX + trackHeaderWidth + (i + 1) * widthPerFrame - 1, drawOriginY + sequenceHeaderHeight),
+                            0xFFFF0000
                         );
                     }
                 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Caching
@@ -35,7 +36,7 @@ namespace SCVE.Editor.Caching
             }
         }
 
-        public void Put(int index, ThreeWayImage image)
+        public void ForceReplace(int index, ThreeWayImage image)
         {
             _images[index].Dispose();
             _images[index] = image;

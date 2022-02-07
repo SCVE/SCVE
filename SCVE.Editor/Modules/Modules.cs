@@ -47,6 +47,16 @@ namespace SCVE.Editor.Modules
             _modules.Add(module);
         }
 
+        public void Add<T>() where T : IModule, new()
+        {
+            if (Get<T>() is not null)
+            {
+                throw new ScveException($"Can't add a module of existing type: {typeof(T)}");
+            }
+
+            _modules.Add(new T());
+        }
+
         public T Get<T>() where T : IModule
         {
             return (T)_modules.FirstOrDefault(m => m.GetType() == typeof(T));

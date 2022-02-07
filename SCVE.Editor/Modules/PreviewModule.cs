@@ -60,15 +60,41 @@ namespace SCVE.Editor.Modules
             }
             else
             {
-                var sampledFrame = _samplerModule.Sampler.Sample(_editingModule.OpenedSequence, index);
-                _previewCache.Put(index, sampledFrame);
-                _previewCache[index].ToGpu();
+                RenderFrame(index);
+            }
+        }
+
+        public void RenderFrame(int index)
+        {
+            var sampledFrame = _samplerModule.Sampler.Sample(_editingModule.OpenedSequence, index);
+            _previewCache.ForceReplace(index, sampledFrame);
+            _previewCache[index].ToGpu();
+        }
+
+        public void RenderRange(int start, int end)
+        {
+            for (int i = start; i < end; i++)
+            {
+                RenderFrame(i);
+            }
+        }
+
+        public void RenderSequence()
+        {
+            for (int i = 0; i < _editingModule.OpenedSequence.FrameLength; i++)
+            {
+                RenderFrame(i);
             }
         }
 
         public bool HasCached(int index)
         {
             return _previewCache.HasAnyPresence(index);
+        }
+        
+        public bool HasCached(int index, ImagePresence presence)
+        {
+            return _previewCache[index].Presence == presence;
         }
 
         public void OnUpdate()

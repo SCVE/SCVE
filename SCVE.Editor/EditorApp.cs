@@ -31,6 +31,7 @@ namespace SCVE.Editor
         private ClipEffectsPanel _clipEffectsPanel;
 
         public ImFontPtr OpenSansFont;
+        private MainMenuBar _mainMenuBar;
 
         public EditorApp()
         {
@@ -40,18 +41,20 @@ namespace SCVE.Editor
         public void Init()
         {
             _modules = new Modules.Modules();
-            _modules.Add(new SamplerModule());
-            _modules.Add(new EditingModule());
-            _modules.Add(new PreviewModule());
+            _modules.Add<SamplerModule>();
+            _modules.Add<EditingModule>();
+            _modules.Add<PreviewModule>();
             _modules.CrossReference();
 
+            // NOTE: modules are inited in order of declaration above
             _modules.Init();
 
-            _projectPanel      = new();
-            _sequencePanel     = new();
-            _previewPanel      = new();
+            _projectPanel = new();
+            _sequencePanel = new();
+            _previewPanel = new();
             _sequenceInfoPanel = new();
-            _clipEffectsPanel  = new();
+            _clipEffectsPanel = new();
+            _mainMenuBar = new();
 
             _modules.Get<PreviewModule>().SyncVisiblePreview();
         }
@@ -71,7 +74,8 @@ namespace SCVE.Editor
                 ImGui.SetNextWindowViewport(viewport.ID);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
+                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+                                ImGuiWindowFlags.NoMove;
                 window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
             }
 
@@ -92,9 +96,9 @@ namespace SCVE.Editor
                 ImGui.PopStyleVar(2);
 
             // DockSpace
-            ImGuiIOPtr    io          = ImGui.GetIO();
-            ImGuiStylePtr style       = ImGui.GetStyle();
-            float         minWinSizeX = style.WindowMinSize.X;
+            ImGuiIOPtr io = ImGui.GetIO();
+            ImGuiStylePtr style = ImGui.GetStyle();
+            float minWinSizeX = style.WindowMinSize.X;
             style.WindowMinSize.X = 370.0f;
             if ((io.ConfigFlags & ImGuiConfigFlags.DockingEnable) != 0)
             {
@@ -104,37 +108,7 @@ namespace SCVE.Editor
 
             style.WindowMinSize.X = minWinSizeX;
 
-            if (ImGui.BeginMenuBar())
-            {
-                if (ImGui.BeginMenu("File"))
-                {
-                    // Disabling fullscreen would allow the window to be moved to the front of other windows, 
-                    // which we can't undo at the moment without finer window depth/z control.
-                    //ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);1
-                    if (ImGui.MenuItem("New", "Ctrl+N"))
-                    {
-                        // NewScene();
-                    }
-
-                    if (ImGui.MenuItem("Open...", "Ctrl+O"))
-                    {
-                        // OpenScene();
-                    }
-
-                    if (ImGui.MenuItem("Save As...", "Ctrl+Shift+S"))
-                    {
-                        // SaveSceneAs();
-                    }
-
-                    if (ImGui.MenuItem("Exit"))
-                    {
-                    }
-
-                    ImGui.EndMenu();
-                }
-
-                ImGui.EndMenuBar();
-            }
+            _mainMenuBar.OnImGuiRender();
 
             ImGui.ShowDemoWindow();
 

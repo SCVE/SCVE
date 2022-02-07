@@ -1,4 +1,5 @@
-﻿namespace SCVE.Editor.Imaging
+﻿// ReSharper disable InconsistentNaming
+namespace SCVE.Editor.Imaging
 {
     public enum ImagePresence
     {
