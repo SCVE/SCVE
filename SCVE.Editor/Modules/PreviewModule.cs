@@ -12,10 +12,10 @@ namespace SCVE.Editor.Modules
         private EditingModule _editingModule;
         private SamplerModule _samplerModule;
 
-        public void CrossReference(Modules modules)
+        public void CrossReference(ModulesContainer modulesContainer)
         {
-            _editingModule = modules.Get<EditingModule>();
-            _samplerModule = modules.Get<SamplerModule>();
+            _editingModule = modulesContainer.Get<EditingModule>();
+            _samplerModule = modulesContainer.Get<SamplerModule>();
         }
 
         public void OnInit()

@@ -8,6 +8,6 @@
         /// <summary>
         /// The only place where modules should reference each other
         /// </summary>
-        void CrossReference(Modules modules);
+        void CrossReference(ModulesContainer modulesContainer);
     }
 }

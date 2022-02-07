@@ -4,11 +4,11 @@ using SCVE.Engine.Core.Misc;
 
 namespace SCVE.Editor.Modules
 {
-    public class Modules
+    public class ModulesContainer
     {
         private List<IModule> _modules;
 
-        public Modules()
+        public ModulesContainer()
         {
             _modules = new List<IModule>();
         }
@@ -37,17 +37,7 @@ namespace SCVE.Editor.Modules
             }
         }
 
-        public void Add<T>(T module) where T : IModule
-        {
-            if (Get<T>() is not null)
-            {
-                throw new ScveException($"Can't add a module of existing type: {module.GetType()}");
-            }
-
-            _modules.Add(module);
-        }
-
-        public void Add<T>() where T : IModule, new()
+        public void Add<T>() where T : class, IModule, new()
         {
             if (Get<T>() is not null)
             {

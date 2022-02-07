@@ -9,7 +9,7 @@ namespace SCVE.Editor.Modules
         public Sequence OpenedSequence { get; private set; }
         public Clip SelectedClip { get; set; }
 
-        public void CrossReference(Modules modules)
+        public void CrossReference(ModulesContainer modulesContainer)
         {
         }
 

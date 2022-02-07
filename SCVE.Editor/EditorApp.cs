@@ -15,8 +15,8 @@ namespace SCVE.Editor
 
         public static EditorApp Instance;
 
-        private Modules.Modules _modules;
-        public static Modules.Modules Modules => Instance._modules;
+        private ModulesContainer _modules;
+        public static ModulesContainer Modules => Instance._modules;
 
         private static bool _dockspaceOpen = true;
         private static bool _optFullscreenPersistant = true;
@@ -40,7 +40,7 @@ namespace SCVE.Editor
 
         public void Init()
         {
-            _modules = new Modules.Modules();
+            _modules = new ModulesContainer();
             _modules.Add<SamplerModule>();
             _modules.Add<EditingModule>();
             _modules.Add<PreviewModule>();
