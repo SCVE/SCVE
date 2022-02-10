@@ -209,6 +209,12 @@ namespace SCVE.Editor.ImGuiUi
 
                     painter.AddText(new Vector2(drawOriginX, drawOriginY + sequenceHeaderHeight + i * (trackHeight + trackMargin)), 0xFFFFFFFF, $"TRACK {track.Id}");
 
+                    lock (track)
+                    {
+                        
+                    }
+                    
+
                     // track content background
                     painter.AddRectFilled(
                         new Vector2(drawOriginX + trackHeaderWidth, drawOriginY + sequenceHeaderHeight + i * (trackHeight + trackMargin)),

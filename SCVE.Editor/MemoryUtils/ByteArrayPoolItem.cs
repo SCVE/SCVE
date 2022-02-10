@@ -1,12 +1,14 @@
-﻿namespace SCVE.Editor.MemoryUtils;
-
-public class ByteArrayPoolItem
+﻿namespace SCVE.Editor.MemoryUtils
 {
-    public byte[] Bytes { get; }
-    public bool IsFree { get; set; }
 
-    public ByteArrayPoolItem(int length)
+    public class ByteArrayPoolItem
     {
-        Bytes = new byte[length];
+        public byte[] Bytes { get; }
+        public bool IsFree { get; set; }
+
+        public ByteArrayPoolItem(int length)
+        {
+            Bytes = new byte[length];
+        }
     }
 }

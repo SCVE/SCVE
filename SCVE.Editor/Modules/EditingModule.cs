@@ -1,5 +1,6 @@
 ﻿using SCVE.Editor.Editing;
 using SCVE.Editor.ProjectStructure;
+using Silk.NET.Vulkan;
 
 namespace SCVE.Editor.Modules
 {
@@ -15,10 +16,12 @@ namespace SCVE.Editor.Modules
 
         public void OnInit()
         {
-            if (!Project.PathIsProject("testdata/projects/abc.scve"))
+            if (Project.PathIsProject("testdata/projects/abc.scve"))
             {
-                Utils.CreateDummyProject("abc", "testdata/projects/");
+                Utils.DeleteDummyProject("abc", "testdata/projects/");
             }
+
+            Utils.CreateDummyProject("abc", "testdata/projects/");
 
             OpenedProject = Project.LoadFrom("testdata/projects/abc.scve");
 

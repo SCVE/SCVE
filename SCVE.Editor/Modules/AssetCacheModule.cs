@@ -1,21 +1,22 @@
 ﻿using SCVE.Editor.Caching;
 
-namespace SCVE.Editor.Modules;
-
-public class AssetCacheModule : IModule
+namespace SCVE.Editor.Modules
 {
-    public AssetCache Cache { get; set; }
-
-    public void OnUpdate()
+    public class AssetCacheModule : IModule
     {
-    }
+        public AssetCache Cache { get; set; }
 
-    public void OnInit()
-    {
-        Cache = new AssetCache();
-    }
+        public void OnUpdate()
+        {
+        }
 
-    public void CrossReference(ModulesContainer modulesContainer)
-    {
+        public void OnInit()
+        {
+            Cache = new AssetCache();
+        }
+
+        public void CrossReference(ModulesContainer modulesContainer)
+        {
+        }
     }
 }

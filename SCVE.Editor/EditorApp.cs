@@ -106,7 +106,7 @@ namespace SCVE.Editor
                 uint dockspace_id = ImGui.GetID("MyDockSpace");
                 ImGui.DockSpace(dockspace_id, new Vector2(0.0f, 0.0f), _dockspaceFlags);
             }
-
+            
             style.WindowMinSize.X = minWinSizeX;
 
             _mainMenuBar.OnImGuiRender();
@@ -122,6 +122,9 @@ namespace SCVE.Editor
             _clipEffectsPanel.OnImGuiRender();
 
             ImGui.ShowMetricsWindow();
+            
+            ImGui.PopFont();
+            ImGui.End();
         }
     }
 }
