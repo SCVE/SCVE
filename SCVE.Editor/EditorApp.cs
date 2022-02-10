@@ -84,6 +84,8 @@ namespace SCVE.Editor
             if ((_dockspaceFlags & ImGuiDockNodeFlags.PassthruCentralNode) != 0)
                 window_flags |= ImGuiWindowFlags.NoBackground;
 
+            Modules.Update();
+
             // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
             // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
             // all active windows docked into it will lose their parent and become undocked.
@@ -112,8 +114,6 @@ namespace SCVE.Editor
             _mainMenuBar.OnImGuiRender();
 
             ImGui.ShowDemoWindow();
-
-            Modules.Update();
 
             _projectPanel.OnImGuiRender();
             _sequencePanel.OnImGuiRender();
