@@ -20,10 +20,11 @@ namespace SCVE.Editor.ImGuiUi
 
         public ClipEffectsPanel()
         {
-            AllKnownEffects       = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.IsAssignableTo(typeof(IEffect)) && !t.IsInterface).ToList();
+            AllKnownEffects = Assembly.GetExecutingAssembly().ExportedTypes
+                .Where(t => t.IsAssignableTo(typeof(IEffect)) && !t.IsInterface).ToList();
             AllKnownEffectsLabels = AllKnownEffects.Select(t => EffectsVisibleNames.Names[t]).ToArray();
-            _editingModule        = EditorApp.Modules.Get<EditingModule>();
-            _previewModule        = EditorApp.Modules.Get<PreviewModule>();
+            _editingModule = EditorApp.Modules.Get<EditingModule>();
+            _previewModule = EditorApp.Modules.Get<PreviewModule>();
         }
 
         private bool _addEffectExpanded;
@@ -32,69 +33,73 @@ namespace SCVE.Editor.ImGuiUi
 
         public void OnImGuiRender()
         {
-            if (ImGui.Begin("Clip Effects"))
+            if (!ImGui.Begin("Clip Effects"))
             {
-                var clip = _editingModule.SelectedClip;
-                if (clip is null)
+                goto END;
+            }
+
+            var clip = _editingModule.SelectedClip;
+            if (clip is null)
+            {
+                ImGui.Text("No Clip Is Selected");
+                goto END;
+            }
+
+            for (var i = 0; i < clip.Effects.Count; i++)
+            {
+                if (ImGui.TreeNodeEx($"{EffectsVisibleNames.Names[clip.Effects[i].GetType()]}##clip-effect-{i}",
+                        ImGuiTreeNodeFlags.SpanFullWidth))
                 {
-                    ImGui.Text("No Clip Is Selected");
-                    ImGui.End();
-                    return;
+                    clip.Effects[i].OnImGuiRender();
+                    ImGui.TreePop();
                 }
 
-                for (var i = 0; i < clip.Effects.Count; i++)
+                if (ImGui.IsItemClicked())
                 {
-                    if (ImGui.TreeNodeEx($"{EffectsVisibleNames.Names[clip.Effects[i].GetType()]}##clip-effect-{i}", ImGuiTreeNodeFlags.SpanFullWidth))
-                    {
-                        clip.Effects[i].OnImGuiRender();
-                        ImGui.TreePop();
-                    }
-
-                    if (ImGui.IsItemClicked())
-                    {
-                        _lastSelectedEffect = i;
-                    }
-                }
-
-                if (!_addEffectExpanded)
-                {
-                    if (ImGui.Button("+"))
-                    {
-                        _addEffectExpanded = !_addEffectExpanded;
-                        ImGui.OpenPopup("##add-effect-contextmenu");
-                    }
-                }
-                else
-                {
-                    ImGui.SetNextWindowSize(new Vector2(200, 200));
-                    ImGui.SetNextWindowPos(ImGui.GetWindowPos());
-                    if (ImGui.BeginPopupModal("##add-effect-contextmenu", ref _addEffectExpanded, ImGuiWindowFlags.NoResize))
-                    {
-                        for (var i = 0; i < AllKnownEffectsLabels.Length; i++)
-                        {
-                            if (ImGui.Selectable(AllKnownEffectsLabels[i]))
-                            {
-                                _addEffectExpanded = false;
-                                clip.AddEffect(Activator.CreateInstance(AllKnownEffects[i]) as IEffect);
-                                _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
-                            }
-                        }
-
-                        ImGui.EndPopup();
-                    }
-                }
-
-                if (ImGui.IsKeyPressed((int)Keys.Delete))
-                {
-                    if (_lastSelectedEffect != -1)
-                    {
-                        clip.RemoveEffect(_lastSelectedEffect);
-                        _lastSelectedEffect = -1;
-                        _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
-                    }
+                    _lastSelectedEffect = i;
                 }
             }
 
+            if (!_addEffectExpanded)
+            {
+                if (ImGui.Button("+"))
+                {
+                    _addEffectExpanded = !_addEffectExpanded;
+                    ImGui.OpenPopup("##add-effect-contextmenu");
+                }
+            }
+            else
+            {
+                ImGui.SetNextWindowSize(new Vector2(200, 200));
+                ImGui.SetNextWindowPos(ImGui.GetWindowPos());
+                if (ImGui.BeginPopupModal("##add-effect-contextmenu", ref _addEffectExpanded,
+                        ImGuiWindowFlags.NoResize))
+                {
+                    for (var i = 0; i < AllKnownEffectsLabels.Length; i++)
+                    {
+                        if (ImGui.Selectable(AllKnownEffectsLabels[i]))
+                        {
+                            _addEffectExpanded = false;
+                            clip.AddEffect(Activator.CreateInstance(AllKnownEffects[i]) as IEffect);
+                            _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
+                        }
+                    }
+
+                    ImGui.EndPopup();
+                }
+            }
+
+            if (ImGui.IsKeyPressed((int) Keys.Delete))
+            {
+                if (_lastSelectedEffect != -1)
+                {
+                    clip.RemoveEffect(_lastSelectedEffect);
+                    _lastSelectedEffect = -1;
+                    _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
+                }
+            }
+
+            END:
             ImGui.End();
         }
     }
