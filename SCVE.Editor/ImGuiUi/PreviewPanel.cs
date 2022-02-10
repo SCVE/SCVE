@@ -54,8 +54,8 @@ namespace SCVE.Editor.ImGuiUi
                         windowPos.Y + contentRegionAvail.Y / 2 + imageSize.Y / 2
                     ), 0xFFFFFFFF);
 
-                ImGui.End();
             }
+            ImGui.End();
         }
     }
 }

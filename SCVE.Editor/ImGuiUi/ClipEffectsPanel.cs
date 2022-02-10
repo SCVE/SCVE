@@ -93,9 +93,9 @@ namespace SCVE.Editor.ImGuiUi
                         _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
                     }
                 }
-                
-                ImGui.End();
             }
+
+            ImGui.End();
         }
     }
 }

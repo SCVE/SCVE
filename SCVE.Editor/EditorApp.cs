@@ -124,6 +124,7 @@ namespace SCVE.Editor
             ImGui.ShowMetricsWindow();
             
             ImGui.PopFont();
+            
             ImGui.End();
         }
     }

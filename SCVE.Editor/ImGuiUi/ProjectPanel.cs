@@ -92,9 +92,8 @@ namespace SCVE.Editor.ImGuiUi
                 {
                     ImGui.Text("Project is not loaded");
                 }
-
-                ImGui.End();
             }
+            ImGui.End();
             
             _assetPreviewModalPanel.OnImGuiRender();
         }

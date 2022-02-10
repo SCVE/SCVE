@@ -31,8 +31,8 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.Text($"FPS: {_editingModule.OpenedSequence.FPS}");
                 ImGui.Text($"Resolution: {_editingModule.OpenedSequence.Resolution}");
                 
-                ImGui.End();
             }
+            ImGui.End();
         }
     }
 }
