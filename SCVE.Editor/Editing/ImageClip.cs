@@ -7,13 +7,10 @@ namespace SCVE.Editor.Editing
     public class ImageClip : Clip
     {
         public Guid ReferencedImageGuid { get; private set; }
-
-        public ImageAsset ReferencedImageAsset { get; private set; }
         
         private ImageClip(Guid guid, int startFrame, int frameLength, Guid referencedImageGuid) : base(guid, startFrame, frameLength)
         {
             ReferencedImageGuid = referencedImageGuid;
-            ReferencedImageAsset = EditorApp.Modules.Get<EditingModule>().OpenedProject.RootFolder.FindAsset<ImageAsset>(referencedImageGuid);
         }
 
         public static ImageClip CreateNew(int startFrame, int frameLength, Guid referencedImageGuid)
@@ -23,7 +20,7 @@ namespace SCVE.Editor.Editing
 
         public override string ShortName()
         {
-            return $"Image {ReferencedImageAsset.InternalName}";
+            return $"Image Clip";
         }
     }
 }

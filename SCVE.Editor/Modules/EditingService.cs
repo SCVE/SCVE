@@ -4,17 +4,13 @@ using Silk.NET.Vulkan;
 
 namespace SCVE.Editor.Modules
 {
-    public class EditingModule : IModule
+    public class EditingService : IService
     {
         public Project OpenedProject { get; private set; }
         public Sequence OpenedSequence { get; private set; }
         public Clip SelectedClip { get; set; }
 
-        public void CrossReference(ModulesContainer modulesContainer)
-        {
-        }
-
-        public void OnInit()
+        public EditingService()
         {
             if (Project.PathIsProject("testdata/projects/abc.scve"))
             {

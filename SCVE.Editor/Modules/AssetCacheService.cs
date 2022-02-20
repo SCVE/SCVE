@@ -2,20 +2,16 @@
 
 namespace SCVE.Editor.Modules
 {
-    public class AssetCacheModule : IModule
+    public class AssetCacheService : IService
     {
         public AssetCache Cache { get; set; }
 
-        public void OnUpdate()
-        {
-        }
-
-        public void OnInit()
+        public AssetCacheService()
         {
             Cache = new AssetCache();
         }
 
-        public void CrossReference(ModulesContainer modulesContainer)
+        public void OnUpdate()
         {
         }
     }

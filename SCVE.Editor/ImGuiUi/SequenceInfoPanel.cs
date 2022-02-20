@@ -6,11 +6,11 @@ namespace SCVE.Editor.ImGuiUi
 {
     public class SequenceInfoPanel : IImGuiRenderable
     {
-        private readonly EditingModule _editingModule;
+        private readonly EditingService _editingService;
 
-        public SequenceInfoPanel()
+        public SequenceInfoPanel(EditingService editingService)
         {
-            _editingModule = EditorApp.Modules.Get<EditingModule>();
+            _editingService = editingService;
         }
 
         public void OnImGuiRender()
@@ -20,18 +20,18 @@ namespace SCVE.Editor.ImGuiUi
                 goto END;
             }
 
-            if (_editingModule.OpenedSequence is null)
+            if (_editingService.OpenedSequence is null)
             {
                 ImGui.Text("No sequence is opened");
                 goto END;
             }
 
-            ImGui.Text($"GUID: {_editingModule.OpenedSequence.Guid}");
-            ImGui.Text($"FrameLength: {_editingModule.OpenedSequence.FrameLength}");
-            ImGui.Text($"MaxFrame: {_editingModule.OpenedSequence.MaxFrame}");
-            ImGui.Text($"CursorTimeFrame: {_editingModule.OpenedSequence.CursorTimeFrame}");
-            ImGui.Text($"FPS: {_editingModule.OpenedSequence.FPS}");
-            ImGui.Text($"Resolution: {_editingModule.OpenedSequence.Resolution}");
+            ImGui.Text($"GUID: {_editingService.OpenedSequence.Guid}");
+            ImGui.Text($"FrameLength: {_editingService.OpenedSequence.FrameLength}");
+            ImGui.Text($"MaxFrame: {_editingService.OpenedSequence.MaxFrame}");
+            ImGui.Text($"CursorTimeFrame: {_editingService.OpenedSequence.CursorTimeFrame}");
+            ImGui.Text($"FPS: {_editingService.OpenedSequence.FPS}");
+            ImGui.Text($"Resolution: {_editingService.OpenedSequence.Resolution}");
 
             END:
             ImGui.End();

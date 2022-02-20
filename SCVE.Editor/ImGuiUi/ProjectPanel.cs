@@ -7,14 +7,14 @@ namespace SCVE.Editor.ImGuiUi
 {
     public class ProjectPanel : IImGuiRenderable
     {
-        private EditingModule _editingModule;
-        
+        private EditingService _editingService;
+
         private AssetPreviewModalPanel _assetPreviewModalPanel;
 
-        public ProjectPanel()
+        public ProjectPanel(EditingService editingService)
         {
             _assetPreviewModalPanel = new AssetPreviewModalPanel();
-            _editingModule          = EditorApp.Modules.Get<EditingModule>();
+            _editingService = editingService;
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
@@ -56,7 +56,7 @@ namespace SCVE.Editor.ImGuiUi
             foreach (var asset in folder.Assets)
             {
                 var treeExpanded = ImGui.TreeNodeEx(asset.InternalName, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-                
+
                 if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
                 {
                     _assetPreviewModalPanel.SetOpenedAsset(asset);
@@ -85,11 +85,11 @@ namespace SCVE.Editor.ImGuiUi
                 goto END;
             }
 
-            if (_editingModule.OpenedProject is not null)
+            if (_editingService.OpenedProject is not null)
             {
-                ImGui.Text(_editingModule.OpenedProject.Name);
+                ImGui.Text(_editingService.OpenedProject.Name);
 
-                PushImGuiAssetTreeFolder(_editingModule.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+                PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
             }
             else
             {
@@ -98,7 +98,7 @@ namespace SCVE.Editor.ImGuiUi
 
             END:
             ImGui.End();
-            
+
             _assetPreviewModalPanel.OnImGuiRender();
         }
     }

@@ -7,13 +7,13 @@ namespace SCVE.Editor.ImGuiUi
 {
     public class PreviewPanel : IImGuiRenderable
     {
-        private readonly EditingModule _editingModule;
-        private readonly PreviewModule _previewModule;
+        private readonly EditingService _editingService;
+        private readonly PreviewService _previewService;
 
-        public PreviewPanel()
+        public PreviewPanel(EditingService editingService, PreviewService previewService)
         {
-            _previewModule = EditorApp.Modules.Get<PreviewModule>();
-            _editingModule = EditorApp.Modules.Get<EditingModule>();
+            _editingService = editingService;
+            _previewService = previewService;
         }
 
         public void OnImGuiRender()
@@ -28,7 +28,7 @@ namespace SCVE.Editor.ImGuiUi
             var windowSize = ImGui.GetWindowSize();
             var painter = ImGui.GetWindowDrawList();
 
-            var image = _previewModule.PreviewImage;
+            var image = _previewService.PreviewImage;
 
             var downscaleFactor = 1f;
             if (image.Width > contentRegionAvail.X)

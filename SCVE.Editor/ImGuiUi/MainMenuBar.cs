@@ -6,6 +6,13 @@ namespace SCVE.Editor.ImGuiUi
 
     public class MainMenuBar : IImGuiRenderable
     {
+        private PreviewService _previewService;
+
+        public MainMenuBar(PreviewService previewService)
+        {
+            _previewService = previewService;
+        }
+
         public void OnImGuiRender()
         {
             if (ImGui.BeginMenuBar())
@@ -41,7 +48,7 @@ namespace SCVE.Editor.ImGuiUi
                 {
                     if (ImGui.MenuItem("Render start to end", "Ctrl+R"))
                     {
-                        EditorApp.Modules.Get<PreviewModule>().RenderSequence();
+                        _previewService.RenderSequence();
                     }
 
                     ImGui.EndMenu();

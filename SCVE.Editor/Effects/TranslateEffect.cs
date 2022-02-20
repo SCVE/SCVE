@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using System;
+using ImGuiNET;
 using SCVE.Editor.Editing;
 using SCVE.Editor.Modules;
 using SixLabors.ImageSharp;
@@ -11,18 +12,15 @@ namespace SCVE.Editor.Effects
 {
     public class TranslateEffect : IEffect
     {
+        public event Action Updated;
         public int X { get; set; }
 
         public int Y { get; set; }
 
-        private EditingModule _editingModule;
-        private PreviewModule _previewModule;
         private Clip _clip;
 
         public TranslateEffect()
         {
-            _editingModule = EditorApp.Modules.Get<EditingModule>();
-            _previewModule = EditorApp.Modules.Get<PreviewModule>();
         }
 
         public void AttachToClip(Clip clip)
@@ -56,14 +54,14 @@ namespace SCVE.Editor.Effects
             if (ImGui.SliderInt("X", ref x, -1000, 1000))
             {
                 X = x;
-                _previewModule.InvalidateRange(_clip.StartFrame, _clip.FrameLength);
+                Updated?.Invoke();
             }
 
             int y = Y;
             if (ImGui.SliderInt("Y", ref y, -1000, 1000))
             {
                 Y = y;
-                _previewModule.InvalidateRange(_clip.StartFrame, _clip.FrameLength);
+                Updated?.Invoke();
             }
         }
     }
