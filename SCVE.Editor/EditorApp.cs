@@ -25,6 +25,7 @@ namespace SCVE.Editor
         private PreviewPanel _previewPanel;
         private SequenceInfoPanel _sequenceInfoPanel;
         private ClipEffectsPanel _clipEffectsPanel;
+        private SequenceCreationPanel _sequenceCreationPanel;
 
         public ImFontPtr OpenSansFont;
         private MainMenuBar _mainMenuBar;
@@ -52,6 +53,7 @@ namespace SCVE.Editor
             serviceCollection.AddSingleton<SequenceInfoPanel>();
             serviceCollection.AddSingleton<ClipEffectsPanel>();
             serviceCollection.AddSingleton<MainMenuBar>();
+            serviceCollection.AddSingleton<SequenceCreationPanel>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -61,6 +63,7 @@ namespace SCVE.Editor
             _sequenceInfoPanel = serviceProvider.GetRequiredService<SequenceInfoPanel>();
             _clipEffectsPanel = serviceProvider.GetRequiredService<ClipEffectsPanel>();
             _mainMenuBar = serviceProvider.GetRequiredService<MainMenuBar>();
+            _sequenceCreationPanel = serviceProvider.GetRequiredService<SequenceCreationPanel>();
             
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
         }
@@ -122,6 +125,7 @@ namespace SCVE.Editor
             _previewPanel.OnImGuiRender();
             _sequenceInfoPanel.OnImGuiRender();
             _clipEffectsPanel.OnImGuiRender();
+            _sequenceCreationPanel.OnImGuiRender();
 
             ImGui.ShowMetricsWindow();
 

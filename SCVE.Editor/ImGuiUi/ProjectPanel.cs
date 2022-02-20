@@ -11,10 +11,13 @@ namespace SCVE.Editor.ImGuiUi
 
         private AssetPreviewModalPanel _assetPreviewModalPanel;
 
-        public ProjectPanel(EditingService editingService)
+        private SequenceCreationPanel _sequenceCreationPanel;
+
+        public ProjectPanel(EditingService editingService, SequenceCreationPanel sequenceCreationPanel)
         {
             _assetPreviewModalPanel = new AssetPreviewModalPanel();
             _editingService = editingService;
+            _sequenceCreationPanel = sequenceCreationPanel;
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
@@ -90,6 +93,11 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.Text(_editingService.OpenedProject.Name);
 
                 PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+
+                if (ImGui.Button("Create new sequence"))
+                {
+                    _sequenceCreationPanel.Visible = true;
+                }
             }
             else
             {
