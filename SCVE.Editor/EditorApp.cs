@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SCVE.Editor.Effects;
 using SCVE.Editor.ImGuiUi;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 using Silk.NET.OpenGL;
 using Vector2 = System.Numerics.Vector2;
 

@@ -1,7 +1,7 @@
 ﻿using SCVE.Editor.Caching;
 using SCVE.Editor.Imaging;
 
-namespace SCVE.Editor.Modules
+namespace SCVE.Editor.Services
 {
     public class PreviewService : IService
     {

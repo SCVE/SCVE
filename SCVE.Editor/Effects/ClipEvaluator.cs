@@ -1,6 +1,6 @@
 ﻿using SCVE.Editor.Editing;
 using SCVE.Editor.MemoryUtils;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 using SCVE.Editor.ProjectStructure;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;

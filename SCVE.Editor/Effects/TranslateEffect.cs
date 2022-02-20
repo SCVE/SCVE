@@ -1,7 +1,7 @@
 ﻿using System;
 using ImGuiNET;
 using SCVE.Editor.Editing;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;

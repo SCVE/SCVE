@@ -3,7 +3,7 @@ using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Editing;
 using SCVE.Editor.Imaging;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi
 {

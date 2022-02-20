@@ -1,5 +1,5 @@
 ﻿using System;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 using SCVE.Editor.ProjectStructure;
 
 namespace SCVE.Editor.Editing

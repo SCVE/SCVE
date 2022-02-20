@@ -1,8 +1,7 @@
 ﻿using SCVE.Editor.Editing;
 using SCVE.Editor.ProjectStructure;
-using Silk.NET.Vulkan;
 
-namespace SCVE.Editor.Modules
+namespace SCVE.Editor.Services
 {
     public class EditingService : IService
     {

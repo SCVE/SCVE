@@ -1,4 +1,4 @@
-﻿namespace SCVE.Editor.Modules
+﻿namespace SCVE.Editor.Services
 {
     public class SamplerService : IService
     {

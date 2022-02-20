@@ -1,6 +1,6 @@
 ﻿using SCVE.Editor.Caching;
 
-namespace SCVE.Editor.Modules
+namespace SCVE.Editor.Services
 {
     public class AssetCacheService : IService
     {
