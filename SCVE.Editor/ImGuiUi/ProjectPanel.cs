@@ -80,21 +80,24 @@ namespace SCVE.Editor.ImGuiUi
 
         public void OnImGuiRender()
         {
-            if (ImGui.Begin("Project Panel"))
+            if (!ImGui.Begin("Project Panel"))
             {
-                if (_editingModule.OpenedProject is not null)
-                {
-                    ImGui.Text(_editingModule.OpenedProject.Name);
-
-                    PushImGuiAssetTreeFolder(_editingModule.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
-                }
-                else
-                {
-                    ImGui.Text("Project is not loaded");
-                }
-
-                ImGui.End();
+                goto END;
             }
+
+            if (_editingModule.OpenedProject is not null)
+            {
+                ImGui.Text(_editingModule.OpenedProject.Name);
+
+                PushImGuiAssetTreeFolder(_editingModule.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+            }
+            else
+            {
+                ImGui.Text("Project is not loaded");
+            }
+
+            END:
+            ImGui.End();
             
             _assetPreviewModalPanel.OnImGuiRender();
         }

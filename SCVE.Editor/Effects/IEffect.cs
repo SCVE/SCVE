@@ -1,10 +1,11 @@
 ﻿using SCVE.Editor.Editing;
+using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Effects
 {
     public interface IEffect
     {
-        public ImageFrame Apply(EffectApplicationContext effectApplicationContext);
+        public IImage Apply(EffectApplicationContext effectApplicationContext);
 
         public void OnImGuiRender();
         void AttachToClip(Clip clip);

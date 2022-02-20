@@ -56,7 +56,7 @@ namespace SCVE.Editor.ProjectStructure
                 guid               = projectAssetFileData.Guid;
             }
 
-            if (entry.FullName.Contains("\\"))
+            if (entry.FullName.Contains(Path.DirectorySeparatorChar))
             {
                 var entryPath = entry.FullName;
                 entryPath = entryPath.Substring(0, entryPath.LastIndexOf(Path.DirectorySeparatorChar));

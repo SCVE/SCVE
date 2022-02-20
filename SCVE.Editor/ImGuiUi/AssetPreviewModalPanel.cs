@@ -52,7 +52,7 @@ namespace SCVE.Editor.ImGuiUi
 
                     var typeStr  = $"Type: {_openedAsset.Type}";
                     var textSize = ImGui.CalcTextSize(typeStr);
-                    ImGui.SameLine(ImGui.GetWindowContentRegionWidth() - textSize.X);
+                    ImGui.SameLine(ImGui.GetContentRegionAvail().X - textSize.X);
                     ImGui.TextDisabled(typeStr);
 
                     ImGui.Separator();

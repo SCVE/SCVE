@@ -8,7 +8,7 @@
         {
         }
 
-        public void CrossReference(Modules modules)
+        public void CrossReference(ModulesContainer modulesContainer)
         {
         }
 

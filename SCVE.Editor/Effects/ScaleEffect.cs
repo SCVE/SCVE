@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using SCVE.Editor.Editing;
+using SCVE.Editor.Imaging;
 using SCVE.Editor.Modules;
 
 namespace SCVE.Editor.Effects
@@ -30,7 +31,7 @@ namespace SCVE.Editor.Effects
             _clip = null;
         }
 
-        public ImageFrame Apply(EffectApplicationContext effectApplicationContext)
+        public IImage Apply(EffectApplicationContext effectApplicationContext)
         {
             var srcImageFrame = effectApplicationContext.SourceImageFrame;
             var dstSizeX      = (int)(srcImageFrame.Width * X);
@@ -39,7 +40,7 @@ namespace SCVE.Editor.Effects
             bool isDownscalingX = X < 1;
             bool isDownscalingY = Y < 1;
 
-            var rawBytes = srcImageFrame.RawBytes;
+            var rawBytes = srcImageFrame.ToByteArray();
 
             if (dstSizeX != srcImageFrame.Width)
             {

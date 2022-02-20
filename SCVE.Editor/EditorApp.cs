@@ -15,8 +15,8 @@ namespace SCVE.Editor
 
         public static EditorApp Instance;
 
-        private Modules.Modules _modules;
-        public static Modules.Modules Modules => Instance._modules;
+        private ModulesContainer _modules;
+        public static ModulesContainer Modules => Instance._modules;
 
         private static bool _dockspaceOpen = true;
         private static bool _optFullscreenPersistant = true;
@@ -31,6 +31,7 @@ namespace SCVE.Editor
         private ClipEffectsPanel _clipEffectsPanel;
 
         public ImFontPtr OpenSansFont;
+        private MainMenuBar _mainMenuBar;
 
         public EditorApp()
         {
@@ -39,19 +40,22 @@ namespace SCVE.Editor
 
         public void Init()
         {
-            _modules = new Modules.Modules();
-            _modules.Add(new PreviewModule());
-            _modules.Add(new SamplerModule());
-            _modules.Add(new EditingModule());
+            _modules = new ModulesContainer();
+            _modules.Add<AssetCacheModule>();
+            _modules.Add<SamplerModule>();
+            _modules.Add<EditingModule>();
+            _modules.Add<PreviewModule>();
             _modules.CrossReference();
 
+            // NOTE: modules are inited in order of declaration above
             _modules.Init();
 
-            _projectPanel      = new();
-            _sequencePanel     = new();
-            _previewPanel      = new();
+            _projectPanel = new();
+            _sequencePanel = new();
+            _previewPanel = new();
             _sequenceInfoPanel = new();
-            _clipEffectsPanel  = new();
+            _clipEffectsPanel = new();
+            _mainMenuBar = new();
 
             _modules.Get<PreviewModule>().SyncVisiblePreview();
         }
@@ -71,13 +75,16 @@ namespace SCVE.Editor
                 ImGui.SetNextWindowViewport(viewport.ID);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
+                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+                                ImGuiWindowFlags.NoMove;
                 window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
             }
 
             // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
             if ((_dockspaceFlags & ImGuiDockNodeFlags.PassthruCentralNode) != 0)
                 window_flags |= ImGuiWindowFlags.NoBackground;
+
+            Modules.Update();
 
             // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
             // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
@@ -92,53 +99,21 @@ namespace SCVE.Editor
                 ImGui.PopStyleVar(2);
 
             // DockSpace
-            ImGuiIOPtr    io          = ImGui.GetIO();
-            ImGuiStylePtr style       = ImGui.GetStyle();
-            float         minWinSizeX = style.WindowMinSize.X;
+            ImGuiIOPtr io = ImGui.GetIO();
+            ImGuiStylePtr style = ImGui.GetStyle();
+            float minWinSizeX = style.WindowMinSize.X;
             style.WindowMinSize.X = 370.0f;
             if ((io.ConfigFlags & ImGuiConfigFlags.DockingEnable) != 0)
             {
                 uint dockspace_id = ImGui.GetID("MyDockSpace");
                 ImGui.DockSpace(dockspace_id, new Vector2(0.0f, 0.0f), _dockspaceFlags);
             }
-
+            
             style.WindowMinSize.X = minWinSizeX;
 
-            if (ImGui.BeginMenuBar())
-            {
-                if (ImGui.BeginMenu("File"))
-                {
-                    // Disabling fullscreen would allow the window to be moved to the front of other windows, 
-                    // which we can't undo at the moment without finer window depth/z control.
-                    //ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);1
-                    if (ImGui.MenuItem("New", "Ctrl+N"))
-                    {
-                        // NewScene();
-                    }
-
-                    if (ImGui.MenuItem("Open...", "Ctrl+O"))
-                    {
-                        // OpenScene();
-                    }
-
-                    if (ImGui.MenuItem("Save As...", "Ctrl+Shift+S"))
-                    {
-                        // SaveSceneAs();
-                    }
-
-                    if (ImGui.MenuItem("Exit"))
-                    {
-                    }
-
-                    ImGui.EndMenu();
-                }
-
-                ImGui.EndMenuBar();
-            }
+            _mainMenuBar.OnImGuiRender();
 
             ImGui.ShowDemoWindow();
-
-            Modules.Update();
 
             _projectPanel.OnImGuiRender();
             _sequencePanel.OnImGuiRender();
@@ -147,6 +122,10 @@ namespace SCVE.Editor
             _clipEffectsPanel.OnImGuiRender();
 
             ImGui.ShowMetricsWindow();
+            
+            ImGui.PopFont();
+            
+            ImGui.End();
         }
     }
 }

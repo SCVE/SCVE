@@ -1,33 +1,30 @@
-﻿using SCVE.Editor.Effects;
+﻿using SCVE.Editor.Caching;
+using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Modules
 {
     public class PreviewModule : IModule
     {
-        public readonly InMemoryFrameCache PreviewCache = new();
+        private ThreeWayCache _previewCache;
 
-        public ImageFrame PreviewImage;
+        public ThreeWayImage PreviewImage => _previewCache[_editingModule.OpenedSequence.CursorTimeFrame];
 
         private EditingModule _editingModule;
         private SamplerModule _samplerModule;
 
+        public void CrossReference(ModulesContainer modulesContainer)
+        {
+            _editingModule = modulesContainer.Get<EditingModule>();
+            _samplerModule = modulesContainer.Get<SamplerModule>();
+        }
+
         public void OnInit()
         {
-        }
-
-        public void CrossReference(Modules modules)
-        {
-            _editingModule = modules.Get<EditingModule>();
-            _samplerModule = modules.Get<SamplerModule>();
-        }
-
-        public void InvalidateFrame(int index)
-        {
-            PreviewCache.InvalidateSampledFrame(index);
-            if (index == _editingModule.OpenedSequence.CursorTimeFrame)
-            {
-                SyncVisiblePreview();
-            }
+            _previewCache = new ThreeWayCache(
+                _editingModule.OpenedSequence.FrameLength,
+                (int)_editingModule.OpenedSequence.Resolution.X,
+                (int)_editingModule.OpenedSequence.Resolution.Y
+            );
         }
 
         /// <summary>
@@ -37,12 +34,12 @@ namespace SCVE.Editor.Modules
         {
             for (int i = start; i < start + length; i++)
             {
-                PreviewCache.InvalidateSampledFrame(i);
+                _previewCache.Invalidate(i);
             }
 
             var cursorTimeFrame = _editingModule.OpenedSequence.CursorTimeFrame;
 
-            if(start <= cursorTimeFrame && cursorTimeFrame <= start + length)
+            if (start <= cursorTimeFrame && cursorTimeFrame <= start + length)
             {
                 SyncVisiblePreview();
             }
@@ -55,22 +52,49 @@ namespace SCVE.Editor.Modules
 
         private void SetVisibleFrame(int index)
         {
-            if (HasCached(index))
+            if (HasCached(index)) return;
+
+            if (_previewCache.TryMakeFromDisk(index))
             {
-                PreviewImage = PreviewCache.Frames[index];
+                _previewCache[index].ToGpu();
             }
             else
             {
-                var sampledFrame = _samplerModule.Sampler.Sample(_editingModule.OpenedSequence, index);
-                PreviewCache.AddSampledFrame(index, sampledFrame);
-                sampledFrame.UploadGpuData();
-                PreviewImage = sampledFrame;
+                RenderFrame(index);
+            }
+        }
+
+        public void RenderFrame(int index)
+        {
+            var sampledFrame = _samplerModule.Sampler.Sample(_editingModule.OpenedSequence, index);
+            _previewCache.ForceReplace(index, sampledFrame);
+            _previewCache[index].ToGpu();
+        }
+
+        public void RenderRange(int start, int end)
+        {
+            for (int i = start; i < end; i++)
+            {
+                RenderFrame(i);
+            }
+        }
+
+        public void RenderSequence()
+        {
+            for (int i = 0; i < _editingModule.OpenedSequence.FrameLength; i++)
+            {
+                RenderFrame(i);
             }
         }
 
         public bool HasCached(int index)
         {
-            return PreviewCache.Frames.ContainsKey(index);
+            return _previewCache.HasAnyPresence(index);
+        }
+        
+        public bool HasCached(int index, ImagePresence presence)
+        {
+            return _previewCache[index].Presence == presence;
         }
 
         public void OnUpdate()

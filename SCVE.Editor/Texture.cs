@@ -104,6 +104,17 @@ namespace SCVE.Editor
                 _gl.TexSubImage2D(GLEnum.Texture2D, 0, 0, 0, Width, Height, pixelFormat, PixelType.UnsignedByte, dataPtr);
         }
 
+        public unsafe byte[] DownloadData()
+        {
+            Bind();
+
+            byte[] bytes = new byte[Width * Height * 4];
+            fixed (void* dataPtr = bytes)
+                _gl.GetTexImage(TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte, dataPtr);
+
+            return bytes;
+        }
+
         public void Bind()
         {
             _gl.BindTexture(GLEnum.Texture2D, GlTexture);
