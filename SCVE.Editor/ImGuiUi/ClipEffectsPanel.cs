@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Reflection;
 using ImGuiNET;
 using SCVE.Editor.Effects;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 using Silk.NET.GLFW;
 
 namespace SCVE.Editor.ImGuiUi
@@ -15,16 +15,15 @@ namespace SCVE.Editor.ImGuiUi
         private List<Type> AllKnownEffects;
         private string[] AllKnownEffectsLabels;
 
-        private EditingModule _editingModule;
-        private PreviewModule _previewModule;
+        private EditingService _editingService;
+        private PreviewService _previewService;
 
-        public ClipEffectsPanel()
+        public ClipEffectsPanel(EditingService editingService, PreviewService previewService)
         {
-            AllKnownEffects = Assembly.GetExecutingAssembly().ExportedTypes
-                .Where(t => t.IsAssignableTo(typeof(IEffect)) && !t.IsInterface).ToList();
+            _editingService = editingService;
+            _previewService = previewService;
+            AllKnownEffects = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.IsAssignableTo(typeof(IEffect)) && !t.IsInterface).ToList();
             AllKnownEffectsLabels = AllKnownEffects.Select(t => EffectsVisibleNames.Names[t]).ToArray();
-            _editingModule = EditorApp.Modules.Get<EditingModule>();
-            _previewModule = EditorApp.Modules.Get<PreviewModule>();
         }
 
         private bool _addEffectExpanded;
@@ -38,7 +37,7 @@ namespace SCVE.Editor.ImGuiUi
                 goto END;
             }
 
-            var clip = _editingModule.SelectedClip;
+            var clip = _editingService.SelectedClip;
             if (clip is null)
             {
                 ImGui.Text("No Clip Is Selected");
@@ -47,8 +46,7 @@ namespace SCVE.Editor.ImGuiUi
 
             for (var i = 0; i < clip.Effects.Count; i++)
             {
-                if (ImGui.TreeNodeEx($"{EffectsVisibleNames.Names[clip.Effects[i].GetType()]}##clip-effect-{i}",
-                        ImGuiTreeNodeFlags.SpanFullWidth))
+                if (ImGui.TreeNodeEx($"{EffectsVisibleNames.Names[clip.Effects[i].GetType()]}##clip-effect-{i}", ImGuiTreeNodeFlags.SpanFullWidth))
                 {
                     clip.Effects[i].OnImGuiRender();
                     ImGui.TreePop();
@@ -72,16 +70,18 @@ namespace SCVE.Editor.ImGuiUi
             {
                 ImGui.SetNextWindowSize(new Vector2(200, 200));
                 ImGui.SetNextWindowPos(ImGui.GetWindowPos());
-                if (ImGui.BeginPopupModal("##add-effect-contextmenu", ref _addEffectExpanded,
-                        ImGuiWindowFlags.NoResize))
+                if (ImGui.BeginPopupModal("##add-effect-contextmenu", ref _addEffectExpanded, ImGuiWindowFlags.NoResize))
                 {
                     for (var i = 0; i < AllKnownEffectsLabels.Length; i++)
                     {
                         if (ImGui.Selectable(AllKnownEffectsLabels[i]))
                         {
                             _addEffectExpanded = false;
-                            clip.AddEffect(Activator.CreateInstance(AllKnownEffects[i]) as IEffect);
-                            _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
+                            var effect = Activator.CreateInstance(AllKnownEffects[i]) as IEffect;
+
+                            effect.Updated += OnEffectOnUpdated;
+                            clip.AddEffect(effect);
+                            _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
                         }
                     }
 
@@ -93,14 +93,18 @@ namespace SCVE.Editor.ImGuiUi
             {
                 if (_lastSelectedEffect != -1)
                 {
+                    clip.Effects[_lastSelectedEffect].Updated -= OnEffectOnUpdated;
                     clip.RemoveEffect(_lastSelectedEffect);
                     _lastSelectedEffect = -1;
-                    _previewModule.InvalidateRange(clip.StartFrame, clip.FrameLength);
+                    _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
                 }
             }
 
             END:
             ImGui.End();
         }
+
+
+        void OnEffectOnUpdated() => _previewService.InvalidateRange(_editingService.SelectedClip.StartFrame, _editingService.SelectedClip.FrameLength);
     }
 }

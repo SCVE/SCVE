@@ -18,10 +18,11 @@ namespace SCVE.Editor
         FontCollection fontCollection = new FontCollection();
         private Font font;
 
-        private ClipEvaluator _clipEvaluator = new ClipEvaluator();
+        private ClipEvaluator _clipEvaluator;
 
-        public SequenceSampler()
+        public SequenceSampler(ClipEvaluator clipEvaluator)
         {
+            _clipEvaluator = clipEvaluator;
             fontCollection.Install("assets/Font/arial.ttf");
             font = fontCollection.CreateFont("arial", 72);
         }

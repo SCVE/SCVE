@@ -3,7 +3,7 @@ using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Editing;
 using SCVE.Editor.Imaging;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi
 {
@@ -11,14 +11,14 @@ namespace SCVE.Editor.ImGuiUi
     {
         private ClipImGuiRenderer _clipRenderer;
 
-        private EditingModule _editingModule;
-        private PreviewModule _previewModule;
+        private readonly EditingService _editingService;
+        private readonly PreviewService _previewService;
 
-        public SequencePanel()
+        public SequencePanel(EditingService editingService, PreviewService previewService)
         {
+            _editingService = editingService;
+            _previewService = previewService;
             _clipRenderer = new ClipImGuiRenderer();
-            _editingModule = EditorApp.Modules.Get<EditingModule>();
-            _previewModule = EditorApp.Modules.Get<PreviewModule>();
         }
 
         private Clip _draggedClip;
@@ -56,7 +56,7 @@ namespace SCVE.Editor.ImGuiUi
                 goto END;
             }
 
-            if (_editingModule.OpenedSequence is null)
+            if (_editingService.OpenedSequence is null)
             {
                 ImGui.Text("No sequence is opened");
                 goto END;
@@ -87,11 +87,11 @@ namespace SCVE.Editor.ImGuiUi
             var timelineFramesMarkerHeight = 3;
             var timelineSecondsMarkerHeight = 8;
 
-            var widthPerFrame = trackContentWidth / _editingModule.OpenedSequence.FrameLength;
-            var sequenceFPS = _editingModule.OpenedSequence.FPS;
-            var sequenceCursorTimeFrame = _editingModule.OpenedSequence.CursorTimeFrame;
+            var widthPerFrame = trackContentWidth / _editingService.OpenedSequence.FrameLength;
+            var sequenceFPS = _editingService.OpenedSequence.FPS;
+            var sequenceCursorTimeFrame = _editingService.OpenedSequence.CursorTimeFrame;
 
-            var sequenceFrameLength = _editingModule.OpenedSequence.FrameLength;
+            var sequenceFrameLength = _editingService.OpenedSequence.FrameLength;
 
             #region Detect click on timeline (not on cursor)
 
@@ -106,11 +106,11 @@ namespace SCVE.Editor.ImGuiUi
                     (int) ((ImGui.GetMousePos().X - drawOriginX - trackHeaderWidth) / widthPerFrame);
                 if (sequenceCursorTimeFrame != timelineClickedFrame)
                 {
-                    _editingModule.OpenedSequence.CursorTimeFrame =
+                    _editingService.OpenedSequence.CursorTimeFrame =
                         Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength);
 
                     // no sequence data has changed, so we just need to preview new frame
-                    _previewModule.SyncVisiblePreview();
+                    _previewService.SyncVisiblePreview();
                 }
             }
 
@@ -159,7 +159,7 @@ namespace SCVE.Editor.ImGuiUi
                     0xFFFFFFFF
                 );
 
-                if (_previewModule.HasCached(i, ImagePresence.GPU))
+                if (_previewService.HasCached(i, ImagePresence.GPU))
                 {
                     painter.AddRectFilled(
                         new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame + 1,
@@ -169,7 +169,7 @@ namespace SCVE.Editor.ImGuiUi
                         0xFF00FF00
                     );
                 }
-                else if (_previewModule.HasCached(i, ImagePresence.DISK))
+                else if (_previewService.HasCached(i, ImagePresence.DISK))
                 {
                     painter.AddRectFilled(
                         new Vector2(drawOriginX + trackHeaderWidth + i * widthPerFrame + 1,
@@ -213,9 +213,9 @@ namespace SCVE.Editor.ImGuiUi
 
             #endregion
 
-            for (var i = 0; i < _editingModule.OpenedSequence.Tracks.Count; i++)
+            for (var i = 0; i < _editingService.OpenedSequence.Tracks.Count; i++)
             {
-                var track = _editingModule.OpenedSequence.Tracks[i];
+                var track = _editingService.OpenedSequence.Tracks[i];
 
                 // Track header
                 painter.AddRectFilled(
@@ -238,9 +238,9 @@ namespace SCVE.Editor.ImGuiUi
                     0xFF222222
                 );
 
-                for (int j = 0; j < _editingModule.OpenedSequence.Tracks[i].Clips.Count; j++)
+                for (int j = 0; j < _editingService.OpenedSequence.Tracks[i].Clips.Count; j++)
                 {
-                    var clip = _editingModule.OpenedSequence.Tracks[i].Clips[j];
+                    var clip = _editingService.OpenedSequence.Tracks[i].Clips[j];
 
                     var clipTopLeft = new Vector2(
                         drawOriginX + trackHeaderWidth +
@@ -260,7 +260,7 @@ namespace SCVE.Editor.ImGuiUi
                     if (ImGui.InvisibleButton($"##clip{clip.Guid:N}",
                             new Vector2(clipBottomRight.X - clipTopLeft.X, clipBottomRight.Y - clipTopLeft.Y)))
                     {
-                        _editingModule.SelectedClip = clip;
+                        _editingService.SelectedClip = clip;
                     }
 
                     if (ImGui.IsItemActive())
@@ -272,9 +272,9 @@ namespace SCVE.Editor.ImGuiUi
 
                         int newTrackId = clip.Track.Id + deltaTracks;
                         if (newTrackId >= 0 &&
-                            newTrackId < _editingModule.OpenedSequence.Tracks.Count)
+                            newTrackId < _editingService.OpenedSequence.Tracks.Count)
                         {
-                            _ghostClip.Track = _editingModule.OpenedSequence.Tracks[newTrackId];
+                            _ghostClip.Track = _editingService.OpenedSequence.Tracks[newTrackId];
                         }
                         else
                         {
@@ -331,8 +331,8 @@ namespace SCVE.Editor.ImGuiUi
 
                     if (_ghostClip.StartFrame != _draggedClip.StartFrame)
                     {
-                        _previewModule.InvalidateRange(_draggedClip.StartFrame, _draggedClip.FrameLength);
-                        _previewModule.InvalidateRange(_ghostClip.StartFrame, _ghostClip.FrameLength);
+                        _previewService.InvalidateRange(_draggedClip.StartFrame, _draggedClip.FrameLength);
+                        _previewService.InvalidateRange(_ghostClip.StartFrame, _ghostClip.FrameLength);
                         _draggedClip.StartFrame = _ghostClip.StartFrame;
                     }
 
@@ -345,11 +345,11 @@ namespace SCVE.Editor.ImGuiUi
             {
                 if (!ImGui.IsMouseDown(ImGuiMouseButton.Left))
                 {
-                    _editingModule.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
+                    _editingService.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
                     _cursorDragFrames = 0;
                     _isDraggingCursor = false;
 
-                    _previewModule.SyncVisiblePreview();
+                    _previewService.SyncVisiblePreview();
                 }
             }
 

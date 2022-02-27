@@ -1,9 +1,8 @@
 ﻿using ImGuiNET;
-using SCVE.Editor.Editing;
+using Microsoft.Extensions.DependencyInjection;
 using SCVE.Editor.Effects;
 using SCVE.Editor.ImGuiUi;
-using SCVE.Editor.Modules;
-using SCVE.Editor.ProjectStructure;
+using SCVE.Editor.Services;
 using Silk.NET.OpenGL;
 using Vector2 = System.Numerics.Vector2;
 
@@ -14,9 +13,6 @@ namespace SCVE.Editor
         public GL GL { get; set; }
 
         public static EditorApp Instance;
-
-        private ModulesContainer _modules;
-        public static ModulesContainer Modules => Instance._modules;
 
         private static bool _dockspaceOpen = true;
         private static bool _optFullscreenPersistant = true;
@@ -29,6 +25,7 @@ namespace SCVE.Editor
         private PreviewPanel _previewPanel;
         private SequenceInfoPanel _sequenceInfoPanel;
         private ClipEffectsPanel _clipEffectsPanel;
+        private SequenceCreationPanel _sequenceCreationPanel;
 
         public ImFontPtr OpenSansFont;
         private MainMenuBar _mainMenuBar;
@@ -40,24 +37,35 @@ namespace SCVE.Editor
 
         public void Init()
         {
-            _modules = new ModulesContainer();
-            _modules.Add<AssetCacheModule>();
-            _modules.Add<SamplerModule>();
-            _modules.Add<EditingModule>();
-            _modules.Add<PreviewModule>();
-            _modules.CrossReference();
+            IServiceCollection serviceCollection = new ServiceCollection();
 
-            // NOTE: modules are inited in order of declaration above
-            _modules.Init();
+            serviceCollection.AddSingleton<AssetCacheService>();
+            serviceCollection.AddSingleton<SamplerService>();
+            serviceCollection.AddSingleton<EditingService>();
+            serviceCollection.AddSingleton<PreviewService>();
 
-            _projectPanel = new();
-            _sequencePanel = new();
-            _previewPanel = new();
-            _sequenceInfoPanel = new();
-            _clipEffectsPanel = new();
-            _mainMenuBar = new();
+            serviceCollection.AddSingleton<ClipEvaluator>();
+            serviceCollection.AddSingleton<SequenceSampler>();
 
-            _modules.Get<PreviewModule>().SyncVisiblePreview();
+            serviceCollection.AddSingleton<ProjectPanel>();
+            serviceCollection.AddSingleton<SequencePanel>();
+            serviceCollection.AddSingleton<PreviewPanel>();
+            serviceCollection.AddSingleton<SequenceInfoPanel>();
+            serviceCollection.AddSingleton<ClipEffectsPanel>();
+            serviceCollection.AddSingleton<MainMenuBar>();
+            serviceCollection.AddSingleton<SequenceCreationPanel>();
+
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+
+            _projectPanel = serviceProvider.GetRequiredService<ProjectPanel>();
+            _sequencePanel = serviceProvider.GetRequiredService<SequencePanel>();
+            _previewPanel = serviceProvider.GetRequiredService<PreviewPanel>();
+            _sequenceInfoPanel = serviceProvider.GetRequiredService<SequenceInfoPanel>();
+            _clipEffectsPanel = serviceProvider.GetRequiredService<ClipEffectsPanel>();
+            _mainMenuBar = serviceProvider.GetRequiredService<MainMenuBar>();
+            _sequenceCreationPanel = serviceProvider.GetRequiredService<SequenceCreationPanel>();
+            
+            serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
         }
 
         public void OnImGuiRender()
@@ -75,16 +83,13 @@ namespace SCVE.Editor
                 ImGui.SetNextWindowViewport(viewport.ID);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
-                                ImGuiWindowFlags.NoMove;
+                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
                 window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
             }
 
             // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
             if ((_dockspaceFlags & ImGuiDockNodeFlags.PassthruCentralNode) != 0)
                 window_flags |= ImGuiWindowFlags.NoBackground;
-
-            Modules.Update();
 
             // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
             // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
@@ -108,7 +113,7 @@ namespace SCVE.Editor
                 uint dockspace_id = ImGui.GetID("MyDockSpace");
                 ImGui.DockSpace(dockspace_id, new Vector2(0.0f, 0.0f), _dockspaceFlags);
             }
-            
+
             style.WindowMinSize.X = minWinSizeX;
 
             _mainMenuBar.OnImGuiRender();
@@ -120,11 +125,12 @@ namespace SCVE.Editor
             _previewPanel.OnImGuiRender();
             _sequenceInfoPanel.OnImGuiRender();
             _clipEffectsPanel.OnImGuiRender();
+            _sequenceCreationPanel.OnImGuiRender();
 
             ImGui.ShowMetricsWindow();
-            
+
             ImGui.PopFont();
-            
+
             ImGui.End();
         }
     }

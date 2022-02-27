@@ -1,20 +1,23 @@
 ﻿using System.Numerics;
 using ImGuiNET;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 using SCVE.Editor.ProjectStructure;
 
 namespace SCVE.Editor.ImGuiUi
 {
     public class ProjectPanel : IImGuiRenderable
     {
-        private EditingModule _editingModule;
-        
+        private EditingService _editingService;
+
         private AssetPreviewModalPanel _assetPreviewModalPanel;
 
-        public ProjectPanel()
+        private SequenceCreationPanel _sequenceCreationPanel;
+
+        public ProjectPanel(EditingService editingService, SequenceCreationPanel sequenceCreationPanel)
         {
             _assetPreviewModalPanel = new AssetPreviewModalPanel();
-            _editingModule          = EditorApp.Modules.Get<EditingModule>();
+            _editingService = editingService;
+            _sequenceCreationPanel = sequenceCreationPanel;
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
@@ -56,7 +59,7 @@ namespace SCVE.Editor.ImGuiUi
             foreach (var asset in folder.Assets)
             {
                 var treeExpanded = ImGui.TreeNodeEx(asset.InternalName, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-                
+
                 if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
                 {
                     _assetPreviewModalPanel.SetOpenedAsset(asset);
@@ -85,11 +88,16 @@ namespace SCVE.Editor.ImGuiUi
                 goto END;
             }
 
-            if (_editingModule.OpenedProject is not null)
+            if (_editingService.OpenedProject is not null)
             {
-                ImGui.Text(_editingModule.OpenedProject.Name);
+                ImGui.Text(_editingService.OpenedProject.Name);
 
-                PushImGuiAssetTreeFolder(_editingModule.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+                PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+
+                if (ImGui.Button("Create new sequence"))
+                {
+                    _sequenceCreationPanel.Visible = true;
+                }
             }
             else
             {
@@ -98,7 +106,7 @@ namespace SCVE.Editor.ImGuiUi
 
             END:
             ImGui.End();
-            
+
             _assetPreviewModalPanel.OnImGuiRender();
         }
     }

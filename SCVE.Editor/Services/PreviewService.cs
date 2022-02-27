@@ -1,29 +1,26 @@
 ﻿using SCVE.Editor.Caching;
 using SCVE.Editor.Imaging;
 
-namespace SCVE.Editor.Modules
+namespace SCVE.Editor.Services
 {
-    public class PreviewModule : IModule
+    public class PreviewService : IService
     {
         private ThreeWayCache _previewCache;
 
-        public ThreeWayImage PreviewImage => _previewCache[_editingModule.OpenedSequence.CursorTimeFrame];
+        public ThreeWayImage PreviewImage => _previewCache[_editingService.OpenedSequence.CursorTimeFrame];
 
-        private EditingModule _editingModule;
-        private SamplerModule _samplerModule;
+        private readonly EditingService _editingService;
+        private readonly SamplerService _samplerService;
 
-        public void CrossReference(ModulesContainer modulesContainer)
+        public PreviewService(EditingService editingService, SamplerService samplerService)
         {
-            _editingModule = modulesContainer.Get<EditingModule>();
-            _samplerModule = modulesContainer.Get<SamplerModule>();
-        }
-
-        public void OnInit()
-        {
+            _editingService = editingService;
+            _samplerService = samplerService;
+            
             _previewCache = new ThreeWayCache(
-                _editingModule.OpenedSequence.FrameLength,
-                (int)_editingModule.OpenedSequence.Resolution.X,
-                (int)_editingModule.OpenedSequence.Resolution.Y
+                _editingService.OpenedSequence.FrameLength,
+                (int)_editingService.OpenedSequence.Resolution.X,
+                (int)_editingService.OpenedSequence.Resolution.Y
             );
         }
 
@@ -37,7 +34,7 @@ namespace SCVE.Editor.Modules
                 _previewCache.Invalidate(i);
             }
 
-            var cursorTimeFrame = _editingModule.OpenedSequence.CursorTimeFrame;
+            var cursorTimeFrame = _editingService.OpenedSequence.CursorTimeFrame;
 
             if (start <= cursorTimeFrame && cursorTimeFrame <= start + length)
             {
@@ -47,7 +44,7 @@ namespace SCVE.Editor.Modules
 
         public void SyncVisiblePreview()
         {
-            SetVisibleFrame(_editingModule.OpenedSequence.CursorTimeFrame);
+            SetVisibleFrame(_editingService.OpenedSequence.CursorTimeFrame);
         }
 
         private void SetVisibleFrame(int index)
@@ -66,7 +63,7 @@ namespace SCVE.Editor.Modules
 
         public void RenderFrame(int index)
         {
-            var sampledFrame = _samplerModule.Sampler.Sample(_editingModule.OpenedSequence, index);
+            var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, index);
             _previewCache.ForceReplace(index, sampledFrame);
             _previewCache[index].ToGpu();
         }
@@ -81,10 +78,7 @@ namespace SCVE.Editor.Modules
 
         public void RenderSequence()
         {
-            for (int i = 0; i < _editingModule.OpenedSequence.FrameLength; i++)
-            {
-                RenderFrame(i);
-            }
+            RenderRange(0, _editingService.OpenedSequence.FrameLength);
         }
 
         public bool HasCached(int index)

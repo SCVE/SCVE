@@ -1,24 +1,22 @@
-﻿using ImGuiNET;
+﻿using System;
+using ImGuiNET;
 using SCVE.Editor.Editing;
 using SCVE.Editor.Imaging;
-using SCVE.Editor.Modules;
+using SCVE.Editor.Services;
 
 namespace SCVE.Editor.Effects
 {
     public class ScaleEffect : IEffect
     {
+        public event Action Updated;
         public float X { get; set; } = 1;
 
         public float Y { get; set; } = 1;
 
-        private EditingModule _editingModule;
-        private PreviewModule _previewModule;
         private Clip _clip;
 
         public ScaleEffect()
         {
-            _editingModule = EditorApp.Modules.Get<EditingModule>();
-            _previewModule = EditorApp.Modules.Get<PreviewModule>();
         }
 
         public void AttachToClip(Clip clip)
@@ -186,14 +184,14 @@ namespace SCVE.Editor.Effects
             if (ImGui.SliderFloat("X", ref x, 0, 5))
             {
                 X = x;
-                _previewModule.InvalidateRange(_clip.StartFrame, _clip.FrameLength);
+                Updated?.Invoke();
             }
 
             float y = Y;
             if (ImGui.SliderFloat("Y", ref y, 0, 5))
             {
                 Y = y;
-                _previewModule.InvalidateRange(_clip.StartFrame, _clip.FrameLength);
+                Updated?.Invoke();
             }
         }
     }
