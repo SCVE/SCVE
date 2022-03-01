@@ -5,7 +5,7 @@ namespace SCVE.Editor.ImGuiUi
 {
     public class AssetPreviewModalPanel : IImGuiRenderable
     {
-        private ProjectAsset _openedAsset;
+        private ProjectAsset<> _openedAsset;
 
         private static TextAssetPreviewLayout _textAssetPreviewLayout = new();
         private static ImageAssetPreviewLayout _imageAssetPreviewLayout = new();
@@ -14,7 +14,7 @@ namespace SCVE.Editor.ImGuiUi
         
         private AssetPreviewLayout _activePreviewLayout;
 
-        public void SetOpenedAsset(ProjectAsset asset)
+        public void SetOpenedAsset(ProjectAsset<> asset)
         {
             _openedAsset = asset;
 

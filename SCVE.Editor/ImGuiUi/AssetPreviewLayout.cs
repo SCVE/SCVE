@@ -10,7 +10,7 @@ namespace SCVE.Editor.ImGuiUi
 {
     public abstract class AssetPreviewLayout : IImGuiRenderable
     {
-        public abstract void SetFromAsset(ProjectAsset asset);
+        public abstract void SetFromAsset(ProjectAsset<> asset);
 
         public abstract void OnImGuiRender();
         public abstract void DisposeResources();
@@ -20,7 +20,7 @@ namespace SCVE.Editor.ImGuiUi
     {
         private string _content;
 
-        public override void SetFromAsset(ProjectAsset asset)
+        public override void SetFromAsset(ProjectAsset<> asset)
         {
             _content = File.ReadAllText(asset.FileSystemFullPath);
         }
@@ -39,7 +39,7 @@ namespace SCVE.Editor.ImGuiUi
     {
         private string _text;
 
-        public override void SetFromAsset(ProjectAsset asset)
+        public override void SetFromAsset(ProjectAsset<> asset)
         {
             _text = $"Asset of type {asset.Type} is not currently supported for preview\n" +
                     $"{asset.FileSystemFullPath}";
@@ -61,7 +61,7 @@ namespace SCVE.Editor.ImGuiUi
         private int _imageWidth = 0;
         private int _imageHeight = 0;
 
-        public override void SetFromAsset(ProjectAsset asset)
+        public override void SetFromAsset(ProjectAsset<> asset)
         {
             var textureFileData = new ImageSharpTextureLoader().Load(asset.FileSystemFullPath, false);
 
@@ -85,7 +85,7 @@ namespace SCVE.Editor.ImGuiUi
     {
         private string _text;
 
-        public override void SetFromAsset(ProjectAsset asset)
+        public override void SetFromAsset(ProjectAsset<> asset)
         {
             _text = $"Asset of type {asset.Type} was not found on the disk\n" +
                     $"{asset.FileSystemFullPath}";

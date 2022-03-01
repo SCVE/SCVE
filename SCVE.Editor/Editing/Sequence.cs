@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using SCVE.Editor.ProjectStructure;
 
 namespace SCVE.Editor.Editing
 {
-    public class Sequence
+    public class Sequence : ProjectAsset<>
     {
         public Guid Guid { get; private set; }
 
         public IReadOnlyList<Track> Tracks => _tracks;
         private List<Track> _tracks;
 
-        public int FPS { get; private set; }
+        public int FPS { get; set; }
 
         public int CursorTimeFrame { get; set; }
 
-        public Vector2 Resolution { get; private set; }
+        public Vector2 Resolution { get; set; }
 
         private Sequence(Guid guid, int fps, Vector2 resolution)
         {

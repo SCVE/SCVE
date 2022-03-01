@@ -1,43 +1,26 @@
 ﻿using System;
-using System.IO;
 
 namespace SCVE.Editor.ProjectStructure
 {
-    public class ProjectAsset
+    public class ProjectAssetBase
     {
         public Guid Guid { get; set; }
-        
-        /// <summary>
-        /// Name of an asset, local to this project
-        /// </summary>
-        public string InternalName { get; }
 
-        /// <summary>
-        /// Full path of an asset, relative to the project root
-        /// </summary>
-        public string InternalFullPath { get; }
+        public string Name { get; set; }
 
-        /// <summary>
-        /// Full path of an asset in a file system
-        /// </summary>
-        public string FileSystemFullPath { get; }
+        public string Location { get; set; }
+    }
+    
+    public abstract class ProjectAsset<T> : ProjectAssetBase
+    {
+        public T Asset { get; set; }
 
-        public string Type { get; }
+        private Lazy<T> _lazyAsset;
 
-        public bool ExistsInFileSystem => File.Exists(FileSystemFullPath);
-
-        private ProjectAsset()
+        public ProjectAsset()
         {
-            Guid = new Guid();
-        }
-
-        public ProjectAsset(Guid guid, string internalName, string internalFullPath, string fileSystemFullPath, string type)
-        {
-            Guid               = guid;
-            InternalName       = internalName;
-            InternalFullPath   = internalFullPath;
-            FileSystemFullPath = fileSystemFullPath;
-            Type               = type;
+            // TODO: think about it
+            _lazyAsset = new Lazy<T>(() => AssetLoader.Load<T>(Location, Name));
         }
     }
 }
