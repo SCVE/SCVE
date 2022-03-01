@@ -1,12 +1,14 @@
-﻿using System;
-
-namespace SCVE.Editor.ProjectStructure
+﻿namespace Tester.ProjectStructure
 {
     public abstract class ProjectAsset<T> : ProjectAssetBase
     {
         public T Asset { get; set; }
 
         private Lazy<T> _lazyAsset;
+
+        public ProjectAsset()
+        {
+        }
 
         public ProjectAsset(Func<string, string, T> factory)
         {

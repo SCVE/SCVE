@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using SCVE.Editor.Editing;
+﻿using Tester.Editing;
 
-namespace SCVE.Editor.ProjectStructure
+namespace Tester.ProjectStructure
 {
     public class VideoProject
     {

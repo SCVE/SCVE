@@ -5,7 +5,7 @@ namespace SCVE.Editor.Services
 {
     public class EditingService : IService
     {
-        public Project OpenedProject { get; private set; }
+        public VideoProject OpenedProject { get; private set; }
         public Sequence OpenedSequence { get; private set; }
         public Clip SelectedClip { get; set; }
 
