@@ -6,7 +6,7 @@ using SCVE.Editor.ProjectStructure;
 
 namespace SCVE.Editor.Editing
 {
-    public class Sequence : ProjectAsset<>
+    public class Sequence
     {
         public Guid Guid { get; private set; }
 

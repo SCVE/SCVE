@@ -10,6 +10,16 @@ namespace SCVE.Editor.ProjectStructure
 
         public VideoProject()
         {
+            new ProjectSequenceAsset(LoadSequence);
+        }
+
+        private Sequence LoadSequence(string location, string name)
+        {
+            
+        }
+        private Image LoadImage()
+        {
+            
         }
     }
 }

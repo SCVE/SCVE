@@ -17,10 +17,10 @@ namespace SCVE.Editor.ProjectStructure
 
         private Lazy<T> _lazyAsset;
 
-        public ProjectAsset()
+        public ProjectAsset(Func<string, string, T> factory)
         {
             // TODO: think about it
-            _lazyAsset = new Lazy<T>(() => AssetLoader.Load<T>(Location, Name));
+            _lazyAsset = new Lazy<T>(() => factory(Location, Name));
         }
     }
 }
