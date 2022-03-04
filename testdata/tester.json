@@ -1,0 +1,12 @@
+﻿{
+  "title": "Tester Project",
+  "sequences": [
+    {
+      "guid": "a665087f-a4c0-4acc-9dc3-e3f0a6287d33",
+      "name": "asset.name",
+      "location": "/"
+    }
+  ],
+  "images": [
+  ]
+}

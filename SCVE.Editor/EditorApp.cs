@@ -1,6 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Extensions.DependencyInjection;
-using SCVE.Editor.Effects;
+using SCVE.Editor.Editing.Effects;
 using SCVE.Editor.ImGuiUi;
 using SCVE.Editor.Services;
 using Silk.NET.OpenGL;

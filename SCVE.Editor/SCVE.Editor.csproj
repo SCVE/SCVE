@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\SCVE.Editor.Editing\SCVE.Editor.Editing.csproj" />
       <ProjectReference Include="..\SCVE.Engine.Core\SCVE.Engine.Core.csproj" />
       <ProjectReference Include="..\SCVE.Engine.ImageSharpBindings\SCVE.Engine.ImageSharpBindings.csproj" />
     </ItemGroup>

@@ -1,8 +1,4 @@
-﻿using System;
-using SCVE.Editor.Services;
-using SCVE.Editor.ProjectStructure;
-
-namespace SCVE.Editor.Editing
+﻿namespace SCVE.Editor.Editing.Editing
 {
     public class ImageClip : Clip
     {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using SCVE.Editor.ProjectStructure;
+﻿using System.Numerics;
 
-namespace SCVE.Editor.Editing
+namespace SCVE.Editor.Editing.Editing
 {
     public class Sequence
     {
@@ -19,11 +15,15 @@ namespace SCVE.Editor.Editing
 
         public Vector2 Resolution { get; set; }
 
+        public Sequence()
+        {
+        }
+
         private Sequence(Guid guid, int fps, Vector2 resolution)
         {
-            _tracks    = new List<Track>();
-            FPS        = fps;
-            Guid       = guid;
+            _tracks = new List<Track>();
+            FPS = fps;
+            Guid = guid;
             Resolution = resolution;
         }
 

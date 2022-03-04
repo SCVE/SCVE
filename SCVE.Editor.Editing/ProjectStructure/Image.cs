@@ -1,4 +1,4 @@
-﻿namespace Tester.ProjectStructure
+﻿namespace SCVE.Editor.Editing.ProjectStructure
 {
     public class Image
     {

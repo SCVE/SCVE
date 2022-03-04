@@ -1,14 +1,12 @@
-﻿using System;
-using SCVE.Editor.Editing;
-using SCVE.Editor.Effects;
+﻿using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Imaging;
 using SCVE.Editor.MemoryUtils;
+using SCVE.Editor.Services;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using ImageFrame = SCVE.Editor.Effects.ImageFrame;
 
 namespace SCVE.Editor
 {
@@ -23,8 +21,8 @@ namespace SCVE.Editor
         public SequenceSampler(ClipEvaluator clipEvaluator)
         {
             _clipEvaluator = clipEvaluator;
-            fontCollection.Install("assets/Font/arial.ttf");
-            font = fontCollection.CreateFont("arial", 72);
+            fontCollection.Add("assets/Font/arial.ttf");
+            font = fontCollection.Get("arial").CreateFont(72);
         }
 
         public ThreeWayImage Sample(Sequence sequence, int timeFrame)
@@ -62,7 +60,7 @@ namespace SCVE.Editor
                         continue;
                     }
 
-                    if (_clipEvaluator.Evaluate(sequence, clip, timeFrame - clip.StartFrame, clipImage))
+                    if (_clipEvaluator.Evaluate(clip, timeFrame - clip.StartFrame, clipImage.ToByteArray(), (int) sequence.Resolution.X, (int) sequence.Resolution.Y))
                     {
                         previewImageSharpImage.Mutate(i => i.DrawImage(clipImageSharpImage, 1f));
 

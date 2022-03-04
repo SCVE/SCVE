@@ -1,4 +1,5 @@
-﻿using SCVE.Editor.Caching;
+﻿using System.Numerics;
+using SCVE.Editor.Caching;
 using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Services
@@ -7,10 +8,14 @@ namespace SCVE.Editor.Services
     {
         private ThreeWayCache _previewCache;
 
-        public ThreeWayImage PreviewImage => _previewCache[_editingService.OpenedSequence.CursorTimeFrame];
+        public ThreeWayImage PreviewImage { get; private set; }
+
+        private ThreeWayImage _noPreviewImage;
 
         private readonly EditingService _editingService;
         private readonly SamplerService _samplerService;
+
+        private static Vector2 _previewResolution = new(1280, 720);
 
         public PreviewService(EditingService editingService, SamplerService samplerService)
         {
@@ -18,9 +23,9 @@ namespace SCVE.Editor.Services
             _samplerService = samplerService;
             
             _previewCache = new ThreeWayCache(
-                _editingService.OpenedSequence.FrameLength,
-                (int)_editingService.OpenedSequence.Resolution.X,
-                (int)_editingService.OpenedSequence.Resolution.Y
+                1,
+                (int)_previewResolution.X,
+                (int)_previewResolution.Y
             );
         }
 
@@ -44,7 +49,16 @@ namespace SCVE.Editor.Services
 
         public void SyncVisiblePreview()
         {
-            SetVisibleFrame(_editingService.OpenedSequence.CursorTimeFrame);
+            if (_editingService.OpenedSequence is null)
+            {
+                _previewCache.ForceReplace(0, _noPreviewImage ??= Utils.CreateNoPreviewImage((int) _previewResolution.X, (int) _previewResolution.Y));
+                _previewCache[0].ToGpu();
+                PreviewImage = _previewCache[0];
+            }
+            else
+            {
+                SetVisibleFrame(_editingService.OpenedSequence.CursorTimeFrame);
+            }
         }
 
         private void SetVisibleFrame(int index)
@@ -59,6 +73,7 @@ namespace SCVE.Editor.Services
             {
                 RenderFrame(index);
             }
+            PreviewImage = _previewCache[index];
         }
 
         public void RenderFrame(int index)

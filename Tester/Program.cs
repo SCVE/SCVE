@@ -2,23 +2,10 @@
 
 
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Tester.ProjectStructure;
+using SCVE.Editor.Editing.ProjectStructure;
+var jsonContent = File.ReadAllText("testdata/tester.json");
 
-var videoProject = JsonSerializer.Deserialize<VideoProject>(
-@"
-{
-    ""sequences"": [
-        {
-            ""guid"": ""a665087f-a4c0-4acc-9dc3-e3f0a6287d33"",
-            ""name"": ""asset.name"",
-            ""location"": ""/""
-        }
-    ],
-    ""images"": [        
-    ] 
-}
-", new JsonSerializerOptions()
+var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent, new JsonSerializerOptions()
 {
     PropertyNameCaseInsensitive = true
 });

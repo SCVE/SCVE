@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SCVE.Editor.Editing
+﻿namespace SCVE.Editor.Editing.Editing
 {
     public class GhostClip : Clip
     {

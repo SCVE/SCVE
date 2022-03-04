@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace SCVE.Editor.ProjectStructure
+﻿namespace SCVE.Editor.Editing.ProjectStructure
 {
-    public class ProjectAssetBase
+    public class AssetBase
     {
         public Guid Guid { get; set; }
 

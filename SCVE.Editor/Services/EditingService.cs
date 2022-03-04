@@ -1,26 +1,16 @@
-﻿using SCVE.Editor.Editing;
-using SCVE.Editor.ProjectStructure;
+﻿using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Editing.ProjectStructure;
 
 namespace SCVE.Editor.Services
 {
     public class EditingService : IService
     {
-        public VideoProject OpenedProject { get; private set; }
-        public Sequence OpenedSequence { get; private set; }
+        public VideoProject OpenedProject { get; set; }
+        public Sequence OpenedSequence { get; set; }
         public Clip SelectedClip { get; set; }
 
         public EditingService()
         {
-            if (Project.PathIsProject("testdata/projects/abc.scve"))
-            {
-                Utils.DeleteDummyProject("abc", "testdata/projects/");
-            }
-
-            Utils.CreateDummyProject("abc", "testdata/projects/");
-
-            OpenedProject = Project.LoadFrom("testdata/projects/abc.scve");
-
-            OpenedSequence = Utils.CreateTestingSequence();
         }
 
         public void OnUpdate()

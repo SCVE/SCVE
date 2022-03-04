@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using ImGuiNET;
-using SCVE.Editor.Editing;
+using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Imaging;
 using SCVE.Editor.Services;
 

@@ -1,6 +1,8 @@
-﻿namespace Tester.Editing
+﻿namespace SCVE.Editor.Editing.Editing
 {
-    // Track is a single line, existent for the whole length of the sequence
+    /// <summary>
+    /// Track is a single line, existent for the whole length of the sequence
+    /// </summary>
     public class Track
     {
         public Guid Guid { get; set; }
@@ -21,7 +23,7 @@
         public void AddClip(Clip clip)
         {
             clip.Track = this;
-            clip.Id    = Clips.Count;
+            clip.Id = Clips.Count;
             _clips.Add(clip);
         }
 
@@ -40,6 +42,14 @@
             {
                 if (_clips.Count == 0) return 0;
                 else return _clips.Max(c => c.EndFrame);
+            }
+        }
+
+        public void RemoveClip(Clip clip)
+        {
+            if (_clips.Contains(clip))
+            {
+                _clips.Remove(clip);
             }
         }
     }

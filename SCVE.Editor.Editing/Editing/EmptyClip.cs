@@ -1,4 +1,4 @@
-﻿namespace Tester.Editing
+﻿namespace SCVE.Editor.Editing.Editing
 {
     public class EmptyClip : Clip
     {

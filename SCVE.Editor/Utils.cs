@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Numerics;
-using System.Text.Json;
-using SCVE.Editor.Editing;
-using SCVE.Editor.Effects;
-using SCVE.Editor.ProjectStructure;
-using SCVE.Engine.Core.Misc;
+using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using FontCollection = SixLabors.Fonts.FontCollection;
 
 namespace SCVE.Editor
 {
@@ -29,6 +30,20 @@ namespace SCVE.Editor
             return Directory.Exists(path);
         }
 
+        public static ThreeWayImage CreateNoPreviewImage(int width, int height)
+        {
+            var previewImage = new CpuImage(new byte[width * height * 4], width, height);
+
+            using var image = Image.WrapMemory<Rgba32>(previewImage.ToByteArray(), width, height);
+            
+            FontCollection fontCollection = new FontCollection();
+            fontCollection.Add("assets/Font/arial.ttf");
+            var font = fontCollection.Get("arial").CreateFont(72);
+            image.Mutate(i => i.DrawText($"NO PREVIEW", font, Color.Red, new PointF(10, 0)));
+
+            return new ThreeWayImage(previewImage, "NO PREVIEW");
+        }
+
         public static Sequence CreateTestingSequence()
         {
             var sequence = Sequence.CreateNew(30, new Vector2(1920, 1080));
@@ -48,77 +63,6 @@ namespace SCVE.Editor
             sequence.Tracks[2].AddClip(ImageClip.CreateNew(10, 30, Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25")));
 
             return sequence;
-        }
-
-
-        public static void CreateDummyProject(string name, string path)
-        {
-            if (path.IsDirectoryPath())
-            {
-                var projectPath = Path.Combine(path, name + ".scve");
-                using var zipStream = new FileStream(projectPath, FileMode.CreateNew);
-                using var zipProjectArchive = new ZipArchive(zipStream, ZipArchiveMode.Update);
-                var metaEntry = zipProjectArchive.CreateEntry("project.meta");
-                zipProjectArchive.CreateEntry($"assets{Path.DirectorySeparatorChar}");
-
-                using var metaWriter = new StreamWriter(metaEntry.Open());
-
-                var projectMetaFileData = new ProjectMetaFileData("Test Project ABC", "SCVE PROJECT", "1.0");
-                var metaFileContent = JsonSerializer.Serialize(projectMetaFileData);
-                metaWriter.WriteLine(metaFileContent);
-                // AppendTextAsset(zipProjectArchive);
-                AppendImageAsset(zipProjectArchive);
-                // AppendMP3Asset(zipProjectArchive);
-            }
-            else
-            {
-                throw new ScveException("Path was not a directory");
-            }
-        }
-
-
-        public static void DeleteDummyProject(string name, string path)
-        {
-            if (path.IsDirectoryPath())
-            {
-                var projectPath = Path.Combine(path, name + ".scve");
-
-                File.Delete(projectPath);
-            }
-            else
-            {
-                throw new ScveException("Path was not a directory");
-            }
-        }
-
-        private static void AppendImageAsset(ZipArchive zipProjectArchive)
-        {
-            var assetEntry = zipProjectArchive.CreateEntry($"assets{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}image.scveasset");
-            using var assetWriter = new StreamWriter(assetEntry.Open());
-
-            var assetFileData = new ProjectAssetFileData(Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25"), "IMAGE", $"testdata{Path.DirectorySeparatorChar}EuupAELWQAQH3-S.jpg");
-            var assetFileContent = JsonSerializer.Serialize(assetFileData);
-            assetWriter.WriteLine(assetFileContent);
-        }
-
-        private static void AppendMP3Asset(ZipArchive zipProjectArchive)
-        {
-            var assetEntry = zipProjectArchive.CreateEntry($"assets{Path.DirectorySeparatorChar}audio.scveasset");
-            using var assetWriter = new StreamWriter(assetEntry.Open());
-
-            var assetFileData = new ProjectAssetFileData(Guid.Parse("1cff5fe5-e8a4-4e74-828f-32c947ad9e66"), "MP3", $"testdata{Path.DirectorySeparatorChar}rukoblud.mp3");
-            var assetFileContent = JsonSerializer.Serialize(assetFileData);
-            assetWriter.WriteLine(assetFileContent);
-        }
-
-        private static void AppendTextAsset(ZipArchive zipProjectArchive)
-        {
-            var assetEntry = zipProjectArchive.CreateEntry($"assets{Path.DirectorySeparatorChar}folder{Path.DirectorySeparatorChar}readme.scveasset");
-            using var assetWriter = new StreamWriter(assetEntry.Open());
-
-            var assetFileData = new ProjectAssetFileData(Guid.Parse("bd32eda7-9027-4f0b-9e81-ba7f763507c3"), "TEXT", $"testdata{Path.DirectorySeparatorChar}readme.txt");
-            var assetFileContent = JsonSerializer.Serialize(assetFileData);
-            assetWriter.WriteLine(assetFileContent);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Services;
-using SCVE.Editor.ProjectStructure;
 
 namespace SCVE.Editor.ImGuiUi
 {
@@ -38,48 +37,48 @@ namespace SCVE.Editor.ImGuiUi
             }
         }
 
-        private void PushImGuiAssetTreeFolder(ProjectAssetFolder folder)
-        {
-            foreach (var subfolder in folder.Subfolders)
-            {
-                var treeExpanded = ImGui.TreeNodeEx(subfolder.InternalName, ImGuiTreeNodeFlags.SpanFullWidth);
-
-                if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
-                {
-                    ShowHint(subfolder.InternalFullPath);
-                }
-
-                if (treeExpanded)
-                {
-                    PushImGuiAssetTreeFolder(subfolder);
-                    ImGui.TreePop();
-                }
-            }
-
-            foreach (var asset in folder.Assets)
-            {
-                var treeExpanded = ImGui.TreeNodeEx(asset.InternalName, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-
-                if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-                {
-                    _assetPreviewModalPanel.SetOpenedAsset(asset);
-                }
-
-                if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
-                {
-                    ShowHint(asset.FileSystemFullPath);
-                }
-                else
-                {
-                    ShowHint(asset.InternalFullPath);
-                }
-
-                if (treeExpanded)
-                {
-                    ImGui.TreePop();
-                }
-            }
-        }
+        // private void PushImGuiAssetTreeFolder(ProjectAssetFolder folder)
+        // {
+        //     foreach (var subfolder in folder.Subfolders)
+        //     {
+        //         var treeExpanded = ImGui.TreeNodeEx(subfolder.InternalName, ImGuiTreeNodeFlags.SpanFullWidth);
+        //
+        //         if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
+        //         {
+        //             ShowHint(subfolder.InternalFullPath);
+        //         }
+        //
+        //         if (treeExpanded)
+        //         {
+        //             PushImGuiAssetTreeFolder(subfolder);
+        //             ImGui.TreePop();
+        //         }
+        //     }
+        //
+        //     foreach (var asset in folder.Assets)
+        //     {
+        //         var treeExpanded = ImGui.TreeNodeEx(asset.InternalName, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
+        //
+        //         if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+        //         {
+        //             _assetPreviewModalPanel.SetOpenedAsset(asset);
+        //         }
+        //
+        //         if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
+        //         {
+        //             ShowHint(asset.FileSystemFullPath);
+        //         }
+        //         else
+        //         {
+        //             ShowHint(asset.InternalFullPath);
+        //         }
+        //
+        //         if (treeExpanded)
+        //         {
+        //             ImGui.TreePop();
+        //         }
+        //     }
+        // }
 
         public void OnImGuiRender()
         {
@@ -90,9 +89,9 @@ namespace SCVE.Editor.ImGuiUi
 
             if (_editingService.OpenedProject is not null)
             {
-                ImGui.Text(_editingService.OpenedProject.Name);
+                ImGui.Text(_editingService.OpenedProject.Title);
 
-                PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+                // PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
 
                 if (ImGui.Button("Create new sequence"))
                 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using ImGuiNET;
-using SCVE.Editor.Effects;
+using SCVE.Editor.Editing.Effects;
 using SCVE.Editor.Services;
 using Silk.NET.GLFW;
 
@@ -22,7 +22,7 @@ namespace SCVE.Editor.ImGuiUi
         {
             _editingService = editingService;
             _previewService = previewService;
-            AllKnownEffects = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.IsAssignableTo(typeof(IEffect)) && !t.IsInterface).ToList();
+            AllKnownEffects = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.IsAssignableTo(typeof(EffectBase)) && !t.IsInterface).ToList();
             AllKnownEffectsLabels = AllKnownEffects.Select(t => EffectsVisibleNames.Names[t]).ToArray();
         }
 
@@ -77,10 +77,10 @@ namespace SCVE.Editor.ImGuiUi
                         if (ImGui.Selectable(AllKnownEffectsLabels[i]))
                         {
                             _addEffectExpanded = false;
-                            var effect = Activator.CreateInstance(AllKnownEffects[i]) as IEffect;
-
-                            effect.Updated += OnEffectOnUpdated;
-                            clip.AddEffect(effect);
+                            // var effect = Activator.CreateInstance(AllKnownEffects[i]) as EffectBase;
+                            //
+                            // effect.Updated += OnEffectOnUpdated;
+                            // clip.AddEffect(effect);
                             _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
                         }
                     }
@@ -93,8 +93,8 @@ namespace SCVE.Editor.ImGuiUi
             {
                 if (_lastSelectedEffect != -1)
                 {
-                    clip.Effects[_lastSelectedEffect].Updated -= OnEffectOnUpdated;
-                    clip.RemoveEffect(_lastSelectedEffect);
+                    // clip.Effects[_lastSelectedEffect].Updated -= OnEffectOnUpdated;
+                    // clip.RemoveEffect(_lastSelectedEffect);
                     _lastSelectedEffect = -1;
                     _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
                 }
