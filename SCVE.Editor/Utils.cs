@@ -44,26 +44,5 @@ namespace SCVE.Editor
 
             return new ThreeWayImage(previewImage, "NO PREVIEW");
         }
-
-        public static Sequence CreateTestingSequence()
-        {
-            var sequence = Sequence.CreateNew(30, new ScveVector2i(1920, 1080));
-            sequence.FrameLength = 100;
-            sequence.Tracks.Add(Track.CreateNew());
-            sequence.Tracks.Add(Track.CreateNew());
-            sequence.Tracks.Add(Track.CreateNew());
-
-            sequence.Tracks[0].EmptyClips.Add(EmptyClip.CreateNew(0, 10));
-            sequence.Tracks[0].EmptyClips.Add(EmptyClip.CreateNew(30, 30));
-            sequence.Tracks[0].EmptyClips.Add(EmptyClip.CreateNew(60, 30));
-
-            sequence.Tracks[1].EmptyClips.Add(EmptyClip.CreateNew(10, 10));
-            sequence.Tracks[1].EmptyClips.Add(EmptyClip.CreateNew(20, 10));
-            sequence.Tracks[1].EmptyClips.Add(EmptyClip.CreateNew(40, 15));
-
-            sequence.Tracks[2].AssetClips.Add(AssetClip.CreateNew(Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25"), 10, 30));
-
-            return sequence;
-        }
     }
 }
