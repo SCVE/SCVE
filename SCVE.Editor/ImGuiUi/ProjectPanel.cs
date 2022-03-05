@@ -125,7 +125,7 @@ namespace SCVE.Editor.ImGuiUi
                 {
                     // _assetPreviewModalPanel.SetOpenedAsset(sequenceAsset);
 
-                    _editingService.OpenedSequence = sequenceAsset.Content;
+                    _editingService.SetOpenedSequence(sequenceAsset.Content);
                     _previewService.SwitchSequence(sequenceAsset.Content);
                 }
 

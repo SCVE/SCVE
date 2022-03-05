@@ -1,4 +1,7 @@
-﻿using ImGuiNET;
+﻿using System.IO;
+using System.Text.Json;
+using ImGuiNET;
+using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi
@@ -7,10 +10,12 @@ namespace SCVE.Editor.ImGuiUi
     public class MainMenuBar : IImGuiRenderable
     {
         private PreviewService _previewService;
+        private EditingService _editingService;
 
-        public MainMenuBar(PreviewService previewService)
+        public MainMenuBar(PreviewService previewService, EditingService editingService)
         {
             _previewService = previewService;
+            _editingService = editingService;
         }
 
         public void OnImGuiRender()
@@ -35,6 +40,33 @@ namespace SCVE.Editor.ImGuiUi
                     if (ImGui.MenuItem("Save As...", "Ctrl+Shift+S"))
                     {
                         // SaveSceneAs();
+                    }
+
+                    if (ImGui.MenuItem("Load test project", "Ctrl+Shift+S"))
+                    {
+                        var jsonContent = File.ReadAllText("testdata/tester.json");
+
+                        var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent, new JsonSerializerOptions()
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        _editingService.SetOpenedProject(videoProject);
+                        _previewService.SyncVisiblePreview();
+                    }
+
+                    if (_editingService.OpenedProject is not null)
+                    {
+                        if (ImGui.MenuItem("Save current project", "Ctrl+Shift+S"))
+                        {
+                            var jsonContent = JsonSerializer.Serialize(_editingService.OpenedProject, new JsonSerializerOptions()
+                            {
+                                PropertyNameCaseInsensitive = true,
+                                WriteIndented = true
+                            });
+
+                            File.WriteAllText("testdata/savetest.json", jsonContent);
+                        }
                     }
 
                     if (ImGui.MenuItem("Exit"))

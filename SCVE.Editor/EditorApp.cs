@@ -68,13 +68,6 @@ namespace SCVE.Editor
             _mainMenuBar = serviceProvider.GetRequiredService<MainMenuBar>();
             _sequenceCreationPanel = serviceProvider.GetRequiredService<SequenceCreationPanel>();
 
-            var jsonContent = File.ReadAllText("testdata/tester.json");
-
-            var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent, new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true
-            });
-            serviceProvider.GetRequiredService<EditingService>().OpenedProject = videoProject;
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
         }
 

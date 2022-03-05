@@ -258,7 +258,7 @@ namespace SCVE.Editor.ImGuiUi
                     if (ImGui.InvisibleButton($"##clip{clip.Guid:N}",
                             new Vector2(clipBottomRight.X - clipTopLeft.X, clipBottomRight.Y - clipTopLeft.Y)))
                     {
-                        _editingService.SelectedClip = clip;
+                        _editingService.SetSelectedClip(clip);
                     }
 
                     if (ImGui.IsItemActive())

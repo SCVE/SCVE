@@ -27,6 +27,7 @@ namespace SCVE.Editor.Editing.Editing
             FPS = fps;
             Guid = guid;
             Resolution = resolution;
+            Tracks = new List<Track>();
         }
 
         public static Sequence CreateNew(int fps, ScveVector2i resolution)

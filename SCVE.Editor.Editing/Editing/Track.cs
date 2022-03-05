@@ -20,7 +20,11 @@
 
         public static Track CreateNew()
         {
-            return new(Guid.NewGuid());
+            return new(Guid.NewGuid())
+            {
+                EmptyClips = new List<EmptyClip>(),
+                AssetClips = new List<AssetClip>()
+            };
         }
     }
 }

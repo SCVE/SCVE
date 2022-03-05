@@ -20,7 +20,8 @@
               {
                 "guid": "0dd602c5-e2a5-4663-a37e-bfd942789bd6",
                 "startFrame": 0,
-                "frameLength": 30
+                "frameLength": 30,
+                "effects": []
               }
             ],
             "assetClips": []

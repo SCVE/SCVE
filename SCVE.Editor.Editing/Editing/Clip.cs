@@ -7,11 +7,6 @@ namespace SCVE.Editor.Editing.Editing
         public Guid Guid { get; set; }
 
         /// <summary>
-        /// Track-local Id of the clip
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
         /// Absolute index of start frame
         /// </summary>
         public int StartFrame { get; set; }
@@ -20,9 +15,7 @@ namespace SCVE.Editor.Editing.Editing
 
         public int EndFrame => StartFrame + FrameLength;
 
-        public IReadOnlyList<EffectBase> Effects => _effects;
-
-        private List<EffectBase> _effects;
+        public IList<EffectBase> Effects { get; set; }
 
         protected internal Clip()
         {
@@ -33,7 +26,7 @@ namespace SCVE.Editor.Editing.Editing
             Guid = guid;
             StartFrame = startFrame;
             FrameLength = frameLength;
-            _effects = new List<EffectBase>();
+            Effects = new List<EffectBase>();
         }
 
         public virtual string ShortName()
