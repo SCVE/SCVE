@@ -3,8 +3,35 @@
   "sequences": [
     {
       "guid": "a665087f-a4c0-4acc-9dc3-e3f0a6287d33",
-      "name": "asset.name",
-      "location": "/"
+      "name": "Testing Sequence",
+      "location": "/",
+      "content": {
+        "guid": "e1ac7a3b-3a24-4d3d-abdb-135ff3910102",
+        "frameLength": 150,
+        "resolution": {
+          "x": 1280,
+          "y": 720
+        },
+        "fps": 30,
+        "tracks": [
+          {
+            "guid": "906e67e9-5ff6-4c35-89c1-600b931bd3d0",
+            "emptyClips": [
+              {
+                "guid": "0dd602c5-e2a5-4663-a37e-bfd942789bd6",
+                "startFrame": 0,
+                "frameLength": 30
+              }
+            ],
+            "assetClips": []
+          },
+          {
+            "guid": "f052bd8d-edf8-470a-9d0d-b7169a170973",
+            "emptyClips": [],
+            "assetClips": []
+          }
+        ]
+      }
     }
   ],
   "images": [

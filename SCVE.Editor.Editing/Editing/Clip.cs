@@ -18,17 +18,20 @@ namespace SCVE.Editor.Editing.Editing
 
         public int FrameLength { get; set; }
 
-        public Track Track { get; set; }
         public int EndFrame => StartFrame + FrameLength;
 
         public IReadOnlyList<EffectBase> Effects => _effects;
 
         private List<EffectBase> _effects;
 
-        protected Clip(Guid guid, int startFrame, int frameLength)
+        protected internal Clip()
         {
-            Guid        = guid;
-            StartFrame  = startFrame;
+        }
+
+        protected internal Clip(Guid guid, int startFrame, int frameLength)
+        {
+            Guid = guid;
+            StartFrame = startFrame;
             FrameLength = frameLength;
             _effects = new List<EffectBase>();
         }

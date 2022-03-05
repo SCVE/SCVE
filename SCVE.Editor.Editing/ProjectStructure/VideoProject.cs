@@ -1,4 +1,5 @@
-﻿using SCVE.Editor.Editing.Editing;
+﻿using System.Collections;
+using SCVE.Editor.Editing.Editing;
 
 namespace SCVE.Editor.Editing.ProjectStructure
 {
@@ -11,7 +12,6 @@ namespace SCVE.Editor.Editing.ProjectStructure
         /// </remarks>
         /// </summary>
         public string Title { get; set; }
-        
         public ICollection<SequenceAsset> Sequences { get; set; }
         public ICollection<ImageAsset> Images { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using SCVE.Editor.Editing.Editing;
+﻿using System.Numerics;
+using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Imaging;
 using SCVE.Editor.MemoryUtils;
 using SCVE.Editor.Services;
@@ -25,17 +26,14 @@ namespace SCVE.Editor
             font = fontCollection.Get("arial").CreateFont(72);
         }
 
-        public ThreeWayImage Sample(Sequence sequence, int timeFrame)
+        public ThreeWayImage Sample(Sequence sequence, ref Vector2 renderResolution, int timeFrame)
         {
-            if (_pool is null)
-            {
-                _pool = new ByteArrayPool((int) sequence.Resolution.X * (int) sequence.Resolution.Y * 4, 2);
-            }
+            _pool ??= new ByteArrayPool((int) renderResolution.X * (int) renderResolution.Y * 4, 2);
 
             var previewPoolItem = _pool.GetFree();
             var clipPoolItem = _pool.GetFree();
-            var previewImage = new CpuImage(previewPoolItem.Bytes, (int) sequence.Resolution.X, (int) sequence.Resolution.Y);
-            var clipImage = new CpuImage(clipPoolItem.Bytes, (int) sequence.Resolution.X, (int) sequence.Resolution.Y);
+            var previewImage = new CpuImage(previewPoolItem.Bytes, (int) renderResolution.X, (int) renderResolution.Y);
+            var clipImage = new CpuImage(clipPoolItem.Bytes, (int) renderResolution.X, (int) renderResolution.Y);
 
             using var previewImageSharpImage =
                 Image.WrapMemory<Rgba32>(previewImage.ToByteArray(), previewImage.Width, previewImage.Height);
@@ -47,20 +45,16 @@ namespace SCVE.Editor
             for (var i = sequence.Tracks.Count - 1; i >= 0; i--)
             {
                 var track = sequence.Tracks[i];
-                if (track.StartFrame > timeFrame || track.EndFrame <= timeFrame)
-                {
-                    continue;
-                }
 
-                for (var j = 0; j < track.Clips.Count; j++)
+                for (var j = 0; j < track.AssetClips.Count; j++)
                 {
-                    var clip = track.Clips[j];
+                    var clip = track.AssetClips[j];
                     if (clip.StartFrame > timeFrame || clip.EndFrame <= timeFrame)
                     {
                         continue;
                     }
 
-                    if (_clipEvaluator.Evaluate(clip, timeFrame - clip.StartFrame, clipImage.ToByteArray(), (int) sequence.Resolution.X, (int) sequence.Resolution.Y))
+                    if (_clipEvaluator.Evaluate(clip, timeFrame - clip.StartFrame, clipImage.ToByteArray(), (int) renderResolution.X, (int) renderResolution.Y))
                     {
                         previewImageSharpImage.Mutate(i => i.DrawImage(clipImageSharpImage, 1f));
 

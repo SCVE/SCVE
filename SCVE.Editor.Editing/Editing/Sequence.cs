@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections;
+using System.Numerics;
 
 namespace SCVE.Editor.Editing.Editing
 {
@@ -6,8 +7,7 @@ namespace SCVE.Editor.Editing.Editing
     {
         public Guid Guid { get; private set; }
 
-        public IReadOnlyList<Track> Tracks => _tracks;
-        private List<Track> _tracks;
+        public IList<Track> Tracks { get; set; }
 
         public int FPS { get; set; }
 
@@ -15,13 +15,16 @@ namespace SCVE.Editor.Editing.Editing
 
         public Vector2 Resolution { get; set; }
 
+
+        // Sequence length, independent of it's content
+        public int FrameLength { get; set; }
+
         public Sequence()
         {
         }
 
         private Sequence(Guid guid, int fps, Vector2 resolution)
         {
-            _tracks = new List<Track>();
             FPS = fps;
             Guid = guid;
             Resolution = resolution;
@@ -30,27 +33,6 @@ namespace SCVE.Editor.Editing.Editing
         public static Sequence CreateNew(int fps, Vector2 resolution)
         {
             return new(Guid.NewGuid(), fps, resolution);
-        }
-
-        public void AddTrack(Track track)
-        {
-            track.Id = _tracks.Count;
-            _tracks.Add(track);
-        }
-
-        // Sequence length, independent of it's content
-        public int FrameLength { get; set; }
-
-        /// <summary>
-        /// Content max frame
-        /// </summary>
-        public int MaxFrame
-        {
-            get
-            {
-                if (_tracks.Count == 0) return 0;
-                else return _tracks.Max(t => t.EndFrame);
-            }
         }
     }
 }

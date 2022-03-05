@@ -227,7 +227,7 @@ namespace SCVE.Editor.ImGuiUi
 
                 painter.AddText(
                     new Vector2(drawOriginX, drawOriginY + sequenceHeaderHeight + i * (trackHeight + trackMargin)),
-                    0xFFFFFFFF, $"TRACK {track.Id}");
+                    0xFFFFFFFF, $"TRACK {i}");
 
                 // track content background
                 painter.AddRectFilled(
@@ -238,19 +238,19 @@ namespace SCVE.Editor.ImGuiUi
                     0xFF222222
                 );
 
-                for (int j = 0; j < _editingService.OpenedSequence.Tracks[i].Clips.Count; j++)
+                for (int j = 0; j < _editingService.OpenedSequence.Tracks[i].EmptyClips.Count; j++)
                 {
-                    var clip = _editingService.OpenedSequence.Tracks[i].Clips[j];
+                    var clip = _editingService.OpenedSequence.Tracks[i].EmptyClips[j];
 
                     var clipTopLeft = new Vector2(
                         drawOriginX + trackHeaderWidth +
                         trackContentWidth * ((float) (clip.StartFrame) / sequenceFrameLength),
-                        drawOriginY + sequenceHeaderHeight + (track.Id) * (trackHeight + trackMargin)
+                        drawOriginY + sequenceHeaderHeight + (i) * (trackHeight + trackMargin)
                     );
                     var clipBottomRight = new Vector2(
                         drawOriginX + trackHeaderWidth + trackContentWidth *
                         ((float) (clip.StartFrame + clip.FrameLength) / sequenceFrameLength),
-                        drawOriginY + sequenceHeaderHeight + (track.Id + 1) * trackHeight + (track.Id) * trackMargin
+                        drawOriginY + sequenceHeaderHeight + (i + 1) * trackHeight + (i) * trackMargin
                     );
 
                     _clipRenderer.Render(ref painter, clip, ref clipTopLeft, ref clipBottomRight);
@@ -265,20 +265,21 @@ namespace SCVE.Editor.ImGuiUi
 
                     if (ImGui.IsItemActive())
                     {
-                        _draggedClip = clip;
+                        _ghostClip.ReferencedClip = clip;
+                        _ghostClip.SourceTrackIndex = i;
                         var mouseDragDelta = ImGui.GetMouseDragDelta();
 
                         int deltaTracks = (int) (mouseDragDelta.Y / (trackHeight + trackMargin));
 
-                        int newTrackId = clip.Track.Id + deltaTracks;
+                        int newTrackId = i + deltaTracks;
                         if (newTrackId >= 0 &&
                             newTrackId < _editingService.OpenedSequence.Tracks.Count)
                         {
-                            _ghostClip.Track = _editingService.OpenedSequence.Tracks[newTrackId];
+                            _ghostClip.CurrentTrackIndex = newTrackId;
                         }
                         else
                         {
-                            _ghostClip.Track = clip.Track;
+                            _ghostClip.CurrentTrackIndex = i;
                         }
 
                         _ghostClip.FrameLength = clip.FrameLength;
@@ -306,13 +307,13 @@ namespace SCVE.Editor.ImGuiUi
                 var clipTopLeft = new Vector2(
                     drawOriginX + trackHeaderWidth +
                     trackContentWidth * ((float) (clip.StartFrame) / sequenceFrameLength),
-                    drawOriginY + sequenceHeaderHeight + (_ghostClip.Track.Id) * (trackHeight + trackMargin)
+                    drawOriginY + sequenceHeaderHeight + (_ghostClip.CurrentTrackIndex) * (trackHeight + trackMargin)
                 );
                 var clipBottomRight = new Vector2(
                     drawOriginX + trackHeaderWidth + trackContentWidth *
                     ((float) (clip.StartFrame + clip.FrameLength) / sequenceFrameLength),
-                    drawOriginY + sequenceHeaderHeight + (_ghostClip.Track.Id + 1) * trackHeight +
-                    (_ghostClip.Track.Id) * trackMargin
+                    drawOriginY + sequenceHeaderHeight + (_ghostClip.CurrentTrackIndex + 1) * trackHeight +
+                    (_ghostClip.CurrentTrackIndex) * trackMargin
                 );
 
                 _clipRenderer.RenderGhost(ref painter, clip, ref clipTopLeft, ref clipBottomRight);
@@ -323,20 +324,29 @@ namespace SCVE.Editor.ImGuiUi
                 if (!ImGui.IsMouseDown(ImGuiMouseButton.Left))
                 {
                     // TODO: Check overlap with other clips in current track
-                    if (_ghostClip.Track != _draggedClip.Track)
+                    if (_ghostClip.SourceTrackIndex != _ghostClip.CurrentTrackIndex)
                     {
-                        _draggedClip.Track.RemoveClip(_draggedClip);
-                        _ghostClip.Track.AddClip(_draggedClip);
+                        if (_ghostClip.ReferencedClip is EmptyClip empty)
+                        {
+                            _editingService.OpenedSequence.Tracks[_ghostClip.SourceTrackIndex].EmptyClips.Remove(empty);
+                            _editingService.OpenedSequence.Tracks[_ghostClip.CurrentTrackIndex].EmptyClips.Add(empty);
+                        }
+                        else if (_ghostClip.ReferencedClip is AssetClip asset)
+                        {
+                            _editingService.OpenedSequence.Tracks[_ghostClip.SourceTrackIndex].AssetClips.Remove(asset);
+                            _editingService.OpenedSequence.Tracks[_ghostClip.CurrentTrackIndex].AssetClips.Add(asset);
+                        }
                     }
 
-                    if (_ghostClip.StartFrame != _draggedClip.StartFrame)
+                    if (_ghostClip.StartFrame != _ghostClip.SourceStartFrame)
                     {
-                        _previewService.InvalidateRange(_draggedClip.StartFrame, _draggedClip.FrameLength);
+                        _previewService.InvalidateRange(_ghostClip.SourceStartFrame, _ghostClip.FrameLength);
                         _previewService.InvalidateRange(_ghostClip.StartFrame, _ghostClip.FrameLength);
-                        _draggedClip.StartFrame = _ghostClip.StartFrame;
+                        _ghostClip.ReferencedClip.StartFrame = _ghostClip.StartFrame;
                     }
 
                     _ghostClip.Visible = false;
+                    _ghostClip.ReferencedClip = null;
                     _isDraggingClip = false;
                 }
             }

@@ -48,19 +48,19 @@ namespace SCVE.Editor
         {
             var sequence = Sequence.CreateNew(30, new Vector2(1920, 1080));
             sequence.FrameLength = 100;
-            sequence.AddTrack(Track.CreateNew());
-            sequence.AddTrack(Track.CreateNew());
-            sequence.AddTrack(Track.CreateNew());
+            sequence.Tracks.Add(Track.CreateNew());
+            sequence.Tracks.Add(Track.CreateNew());
+            sequence.Tracks.Add(Track.CreateNew());
 
-            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(0, 10));
-            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(30, 30));
-            sequence.Tracks[0].AddClip(EmptyClip.CreateNew(60, 30));
+            sequence.Tracks[0].EmptyClips.Add(EmptyClip.CreateNew(0, 10));
+            sequence.Tracks[0].EmptyClips.Add(EmptyClip.CreateNew(30, 30));
+            sequence.Tracks[0].EmptyClips.Add(EmptyClip.CreateNew(60, 30));
 
-            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(10, 10));
-            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(20, 10));
-            sequence.Tracks[1].AddClip(EmptyClip.CreateNew(40, 15));
+            sequence.Tracks[1].EmptyClips.Add(EmptyClip.CreateNew(10, 10));
+            sequence.Tracks[1].EmptyClips.Add(EmptyClip.CreateNew(20, 10));
+            sequence.Tracks[1].EmptyClips.Add(EmptyClip.CreateNew(40, 15));
 
-            sequence.Tracks[2].AddClip(ImageClip.CreateNew(10, 30, Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25")));
+            sequence.Tracks[2].AssetClips.Add(AssetClip.CreateNew(Guid.Parse("53d08676-4b40-4efe-bab7-2588dc697e25"), 10, 30));
 
             return sequence;
         }

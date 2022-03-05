@@ -7,15 +7,17 @@ namespace SCVE.Editor.ImGuiUi
     public class ProjectPanel : IImGuiRenderable
     {
         private EditingService _editingService;
-
+        private PreviewService _previewService;
+        
         private AssetPreviewModalPanel _assetPreviewModalPanel;
 
         private SequenceCreationPanel _sequenceCreationPanel;
 
-        public ProjectPanel(EditingService editingService, SequenceCreationPanel sequenceCreationPanel)
+        public ProjectPanel(EditingService editingService, PreviewService previewService, SequenceCreationPanel sequenceCreationPanel)
         {
             _assetPreviewModalPanel = new AssetPreviewModalPanel();
             _editingService = editingService;
+            _previewService = previewService;
             _sequenceCreationPanel = sequenceCreationPanel;
         }
 
@@ -92,6 +94,8 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.Text(_editingService.OpenedProject.Title);
 
                 // PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+                
+                PushSequences();
 
                 if (ImGui.Button("Create new sequence"))
                 {
@@ -107,6 +111,34 @@ namespace SCVE.Editor.ImGuiUi
             ImGui.End();
 
             _assetPreviewModalPanel.OnImGuiRender();
+        }
+
+        private void PushSequences()
+        {
+            var treeRootExpanded = ImGui.TreeNodeEx("Sequences", ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
+
+            foreach (var sequenceAsset in _editingService.OpenedProject.Sequences)
+            {
+                var elementExpanded = ImGui.TreeNodeEx(sequenceAsset.Name, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
+
+                if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                {
+                    // _assetPreviewModalPanel.SetOpenedAsset(sequenceAsset);
+
+                    _editingService.OpenedSequence = sequenceAsset.Content;
+                    _previewService.SwitchSequence(sequenceAsset.Content);
+                }
+
+                if (elementExpanded)
+                {
+                    ImGui.TreePop();
+                }
+            }
+
+            if (treeRootExpanded)
+            {
+                ImGui.TreePop();
+            }
         }
     }
 }

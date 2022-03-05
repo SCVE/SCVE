@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using SCVE.Editor.Caching;
+using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Services
@@ -22,11 +23,17 @@ namespace SCVE.Editor.Services
             _editingService = editingService;
             _samplerService = samplerService;
             
+        }
+
+        public void SwitchSequence(Sequence sequence)
+        {
             _previewCache = new ThreeWayCache(
-                1,
+                sequence.FrameLength,
                 (int)_previewResolution.X,
                 (int)_previewResolution.Y
             );
+            
+            SyncVisiblePreview();
         }
 
         /// <summary>
@@ -51,9 +58,9 @@ namespace SCVE.Editor.Services
         {
             if (_editingService.OpenedSequence is null)
             {
-                _previewCache.ForceReplace(0, _noPreviewImage ??= Utils.CreateNoPreviewImage((int) _previewResolution.X, (int) _previewResolution.Y));
-                _previewCache[0].ToGpu();
-                PreviewImage = _previewCache[0];
+                _noPreviewImage ??= Utils.CreateNoPreviewImage((int) _previewResolution.X, (int) _previewResolution.Y);
+                _noPreviewImage.ToGpu();
+                PreviewImage = _noPreviewImage;
             }
             else
             {
@@ -63,22 +70,24 @@ namespace SCVE.Editor.Services
 
         private void SetVisibleFrame(int index)
         {
-            if (HasCached(index)) return;
+            if (!HasCached(index))
+            {
+                if (_previewCache.TryMakeFromDisk(index))
+                {
+                    _previewCache[index].ToGpu();
+                }
+                else
+                {
+                    RenderFrame(index);
+                }
+            }
 
-            if (_previewCache.TryMakeFromDisk(index))
-            {
-                _previewCache[index].ToGpu();
-            }
-            else
-            {
-                RenderFrame(index);
-            }
             PreviewImage = _previewCache[index];
         }
 
         public void RenderFrame(int index)
         {
-            var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, index);
+            var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, ref _previewResolution, index);
             _previewCache.ForceReplace(index, sampledFrame);
             _previewCache[index].ToGpu();
         }
@@ -100,7 +109,7 @@ namespace SCVE.Editor.Services
         {
             return _previewCache.HasAnyPresence(index);
         }
-        
+
         public bool HasCached(int index, ImagePresence presence)
         {
             return _previewCache[index].Presence == presence;

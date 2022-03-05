@@ -19,22 +19,9 @@ namespace SCVE.Editor.Services
         /// <summary>
         /// time must be in clip space
         /// </summary>
-        public bool Evaluate(Clip clip, int time, byte[] pixels, int width, int height)
+        public bool Evaluate(AssetClip clip, int time, byte[] pixels, int width, int height)
         {
-            if (clip is EmptyClip)
-            {
-                // Don't evaluate any empty clips, because they produce no output
-                return false;
-            }
-            else if (clip is ImageClip imageClip)
-            {
-                
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
     }
 }
