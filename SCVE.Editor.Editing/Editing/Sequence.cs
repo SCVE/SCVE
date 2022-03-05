@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Numerics;
+﻿using SCVE.Editor.Editing.Misc;
 
 namespace SCVE.Editor.Editing.Editing
 {
     public class Sequence
     {
-        public Guid Guid { get; private set; }
+        public Guid Guid { get; set; }
 
         public IList<Track> Tracks { get; set; }
 
@@ -13,7 +12,7 @@ namespace SCVE.Editor.Editing.Editing
 
         public int CursorTimeFrame { get; set; }
 
-        public Vector2 Resolution { get; set; }
+        public ScveVector2i Resolution { get; set; }
 
 
         // Sequence length, independent of it's content
@@ -23,14 +22,14 @@ namespace SCVE.Editor.Editing.Editing
         {
         }
 
-        private Sequence(Guid guid, int fps, Vector2 resolution)
+        private Sequence(Guid guid, int fps, ScveVector2i resolution)
         {
             FPS = fps;
             Guid = guid;
             Resolution = resolution;
         }
 
-        public static Sequence CreateNew(int fps, Vector2 resolution)
+        public static Sequence CreateNew(int fps, ScveVector2i resolution)
         {
             return new(Guid.NewGuid(), fps, resolution);
         }

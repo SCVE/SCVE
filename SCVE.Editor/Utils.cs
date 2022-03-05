@@ -2,6 +2,7 @@
 using System.IO;
 using System.Numerics;
 using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Imaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -46,7 +47,7 @@ namespace SCVE.Editor
 
         public static Sequence CreateTestingSequence()
         {
-            var sequence = Sequence.CreateNew(30, new Vector2(1920, 1080));
+            var sequence = Sequence.CreateNew(30, new ScveVector2i(1920, 1080));
             sequence.FrameLength = 100;
             sequence.Tracks.Add(Track.CreateNew());
             sequence.Tracks.Add(Track.CreateNew());

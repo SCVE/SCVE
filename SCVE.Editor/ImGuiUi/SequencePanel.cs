@@ -21,8 +21,6 @@ namespace SCVE.Editor.ImGuiUi
             _clipRenderer = new ClipImGuiRenderer();
         }
 
-        private Clip _draggedClip;
-
         private bool _isDraggingClip;
         private bool _isDraggingCursor;
 
@@ -267,6 +265,7 @@ namespace SCVE.Editor.ImGuiUi
                     {
                         _ghostClip.ReferencedClip = clip;
                         _ghostClip.SourceTrackIndex = i;
+                        _ghostClip.SourceStartFrame = clip.StartFrame;
                         var mouseDragDelta = ImGui.GetMouseDragDelta();
 
                         int deltaTracks = (int) (mouseDragDelta.Y / (trackHeight + trackMargin));

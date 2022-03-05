@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Imaging;
 using SCVE.Editor.MemoryUtils;
 using SCVE.Editor.Services;
@@ -26,14 +27,14 @@ namespace SCVE.Editor
             font = fontCollection.Get("arial").CreateFont(72);
         }
 
-        public ThreeWayImage Sample(Sequence sequence, ref Vector2 renderResolution, int timeFrame)
+        public ThreeWayImage Sample(Sequence sequence, ScveVector2i renderResolution, int timeFrame)
         {
-            _pool ??= new ByteArrayPool((int) renderResolution.X * (int) renderResolution.Y * 4, 2);
+            _pool ??= new ByteArrayPool(renderResolution.X * renderResolution.Y * 4, 2);
 
             var previewPoolItem = _pool.GetFree();
             var clipPoolItem = _pool.GetFree();
-            var previewImage = new CpuImage(previewPoolItem.Bytes, (int) renderResolution.X, (int) renderResolution.Y);
-            var clipImage = new CpuImage(clipPoolItem.Bytes, (int) renderResolution.X, (int) renderResolution.Y);
+            var previewImage = new CpuImage(previewPoolItem.Bytes, renderResolution.X, renderResolution.Y);
+            var clipImage = new CpuImage(clipPoolItem.Bytes, renderResolution.X, renderResolution.Y);
 
             using var previewImageSharpImage =
                 Image.WrapMemory<Rgba32>(previewImage.ToByteArray(), previewImage.Width, previewImage.Height);
@@ -54,7 +55,7 @@ namespace SCVE.Editor
                         continue;
                     }
 
-                    if (_clipEvaluator.Evaluate(clip, timeFrame - clip.StartFrame, clipImage.ToByteArray(), (int) renderResolution.X, (int) renderResolution.Y))
+                    if (_clipEvaluator.Evaluate(clip, timeFrame - clip.StartFrame, clipImage.ToByteArray(), renderResolution.X, renderResolution.Y))
                     {
                         previewImageSharpImage.Mutate(i => i.DrawImage(clipImageSharpImage, 1f));
 

@@ -1,6 +1,6 @@
-﻿using System.Numerics;
-using SCVE.Editor.Caching;
+﻿using SCVE.Editor.Caching;
 using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Services
@@ -16,7 +16,7 @@ namespace SCVE.Editor.Services
         private readonly EditingService _editingService;
         private readonly SamplerService _samplerService;
 
-        private static Vector2 _previewResolution = new(1280, 720);
+        private static ScveVector2i _previewResolution = new(1280, 720);
 
         public PreviewService(EditingService editingService, SamplerService samplerService)
         {
@@ -87,7 +87,7 @@ namespace SCVE.Editor.Services
 
         public void RenderFrame(int index)
         {
-            var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, ref _previewResolution, index);
+            var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, _previewResolution, index);
             _previewCache.ForceReplace(index, sampledFrame);
             _previewCache[index].ToGpu();
         }
