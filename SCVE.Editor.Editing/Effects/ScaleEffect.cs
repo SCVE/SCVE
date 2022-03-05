@@ -1,10 +1,9 @@
-﻿using ImGuiNET;
+﻿using SCVE.Editor.Editing.Visitors;
 
 namespace SCVE.Editor.Editing.Effects
 {
     public class ScaleEffect : EffectBase
     {
-        public event Action Updated;
         public float X { get; set; } = 1;
 
         public float Y { get; set; } = 1;
@@ -159,21 +158,9 @@ namespace SCVE.Editor.Editing.Effects
             }
         }
 
-        protected override void OnImGuiRenderAlgorithm()
+        public override void AcceptVisitor(IEffectVisitor visitor)
         {
-            float x = X;
-            if (ImGui.SliderFloat("X", ref x, 0, 5))
-            {
-                X = x;
-                Updated?.Invoke();
-            }
-
-            float y = Y;
-            if (ImGui.SliderFloat("Y", ref y, 0, 5))
-            {
-                Y = y;
-                Updated?.Invoke();
-            }
+            visitor.Visit(this);
         }
     }
 }

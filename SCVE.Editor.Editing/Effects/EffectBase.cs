@@ -1,4 +1,6 @@
-﻿namespace SCVE.Editor.Editing.Effects
+﻿using SCVE.Editor.Editing.Visitors;
+
+namespace SCVE.Editor.Editing.Effects
 {
     public abstract class EffectBase
     {
@@ -10,12 +12,12 @@
         {
             Algorithm(pixels, width, height);
         }
-        
-        protected abstract void OnImGuiRenderAlgorithm();
 
-        public void OnImGuiRender()
+        public abstract void AcceptVisitor(IEffectVisitor visitor);
+
+        public void InvokeUpdated()
         {
-            OnImGuiRenderAlgorithm();
+            Updated?.Invoke();
         }
     }
 }

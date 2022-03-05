@@ -15,6 +15,8 @@ namespace SCVE.Editor.ImGuiUi
         private List<Type> AllKnownEffects;
         private string[] AllKnownEffectsLabels;
 
+        private EffectImGuiRenderer _renderer;
+
         private EditingService _editingService;
         private PreviewService _previewService;
 
@@ -24,6 +26,8 @@ namespace SCVE.Editor.ImGuiUi
             _previewService = previewService;
             AllKnownEffects = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.IsAssignableTo(typeof(EffectBase)) && !t.IsInterface).ToList();
             AllKnownEffectsLabels = AllKnownEffects.Select(t => EffectsVisibleNames.Names[t]).ToArray();
+
+            _renderer = new EffectImGuiRenderer();
         }
 
         private bool _addEffectExpanded;
@@ -48,7 +52,7 @@ namespace SCVE.Editor.ImGuiUi
             {
                 if (ImGui.TreeNodeEx($"{EffectsVisibleNames.Names[clip.Effects[i].GetType()]}##clip-effect-{i}", ImGuiTreeNodeFlags.SpanFullWidth))
                 {
-                    clip.Effects[i].OnImGuiRender();
+                    _renderer.Visit(clip.Effects[i]);
                     ImGui.TreePop();
                 }
 

@@ -1,6 +1,9 @@
-﻿using ImGuiNET;
+﻿using System.IO;
+using System.Text.Json;
+using ImGuiNET;
 using Microsoft.Extensions.DependencyInjection;
 using SCVE.Editor.Editing.Effects;
+using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi;
 using SCVE.Editor.Services;
 using Silk.NET.OpenGL;
@@ -64,7 +67,14 @@ namespace SCVE.Editor
             _clipEffectsPanel = serviceProvider.GetRequiredService<ClipEffectsPanel>();
             _mainMenuBar = serviceProvider.GetRequiredService<MainMenuBar>();
             _sequenceCreationPanel = serviceProvider.GetRequiredService<SequenceCreationPanel>();
-            
+
+            var jsonContent = File.ReadAllText("testdata/tester.json");
+
+            var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent, new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            serviceProvider.GetRequiredService<EditingService>().OpenedProject = videoProject;
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
         }
 
