@@ -1,4 +1,5 @@
-﻿using SCVE.Editor.Editing.Misc;
+﻿using System.Text.Json.Serialization;
+using SCVE.Editor.Editing.Misc;
 
 namespace SCVE.Editor.Editing.Editing
 {
@@ -22,17 +23,18 @@ namespace SCVE.Editor.Editing.Editing
         {
         }
 
-        private Sequence(Guid guid, int fps, ScveVector2i resolution)
+        private Sequence(Guid guid, int fps, ScveVector2i resolution, int frameLength)
         {
             FPS = fps;
             Guid = guid;
             Resolution = resolution;
+            FrameLength = frameLength;
             Tracks = new List<Track>();
         }
 
-        public static Sequence CreateNew(int fps, ScveVector2i resolution)
+        public static Sequence CreateNew(int fps, ScveVector2i resolution, int frameLength)
         {
-            return new(Guid.NewGuid(), fps, resolution);
+            return new(Guid.NewGuid(), fps, resolution, frameLength);
         }
     }
 }
