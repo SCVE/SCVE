@@ -34,5 +34,10 @@ namespace SCVE.Editor.Services
         public void OnUpdate()
         {
         }
+
+        public void AddSequence(SequenceAsset sequenceAsset)
+        {
+            OpenedProject.AddSequence(sequenceAsset);
+        }
     }
 }
