@@ -14,10 +14,13 @@ namespace SCVE.Editor.ImGuiUi
         private PreviewService _previewService;
         private EditingService _editingService;
 
-        public MainMenuBar(PreviewService previewService, EditingService editingService)
+        private ModalManagerService _modalManagerService;
+
+        public MainMenuBar(PreviewService previewService, EditingService editingService, ModalManagerService modalManagerService)
         {
             _previewService = previewService;
             _editingService = editingService;
+            _modalManagerService = modalManagerService;
         }
 
         public void OnImGuiRender()
@@ -31,12 +34,37 @@ namespace SCVE.Editor.ImGuiUi
                     //ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);1
                     if (ImGui.MenuItem("New", "Ctrl+N"))
                     {
-                        // NewScene();
+                        _modalManagerService.OpenProjectCreationPanel();
                     }
 
                     if (ImGui.MenuItem("Open...", "Ctrl+O"))
                     {
-                        // OpenScene();
+                        _modalManagerService.OpenFilePickerPanel(Environment.CurrentDirectory, () =>
+                        {
+                            string path = _modalManagerService.FilePickerSelectedPath;
+
+                            if (Path.GetExtension(path) == ".scveproject")
+                            {
+                                var jsonContent = File.ReadAllText(path);
+
+                                var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent, new JsonSerializerOptions()
+                                {
+                                    PropertyNameCaseInsensitive = true
+                                });
+
+                                _editingService.SetOpenedProject(videoProject);
+                                _previewService.SyncVisiblePreview();
+
+                                Console.WriteLine($"Loaded project: {videoProject.Title}");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Unknown file selected: {Path.GetExtension(path)}");
+                            }
+                        }, () =>
+                        {
+                            Console.WriteLine("Opening file dialog was dismissed");
+                        });
                     }
 
                     if (ImGui.MenuItem("Save As...", "Ctrl+Shift+S"))
@@ -46,7 +74,7 @@ namespace SCVE.Editor.ImGuiUi
 
                     if (ImGui.MenuItem("Load test project", "Ctrl+Shift+S"))
                     {
-                        var jsonContent = File.ReadAllText("testdata/tester.json");
+                        var jsonContent = File.ReadAllText("testdata/tester.scveproject");
 
                         var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent, new JsonSerializerOptions()
                         {
@@ -67,7 +95,7 @@ namespace SCVE.Editor.ImGuiUi
                                 WriteIndented = true
                             });
 
-                            File.WriteAllText("testdata/savetest.json", jsonContent);
+                            File.WriteAllText("testdata/savetest.scveproject", jsonContent);
                         }
                     }
 

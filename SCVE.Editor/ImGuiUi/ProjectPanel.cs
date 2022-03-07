@@ -8,17 +8,17 @@ namespace SCVE.Editor.ImGuiUi
     {
         private EditingService _editingService;
         private PreviewService _previewService;
-        
-        private AssetPreviewModalPanel _assetPreviewModalPanel;
 
         private SequenceCreationPanel _sequenceCreationPanel;
 
-        public ProjectPanel(EditingService editingService, PreviewService previewService, SequenceCreationPanel sequenceCreationPanel)
+        private ModalManagerService _modalManagerService;
+
+        public ProjectPanel(EditingService editingService, PreviewService previewService, SequenceCreationPanel sequenceCreationPanel, ModalManagerService modalManagerService)
         {
-            _assetPreviewModalPanel = new AssetPreviewModalPanel();
             _editingService = editingService;
             _previewService = previewService;
             _sequenceCreationPanel = sequenceCreationPanel;
+            _modalManagerService = modalManagerService;
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
@@ -99,7 +99,7 @@ namespace SCVE.Editor.ImGuiUi
 
                 if (ImGui.Button("Create new sequence"))
                 {
-                    _sequenceCreationPanel.Visible = true;
+                    _modalManagerService.OpenSequenceCreationPanel();
                 }
             }
             else
@@ -109,8 +109,6 @@ namespace SCVE.Editor.ImGuiUi
 
             END:
             ImGui.End();
-
-            _assetPreviewModalPanel.OnImGuiRender();
         }
 
         private void PushSequences()

@@ -29,21 +29,8 @@ namespace SCVE.Engine.ImageSharpBindings
         public static byte[] ImageToBytes(Image<Rgba32> image)
         {
             var pixels = new byte[4 * image.Width * image.Height];
-            int index  = 0;
-
-            for (int y = 0; y < image.Height; y++)
-            {
-                var row = image.GetPixelRowSpan(y);
-
-                for (int x = 0; x < image.Width; x++)
-                {
-                    pixels[index++] = row[x].R;
-                    pixels[index++] = row[x].G;
-                    pixels[index++] = row[x].B;
-                    pixels[index++] = row[x].A;
-                }
-            }
-
+            
+            image.CopyPixelDataTo(pixels);
             return pixels;
         }
     }
