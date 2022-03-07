@@ -54,11 +54,15 @@ namespace SCVE.Editor.ImGuiUi
                 goto END;
             }
 
+            
+
             if (_editingService.OpenedSequence is null)
             {
                 ImGui.Text("No sequence is opened");
                 goto END;
             }
+
+            #region All calculations
 
             var windowPos = ImGui.GetWindowPos();
 
@@ -90,6 +94,8 @@ namespace SCVE.Editor.ImGuiUi
             var sequenceCursorTimeFrame = _editingService.OpenedSequence.CursorTimeFrame;
 
             var sequenceFrameLength = _editingService.OpenedSequence.FrameLength;
+
+            #endregion
 
             #region Detect click on timeline (not on cursor)
 
@@ -211,6 +217,7 @@ namespace SCVE.Editor.ImGuiUi
 
             #endregion
 
+            const int trackMarginLeft = 10;
             for (var i = 0; i < _editingService.OpenedSequence.Tracks.Count; i++)
             {
                 var track = _editingService.OpenedSequence.Tracks[i];
@@ -222,9 +229,9 @@ namespace SCVE.Editor.ImGuiUi
                         drawOriginY + sequenceHeaderHeight + (i + 1) * trackHeight + i * trackMargin),
                     0xFF444444
                 );
-
+                
                 painter.AddText(
-                    new Vector2(drawOriginX, drawOriginY + sequenceHeaderHeight + i * (trackHeight + trackMargin)),
+                    new Vector2(drawOriginX + trackMarginLeft, drawOriginY + sequenceHeaderHeight + i * (trackHeight + trackMargin)),
                     0xFFFFFFFF, $"TRACK {i}");
 
                 // track content background

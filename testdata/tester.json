@@ -33,6 +33,45 @@
           }
         ]
       }
+    },
+    {
+      "guid": "2c9f3af8-f75e-4da3-83ad-03ec47e9dde9",
+      "name": "My super Sequence",
+      "location": "/",
+      "content": {
+        "guid": "5531bdff-4f58-4882-9442-694e74308fa0",
+        "frameLength": 150,
+        "resolution": {
+          "x": 1280,
+          "y": 720
+        },
+        "fps": 30,
+        "tracks": [
+          {
+            "guid": "b294e91e-1309-475b-b98b-eb6dd2a73e34",
+            "emptyClips": [
+              {
+                "guid": "7e7b0fbe-10cc-4e84-9d76-15649e17054f",
+                "startFrame": 5,
+                "frameLength": 30,
+                "effects": []
+              },
+              {
+                "guid": "2541bee9-0ee7-4d98-94b9-12b3dd4c6c69",
+                "startFrame": 40,
+                "frameLength": 20,
+                "effects": []
+              }
+            ],
+            "assetClips": []
+          },
+          {
+            "guid": "e35a924a-d7c8-42fa-a275-8c51d8c14217",
+            "emptyClips": [],
+            "assetClips": []
+          }
+        ]
+      }
     }
   ],
   "images": [

@@ -18,5 +18,10 @@ namespace SCVE.Editor.Editing.ProjectStructure
         public VideoProject()
         {
         }
+
+        public void AddSequence(SequenceAsset sequenceAsset)
+        {
+            Sequences.Add(sequenceAsset);
+        }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using ImGuiNET;
+using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.Services;
 
@@ -81,6 +83,11 @@ namespace SCVE.Editor.ImGuiUi
                     if (ImGui.MenuItem("Render start to end", "Ctrl+R"))
                     {
                         _previewService.RenderSequence();
+                    }
+
+                    if (ImGui.MenuItem("Add Track"))
+                    {
+                        _editingService.OpenedSequence.Tracks.Add(Track.CreateNew());
                     }
 
                     ImGui.EndMenu();
