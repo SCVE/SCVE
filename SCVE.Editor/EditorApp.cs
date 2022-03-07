@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using ImGuiNET;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,15 +26,9 @@ namespace SCVE.Editor
 
         private static ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags.None;
 
-        private ProjectPanel _projectPanel;
-        private SequencePanel _sequencePanel;
-        private PreviewPanel _previewPanel;
-        private SequenceInfoPanel _sequenceInfoPanel;
-        private ClipEffectsPanel _clipEffectsPanel;
-        private SequenceCreationPanel _sequenceCreationPanel;
-
         public ImFontPtr OpenSansFont;
-        private MainMenuBar _mainMenuBar;
+        
+        private List<IImGuiRenderable> imGuiRenderables;
 
         public EditorApp()
         {
@@ -46,6 +43,7 @@ namespace SCVE.Editor
             serviceCollection.AddSingleton<SamplerService>();
             serviceCollection.AddSingleton<EditingService>();
             serviceCollection.AddSingleton<PreviewService>();
+            serviceCollection.AddSingleton<ModalManagerService>();
 
             serviceCollection.AddSingleton<ClipEvaluator>();
             serviceCollection.AddSingleton<SequenceSampler>();
@@ -57,16 +55,14 @@ namespace SCVE.Editor
             serviceCollection.AddSingleton<ClipEffectsPanel>();
             serviceCollection.AddSingleton<MainMenuBar>();
             serviceCollection.AddSingleton<SequenceCreationPanel>();
+            serviceCollection.AddSingleton<ProjectCreationPanel>();
+            serviceCollection.AddSingleton<FilePickerModalPanel>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            _projectPanel = serviceProvider.GetRequiredService<ProjectPanel>();
-            _sequencePanel = serviceProvider.GetRequiredService<SequencePanel>();
-            _previewPanel = serviceProvider.GetRequiredService<PreviewPanel>();
-            _sequenceInfoPanel = serviceProvider.GetRequiredService<SequenceInfoPanel>();
-            _clipEffectsPanel = serviceProvider.GetRequiredService<ClipEffectsPanel>();
-            _mainMenuBar = serviceProvider.GetRequiredService<MainMenuBar>();
-            _sequenceCreationPanel = serviceProvider.GetRequiredService<SequenceCreationPanel>();
+            imGuiRenderables = Utils.GetAssignableTypes<IImGuiRenderable>()
+                .Select(t => serviceProvider.GetService(t) as IImGuiRenderable)
+                .ToList();
 
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
         }
@@ -118,17 +114,13 @@ namespace SCVE.Editor
             }
 
             style.WindowMinSize.X = minWinSizeX;
-
-            _mainMenuBar.OnImGuiRender();
+            
+            foreach (var imGuiRenderable in imGuiRenderables)
+            {
+                imGuiRenderable.OnImGuiRender();
+            }
 
             ImGui.ShowDemoWindow();
-
-            _projectPanel.OnImGuiRender();
-            _sequencePanel.OnImGuiRender();
-            _previewPanel.OnImGuiRender();
-            _sequenceInfoPanel.OnImGuiRender();
-            _clipEffectsPanel.OnImGuiRender();
-            _sequenceCreationPanel.OnImGuiRender();
 
             ImGui.ShowMetricsWindow();
 

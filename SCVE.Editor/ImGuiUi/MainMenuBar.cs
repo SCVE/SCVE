@@ -14,10 +14,13 @@ namespace SCVE.Editor.ImGuiUi
         private PreviewService _previewService;
         private EditingService _editingService;
 
-        public MainMenuBar(PreviewService previewService, EditingService editingService)
+        private ModalManagerService _modalManagerService;
+
+        public MainMenuBar(PreviewService previewService, EditingService editingService, ModalManagerService modalManagerService)
         {
             _previewService = previewService;
             _editingService = editingService;
+            _modalManagerService = modalManagerService;
         }
 
         public void OnImGuiRender()
@@ -31,12 +34,12 @@ namespace SCVE.Editor.ImGuiUi
                     //ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);1
                     if (ImGui.MenuItem("New", "Ctrl+N"))
                     {
-                        // NewScene();
+                        _modalManagerService.OpenProjectCreationPanel();
                     }
 
                     if (ImGui.MenuItem("Open...", "Ctrl+O"))
                     {
-                        // OpenScene();
+                        _modalManagerService.OpenFilePickerPanel(Environment.CurrentDirectory);
                     }
 
                     if (ImGui.MenuItem("Save As...", "Ctrl+Shift+S"))
