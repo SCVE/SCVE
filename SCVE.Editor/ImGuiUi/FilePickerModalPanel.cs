@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using ImGuiNET;
@@ -11,11 +12,13 @@ namespace SCVE.Editor.ImGuiUi
     {
         private DirectoryInfo _currentDirectory;
 
+        private IEnumerable<FileSystemInfo> _content;
+
         private ThreeWayImage _directoryIcon;
         private ThreeWayImage _fileIcon;
         
-        private float _padding = 16.0f;
         private float _thumbnailSize = 96.0f;
+        private string _selectedFilePath;
 
         public FilePickerModalPanel()
         {
@@ -33,10 +36,13 @@ namespace SCVE.Editor.ImGuiUi
             _directoryIcon.ToGpu();
         }
 
-        public void Open(string location)
+        public string SelectedPath => _selectedFilePath;
+
+        public void Open(string location, Action closed, Action dismissed)
         {
             _currentDirectory = new DirectoryInfo(location);
-            base.Open();
+            _content = _currentDirectory.EnumerateFileSystemInfos();
+            base.Open(closed, dismissed);
         }
 
         public override void OnImGuiRender()
@@ -55,19 +61,18 @@ namespace SCVE.Editor.ImGuiUi
                     if (ImGui.Button("<-"))
                     {
                         _currentDirectory = _currentDirectory.Parent;
+                        _content = _currentDirectory.EnumerateFileSystemInfos();
                     }
                 }
 
-                float cellSize = _thumbnailSize + _padding;
+                float cellSize = _thumbnailSize;
 
                 float panelWidth = ImGui.GetContentRegionAvail().X;
-                int columnCount = (int) (panelWidth / cellSize);
-                if (columnCount < 1)
-                    columnCount = 1;
+                int columnCount = Math.Clamp((int) (panelWidth / cellSize), 1, 8);
 
                 ImGui.Columns(columnCount, "file_picker_columns", false);
 
-                foreach (var entry in _currentDirectory.EnumerateFileSystemInfos())
+                foreach (var entry in _content)
                 {
                     var path = entry.FullName;
 
@@ -75,23 +80,36 @@ namespace SCVE.Editor.ImGuiUi
 
                     ImGui.PushID(filename);
                     var icon = path.IsDirectoryPath() ? _directoryIcon : _fileIcon;
-                    ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0, 0, 0, 0));
+                    // ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0, 0, 0, 0));
                     ImGui.ImageButton((IntPtr) icon.GpuImage.GpuId, new Vector2(_thumbnailSize, _thumbnailSize), new Vector2(0, 1), new Vector2(1, 0));
 
                     if (ImGui.BeginDragDropSource())
                     {
+                        ImGui.Text(filename);
                         // const wchar_t* itemPath = relativePath.c_str();
                         // ImGui.SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
-                        // ImGui.EndDragDropSource();
+                        ImGui.EndDragDropSource();
                     }
 
-                    ImGui.PopStyleColor();
-                    if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                    // ImGui.PopStyleColor();
+                    if (ImGui.IsItemHovered())
                     {
-                        if (entry.IsDirectory())
-                            _currentDirectory = new DirectoryInfo(path);
+                        if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                        {
+                            if (entry.IsDirectory())
+                            {
+                                _currentDirectory = new DirectoryInfo(path);
+                                _content = _currentDirectory.EnumerateFileSystemInfos();
+                            }
+                            else
+                            {
+                                _selectedFilePath = entry.FullName;
+                                ImGui.CloseCurrentPopup();
+                                Close();
+                            }
+                        }
                     }
-
+                    
                     ImGui.TextWrapped(filename);
 
                     ImGui.NextColumn();
@@ -102,7 +120,6 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.Columns(1);
 
                 ImGui.SliderFloat("Thumbnail Size", ref _thumbnailSize, 32, 512);
-                ImGui.SliderFloat("Padding", ref _padding, 0, 32);
 
                 if (ImGui.Button("Close"))
                 {

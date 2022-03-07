@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using System;
+using ImGuiNET;
 using SCVE.Editor.ImGuiUi;
 
 namespace SCVE.Editor.Services
@@ -16,19 +17,21 @@ namespace SCVE.Editor.Services
             _filePickerModalPanel = filePickerModalPanel;
         }
 
-        public void OpenProjectCreationPanel()
+        public string FilePickerSelectedPath => _filePickerModalPanel.SelectedPath;
+
+        public void OpenProjectCreationPanel(Action closed = null, Action dismissed = null)
         {
-            _projectCreationPanel.Open();
+            _projectCreationPanel.Open(closed, dismissed);
         }
 
-        public void OpenSequenceCreationPanel()
+        public void OpenSequenceCreationPanel(Action closed = null, Action dismissed = null)
         {
-            _sequenceCreationPanel.Open();
+            _sequenceCreationPanel.Open(closed, dismissed);
         }
 
-        public void OpenFilePickerPanel(string location)
+        public void OpenFilePickerPanel(string location, Action closed = null, Action dismissed = null)
         {
-            _filePickerModalPanel.Open(location);
+            _filePickerModalPanel.Open(location, closed, dismissed);
         }
 
         public void OnUpdate()
