@@ -1,4 +1,6 @@
 ﻿using SCVE.Editor.Caching;
+using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Services
@@ -7,21 +9,31 @@ namespace SCVE.Editor.Services
     {
         private ThreeWayCache _previewCache;
 
-        public ThreeWayImage PreviewImage => _previewCache[_editingService.OpenedSequence.CursorTimeFrame];
+        public ThreeWayImage PreviewImage { get; private set; }
+
+        private ThreeWayImage _noPreviewImage;
 
         private readonly EditingService _editingService;
         private readonly SamplerService _samplerService;
+
+        private static ScveVector2i _previewResolution = new(1280, 720);
 
         public PreviewService(EditingService editingService, SamplerService samplerService)
         {
             _editingService = editingService;
             _samplerService = samplerService;
             
+        }
+
+        public void SwitchSequence(Sequence sequence)
+        {
             _previewCache = new ThreeWayCache(
-                _editingService.OpenedSequence.FrameLength,
-                (int)_editingService.OpenedSequence.Resolution.X,
-                (int)_editingService.OpenedSequence.Resolution.Y
+                sequence.FrameLength,
+                (int)_previewResolution.X,
+                (int)_previewResolution.Y
             );
+            
+            SyncVisiblePreview();
         }
 
         /// <summary>
@@ -44,26 +56,38 @@ namespace SCVE.Editor.Services
 
         public void SyncVisiblePreview()
         {
-            SetVisibleFrame(_editingService.OpenedSequence.CursorTimeFrame);
+            if (_editingService.OpenedSequence is null)
+            {
+                _noPreviewImage ??= Utils.CreateNoPreviewImage((int) _previewResolution.X, (int) _previewResolution.Y);
+                _noPreviewImage.ToGpu();
+                PreviewImage = _noPreviewImage;
+            }
+            else
+            {
+                SetVisibleFrame(_editingService.OpenedSequence.CursorTimeFrame);
+            }
         }
 
         private void SetVisibleFrame(int index)
         {
-            if (HasCached(index)) return;
+            if (!HasCached(index))
+            {
+                if (_previewCache.TryMakeFromDisk(index))
+                {
+                    _previewCache[index].ToGpu();
+                }
+                else
+                {
+                    RenderFrame(index);
+                }
+            }
 
-            if (_previewCache.TryMakeFromDisk(index))
-            {
-                _previewCache[index].ToGpu();
-            }
-            else
-            {
-                RenderFrame(index);
-            }
+            PreviewImage = _previewCache[index];
         }
 
         public void RenderFrame(int index)
         {
-            var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, index);
+            var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, _previewResolution, index);
             _previewCache.ForceReplace(index, sampledFrame);
             _previewCache[index].ToGpu();
         }
@@ -85,7 +109,7 @@ namespace SCVE.Editor.Services
         {
             return _previewCache.HasAnyPresence(index);
         }
-        
+
         public bool HasCached(int index, ImagePresence presence)
         {
             return _previewCache[index].Presence == presence;

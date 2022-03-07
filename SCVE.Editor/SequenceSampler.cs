@@ -1,14 +1,14 @@
-﻿using System;
-using SCVE.Editor.Editing;
-using SCVE.Editor.Effects;
+﻿using System.Numerics;
+using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Imaging;
 using SCVE.Editor.MemoryUtils;
+using SCVE.Editor.Services;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using ImageFrame = SCVE.Editor.Effects.ImageFrame;
 
 namespace SCVE.Editor
 {
@@ -23,21 +23,18 @@ namespace SCVE.Editor
         public SequenceSampler(ClipEvaluator clipEvaluator)
         {
             _clipEvaluator = clipEvaluator;
-            fontCollection.Install("assets/Font/arial.ttf");
-            font = fontCollection.CreateFont("arial", 72);
+            fontCollection.Add("assets/Font/arial.ttf");
+            font = fontCollection.Get("arial").CreateFont(72);
         }
 
-        public ThreeWayImage Sample(Sequence sequence, int timeFrame)
+        public ThreeWayImage Sample(Sequence sequence, ScveVector2i renderResolution, int timeFrame)
         {
-            if (_pool is null)
-            {
-                _pool = new ByteArrayPool((int) sequence.Resolution.X * (int) sequence.Resolution.Y * 4, 2);
-            }
+            _pool ??= new ByteArrayPool(renderResolution.X * renderResolution.Y * 4, 2);
 
             var previewPoolItem = _pool.GetFree();
             var clipPoolItem = _pool.GetFree();
-            var previewImage = new CpuImage(previewPoolItem.Bytes, (int) sequence.Resolution.X, (int) sequence.Resolution.Y);
-            var clipImage = new CpuImage(clipPoolItem.Bytes, (int) sequence.Resolution.X, (int) sequence.Resolution.Y);
+            var previewImage = new CpuImage(previewPoolItem.Bytes, renderResolution.X, renderResolution.Y);
+            var clipImage = new CpuImage(clipPoolItem.Bytes, renderResolution.X, renderResolution.Y);
 
             using var previewImageSharpImage =
                 Image.WrapMemory<Rgba32>(previewImage.ToByteArray(), previewImage.Width, previewImage.Height);
@@ -49,20 +46,16 @@ namespace SCVE.Editor
             for (var i = sequence.Tracks.Count - 1; i >= 0; i--)
             {
                 var track = sequence.Tracks[i];
-                if (track.StartFrame > timeFrame || track.EndFrame <= timeFrame)
-                {
-                    continue;
-                }
 
-                for (var j = 0; j < track.Clips.Count; j++)
+                for (var j = 0; j < track.AssetClips.Count; j++)
                 {
-                    var clip = track.Clips[j];
+                    var clip = track.AssetClips[j];
                     if (clip.StartFrame > timeFrame || clip.EndFrame <= timeFrame)
                     {
                         continue;
                     }
 
-                    if (_clipEvaluator.Evaluate(sequence, clip, timeFrame - clip.StartFrame, clipImage))
+                    if (_clipEvaluator.Evaluate(clip, timeFrame - clip.StartFrame, clipImage.ToByteArray(), renderResolution.X, renderResolution.Y))
                     {
                         previewImageSharpImage.Mutate(i => i.DrawImage(clipImageSharpImage, 1f));
 

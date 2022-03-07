@@ -1,43 +1,22 @@
 ﻿using ImGuiNET;
-using SCVE.Editor.ProjectStructure;
+using SCVE.Editor.Editing.ProjectStructure;
 
 namespace SCVE.Editor.ImGuiUi
 {
     public class AssetPreviewModalPanel : IImGuiRenderable
     {
-        private ProjectAsset _openedAsset;
+        private AssetBase _openedAsset;
 
-        private static TextAssetPreviewLayout _textAssetPreviewLayout = new();
-        private static ImageAssetPreviewLayout _imageAssetPreviewLayout = new();
         private static UnknownTypeAssetPreviewLayout _unknownTypeAssetPreviewLayout = new();
-        private static NotFoundAssetPreviewLayout _notFoundAssetPreviewLayout = new();
-        
+
         private AssetPreviewLayout _activePreviewLayout;
 
-        public void SetOpenedAsset(ProjectAsset asset)
+        public void SetOpenedAsset(AssetBase asset)
         {
             _openedAsset = asset;
 
-            if (!asset.ExistsInFileSystem)
-            {
-                _notFoundAssetPreviewLayout.SetFromAsset(asset);
-                _activePreviewLayout = _notFoundAssetPreviewLayout;
-            }
-            else if (_openedAsset.Type == "TEXT")
-            {
-                _textAssetPreviewLayout.SetFromAsset(asset);
-                _activePreviewLayout = _textAssetPreviewLayout;
-            }
-            else if (_openedAsset.Type == "IMAGE")
-            {
-                _imageAssetPreviewLayout.SetFromAsset(asset);
-                _activePreviewLayout = _imageAssetPreviewLayout;
-            }
-            else
-            {
-                _unknownTypeAssetPreviewLayout.SetFromAsset(asset);
-                _activePreviewLayout = _unknownTypeAssetPreviewLayout;
-            }
+            _unknownTypeAssetPreviewLayout.SetFromAsset(asset);
+            _activePreviewLayout = _unknownTypeAssetPreviewLayout;
         }
 
         public void OnImGuiRender()
@@ -48,9 +27,9 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.OpenPopup("Asset Preview");
                 if (ImGui.BeginPopupModal("Asset Preview", ref previewVisible))
                 {
-                    ImGui.TextDisabled($"Previewing asset {_openedAsset.InternalName}");
+                    ImGui.TextDisabled($"Previewing asset {_openedAsset.Name}");
 
-                    var typeStr  = $"Type: {_openedAsset.Type}";
+                    var typeStr = $"Type: Unknown";
                     var textSize = ImGui.CalcTextSize(typeStr);
                     ImGui.SameLine(ImGui.GetContentRegionAvail().X - textSize.X);
                     ImGui.TextDisabled(typeStr);

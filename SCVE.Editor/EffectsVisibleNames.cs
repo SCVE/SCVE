@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SCVE.Editor.Effects;
+using SCVE.Editor.Editing.Effects;
 
 namespace SCVE.Editor
 {

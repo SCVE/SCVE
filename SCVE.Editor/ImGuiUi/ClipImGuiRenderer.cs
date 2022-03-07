@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Editing;
+using SCVE.Editor.Editing.Editing;
 
 namespace SCVE.Editor.ImGuiUi
 {

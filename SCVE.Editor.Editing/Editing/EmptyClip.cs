@@ -1,9 +1,12 @@
-﻿using System;
-
-namespace SCVE.Editor.Editing
+﻿namespace SCVE.Editor.Editing.Editing
 {
     public class EmptyClip : Clip
     {
+        public EmptyClip()
+        {
+            
+        }
+        
         private EmptyClip(Guid guid, int startFrame, int frameLength) : base(guid, startFrame, frameLength)
         {
         }
