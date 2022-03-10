@@ -16,9 +16,10 @@ namespace SCVE.Editor.ImGuiUi
 
         private ThreeWayImage _directoryIcon;
         private ThreeWayImage _fileIcon;
-        
-        private float _thumbnailSize = 96.0f;
+
         private string _selectedFilePath;
+
+        private bool _mode;
 
         public FilePickerModalPanel()
         {
@@ -31,7 +32,7 @@ namespace SCVE.Editor.ImGuiUi
 
             _fileIcon = new ThreeWayImage(new CpuImage(fileIconTextureData.RgbaPixels, fileIconTextureData.Width, fileIconTextureData.Height), "FileIcon");
             _directoryIcon = new ThreeWayImage(new CpuImage(directoryIconTextureData.RgbaPixels, directoryIconTextureData.Width, directoryIconTextureData.Height), "DirectoryIcon");
-            
+
             _fileIcon.ToGpu();
             _directoryIcon.ToGpu();
         }
@@ -52,26 +53,112 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.OpenPopup(Name);
             }
 
-            if (ImGui.BeginPopupModal(Name, ref IsOpen))
+            ImGui.SetNextWindowSize(new Vector2(600, 400));
+            
+            if (ImGui.BeginPopupModal(Name, ref IsOpen, ImGuiWindowFlags.NoResize))
             {
-                ImGui.TextDisabled($"Open Project");
-
-                if (_currentDirectory.Parent is not null)
+                if (_mode)
                 {
-                    if (ImGui.Button("<-"))
-                    {
-                        _currentDirectory = _currentDirectory.Parent;
-                        _content = _currentDirectory.EnumerateFileSystemInfos();
-                    }
+                    ImGui.Checkbox("Mode Tree", ref _mode);
+                }
+                else
+                {
+                    ImGui.Checkbox("Mode Cells", ref _mode);
                 }
 
-                float cellSize = _thumbnailSize;
+                if (_mode)
+                {
+                    DrawCells();
+                }
+                else
+                {
+                    DrawTree();
+                }
 
-                float panelWidth = ImGui.GetContentRegionAvail().X;
-                int columnCount = Math.Clamp((int) (panelWidth / cellSize), 1, 8);
+                if (ImGui.Button("Close"))
+                {
+                    ImGui.CloseCurrentPopup();
+                    Dismiss();
+                }
 
+                ImGui.EndPopup();
+            }
+        }
+
+        private void DrawTree()
+        {
+            if (_currentDirectory.Parent is not null)
+            {
+                if (ImGui.Button("<-"))
+                {
+                    _currentDirectory = _currentDirectory.Parent;
+                    _content = _currentDirectory.EnumerateFileSystemInfos();
+                }
+            }
+
+            if (ImGui.BeginChild("FilePickerTree", ImGui.GetContentRegionAvail() - new Vector2(0, 40)))
+            {
+                foreach (var entry in _content)
+                {
+                    var path = entry.FullName;
+                    var name = entry.Name;
+                    if (entry.IsDirectory())
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.Text, 0xFF0000FF);
+                    }
+
+                    if (ImGui.TreeNodeEx(name, ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.Leaf))
+                    {
+                        if (ImGui.IsItemHovered())
+                        {
+                            if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                            {
+                                if (entry.IsDirectory())
+                                {
+                                    _currentDirectory = new DirectoryInfo(path);
+                                    _content = _currentDirectory.EnumerateFileSystemInfos();
+                                }
+                                else
+                                {
+                                    _selectedFilePath = entry.FullName;
+                                    ImGui.CloseCurrentPopup();
+                                    Close();
+                                }
+                            }
+                        }
+
+                        ImGui.TreePop();
+                    }
+
+                    if (entry.IsDirectory())
+                    {
+                        ImGui.PopStyleColor();
+                    }
+                }
+                
+                ImGui.EndChild();
+            }
+        }
+
+        private void DrawCells()
+        {
+            if (_currentDirectory.Parent is not null)
+            {
+                if (ImGui.Button("<-"))
+                {
+                    _currentDirectory = _currentDirectory.Parent;
+                    _content = _currentDirectory.EnumerateFileSystemInfos();
+                }
+            }
+
+            if (ImGui.BeginChild("FilePickerTree", ImGui.GetContentRegionAvail() - new Vector2(0, 40)))
+            {
+                int columnCount = 6;
                 ImGui.Columns(columnCount, "file_picker_columns", false);
-
+                
+                // magic 20, don't ask, it just works
+                var columnWidth = ImGui.GetColumnWidth() - 20;
+                
                 foreach (var entry in _content)
                 {
                     var path = entry.FullName;
@@ -81,7 +168,8 @@ namespace SCVE.Editor.ImGuiUi
                     ImGui.PushID(filename);
                     var icon = path.IsDirectoryPath() ? _directoryIcon : _fileIcon;
                     // ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0, 0, 0, 0));
-                    ImGui.ImageButton((IntPtr) icon.GpuImage.GpuId, new Vector2(_thumbnailSize, _thumbnailSize), new Vector2(0, 1), new Vector2(1, 0));
+                    
+                    ImGui.ImageButton((IntPtr) icon.GpuImage.GpuId, new Vector2(columnWidth, columnWidth), new Vector2(0, 1), new Vector2(1, 0));
 
                     if (ImGui.BeginDragDropSource())
                     {
@@ -109,26 +197,17 @@ namespace SCVE.Editor.ImGuiUi
                             }
                         }
                     }
-                    
+
                     ImGui.TextWrapped(filename);
 
                     ImGui.NextColumn();
 
                     ImGui.PopID();
                 }
-
-                ImGui.Columns(1);
-
-                ImGui.SliderFloat("Thumbnail Size", ref _thumbnailSize, 32, 512);
-
-                if (ImGui.Button("Close"))
-                {
-                    ImGui.CloseCurrentPopup();
-                    Close();
-                }
-
-                ImGui.EndPopup();
+                ImGui.EndChild();
             }
+
+            ImGui.Columns(1);
         }
     }
 }
