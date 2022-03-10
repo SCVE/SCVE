@@ -33,5 +33,22 @@ namespace SCVE.Editor.Editing.ProjectStructure
         {
             Sequences.Add(sequenceAsset);
         }
+
+        public void AddImage(string fileName, string relativePath)
+        {
+            var imageAsset = new ImageAsset()
+            {
+                Guid  = Guid.NewGuid(),
+                Name = fileName,
+                Location = "/",
+                Content = new Image()
+                {
+                    Guid = Guid.NewGuid(),
+                    RelativePath = relativePath
+                }
+            };
+            
+            Images.Add(imageAsset);
+        }
     }
 }

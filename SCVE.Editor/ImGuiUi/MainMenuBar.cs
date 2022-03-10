@@ -124,6 +124,36 @@ namespace SCVE.Editor.ImGuiUi
                     ImGui.EndMenu();
                 }
 
+                if (ImGui.BeginMenu("Image"))
+                {
+                    if (ImGui.MenuItem("Add Image"))
+                    {
+                        if (_editingService.OpenedProject is not null)
+                        {
+                            _modalManagerService.OpenFilePickerPanel(Environment.CurrentDirectory, () =>
+                            {
+                                string path = _modalManagerService.FilePickerSelectedPath;
+
+                                var fileName = Path.GetFileName(path);
+                                var extension = Path.GetExtension(path);
+                                var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, path);
+                                if (extension == ".jpeg" || extension == ".png")
+                                {
+                                    _editingService.OpenedProject.AddImage(fileName!, relativePath);
+
+                                    // Console.WriteLine($"Loaded project: {videoProject.Title}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Unknown file selected: {extension}");
+                                }
+                            }, () => { Console.WriteLine("Opening file dialog was dismissed"); });
+                        }
+                    }
+
+                    ImGui.EndMenu();
+                }
+
                 ImGui.EndMenuBar();
             }
         }

@@ -75,5 +75,14 @@
     }
   ],
   "images": [
+      {
+        "guid": "6D70262B-27CB-435E-909B-5756B11C07F9",
+        "name": "test-image",
+        "location": "/",
+        "content": {
+            "guid": "72003910-0477-4DD9-AF3E-02ED47883B9A",
+            "relativePath": "testdata/Jessei.png"
+        }
+      }
   ]
 }
