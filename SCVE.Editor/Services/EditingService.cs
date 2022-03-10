@@ -10,13 +10,16 @@ namespace SCVE.Editor.Services
         public Sequence OpenedSequence { get; private set; }
         public Clip SelectedClip { get; private set; }
 
+        public string OpenedProjectPath { get; set; }
+
         public EditingService()
         {
         }
 
-        public void SetOpenedProject(VideoProject project)
+        public void SetOpenedProject(VideoProject project, string path = null)
         {
             OpenedProject = project;
+            OpenedProjectPath = path;
             OpenedSequence = null;
             SelectedClip = null;
         }

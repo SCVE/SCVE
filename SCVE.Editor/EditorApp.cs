@@ -10,12 +10,14 @@ using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi;
 using SCVE.Editor.Services;
 using Silk.NET.OpenGL;
+using Silk.NET.Windowing;
 using Vector2 = System.Numerics.Vector2;
 
 namespace SCVE.Editor
 {
     public class EditorApp
     {
+        private readonly IWindow _window;
         public GL GL { get; set; }
 
         public static EditorApp Instance;
@@ -27,11 +29,14 @@ namespace SCVE.Editor
         private static ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags.None;
 
         public ImFontPtr OpenSansFont;
-        
+
         private List<IImGuiRenderable> imGuiRenderables;
 
-        public EditorApp()
+        private RecentsService _recentsService;
+
+        public EditorApp(IWindow window)
         {
+            _window = window;
             Instance = this;
         }
 
@@ -44,6 +49,7 @@ namespace SCVE.Editor
             serviceCollection.AddSingleton<EditingService>();
             serviceCollection.AddSingleton<PreviewService>();
             serviceCollection.AddSingleton<ModalManagerService>();
+            serviceCollection.AddSingleton<RecentsService>();
 
             serviceCollection.AddSingleton<ClipEvaluator>();
             serviceCollection.AddSingleton<SequenceSampler>();
@@ -65,6 +71,9 @@ namespace SCVE.Editor
                 .ToList();
 
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
+            _recentsService = serviceProvider.GetRequiredService<RecentsService>();
+
+            _recentsService.TryLoad();
         }
 
         public void OnImGuiRender()
@@ -114,7 +123,7 @@ namespace SCVE.Editor
             }
 
             style.WindowMinSize.X = minWinSizeX;
-            
+
             foreach (var imGuiRenderable in imGuiRenderables)
             {
                 imGuiRenderable.OnImGuiRender();
@@ -127,6 +136,12 @@ namespace SCVE.Editor
             ImGui.PopFont();
 
             ImGui.End();
+        }
+
+        public void Exit()
+        {
+            _recentsService.TrySave();
+            _window.IsClosing = true;
         }
     }
 }
