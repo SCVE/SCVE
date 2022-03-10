@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using ImGuiNET;
+using SCVE.Editor.Imaging;
 using SCVE.Editor.Services;
+using SCVE.Engine.ImageSharpBindings;
 
 namespace SCVE.Editor.ImGuiUi
 {
@@ -13,7 +15,8 @@ namespace SCVE.Editor.ImGuiUi
 
         private ModalManagerService _modalManagerService;
 
-        public ProjectPanel(EditingService editingService, PreviewService previewService, SequenceCreationPanel sequenceCreationPanel, ModalManagerService modalManagerService)
+        public ProjectPanel(EditingService editingService, PreviewService previewService,
+            SequenceCreationPanel sequenceCreationPanel, ModalManagerService modalManagerService)
         {
             _editingService = editingService;
             _previewService = previewService;
@@ -94,13 +97,15 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.Text(_editingService.OpenedProject.Title);
 
                 // PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
-                
+
                 PushSequences();
 
                 if (ImGui.Button("Create new sequence"))
                 {
                     _modalManagerService.OpenSequenceCreationPanel();
                 }
+
+                PushImages();
             }
             else
             {
@@ -113,11 +118,13 @@ namespace SCVE.Editor.ImGuiUi
 
         private void PushSequences()
         {
-            var treeRootExpanded = ImGui.TreeNodeEx("Sequences", ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
+            var treeRootExpanded =
+                ImGui.TreeNodeEx("Sequences", ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
 
             foreach (var sequenceAsset in _editingService.OpenedProject.Sequences)
             {
-                var elementExpanded = ImGui.TreeNodeEx(sequenceAsset.Name, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
+                var elementExpanded = ImGui.TreeNodeEx(sequenceAsset.Name,
+                    ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
 
                 if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
                 {
@@ -125,6 +132,45 @@ namespace SCVE.Editor.ImGuiUi
 
                     _editingService.SetOpenedSequence(sequenceAsset.Content);
                     _previewService.SwitchSequence(sequenceAsset.Content);
+                }
+
+                if (elementExpanded)
+                {
+                    ImGui.TreePop();
+                }
+            }
+
+            if (treeRootExpanded)
+            {
+                ImGui.TreePop();
+            }
+        }
+
+        private void PushImages()
+        {
+            // TODO: Finish this shit man plz u can do it I know man plz just do it. Luv ya.
+
+            var treeRootExpanded =
+                ImGui.TreeNodeEx("Images", ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
+
+            foreach (var imageAsset in _editingService.OpenedProject.Images)
+            {
+                var elementExpanded = ImGui.TreeNodeEx(imageAsset.Name,
+                    ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
+
+                if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                {
+                    var imageSharpTextureLoader = new ImageSharpTextureLoader();
+
+                    var fileIconTextureData = imageSharpTextureLoader.Load(imageAsset.Content.RelativePath, false);
+
+                    var fileIcon =
+                        new ThreeWayImage(
+                            new CpuImage(fileIconTextureData.RgbaPixels, fileIconTextureData.Width,
+                                fileIconTextureData.Height), "FileIcon");
+
+                    fileIcon.ToGpu();
+                    _previewService.SetPreviewImage(fileIcon);
                 }
 
                 if (elementExpanded)

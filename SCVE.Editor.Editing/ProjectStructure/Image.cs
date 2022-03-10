@@ -2,9 +2,13 @@
 {
     public class Image
     {
+        public Guid Guid { get; set; }
+
+        public string RelativePath { get; set; }
+        
         public Image()
         {
-            
+               
         }
     }
 }

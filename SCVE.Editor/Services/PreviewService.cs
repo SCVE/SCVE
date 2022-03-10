@@ -118,5 +118,11 @@ namespace SCVE.Editor.Services
         public void OnUpdate()
         {
         }
+
+        public void SetPreviewImage(ThreeWayImage image)
+        {
+            PreviewImage.Dispose();
+            PreviewImage = image;
+        }
     }
 }
