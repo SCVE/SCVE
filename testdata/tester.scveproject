@@ -1,88 +1,93 @@
 ﻿{
-  "title": "Tester Project",
-  "sequences": [
+  "Title": "Tester Project",
+  "Sequences": [
     {
-      "guid": "a665087f-a4c0-4acc-9dc3-e3f0a6287d33",
-      "name": "Testing Sequence",
-      "location": "/",
-      "content": {
-        "guid": "e1ac7a3b-3a24-4d3d-abdb-135ff3910102",
-        "frameLength": 150,
-        "resolution": {
-          "x": 1280,
-          "y": 720
-        },
-        "fps": 30,
-        "tracks": [
+      "Content": {
+        "Guid": "e1ac7a3b-3a24-4d3d-abdb-135ff3910102",
+        "Tracks": [
           {
-            "guid": "906e67e9-5ff6-4c35-89c1-600b931bd3d0",
-            "emptyClips": [
-              {
-                "guid": "0dd602c5-e2a5-4663-a37e-bfd942789bd6",
-                "startFrame": 0,
-                "frameLength": 30,
-                "effects": []
-              }
-            ],
-            "assetClips": []
+            "Guid": "906e67e9-5ff6-4c35-89c1-600b931bd3d0",
+            "EmptyClips": [],
+            "AssetClips": []
           },
           {
-            "guid": "f052bd8d-edf8-470a-9d0d-b7169a170973",
-            "emptyClips": [],
-            "assetClips": []
+            "Guid": "f052bd8d-edf8-470a-9d0d-b7169a170973",
+            "EmptyClips": [
+              {
+                "Guid": "0dd602c5-e2a5-4663-a37e-bfd942789bd6",
+                "StartFrame": 22,
+                "FrameLength": 30,
+                "EndFrame": 52,
+                "Effects": []
+              }
+            ],
+            "AssetClips": []
           }
-        ]
-      }
+        ],
+        "FPS": 30,
+        "CursorTimeFrame": 26,
+        "Resolution": {
+          "X": 1280,
+          "Y": 720
+        },
+        "FrameLength": 150
+      },
+      "Guid": "a665087f-a4c0-4acc-9dc3-e3f0a6287d33",
+      "Name": "Testing Sequence",
+      "Location": "/"
     },
     {
-      "guid": "2c9f3af8-f75e-4da3-83ad-03ec47e9dde9",
-      "name": "My super Sequence",
-      "location": "/",
-      "content": {
-        "guid": "5531bdff-4f58-4882-9442-694e74308fa0",
-        "frameLength": 150,
-        "resolution": {
-          "x": 1280,
-          "y": 720
-        },
-        "fps": 30,
-        "tracks": [
+      "Content": {
+        "Guid": "5531bdff-4f58-4882-9442-694e74308fa0",
+        "Tracks": [
           {
-            "guid": "b294e91e-1309-475b-b98b-eb6dd2a73e34",
-            "emptyClips": [
+            "Guid": "b294e91e-1309-475b-b98b-eb6dd2a73e34",
+            "EmptyClips": [
               {
-                "guid": "7e7b0fbe-10cc-4e84-9d76-15649e17054f",
-                "startFrame": 5,
-                "frameLength": 30,
-                "effects": []
+                "Guid": "7e7b0fbe-10cc-4e84-9d76-15649e17054f",
+                "StartFrame": 5,
+                "FrameLength": 30,
+                "EndFrame": 35,
+                "Effects": []
               },
               {
-                "guid": "2541bee9-0ee7-4d98-94b9-12b3dd4c6c69",
-                "startFrame": 40,
-                "frameLength": 20,
-                "effects": []
+                "Guid": "2541bee9-0ee7-4d98-94b9-12b3dd4c6c69",
+                "StartFrame": 40,
+                "FrameLength": 20,
+                "EndFrame": 60,
+                "Effects": []
               }
             ],
-            "assetClips": []
+            "AssetClips": []
           },
           {
-            "guid": "e35a924a-d7c8-42fa-a275-8c51d8c14217",
-            "emptyClips": [],
-            "assetClips": []
+            "Guid": "e35a924a-d7c8-42fa-a275-8c51d8c14217",
+            "EmptyClips": [],
+            "AssetClips": []
           }
-        ]
-      }
+        ],
+        "FPS": 30,
+        "CursorTimeFrame": 0,
+        "Resolution": {
+          "X": 1280,
+          "Y": 720
+        },
+        "FrameLength": 150
+      },
+      "Guid": "2c9f3af8-f75e-4da3-83ad-03ec47e9dde9",
+      "Name": "My super Sequence",
+      "Location": "/"
     }
   ],
-  "images": [
-      {
-        "guid": "6D70262B-27CB-435E-909B-5756B11C07F9",
-        "name": "test-image",
-        "location": "/",
-        "content": {
-            "guid": "72003910-0477-4DD9-AF3E-02ED47883B9A",
-            "relativePath": "testdata/Jessei.png"
-        }
-      }
+  "Images": [
+    {
+      "Content": {
+        "Guid": "72003910-0477-4dd9-af3e-02ed47883b9a",
+        "RelativePath": "testdata/Jessei.png"
+      },
+      "Guid": "6d70262b-27cb-435e-909b-5756b11c07f9",
+      "Name": "test-image",
+      "Location": "/"
+    }
   ]
 }

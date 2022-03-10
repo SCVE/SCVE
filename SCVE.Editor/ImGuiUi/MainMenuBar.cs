@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Numerics;
-using System.Text.Json;
 using ImGuiNET;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.ProjectStructure;
@@ -49,17 +49,11 @@ namespace SCVE.Editor.ImGuiUi
 
                             if (Path.GetExtension(path) == ".scveproject")
                             {
-                                var jsonContent = File.ReadAllText(path);
-
-                                var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent,
-                                    new JsonSerializerOptions()
-                                    {
-                                        PropertyNameCaseInsensitive = true
-                                    });
+                                var videoProject = Utils.ReadJson<VideoProject>(path);
 
                                 _editingService.SetOpenedProject(videoProject, path);
                                 _previewService.SyncVisiblePreview();
-                                _recentsService.NoticeOpenNew(path);
+                                _recentsService.NoticeOpen(path);
 
                                 Console.WriteLine($"Loaded project: {videoProject.Title}");
                             }
@@ -78,19 +72,13 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 var fileName = Path.GetFileName(recent);
 
-                                if (ImGui.MenuItem(fileName))
+                                if (ImGui.MenuItem(fileName, File.Exists(recent)))
                                 {
-                                    var jsonContent = File.ReadAllText(recent);
-
-                                    var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent,
-                                        new JsonSerializerOptions()
-                                        {
-                                            PropertyNameCaseInsensitive = true
-                                        });
+                                    var videoProject = Utils.ReadJson<VideoProject>(recent);
 
                                     _editingService.SetOpenedProject(videoProject, recent);
                                     _previewService.SyncVisiblePreview();
-                                    _recentsService.NoticeOpenRecent(recent);
+                                    _recentsService.NoticeOpen(recent);
 
                                     Console.WriteLine($"Loaded Recent Project: {videoProject.Title}");
                                     
@@ -107,16 +95,17 @@ namespace SCVE.Editor.ImGuiUi
 
                     if (_editingService.OpenedProject is not null)
                     {
-                        if (ImGui.MenuItem("Save Project", "Ctrl+Shift+S"))
+                        if (ImGui.MenuItem("Save Project", "Ctrl+S"))
                         {
-                            var jsonContent = JsonSerializer.Serialize(_editingService.OpenedProject,
-                                new JsonSerializerOptions()
-                                {
-                                    PropertyNameCaseInsensitive = true,
-                                    WriteIndented = true
-                                });
-
-                            File.WriteAllText("testdata/savetest.scveproject", jsonContent);
+                            if (_editingService.OpenedProjectPath is not null)
+                            {
+                                Utils.WriteJson(_editingService.OpenedProject, _editingService.OpenedProjectPath);
+                            }
+                            else
+                            {
+                                // TODO
+                                throw new NotImplementedException("Saving of just-created projects is not currently supported");
+                            }
                         }
                     }
 
@@ -156,11 +145,11 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 string path = _modalManagerService.FilePickerSelectedPath;
 
-                                var fileName = Path.GetFileName(path);
                                 var extension = Path.GetExtension(path);
-                                var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, path);
                                 if (extension is ".jpeg" or ".png")
                                 {
+                                    var fileName = Path.GetFileName(path);
+                                    var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, path);
                                     _editingService.OpenedProject.AddImage(fileName!, relativePath);
                                 }
                                 else
