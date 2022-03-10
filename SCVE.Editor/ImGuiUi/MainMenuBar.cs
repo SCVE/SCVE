@@ -8,7 +8,6 @@ using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi
 {
-
     public class MainMenuBar : IImGuiRenderable
     {
         private PreviewService _previewService;
@@ -16,7 +15,8 @@ namespace SCVE.Editor.ImGuiUi
 
         private ModalManagerService _modalManagerService;
 
-        public MainMenuBar(PreviewService previewService, EditingService editingService, ModalManagerService modalManagerService)
+        public MainMenuBar(PreviewService previewService, EditingService editingService,
+            ModalManagerService modalManagerService)
         {
             _previewService = previewService;
             _editingService = editingService;
@@ -47,10 +47,11 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 var jsonContent = File.ReadAllText(path);
 
-                                var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent, new JsonSerializerOptions()
-                                {
-                                    PropertyNameCaseInsensitive = true
-                                });
+                                var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent,
+                                    new JsonSerializerOptions()
+                                    {
+                                        PropertyNameCaseInsensitive = true
+                                    });
 
                                 _editingService.SetOpenedProject(videoProject);
                                 _previewService.SyncVisiblePreview();
@@ -61,10 +62,7 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 Console.WriteLine($"Unknown file selected: {Path.GetExtension(path)}");
                             }
-                        }, () =>
-                        {
-                            Console.WriteLine("Opening file dialog was dismissed");
-                        });
+                        }, () => { Console.WriteLine("Opening file dialog was dismissed"); });
                     }
 
                     if (ImGui.MenuItem("Save As...", "Ctrl+Shift+S"))
@@ -76,10 +74,11 @@ namespace SCVE.Editor.ImGuiUi
                     {
                         var jsonContent = File.ReadAllText("testdata/tester.scveproject");
 
-                        var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent, new JsonSerializerOptions()
-                        {
-                            PropertyNameCaseInsensitive = true
-                        });
+                        var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent,
+                            new JsonSerializerOptions()
+                            {
+                                PropertyNameCaseInsensitive = true
+                            });
 
                         _editingService.SetOpenedProject(videoProject);
                         _previewService.SyncVisiblePreview();
@@ -89,11 +88,12 @@ namespace SCVE.Editor.ImGuiUi
                     {
                         if (ImGui.MenuItem("Save current project", "Ctrl+Shift+S"))
                         {
-                            var jsonContent = JsonSerializer.Serialize(_editingService.OpenedProject, new JsonSerializerOptions()
-                            {
-                                PropertyNameCaseInsensitive = true,
-                                WriteIndented = true
-                            });
+                            var jsonContent = JsonSerializer.Serialize(_editingService.OpenedProject,
+                                new JsonSerializerOptions()
+                                {
+                                    PropertyNameCaseInsensitive = true,
+                                    WriteIndented = true
+                                });
 
                             File.WriteAllText("testdata/savetest.scveproject", jsonContent);
                         }
@@ -115,7 +115,10 @@ namespace SCVE.Editor.ImGuiUi
 
                     if (ImGui.MenuItem("Add Track"))
                     {
-                        _editingService.OpenedSequence.Tracks.Add(Track.CreateNew());
+                        if (_editingService.OpenedProject is not null)
+                        {
+                            _editingService.OpenedSequence.Tracks.Add(Track.CreateNew());
+                        }
                     }
 
                     ImGui.EndMenu();
