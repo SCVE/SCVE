@@ -2,13 +2,13 @@
 
 namespace SCVE.Editor.Editing.Effects
 {
-    public class ScaleEffect : EffectBase
+    public class Scale : EffectBase
     {
         public float X { get; set; } = 1;
 
         public float Y { get; set; } = 1;
 
-        public ScaleEffect()
+        public Scale()
         {
         }
 
