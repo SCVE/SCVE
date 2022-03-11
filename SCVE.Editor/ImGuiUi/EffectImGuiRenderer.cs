@@ -11,7 +11,7 @@ namespace SCVE.Editor.ImGuiUi
             effect.AcceptVisitor(this);
         }
 
-        public void Visit(TranslateEffect effect)
+        public void Visit(Translate effect)
         {
             int x = effect.X;
             if (ImGui.SliderInt("X", ref x, -1000, 1000))
@@ -28,7 +28,7 @@ namespace SCVE.Editor.ImGuiUi
             }
         }
 
-        public void Visit(ScaleEffect effect)
+        public void Visit(Scale effect)
         {
             float x = effect.X;
             if (ImGui.SliderFloat("X", ref x, 0, 5))

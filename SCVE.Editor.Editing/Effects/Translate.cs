@@ -6,13 +6,13 @@ using SixLabors.ImageSharp.Processing;
 
 namespace SCVE.Editor.Editing.Effects
 {
-    public class TranslateEffect : EffectBase
+    public class Translate : EffectBase
     {
         public int X { get; set; }
 
         public int Y { get; set; }
 
-        public TranslateEffect()
+        public Translate()
         {
         }
 

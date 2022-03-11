@@ -9,7 +9,8 @@ Inspired by [Hazel](https://github.com/TheCherno/Hazel).
 Based on:
 
 - [Silk.NET](https://github.com/dotnet/Silk.NET)
-- [ImageSharp](https://github.com/SixLabors/ImageSharp/)
+- [ImageSharp](https://github.com/SixLabors/ImageSharp)
+- [JsonSubTypes](https://github.com/manuc66/JsonSubTypes)
 - likely many more.
 
 ## Solution structure

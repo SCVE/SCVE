@@ -6,8 +6,8 @@ namespace SCVE.Editor.Editing.Visitors
     {
         void Visit(EffectBase effect);
         
-        void Visit(TranslateEffect effect);
+        void Visit(Translate effect);
 
-        void Visit(ScaleEffect effect);
+        void Visit(Scale effect);
     }
 }

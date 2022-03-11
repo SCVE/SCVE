@@ -4,12 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using JsonSubTypes;
+using Newtonsoft.Json;
+using SCVE.Editor.Editing.Effects;
 using SCVE.Editor.Imaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using FontCollection = SixLabors.Fonts.FontCollection;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SCVE.Editor
 {
@@ -66,6 +70,34 @@ namespace SCVE.Editor
             return new ThreeWayImage(previewImage, "NO PREVIEW");
         }
 
+        private static JsonSerializerSettings _settings;
+
+        private static JsonSerializerSettings GetJsonSettings()
+        {
+            if (_settings is not null)
+            {
+                return _settings;
+            }
+
+            var settings = new JsonSerializerSettings();
+
+            settings.Formatting = Formatting.Indented;
+
+            var allEffectTypes = GetAssignableTypes<EffectBase>();
+            var effectsSubtypesBuilder = JsonSubtypesConverterBuilder
+                .Of<EffectBase>("Type");
+            foreach (var effectType in allEffectTypes)
+            {
+                effectsSubtypesBuilder.RegisterSubtype(effectType, effectType.Name);
+            }
+
+            effectsSubtypesBuilder.SerializeDiscriminatorProperty(true);
+
+            settings.Converters.Add(effectsSubtypesBuilder.Build());
+
+            return _settings = settings;
+        }
+
         /// <summary>
         /// Reads JSON file contents into an object, throws on any invalid data, so be careful 
         /// </summary>
@@ -73,11 +105,7 @@ namespace SCVE.Editor
         {
             var jsonContent = File.ReadAllText(path);
 
-            var obj = JsonSerializer.Deserialize<T>(jsonContent,
-                new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+            var obj = JsonConvert.DeserializeObject<T>(jsonContent, GetJsonSettings());
 
             return obj;
         }
@@ -87,12 +115,7 @@ namespace SCVE.Editor
         /// </summary>
         public static void WriteJson<T>(T obj, string path)
         {
-            var jsonContent = JsonSerializer.Serialize(obj,
-                new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true,
-                    WriteIndented = true
-                });
+            var jsonContent = JsonConvert.SerializeObject(obj, GetJsonSettings());
 
             File.WriteAllText(path, jsonContent);
         }

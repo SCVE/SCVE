@@ -1,4 +1,4 @@
-﻿{
+{
   "Title": "Tester Project",
   "Sequences": [
     {
@@ -18,7 +18,13 @@
                 "StartFrame": 22,
                 "FrameLength": 30,
                 "EndFrame": 52,
-                "Effects": []
+                "Effects": [
+                  {
+                    "Type": "Translate",
+                    "X": 447,
+                    "Y": 0
+                  }
+                ]
               }
             ],
             "AssetClips": []
