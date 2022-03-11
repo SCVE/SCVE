@@ -19,7 +19,7 @@ namespace SCVE.Editor
             GL              gl           = null;
             IInputContext   inputContext = null;
 
-            var editorApp = new EditorApp();
+            var editorApp = new EditorApp(window);
 
             // Our loading function
             window.Load += () =>
@@ -65,6 +65,8 @@ namespace SCVE.Editor
             // The closing function
             window.Closing += () =>
             {
+                editorApp.Exit();
+                
                 ImGui.SaveIniSettingsToDisk("imgui.ini");
                 // Dispose our controller first
                 controller?.Dispose();

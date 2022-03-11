@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Reflection;
-using SCVE.Editor.Editing.Editing;
-using SCVE.Editor.Editing.Misc;
+using System.Text.Json;
 using SCVE.Editor.Imaging;
-using SCVE.Editor.ImGuiUi;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
@@ -67,6 +64,37 @@ namespace SCVE.Editor
             image.Mutate(i => i.DrawText($"NO PREVIEW", font, Color.Red, new PointF(10, 0)));
 
             return new ThreeWayImage(previewImage, "NO PREVIEW");
+        }
+
+        /// <summary>
+        /// Reads JSON file contents into an object, throws on any invalid data, so be careful 
+        /// </summary>
+        public static T ReadJson<T>(string path)
+        {
+            var jsonContent = File.ReadAllText(path);
+
+            var obj = JsonSerializer.Deserialize<T>(jsonContent,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            return obj;
+        }
+
+        /// <summary>
+        /// Writes object to a JSON file, throws on any invalid data, so be careful 
+        /// </summary>
+        public static void WriteJson<T>(T obj, string path)
+        {
+            var jsonContent = JsonSerializer.Serialize(obj,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true,
+                    WriteIndented = true
+                });
+
+            File.WriteAllText(path, jsonContent);
         }
     }
 }

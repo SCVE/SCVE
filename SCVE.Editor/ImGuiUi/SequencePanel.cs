@@ -54,8 +54,6 @@ namespace SCVE.Editor.ImGuiUi
                 goto END;
             }
 
-            
-
             if (_editingService.OpenedSequence is null)
             {
                 ImGui.Text("No sequence is opened");
@@ -229,7 +227,7 @@ namespace SCVE.Editor.ImGuiUi
                         drawOriginY + sequenceHeaderHeight + (i + 1) * trackHeight + i * trackMargin),
                     0xFF444444
                 );
-                
+
                 painter.AddText(
                     new Vector2(drawOriginX + trackMarginLeft, drawOriginY + sequenceHeaderHeight + i * (trackHeight + trackMargin)),
                     0xFFFFFFFF, $"TRACK {i}");

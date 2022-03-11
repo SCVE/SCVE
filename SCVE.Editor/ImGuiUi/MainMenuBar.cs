@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
-using System.Text.Json;
+using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.ProjectStructure;
@@ -15,12 +16,15 @@ namespace SCVE.Editor.ImGuiUi
 
         private ModalManagerService _modalManagerService;
 
+        private RecentsService _recentsService;
+
         public MainMenuBar(PreviewService previewService, EditingService editingService,
-            ModalManagerService modalManagerService)
+            ModalManagerService modalManagerService, RecentsService recentsService)
         {
             _previewService = previewService;
             _editingService = editingService;
             _modalManagerService = modalManagerService;
+            _recentsService = recentsService;
         }
 
         public void OnImGuiRender()
@@ -32,12 +36,12 @@ namespace SCVE.Editor.ImGuiUi
                     // Disabling fullscreen would allow the window to be moved to the front of other windows, 
                     // which we can't undo at the moment without finer window depth/z control.
                     //ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);1
-                    if (ImGui.MenuItem("New", "Ctrl+N"))
+                    if (ImGui.MenuItem("New Project", "Ctrl+N"))
                     {
                         _modalManagerService.OpenProjectCreationPanel();
                     }
 
-                    if (ImGui.MenuItem("Open...", "Ctrl+O"))
+                    if (ImGui.MenuItem("Open Project", "Ctrl+O"))
                     {
                         _modalManagerService.OpenFilePickerPanel(Environment.CurrentDirectory, () =>
                         {
@@ -45,16 +49,11 @@ namespace SCVE.Editor.ImGuiUi
 
                             if (Path.GetExtension(path) == ".scveproject")
                             {
-                                var jsonContent = File.ReadAllText(path);
+                                var videoProject = Utils.ReadJson<VideoProject>(path);
 
-                                var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent,
-                                    new JsonSerializerOptions()
-                                    {
-                                        PropertyNameCaseInsensitive = true
-                                    });
-
-                                _editingService.SetOpenedProject(videoProject);
+                                _editingService.SetOpenedProject(videoProject, path);
                                 _previewService.SyncVisiblePreview();
+                                _recentsService.NoticeOpen(path);
 
                                 Console.WriteLine($"Loaded project: {videoProject.Title}");
                             }
@@ -65,42 +64,54 @@ namespace SCVE.Editor.ImGuiUi
                         }, () => { Console.WriteLine("Opening file dialog was dismissed"); });
                     }
 
-                    if (ImGui.MenuItem("Save As...", "Ctrl+Shift+S"))
+                    if (_recentsService.Recents.Count != 0)
                     {
-                        // SaveSceneAs();
-                    }
-
-                    if (ImGui.MenuItem("Load test project", "Ctrl+Shift+S"))
-                    {
-                        var jsonContent = File.ReadAllText("testdata/tester.scveproject");
-
-                        var videoProject = JsonSerializer.Deserialize<VideoProject>(jsonContent,
-                            new JsonSerializerOptions()
+                        if (ImGui.BeginMenu("Open Recent"))
+                        {
+                            foreach (var recent in _recentsService.Recents)
                             {
-                                PropertyNameCaseInsensitive = true
-                            });
+                                var fileName = Path.GetFileName(recent);
 
-                        _editingService.SetOpenedProject(videoProject);
-                        _previewService.SyncVisiblePreview();
+                                if (ImGui.MenuItem(fileName, File.Exists(recent)))
+                                {
+                                    var videoProject = Utils.ReadJson<VideoProject>(recent);
+
+                                    _editingService.SetOpenedProject(videoProject, recent);
+                                    _previewService.SyncVisiblePreview();
+                                    _recentsService.NoticeOpen(recent);
+
+                                    Console.WriteLine($"Loaded Recent Project: {videoProject.Title}");
+                                    
+                                    // NOTE: break is needed, because _recentsService.NoticeOpenRecent() modifies original list
+                                    break;
+                                }
+
+                                ShowHint(recent);
+                            }
+
+                            ImGui.EndMenu();
+                        }
                     }
 
                     if (_editingService.OpenedProject is not null)
                     {
-                        if (ImGui.MenuItem("Save current project", "Ctrl+Shift+S"))
+                        if (ImGui.MenuItem("Save Project", "Ctrl+S"))
                         {
-                            var jsonContent = JsonSerializer.Serialize(_editingService.OpenedProject,
-                                new JsonSerializerOptions()
-                                {
-                                    PropertyNameCaseInsensitive = true,
-                                    WriteIndented = true
-                                });
-
-                            File.WriteAllText("testdata/savetest.scveproject", jsonContent);
+                            if (_editingService.OpenedProjectPath is not null)
+                            {
+                                Utils.WriteJson(_editingService.OpenedProject, _editingService.OpenedProjectPath);
+                            }
+                            else
+                            {
+                                // TODO
+                                throw new NotImplementedException("Saving of just-created projects is not currently supported");
+                            }
                         }
                     }
 
                     if (ImGui.MenuItem("Exit"))
                     {
+                        EditorApp.Instance.Exit();
                     }
 
                     ImGui.EndMenu();
@@ -124,7 +135,7 @@ namespace SCVE.Editor.ImGuiUi
                     ImGui.EndMenu();
                 }
 
-                if (ImGui.BeginMenu("Image"))
+                if (ImGui.BeginMenu("Assets"))
                 {
                     if (ImGui.MenuItem("Add Image"))
                     {
@@ -134,14 +145,12 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 string path = _modalManagerService.FilePickerSelectedPath;
 
-                                var fileName = Path.GetFileName(path);
                                 var extension = Path.GetExtension(path);
-                                var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, path);
-                                if (extension == ".jpeg" || extension == ".png")
+                                if (extension is ".jpeg" or ".png")
                                 {
+                                    var fileName = Path.GetFileName(path);
+                                    var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, path);
                                     _editingService.OpenedProject.AddImage(fileName!, relativePath);
-
-                                    // Console.WriteLine($"Loaded project: {videoProject.Title}");
                                 }
                                 else
                                 {
@@ -155,6 +164,24 @@ namespace SCVE.Editor.ImGuiUi
                 }
 
                 ImGui.EndMenuBar();
+            }
+        }
+        
+        // This is a direct port of imgui_demo.cpp HelpMarker function
+        // https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp#L190
+        private void ShowHint(string message)
+        {
+            // ImGui.TextDisabled("(?)");
+            if (ImGui.IsItemHovered())
+            {
+                // Change background transparency
+                ImGui.PushStyleColor(ImGuiCol.PopupBg, new Vector4(0, 0, 0, 0.3f));
+                ImGui.BeginTooltip();
+                ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
+                ImGui.TextUnformatted(message);
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+                ImGui.PopStyleColor();
             }
         }
     }
