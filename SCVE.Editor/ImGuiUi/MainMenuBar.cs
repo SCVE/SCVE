@@ -3,7 +3,9 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Numerics;
 using ImGuiNET;
+using SCVE.Editor.Background;
 using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.Services;
 
@@ -20,17 +22,25 @@ namespace SCVE.Editor.ImGuiUi
 
         private ProjectPanelService _projectPanelService;
 
-        public MainMenuBar(PreviewService previewService, 
+        private BackgroundJobRunner _backgroundJobRunner;
+
+        private ClipEvaluator _evaluator;
+
+        public MainMenuBar(PreviewService previewService,
             EditingService editingService,
-            ModalManagerService modalManagerService, 
-            RecentsService recentsService, 
-            ProjectPanelService projectPanelService)
+            ModalManagerService modalManagerService,
+            RecentsService recentsService,
+            ProjectPanelService projectPanelService,
+            BackgroundJobRunner backgroundJobRunner,
+            ClipEvaluator evaluator)
         {
             _previewService = previewService;
             _editingService = editingService;
             _modalManagerService = modalManagerService;
             _recentsService = recentsService;
             _projectPanelService = projectPanelService;
+            _backgroundJobRunner = backgroundJobRunner;
+            _evaluator = evaluator;
         }
 
         public void OnImGuiRender()
@@ -125,22 +135,37 @@ namespace SCVE.Editor.ImGuiUi
                     ImGui.EndMenu();
                 }
 
-                if (ImGui.BeginMenu("Sequence"))
+                if (_editingService.OpenedSequence is not null)
                 {
-                    if (ImGui.MenuItem("Render start to end", "Ctrl+R"))
+                    if (ImGui.BeginMenu("Sequence"))
                     {
-                        _previewService.RenderSequence();
-                    }
+                        if (ImGui.MenuItem("Render start to end", "Ctrl+R"))
+                        {
+                            for (var i = 0; i < _editingService.OpenedSequence.FrameLength; i++)
+                            {
+                                int localI = i;
+                                var job = new RenderFrameBackgroundJob(
+                                    sequence: _editingService.OpenedSequence,
+                                    sampler: new SequenceSampler(_evaluator),
+                                    resolution: new ScveVector2i(1280, 720),
+                                    frame: i,
+                                    onFinished: (image) =>
+                                    {
+                                        Console.WriteLine($"Finished rendering frame {localI} in background");
+                                        _previewService.SetRenderedFrame(localI, image);
+                                    }
+                                );
+                                _backgroundJobRunner.PushJob(job);
+                            }
+                        }
 
-                    if (ImGui.MenuItem("Add Track"))
-                    {
-                        if (_editingService.OpenedProject is not null)
+                        if (ImGui.MenuItem("Add Track"))
                         {
                             _editingService.OpenedSequence.Tracks.Add(Track.CreateNew());
                         }
-                    }
 
-                    ImGui.EndMenu();
+                        ImGui.EndMenu();
+                    }
                 }
 
                 if (ImGui.BeginMenu("Assets"))
