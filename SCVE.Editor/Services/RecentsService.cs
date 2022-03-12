@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SCVE.Editor.Abstractions;
+using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -9,10 +11,6 @@ namespace SCVE.Editor.Services
     {
         public IReadOnlyList<string> Recents => _recents;
         private List<string> _recents;
-
-        public void OnUpdate()
-        {
-        }
 
         public void TryLoad()
         {

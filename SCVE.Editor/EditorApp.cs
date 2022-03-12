@@ -5,10 +5,12 @@ using System.Reflection;
 using System.Text.Json;
 using ImGuiNET;
 using Microsoft.Extensions.DependencyInjection;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Effects;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi;
 using SCVE.Editor.Services;
+using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using Vector2 = System.Numerics.Vector2;
@@ -19,6 +21,7 @@ namespace SCVE.Editor
     {
         private readonly IWindow _window;
         public GL GL { get; set; }
+        public IInputContext Input { get; set; }
 
         public static EditorApp Instance;
 
@@ -30,7 +33,10 @@ namespace SCVE.Editor
 
         public ImFontPtr OpenSansFont;
 
-        private List<IImGuiRenderable> imGuiRenderables;
+        private List<IImGuiRenderable> _imGuiRenderables;
+        private List<IService> _services;
+        private List<IUpdateReceiver> _updateReceivers;
+        private List<IKeyPressReceiver> _keyPressReceivers;
 
         private RecentsService _recentsService;
 
@@ -65,8 +71,20 @@ namespace SCVE.Editor
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            imGuiRenderables = Utils.GetAssignableTypes<IImGuiRenderable>()
+            _imGuiRenderables = Utils.GetAssignableTypes<IImGuiRenderable>()
                 .Select(t => serviceProvider.GetService(t) as IImGuiRenderable)
+                .ToList();
+            
+            _services = Utils.GetAssignableTypes<IService>()
+                .Select(t => serviceProvider.GetService(t) as IService)
+                .ToList();
+            
+            _updateReceivers = Utils.GetAssignableTypes<IUpdateReceiver>()
+                .Select(t => serviceProvider.GetService(t) as IUpdateReceiver)
+                .ToList();
+            
+            _keyPressReceivers = Utils.GetAssignableTypes<IKeyPressReceiver>()
+                .Select(t => serviceProvider.GetService(t) as IKeyPressReceiver)
                 .ToList();
 
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
@@ -123,7 +141,7 @@ namespace SCVE.Editor
 
             style.WindowMinSize.X = minWinSizeX;
 
-            foreach (var imGuiRenderable in imGuiRenderables)
+            foreach (var imGuiRenderable in _imGuiRenderables)
             {
                 imGuiRenderable.OnImGuiRender();
             }
@@ -141,6 +159,22 @@ namespace SCVE.Editor
         {
             _recentsService.TrySave();
             _window.IsClosing = true;
+        }
+
+        public void Update(double delta)
+        {
+            foreach (var updateReceiver in _updateReceivers)
+            {
+                updateReceiver.OnUpdate((float)delta);
+            }
+        }
+
+        public void OnKeyPressed(Key key)
+        {
+            foreach (var keyPressReceiver in _keyPressReceivers)
+            {
+                keyPressReceiver.OnKeyPressed(key);
+            }
         }
     }
 }

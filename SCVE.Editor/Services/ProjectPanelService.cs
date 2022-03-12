@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.ProjectStructure;
+using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -52,10 +54,6 @@ namespace SCVE.Editor.Services
         public void LevelUp()
         {
             ChangeLocation(CurrentLocation.Substring(0, CurrentLocation.LastIndexOf('/') + 1));
-        }
-
-        public void OnUpdate()
-        {
         }
     }
 }

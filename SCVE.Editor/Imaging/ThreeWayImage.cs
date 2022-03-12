@@ -4,7 +4,7 @@ namespace SCVE.Editor.Imaging
 {
     public class ThreeWayImage : IImage
     {
-        private readonly string _name;
+        private string _name;
 
         public int Width { get; set; }
         public int Height { get; set; }
@@ -206,6 +206,16 @@ namespace SCVE.Editor.Imaging
                 ImagePresence.NO => throw new ArgumentOutOfRangeException("Image instance has a ImagePresence.NO value and can't be materialized"),
                 _ => throw new ArgumentOutOfRangeException("Image instance has an unknown ImagePresence value.")
             };
+        }
+
+        public void ForceReplace(ThreeWayImage image)
+        {
+            Dispose();
+            _cpuImage = image._cpuImage;
+            _gpuImage = image._gpuImage;
+            _diskImage = image._diskImage;
+            _presence = image._presence;
+            _name = image._name;
         }
 
         public void Dispose()

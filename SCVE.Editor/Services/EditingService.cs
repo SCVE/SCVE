@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.ProjectStructure;
+using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -33,10 +35,6 @@ namespace SCVE.Editor.Services
         public void SetSelectedClip(Clip clip)
         {
             SelectedClip = clip;
-        }
-
-        public void OnUpdate()
-        {
         }
 
         public void AddSequence(SequenceAsset sequenceAsset)

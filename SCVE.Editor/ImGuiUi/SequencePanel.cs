@@ -109,7 +109,7 @@ namespace SCVE.Editor.ImGuiUi
                 if (sequenceCursorTimeFrame != timelineClickedFrame)
                 {
                     _editingService.OpenedSequence.CursorTimeFrame =
-                        Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength);
+                        Math.Clamp(timelineClickedFrame, 0, sequenceFrameLength - 1);
 
                     // no sequence data has changed, so we just need to preview new frame
                     _previewService.SyncVisiblePreview();
@@ -201,7 +201,7 @@ namespace SCVE.Editor.ImGuiUi
                 var mouseDragDelta = ImGui.GetMouseDragDelta();
                 _cursorDragFrames = (int) (mouseDragDelta.X / widthPerFrame);
                 _cursorDragFrames = Math.Clamp(_cursorDragFrames, -sequenceCursorTimeFrame,
-                    sequenceFrameLength - sequenceCursorTimeFrame);
+                    sequenceFrameLength - sequenceCursorTimeFrame - 1);
                 _isDraggingCursor = true;
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
-using ImGuiNET;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.ImGuiUi;
+using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -32,10 +33,6 @@ namespace SCVE.Editor.Services
         public void OpenFilePickerPanel(string location, Action closed = null, Action dismissed = null)
         {
             _filePickerModalPanel.Open(location, closed, dismissed);
-        }
-
-        public void OnUpdate()
-        {
         }
     }
 }

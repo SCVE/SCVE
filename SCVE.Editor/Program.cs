@@ -20,6 +20,7 @@ namespace SCVE.Editor
             IInputContext   inputContext = null;
 
             var editorApp = new EditorApp(window);
+            
 
             // Our loading function
             window.Load += () =>
@@ -36,6 +37,11 @@ namespace SCVE.Editor
                     }
                 );
                 editorApp.Init();
+
+                inputContext.Keyboards[0].KeyUp += (keyboard, key, scancode) =>
+                {
+                    editorApp.OnKeyPressed(key);
+                };
             };
 
             // Handle resizes
@@ -56,6 +62,7 @@ namespace SCVE.Editor
                 gl.ClearColor(Color.FromArgb(255, (int)(.45f * 255), (int)(.55f * 255), (int)(.60f * 255)));
                 gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
+                editorApp.Update(delta);
                 editorApp.OnImGuiRender();
 
                 // Make sure ImGui renders too!

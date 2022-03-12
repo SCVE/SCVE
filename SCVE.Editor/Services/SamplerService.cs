@@ -1,4 +1,7 @@
-﻿namespace SCVE.Editor.Services
+﻿using SCVE.Editor.Abstractions;
+using Silk.NET.Input;
+
+namespace SCVE.Editor.Services
 {
     public class SamplerService : IService
     {
@@ -7,10 +10,6 @@
         public SamplerService(SequenceSampler sampler)
         {
             Sampler = sampler;
-        }
-
-        public void OnUpdate()
-        {
         }
     }
 }
