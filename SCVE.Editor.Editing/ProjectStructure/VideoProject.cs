@@ -12,8 +12,11 @@ namespace SCVE.Editor.Editing.ProjectStructure
         /// </remarks>
         /// </summary>
         public string Title { get; set; }
+
         public ICollection<SequenceAsset> Sequences { get; set; }
         public ICollection<ImageAsset> Images { get; set; }
+
+        public ICollection<FolderAsset> Folders { get; set; }
 
         public VideoProject()
         {
@@ -34,20 +37,8 @@ namespace SCVE.Editor.Editing.ProjectStructure
             Sequences.Add(sequenceAsset);
         }
 
-        public void AddImage(string fileName, string relativePath)
+        public void AddImage(ImageAsset imageAsset)
         {
-            var imageAsset = new ImageAsset()
-            {
-                Guid  = Guid.NewGuid(),
-                Name = fileName,
-                Location = "/",
-                Content = new Image()
-                {
-                    Guid = Guid.NewGuid(),
-                    RelativePath = relativePath
-                }
-            };
-            
             Images.Add(imageAsset);
         }
     }

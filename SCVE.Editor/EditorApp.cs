@@ -44,15 +44,14 @@ namespace SCVE.Editor
         {
             IServiceCollection serviceCollection = new ServiceCollection();
 
-            serviceCollection.AddSingleton<AssetCacheService>();
-            serviceCollection.AddSingleton<SamplerService>();
-            serviceCollection.AddSingleton<EditingService>();
-            serviceCollection.AddSingleton<PreviewService>();
-            serviceCollection.AddSingleton<ModalManagerService>();
-            serviceCollection.AddSingleton<RecentsService>();
+            foreach (var type in Utils.GetAssignableTypes<IService>())
+            {
+                serviceCollection.AddSingleton(type);
+            }
 
             serviceCollection.AddSingleton<ClipEvaluator>();
             serviceCollection.AddSingleton<SequenceSampler>();
+            serviceCollection.AddSingleton<ImGuiAssetRenderer>();
 
             serviceCollection.AddSingleton<ProjectPanel>();
             serviceCollection.AddSingleton<SequencePanel>();

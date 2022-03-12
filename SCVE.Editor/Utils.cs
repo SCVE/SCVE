@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
-using System.Text.Json;
 using JsonSubTypes;
 using Newtonsoft.Json;
 using SCVE.Editor.Editing.Effects;
 using SCVE.Editor.Imaging;
+using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using FontCollection = SixLabors.Fonts.FontCollection;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SCVE.Editor
 {
@@ -44,12 +43,13 @@ namespace SCVE.Editor
 
         public static IList<Type> GetAssignableTypes<T>()
         {
-            var referencedAssemblyNames = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var referencedAssemblyNames = executingAssembly.GetReferencedAssemblies();
             var types = referencedAssemblyNames.SelectMany(name =>
                     GetAssignableTypesFromAssembly<T>(Assembly.Load(name))
                 )
                 .Concat(
-                    GetAssignableTypesFromAssembly<T>(Assembly.GetExecutingAssembly())
+                    GetAssignableTypesFromAssembly<T>(executingAssembly)
                 )
                 .ToList();
 
@@ -118,6 +118,25 @@ namespace SCVE.Editor
             var jsonContent = JsonConvert.SerializeObject(obj, GetJsonSettings());
 
             File.WriteAllText(path, jsonContent);
+        }
+
+        /// <summary>
+        /// Fits a rect inside another rect
+        /// <remarks>
+        /// https://stackoverflow.com/a/21960701
+        /// </remarks>
+        /// </summary>
+        public static Vector2 FitRect(Vector2 container, Vector2 subject)
+        {
+            float innerAspectRatio = subject.X / subject.Y;
+            float outerAspectRatio = container.X / container.Y;
+
+            float resizeFactor = (innerAspectRatio >= outerAspectRatio) ? (container.X / subject.X) : (container.Y / subject.Y);
+
+            float newWidth = subject.X * resizeFactor;
+            float newHeight = subject.Y * resizeFactor;
+
+            return new Vector2(newWidth, newHeight);
         }
     }
 }

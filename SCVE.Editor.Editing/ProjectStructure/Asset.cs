@@ -1,4 +1,6 @@
-﻿namespace SCVE.Editor.Editing.ProjectStructure
+﻿using SCVE.Editor.Editing.Visitors;
+
+namespace SCVE.Editor.Editing.ProjectStructure
 {
     public abstract class Asset<T> : AssetBase
     {
@@ -7,5 +9,7 @@
         public Asset()
         {
         }
+
+        public abstract void AcceptVisitor(IAssetVisitor visitor);
     }
 }

@@ -1,27 +1,29 @@
 ﻿using System.Numerics;
 using ImGuiNET;
-using SCVE.Editor.Imaging;
 using SCVE.Editor.Services;
-using SCVE.Engine.ImageSharpBindings;
 
 namespace SCVE.Editor.ImGuiUi
 {
     public class ProjectPanel : IImGuiRenderable
     {
         private EditingService _editingService;
-        private PreviewService _previewService;
 
-        private SequenceCreationPanel _sequenceCreationPanel;
+        private ImGuiAssetRenderer _assetRenderer;
 
         private ModalManagerService _modalManagerService;
 
-        public ProjectPanel(EditingService editingService, PreviewService previewService,
-            SequenceCreationPanel sequenceCreationPanel, ModalManagerService modalManagerService)
+        private ProjectPanelService _projectPanelService;
+
+        public ProjectPanel(
+            EditingService editingService,
+            ModalManagerService modalManagerService,
+            ImGuiAssetRenderer assetRenderer,
+            ProjectPanelService projectPanelService)
         {
             _editingService = editingService;
-            _previewService = previewService;
-            _sequenceCreationPanel = sequenceCreationPanel;
             _modalManagerService = modalManagerService;
+            _assetRenderer = assetRenderer;
+            _projectPanelService = projectPanelService;
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
@@ -87,100 +89,93 @@ namespace SCVE.Editor.ImGuiUi
 
         public void OnImGuiRender()
         {
-            if (!ImGui.Begin("Project Panel"))
+            if (!ImGui.Begin("Project Panel", _editingService.OpenedProject is null ? ImGuiWindowFlags.None : ImGuiWindowFlags.MenuBar))
             {
                 goto END;
             }
 
-            if (_editingService.OpenedProject is not null)
-            {
-                ImGui.Text(_editingService.OpenedProject.Title);
-
-                // PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
-
-                PushSequences();
-
-                if (ImGui.Button("Create new sequence"))
-                {
-                    _modalManagerService.OpenSequenceCreationPanel();
-                }
-
-                PushImages();
-            }
-            else
+            if (_editingService.OpenedProject is null)
             {
                 ImGui.Text("Project is not loaded");
+                goto END;
             }
+
+            if (ImGui.BeginMenuBar())
+            {
+                if (ImGui.BeginMenu("Add"))
+                {
+                    if (ImGui.MenuItem("Sequence"))
+                    {
+                        _modalManagerService.OpenSequenceCreationPanel();
+                    }
+                    ImGui.EndMenu();
+                }
+                ImGui.EndMenuBar();
+            }
+
+            if (!_projectPanelService.HasSelectedLocation)
+            {
+                ImGui.Text("Location is not selected");
+                goto END;
+            }
+
+            if (_projectPanelService.CurrentLocation != "/")
+            {
+                if (ImGui.Button("<-"))
+                {
+                    _projectPanelService.LevelUp();
+                }
+            }
+
+            ImGui.Text($"{_editingService.OpenedProject.Title} - {_projectPanelService.CurrentLocation}");
+
+            // PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
+
+            PushFolders();
+
+            PushSequences();
+
+            PushImages();
 
             END:
             ImGui.End();
         }
 
+        private void PushFolders()
+        {
+            if (ImGui.TreeNodeEx("Folders", ImGuiTreeNodeFlags.SpanFullWidth))
+            {
+                foreach (var folderAsset in _projectPanelService.Folders)
+                {
+                    _assetRenderer.Visit(folderAsset);
+                }
+
+                ImGui.TreePop();
+            }
+        }
+
         private void PushSequences()
         {
-            var treeRootExpanded =
-                ImGui.TreeNodeEx("Sequences", ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-
-            foreach (var sequenceAsset in _editingService.OpenedProject.Sequences)
+            if (ImGui.TreeNodeEx("Sequences", ImGuiTreeNodeFlags.SpanFullWidth))
             {
-                var elementExpanded = ImGui.TreeNodeEx(sequenceAsset.Name,
-                    ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-
-                if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                foreach (var sequenceAsset in _projectPanelService.Sequences)
                 {
-                    // _assetPreviewModalPanel.SetOpenedAsset(sequenceAsset);
-
-                    _editingService.SetOpenedSequence(sequenceAsset.Content);
-                    _previewService.SwitchSequence(sequenceAsset.Content);
+                    _assetRenderer.Visit(sequenceAsset);
                 }
 
-                if (elementExpanded)
-                {
-                    ImGui.TreePop();
-                }
-            }
-
-            if (treeRootExpanded)
-            {
                 ImGui.TreePop();
             }
         }
 
         private void PushImages()
         {
-            // TODO: Finish this shit man plz u can do it I know man plz just do it. Luv ya.
-
-            var treeRootExpanded =
-                ImGui.TreeNodeEx("Images", ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-
-            foreach (var imageAsset in _editingService.OpenedProject.Images)
+            if (ImGui.TreeNodeEx("Images", ImGuiTreeNodeFlags.SpanFullWidth))
             {
-                var elementExpanded = ImGui.TreeNodeEx(imageAsset.Name,
-                    ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-
-                if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+                foreach (var imageAsset in _projectPanelService.Images)
                 {
-                    var imageSharpTextureLoader = new ImageSharpTextureLoader();
-
-                    var fileIconTextureData = imageSharpTextureLoader.Load(imageAsset.Content.RelativePath, false);
-
-                    var fileIcon =
-                        new ThreeWayImage(
-                            new CpuImage(fileIconTextureData.RgbaPixels, fileIconTextureData.Width,
-                                fileIconTextureData.Height), "FileIcon");
-
-                    fileIcon.ToGpu();
-                    _previewService.SetPreviewImage(fileIcon);
+                    _assetRenderer.Visit(imageAsset);
                 }
 
-                if (elementExpanded)
-                {
-                    ImGui.TreePop();
-                }
-            }
-
-            if (treeRootExpanded)
-            {
                 ImGui.TreePop();
             }
         }

@@ -10,10 +10,12 @@ namespace SCVE.Editor.ImGuiUi
     public class SequenceCreationPanel : ImGuiModalPanel
     {
         private readonly EditingService _editingService;
+        private readonly ProjectPanelService _projectPanelService;
 
-        public SequenceCreationPanel(EditingService editingService)
+        public SequenceCreationPanel(EditingService editingService, ProjectPanelService projectPanelService)
         {
             _editingService = editingService;
+            _projectPanelService = projectPanelService;
             Name = "New Sequence";
         }
 
@@ -25,7 +27,6 @@ namespace SCVE.Editor.ImGuiUi
             {
                 ImGui.OpenPopup(Name);
             }
-
 
             // Checks if the popup modal "New Sequence" is opened.
             if (ImGui.BeginPopupModal(Name, ref IsOpen))
@@ -44,7 +45,7 @@ namespace SCVE.Editor.ImGuiUi
                         {
                             Guid = Guid.NewGuid(),
                             Name = _name,
-                            Location = "/",
+                            Location = _projectPanelService.CurrentLocation,
                             Content = Sequence.CreateNew(30, new ScveVector2i(1280, 720), 150)
                         };
 

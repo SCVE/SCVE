@@ -40,7 +40,7 @@
       },
       "Guid": "a665087f-a4c0-4acc-9dc3-e3f0a6287d33",
       "Name": "Testing Sequence",
-      "Location": "/"
+      "Location": "/Test Folder"
     },
     {
       "Content": {
@@ -92,7 +92,15 @@
         "RelativePath": "testdata/Jessei.png"
       },
       "Guid": "6d70262b-27cb-435e-909b-5756b11c07f9",
-      "Name": "test-image",
+      "Name": "Jessei.png",
+      "Location": "/"
+    }
+  ],
+  "Folders": [
+    {
+      "Content": {},
+      "Guid": "d0ab7327-fcce-4179-88cb-bc0dcd7bae31",
+      "Name": "Test Folder",
       "Location": "/"
     }
   ]

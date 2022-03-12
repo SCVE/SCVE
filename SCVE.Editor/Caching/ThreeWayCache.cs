@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Imaging;
 
 namespace SCVE.Editor.Caching
@@ -18,6 +18,13 @@ namespace SCVE.Editor.Caching
             _images = new List<ThreeWayImage>();
             Width   = width;
             Height  = height;
+            Resize(length);
+        }
+        public ThreeWayCache(int length, ScveVector2i size)
+        {
+            _images = new List<ThreeWayImage>();
+            Width   = size.X;
+            Height  = size.Y;
             Resize(length);
         }
 
