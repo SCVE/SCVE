@@ -45,8 +45,7 @@ namespace SCVE.Editor.Caching
 
         public void ForceReplace(int index, ThreeWayImage image)
         {
-            _images[index].Dispose();
-            _images[index] = image;
+            _images[index].ForceReplace(image);
         }
 
         public bool HasAnyPresence(int index)
