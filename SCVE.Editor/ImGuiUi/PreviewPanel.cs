@@ -22,8 +22,7 @@ namespace SCVE.Editor.ImGuiUi
             {
                 goto END;
             }
-
-
+            
             var windowPos = ImGui.GetWindowPos();
             var painter = ImGui.GetWindowDrawList();
 
@@ -42,7 +41,7 @@ namespace SCVE.Editor.ImGuiUi
 
             painter.AddRect(
                 windowPos + contentRegionMin + contentRegionAvail / 2 - imageSize / 2,
-                windowPos + contentRegionMin + contentRegionAvail / 2 + imageSize / 2, 
+                windowPos + contentRegionMin + contentRegionAvail / 2 + imageSize / 2,
                 0xFFFFFFFF);
 
             END:

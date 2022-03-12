@@ -1,7 +1,9 @@
-﻿using SCVE.Editor.Caching;
+﻿using SCVE.Editor.Abstractions;
+using SCVE.Editor.Caching;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Imaging;
+using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -22,7 +24,6 @@ namespace SCVE.Editor.Services
         {
             _editingService = editingService;
             _samplerService = samplerService;
-            
         }
 
         public void SwitchSequence(Sequence sequence)
@@ -31,7 +32,7 @@ namespace SCVE.Editor.Services
                 sequence.FrameLength,
                 PreviewResolution
             );
-            
+
             SyncVisiblePreview();
         }
 
@@ -112,10 +113,6 @@ namespace SCVE.Editor.Services
         public bool HasCached(int index, ImagePresence presence)
         {
             return _previewCache[index].Presence == presence;
-        }
-
-        public void OnUpdate()
-        {
         }
 
         public void SetPreviewImage(ThreeWayImage image)
