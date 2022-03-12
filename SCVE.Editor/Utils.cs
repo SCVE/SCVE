@@ -44,12 +44,13 @@ namespace SCVE.Editor
 
         public static IList<Type> GetAssignableTypes<T>()
         {
-            var referencedAssemblyNames = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var referencedAssemblyNames = executingAssembly.GetReferencedAssemblies();
             var types = referencedAssemblyNames.SelectMany(name =>
                     GetAssignableTypesFromAssembly<T>(Assembly.Load(name))
                 )
                 .Concat(
-                    GetAssignableTypesFromAssembly<T>(Assembly.GetExecutingAssembly())
+                    GetAssignableTypesFromAssembly<T>(executingAssembly)
                 )
                 .ToList();
 

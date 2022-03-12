@@ -1,27 +1,25 @@
 ﻿using System.Numerics;
 using ImGuiNET;
-using SCVE.Editor.Imaging;
 using SCVE.Editor.Services;
-using SCVE.Engine.ImageSharpBindings;
 
 namespace SCVE.Editor.ImGuiUi
 {
     public class ProjectPanel : IImGuiRenderable
     {
         private EditingService _editingService;
-        private PreviewService _previewService;
 
-        private SequenceCreationPanel _sequenceCreationPanel;
+        private ImGuiAssetDrawer _assetDrawer;
 
         private ModalManagerService _modalManagerService;
 
-        public ProjectPanel(EditingService editingService, PreviewService previewService,
-            SequenceCreationPanel sequenceCreationPanel, ModalManagerService modalManagerService)
+        public ProjectPanel(
+            EditingService editingService, 
+            ModalManagerService modalManagerService, 
+            ImGuiAssetDrawer assetDrawer)
         {
             _editingService = editingService;
-            _previewService = previewService;
-            _sequenceCreationPanel = sequenceCreationPanel;
             _modalManagerService = modalManagerService;
+            _assetDrawer = assetDrawer;
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
@@ -123,21 +121,7 @@ namespace SCVE.Editor.ImGuiUi
 
             foreach (var sequenceAsset in _editingService.OpenedProject.Sequences)
             {
-                var elementExpanded = ImGui.TreeNodeEx(sequenceAsset.Name,
-                    ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-
-                if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-                {
-                    // _assetPreviewModalPanel.SetOpenedAsset(sequenceAsset);
-
-                    _editingService.SetOpenedSequence(sequenceAsset.Content);
-                    _previewService.SwitchSequence(sequenceAsset.Content);
-                }
-
-                if (elementExpanded)
-                {
-                    ImGui.TreePop();
-                }
+                _assetDrawer.Visit(sequenceAsset);
             }
 
             if (treeRootExpanded)
@@ -148,35 +132,12 @@ namespace SCVE.Editor.ImGuiUi
 
         private void PushImages()
         {
-            // TODO: Finish this shit man plz u can do it I know man plz just do it. Luv ya.
-
             var treeRootExpanded =
                 ImGui.TreeNodeEx("Images", ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
 
             foreach (var imageAsset in _editingService.OpenedProject.Images)
             {
-                var elementExpanded = ImGui.TreeNodeEx(imageAsset.Name,
-                    ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
-
-                if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-                {
-                    var imageSharpTextureLoader = new ImageSharpTextureLoader();
-
-                    var fileIconTextureData = imageSharpTextureLoader.Load(imageAsset.Content.RelativePath, false);
-
-                    var fileIcon =
-                        new ThreeWayImage(
-                            new CpuImage(fileIconTextureData.RgbaPixels, fileIconTextureData.Width,
-                                fileIconTextureData.Height), "FileIcon");
-
-                    fileIcon.ToGpu();
-                    _previewService.SetPreviewImage(fileIcon);
-                }
-
-                if (elementExpanded)
-                {
-                    ImGui.TreePop();
-                }
+                _assetDrawer.Visit(imageAsset);
             }
 
             if (treeRootExpanded)

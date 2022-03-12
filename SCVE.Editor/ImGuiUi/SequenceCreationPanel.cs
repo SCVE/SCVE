@@ -26,7 +26,6 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.OpenPopup(Name);
             }
 
-
             // Checks if the popup modal "New Sequence" is opened.
             if (ImGui.BeginPopupModal(Name, ref IsOpen))
             {
