@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+﻿using System.Numerics;
 using ImGuiNET;
-using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi
