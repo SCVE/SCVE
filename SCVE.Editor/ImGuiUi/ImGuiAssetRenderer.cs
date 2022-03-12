@@ -7,15 +7,21 @@ using SCVE.Engine.ImageSharpBindings;
 
 namespace SCVE.Editor.ImGuiUi
 {
-    public class ImGuiAssetDrawer : IAssetVisitor
+    public class ImGuiAssetRenderer : IAssetVisitor
     {
         private PreviewService _previewService;
         private EditingService _editingService;
 
-        public ImGuiAssetDrawer(PreviewService previewService, EditingService editingService)
+        private ProjectPanelService _projectPanelService;
+
+        public ImGuiAssetRenderer(
+            PreviewService previewService, 
+            EditingService editingService, 
+            ProjectPanelService projectPanelService)
         {
             _previewService = previewService;
             _editingService = editingService;
+            _projectPanelService = projectPanelService;
         }
 
         public void Visit(ImageAsset asset)
@@ -55,6 +61,22 @@ namespace SCVE.Editor.ImGuiUi
 
                 _editingService.SetOpenedSequence(asset.Content);
                 _previewService.SwitchSequence(asset.Content);
+            }
+
+            if (elementExpanded)
+            {
+                ImGui.TreePop();
+            }
+        }
+
+        public void Visit(FolderAsset asset)
+        {
+            var elementExpanded = ImGui.TreeNodeEx(asset.Name,
+                ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
+
+            if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+            {
+                _projectPanelService.ChangeLocation(asset.Location + asset.Name);
             }
 
             if (elementExpanded)

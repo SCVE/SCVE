@@ -18,13 +18,19 @@ namespace SCVE.Editor.ImGuiUi
 
         private RecentsService _recentsService;
 
-        public MainMenuBar(PreviewService previewService, EditingService editingService,
-            ModalManagerService modalManagerService, RecentsService recentsService)
+        private ProjectPanelService _projectPanelService;
+
+        public MainMenuBar(PreviewService previewService, 
+            EditingService editingService,
+            ModalManagerService modalManagerService, 
+            RecentsService recentsService, 
+            ProjectPanelService projectPanelService)
         {
             _previewService = previewService;
             _editingService = editingService;
             _modalManagerService = modalManagerService;
             _recentsService = recentsService;
+            _projectPanelService = projectPanelService;
         }
 
         public void OnImGuiRender()
@@ -52,8 +58,9 @@ namespace SCVE.Editor.ImGuiUi
                                 var videoProject = Utils.ReadJson<VideoProject>(path);
 
                                 _editingService.SetOpenedProject(videoProject, path);
-                                _previewService.SyncVisiblePreview();
                                 _recentsService.NoticeOpen(path);
+                                _projectPanelService.ChangeLocation("/");
+                                _previewService.SyncVisiblePreview();
 
                                 Console.WriteLine($"Loaded project: {videoProject.Title}");
                             }
@@ -77,12 +84,13 @@ namespace SCVE.Editor.ImGuiUi
                                     var videoProject = Utils.ReadJson<VideoProject>(recent);
 
                                     _editingService.SetOpenedProject(videoProject, recent);
-                                    _previewService.SyncVisiblePreview();
                                     _recentsService.NoticeOpen(recent);
+                                    _projectPanelService.ChangeLocation("/");
+                                    _previewService.SyncVisiblePreview();
 
                                     Console.WriteLine($"Loaded Recent Project: {videoProject.Title}");
-                                    
-                                    // NOTE: break is needed, because _recentsService.NoticeOpenRecent() modifies original list
+
+                                    // NOTE: break is needed, because _recentsService.NoticeOpen() modifies original list
                                     break;
                                 }
 
@@ -137,9 +145,9 @@ namespace SCVE.Editor.ImGuiUi
 
                 if (ImGui.BeginMenu("Assets"))
                 {
-                    if (ImGui.MenuItem("Add Image"))
+                    if (_editingService.OpenedProject is not null)
                     {
-                        if (_editingService.OpenedProject is not null)
+                        if (ImGui.MenuItem("Add Image"))
                         {
                             _modalManagerService.OpenFilePickerPanel(Environment.CurrentDirectory, () =>
                             {
@@ -150,7 +158,18 @@ namespace SCVE.Editor.ImGuiUi
                                 {
                                     var fileName = Path.GetFileName(path);
                                     var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, path);
-                                    _editingService.OpenedProject.AddImage(fileName!, relativePath);
+                                    var imageAsset = new ImageAsset()
+                                    {
+                                        Guid = Guid.NewGuid(),
+                                        Name = fileName,
+                                        Location = _projectPanelService.CurrentLocation,
+                                        Content = new Image()
+                                        {
+                                            Guid = Guid.NewGuid(),
+                                            RelativePath = relativePath
+                                        }
+                                    };
+                                    _editingService.OpenedProject.AddImage(imageAsset);
                                 }
                                 else
                                 {
@@ -166,7 +185,7 @@ namespace SCVE.Editor.ImGuiUi
                 ImGui.EndMenuBar();
             }
         }
-        
+
         // This is a direct port of imgui_demo.cpp HelpMarker function
         // https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp#L190
         private void ShowHint(string message)

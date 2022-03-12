@@ -51,7 +51,7 @@ namespace SCVE.Editor
 
             serviceCollection.AddSingleton<ClipEvaluator>();
             serviceCollection.AddSingleton<SequenceSampler>();
-            serviceCollection.AddSingleton<ImGuiAssetDrawer>();
+            serviceCollection.AddSingleton<ImGuiAssetRenderer>();
 
             serviceCollection.AddSingleton<ProjectPanel>();
             serviceCollection.AddSingleton<SequencePanel>();
