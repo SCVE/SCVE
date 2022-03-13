@@ -167,6 +167,7 @@ namespace SCVE.Editor
                 exitReceiver.OnExit();
             }
             _recentsService.TrySave();
+            // TODO: Fix error with exiting
             _window.IsClosing = true;
         }
 
