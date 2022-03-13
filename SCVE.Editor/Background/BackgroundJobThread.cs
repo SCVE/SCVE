@@ -38,7 +38,7 @@ namespace SCVE.Editor.Background
             {
                 while (true)
                 {
-                    if (_jobsQueue.TryDequeue(out var job))
+                    while (_jobsQueue.TryDequeue(out var job))
                     {
                         IsRunning = true;
                         job.Run();

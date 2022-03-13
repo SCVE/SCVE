@@ -37,7 +37,7 @@ namespace SCVE.Editor.Services
         public void OnUpdate(float delta)
         {
             int i = 0;
-            while (i++ < 3 && _finished.TryDequeue(out var job))
+            while (/*i++ < 3 && */_finished.TryDequeue(out var job))
             {
                 job.OnFinished?.Invoke();
             }
