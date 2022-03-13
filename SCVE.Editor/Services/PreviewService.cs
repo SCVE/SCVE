@@ -88,7 +88,12 @@ namespace SCVE.Editor.Services
         public void RenderFrame(int index)
         {
             var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, PreviewResolution, index);
-            _previewCache.ForceReplace(index, sampledFrame);
+            SetRenderedFrame(index, sampledFrame);
+        }
+
+        public void SetRenderedFrame(int index, ThreeWayImage image)
+        {
+            _previewCache.ForceReplace(index, image);
             _previewCache[index].ToGpu();
         }
 
