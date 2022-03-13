@@ -51,7 +51,7 @@ namespace SCVE.Editor.ImGuiUi
                 );
             }
 
-            var clipTextSize = ImGui.CalcTextSize($"{clip.ShortName()}");
+            var clipTextSize = ImGui.CalcTextSize(clip.ShortName());
             painter.AddText(
                 topLeft + new Vector2(clipPadding + clipRounding, clipPadding) +
                 new Vector2(0, ((bottomRight.Y - clipPadding) - (topLeft.Y + clipPadding)) / 2 - clipTextSize.Y / 2),
@@ -60,7 +60,7 @@ namespace SCVE.Editor.ImGuiUi
             );
         }
 
-        public void RenderGhost(ref ImDrawListPtr painter, Clip clip, ref Vector2 topLeft, ref Vector2 bottomRight)
+        public void RenderGhost(ref ImDrawListPtr painter, GhostClip clip, ref Vector2 topLeft, ref Vector2 bottomRight)
         {
             var clipPadding  = 3;
             var clipRounding = 3;
@@ -68,7 +68,7 @@ namespace SCVE.Editor.ImGuiUi
             painter.AddRectFilled(
                 topLeft,
                 bottomRight,
-                0xFF888888,
+                0x88888888,
                 clipRounding
             );
 
@@ -80,7 +80,7 @@ namespace SCVE.Editor.ImGuiUi
                 clipRounding
             );
 
-            var clipTextSize = ImGui.CalcTextSize($"{clip.ShortName()}");
+            var clipTextSize = ImGui.CalcTextSize(clip.ShortName());
             painter.AddText(
                 topLeft + new Vector2(clipPadding + clipRounding, clipPadding) +
                 new Vector2(0, ((bottomRight.Y - clipPadding) - (topLeft.Y + clipPadding)) / 2 - clipTextSize.Y / 2),

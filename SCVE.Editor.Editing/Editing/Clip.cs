@@ -1,4 +1,5 @@
-﻿using SCVE.Editor.Editing.Effects;
+﻿using System.Text.Json.Serialization;
+using SCVE.Editor.Editing.Effects;
 
 namespace SCVE.Editor.Editing.Editing
 {
@@ -13,6 +14,7 @@ namespace SCVE.Editor.Editing.Editing
 
         public int FrameLength { get; set; }
 
+        [JsonIgnore]
         public int EndFrame => StartFrame + FrameLength;
 
         public IList<EffectBase> Effects { get; set; }

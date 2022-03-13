@@ -50,17 +50,9 @@
             "Guid": "b294e91e-1309-475b-b98b-eb6dd2a73e34",
             "EmptyClips": [
               {
-                "Guid": "7e7b0fbe-10cc-4e84-9d76-15649e17054f",
-                "StartFrame": 5,
-                "FrameLength": 30,
-                "EndFrame": 35,
-                "Effects": []
-              },
-              {
                 "Guid": "2541bee9-0ee7-4d98-94b9-12b3dd4c6c69",
-                "StartFrame": 40,
-                "FrameLength": 20,
-                "EndFrame": 60,
+                "StartFrame": 10,
+                "FrameLength": 30,
                 "Effects": []
               }
             ],

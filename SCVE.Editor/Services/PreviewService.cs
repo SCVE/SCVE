@@ -54,7 +54,7 @@ namespace SCVE.Editor.Services
             }
         }
 
-        public void SyncVisiblePreview()
+        public void SyncVisiblePreview(int offset = 0)
         {
             if (_editingService.OpenedSequence is null)
             {
@@ -64,7 +64,7 @@ namespace SCVE.Editor.Services
             }
             else
             {
-                SetVisibleFrame(_editingService.OpenedSequence.CursorTimeFrame);
+                SetVisibleFrame(_editingService.OpenedSequence.CursorTimeFrame + offset);
             }
         }
 

@@ -10,13 +10,9 @@ namespace SCVE.Editor.ImGuiUi
     {
         #region Fields
 
-        private ClipImGuiRenderer _clipRenderer;
-
         private readonly EditingService _editingService;
         private readonly PreviewService _previewService;
 
-
-        private readonly GhostClip _ghostClip;
 
         private readonly SequencePanelService _sequencePanelService;
 
@@ -27,10 +23,6 @@ namespace SCVE.Editor.ImGuiUi
             _editingService = editingService;
             _previewService = previewService;
             _sequencePanelService = sequencePanelService;
-            _clipRenderer = new ClipImGuiRenderer();
-
-            _ghostClip = GhostClip.CreateNew(0, 1);
-            
         }
 
 
@@ -49,20 +41,13 @@ namespace SCVE.Editor.ImGuiUi
 
             _sequencePanelService.RefreshData();
 
-            _sequencePanelService.DetectClickOnTimeline();
-
             _sequencePanelService.DrawSequenceHeader();
-
-            _sequencePanelService.DrawSequenceFramesMarkers();
 
             _sequencePanelService.DrawCursor();
 
-            _sequencePanelService.DrawTracks(_clipRenderer, _ghostClip);
+            _sequencePanelService.DrawTracks();
                 
-            _sequencePanelService.ProcessGhostClip(_clipRenderer, _ghostClip);
-            _sequencePanelService.ProcessDraggingClip(_ghostClip);
-            _sequencePanelService.ProcessDraggingCursor();
-            
+            _sequencePanelService.DrawGhostClip();
 
             END:
             ImGui.End();
