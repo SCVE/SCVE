@@ -37,6 +37,7 @@ namespace SCVE.Editor
         private List<IService> _services;
         private List<IUpdateReceiver> _updateReceivers;
         private List<IKeyPressReceiver> _keyPressReceivers;
+        private List<IExitReceiver> _exitReceivers;
 
         private RecentsService _recentsService;
 
@@ -81,6 +82,10 @@ namespace SCVE.Editor
             
             _updateReceivers = Utils.GetAssignableTypes<IUpdateReceiver>()
                 .Select(t => serviceProvider.GetService(t) as IUpdateReceiver)
+                .ToList();
+            
+            _exitReceivers = Utils.GetAssignableTypes<IExitReceiver>()
+                .Select(t => serviceProvider.GetService(t) as IExitReceiver)
                 .ToList();
             
             _keyPressReceivers = Utils.GetAssignableTypes<IKeyPressReceiver>()
@@ -157,6 +162,10 @@ namespace SCVE.Editor
 
         public void Exit()
         {
+            foreach (var exitReceiver in _exitReceivers)
+            {
+                exitReceiver.OnExit();
+            }
             _recentsService.TrySave();
             _window.IsClosing = true;
         }

@@ -9,9 +9,8 @@ namespace SCVE.Editor.Background
         private readonly ConcurrentQueue<BackgroundJobBase> _jobsQueue;
         private readonly ConcurrentQueue<BackgroundJobBase> _finishedQueue;
         private readonly string _name;
-        private Thread _thread;
+        private readonly Thread _thread;
 
-        private SemaphoreSlim _isRunningSemaphore;
         public bool IsRunning { get; set; }
 
         public BackgroundJobThread(ConcurrentQueue<BackgroundJobBase> jobsQueue, ConcurrentQueue<BackgroundJobBase> finishedQueue, string name)
@@ -20,7 +19,6 @@ namespace SCVE.Editor.Background
             _finishedQueue = finishedQueue;
             _name = name;
             _thread = new Thread(Run);
-            _isRunningSemaphore = new SemaphoreSlim(1);
         }
 
         public void Start()
@@ -29,26 +27,32 @@ namespace SCVE.Editor.Background
             Console.WriteLine($"{_name} started");
         }
 
+        public void Stop()
+        {
+            _thread.Interrupt();
+        }
+
         private void Run()
         {
-            while (true)
+            try
             {
-                if (_jobsQueue.TryDequeue(out var job))
+                while (true)
                 {
-                    IsRunning = true;
-                    job.Run();
-                    _finishedQueue.Enqueue(job);
-                    IsRunning = false;
-                }
+                    if (_jobsQueue.TryDequeue(out var job))
+                    {
+                        IsRunning = true;
+                        job.Run();
+                        _finishedQueue.Enqueue(job);
+                        IsRunning = false;
+                    }
 
-                if (_thread.ThreadState == ThreadState.AbortRequested)
-                {
-                    return;
-                }
-                else
-                {
                     Thread.Sleep(1);
                 }
+            }
+            catch (ThreadInterruptedException e)
+            {
+                Console.WriteLine($"{_name} exited");
+                throw;
             }
         }
     }

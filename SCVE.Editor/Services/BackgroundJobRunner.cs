@@ -7,7 +7,7 @@ using SCVE.Editor.Background;
 
 namespace SCVE.Editor.Services
 {
-    public class BackgroundJobRunner : IService, IUpdateReceiver
+    public class BackgroundJobRunner : IService, IUpdateReceiver, IExitReceiver
     {
         private ConcurrentQueue<BackgroundJobBase> _jobs;
         private ConcurrentQueue<BackgroundJobBase> _finished;
@@ -36,9 +36,18 @@ namespace SCVE.Editor.Services
 
         public void OnUpdate(float delta)
         {
-            if (_finished.TryDequeue(out var job))
+            int i = 0;
+            while (i++ < 3 && _finished.TryDequeue(out var job))
             {
                 job.OnFinished?.Invoke();
+            }
+        }
+
+        public void OnExit()
+        {
+            foreach (var thread in _threads)
+            {
+                thread.Stop();
             }
         }
     }
