@@ -56,6 +56,8 @@ namespace SCVE.Editor
                 serviceCollection.AddSingleton(type);
             }
 
+            serviceCollection.AddSingleton<SequencePanelService>();
+
             serviceCollection.AddSingleton<ClipEvaluator>();
             serviceCollection.AddSingleton<SequenceSampler>();
             serviceCollection.AddSingleton<ImGuiAssetRenderer>();
@@ -113,7 +115,8 @@ namespace SCVE.Editor
                 ImGui.SetNextWindowViewport(viewport.ID);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
+                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+                                ImGuiWindowFlags.NoMove;
                 window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
             }
 
