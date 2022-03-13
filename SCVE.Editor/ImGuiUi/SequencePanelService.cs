@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Numerics;
 using ImGuiNET;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Services;
 
@@ -313,10 +314,6 @@ namespace SCVE.Editor.ImGuiUi
                     }
                 }
             }
-        }
-
-        public void OnUpdate()
-        {
         }
     }
 }
