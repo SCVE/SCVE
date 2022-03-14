@@ -207,6 +207,13 @@ namespace SCVE.Editor.ImGuiUi
                     ImGui.EndMenu();
                 }
 
+                if (ImGui.BeginMenu("Settings"))
+                {
+                    _modalManagerService.OpenSettingsPanel();
+                    
+                    ImGui.EndMenu();
+                }
+
                 ImGui.EndMenuBar();
             }
         }

@@ -3,7 +3,7 @@ using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Services;
 
-namespace SCVE.Editor.ImGuiUi
+namespace SCVE.Editor.ImGuiUi.Services
 {
     public class SequencePanelService : IService
     {
