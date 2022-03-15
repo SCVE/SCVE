@@ -294,7 +294,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 (trackIndex) * Settings.Instance.TrackMargin
             );
 
-            _clipRenderer.Render(ref _painter, clip, ref clipTopLeft, ref clipBottomRight);
+            _clipRenderer.Render(ref _painter, clip, clipTopLeft, clipBottomRight);
 
             ImGui.SetCursorPos(clipTopLeft - _windowPosition);
             // this messes up with click detection, making mouse a god-ray, punching through all clips

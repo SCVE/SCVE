@@ -6,7 +6,7 @@ using ImGuiNET;
 using SCVE.Editor.Imaging;
 using SCVE.Engine.ImageSharpBindings;
 
-namespace SCVE.Editor.ImGuiUi
+namespace SCVE.Editor.ImGuiUi.Panels
 {
     public class FilePickerModalPanel : ImGuiModalPanel
     {
@@ -17,9 +17,11 @@ namespace SCVE.Editor.ImGuiUi
         private ThreeWayImage _directoryIcon;
         private ThreeWayImage _fileIcon;
 
+        public string SelectedPath => _selectedFilePath;
         private string _selectedFilePath;
 
         private bool _mode;
+
 
         public FilePickerModalPanel()
         {
@@ -37,8 +39,6 @@ namespace SCVE.Editor.ImGuiUi
             _directoryIcon.ToGpu();
         }
 
-        public string SelectedPath => _selectedFilePath;
-
         public void Open(string location, Action closed, Action dismissed)
         {
             _currentDirectory = new DirectoryInfo(location);
@@ -55,15 +55,23 @@ namespace SCVE.Editor.ImGuiUi
 
             ImGui.SetNextWindowSize(new Vector2(600, 400));
             
-            if (ImGui.BeginPopupModal(Name, ref IsOpen, ImGuiWindowFlags.NoResize))
+            if (ImGui.BeginPopupModal(Name, ref IsOpen, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.MenuBar))
             {
-                if (_mode)
+                if (ImGui.BeginMenuBar())
                 {
-                    ImGui.Checkbox("Mode Tree", ref _mode);
-                }
-                else
-                {
-                    ImGui.Checkbox("Mode Cells", ref _mode);
+                    if (ImGui.BeginMenu("Mode"))
+                    {
+                        if (ImGui.MenuItem("Tree", _mode))
+                        {
+                            _mode = !_mode;
+                        }
+                        if (ImGui.MenuItem("Cells", !_mode))
+                        {
+                            _mode = !_mode;
+                        }
+                        ImGui.EndMenu();
+                    }
+                    ImGui.EndMenuBar();
                 }
 
                 if (_mode)
@@ -94,7 +102,11 @@ namespace SCVE.Editor.ImGuiUi
                     _currentDirectory = _currentDirectory.Parent;
                     _content = _currentDirectory.EnumerateFileSystemInfos();
                 }
+                
+                ImGui.SameLine();
             }
+            
+            ImGui.Text(_currentDirectory.FullName);
 
             if (ImGui.BeginChild("FilePickerTree", ImGui.GetContentRegionAvail() - new Vector2(0, 40)))
             {
@@ -149,7 +161,11 @@ namespace SCVE.Editor.ImGuiUi
                     _currentDirectory = _currentDirectory.Parent;
                     _content = _currentDirectory.EnumerateFileSystemInfos();
                 }
+                
+                ImGui.SameLine();
             }
+            
+            ImGui.Text(_currentDirectory.FullName);
 
             if (ImGui.BeginChild("FilePickerTree", ImGui.GetContentRegionAvail() - new Vector2(0, 40)))
             {

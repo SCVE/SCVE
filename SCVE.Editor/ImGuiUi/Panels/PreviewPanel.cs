@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Numerics;
 using ImGuiNET;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Services;
 
-namespace SCVE.Editor.ImGuiUi
+namespace SCVE.Editor.ImGuiUi.Panels
 {
-    public class PreviewPanel : IImGuiRenderable
+    public class PreviewPanel : IImGuiPanel
     {
         private readonly EditingService _editingService;
         private readonly PreviewService _previewService;

@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Reflection;
 using ImGuiNET;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Effects;
 using SCVE.Editor.Services;
 using Silk.NET.GLFW;
 
-namespace SCVE.Editor.ImGuiUi
+namespace SCVE.Editor.ImGuiUi.Panels
 {
-    public class ClipEffectsPanel : IImGuiRenderable
+    public class ClipEffectsPanel : IImGuiPanel
     {
         private IList<Type> AllKnownEffects;
 
@@ -72,8 +71,8 @@ namespace SCVE.Editor.ImGuiUi
             else
             {
                 ImGui.SetNextWindowSize(new Vector2(200, 200));
-                ImGui.SetNextWindowPos(ImGui.GetWindowPos());
-                if (ImGui.BeginPopupModal("##add-effect-contextmenu", ref _addEffectExpanded, ImGuiWindowFlags.NoResize))
+                ImGui.SetNextWindowPos(ImGui.GetWindowPos() + ImGui.GetCursorPos());
+                if (ImGui.BeginPopupModal("##add-effect-contextmenu", ref _addEffectExpanded, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar))
                 {
                     for (var i = 0; i < AllKnownEffects.Count; i++)
                     {
@@ -82,10 +81,16 @@ namespace SCVE.Editor.ImGuiUi
                             _addEffectExpanded = false;
                             var effect = Activator.CreateInstance(AllKnownEffects[i]) as EffectBase;
 
-                            effect.Updated += OnEffectUpdated;
+                            effect!.Updated += OnEffectUpdated;
                             clip.Effects.Add(effect);
                             _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
                         }
+                    }
+
+                    ImGui.SetCursorPos(new Vector2(8, 200 - 20 - 8 - 4));
+                    if (ImGui.Button("Cancel"))
+                    {
+                        _addEffectExpanded = false;
                     }
 
                     ImGui.EndPopup();
