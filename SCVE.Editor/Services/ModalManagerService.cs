@@ -1,7 +1,6 @@
 ﻿using System;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.ImGuiUi;
-using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -43,6 +42,7 @@ namespace SCVE.Editor.Services
 
         public void OpenSettingsPanel(Action closed = null, Action dismissed = null)
         {
+            _settingsModalPanel.LoadDraft();
             _settingsModalPanel.Open(closed, dismissed);
         }
     }

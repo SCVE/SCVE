@@ -37,10 +37,10 @@ namespace SCVE.Editor.Services
             Console.WriteLine("Saved settings.");
         }
 
-        public void ShortenCursor(Vector2 newCursorSize)
+        public void ApplySettings(Settings draftSettings)
         {
-            Settings.Instance.CursorSize = newCursorSize;
-            Settings.Instance.CompleteInnerCalculations();
+            Settings.SetFrom(draftSettings);
+            TrySave();
         }
     }
 }

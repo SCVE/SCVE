@@ -8,7 +8,10 @@ namespace SCVE.Editor
     public class Settings
     {
         public static Settings Instance => _instance;
+
+        // Working settings.
         private static Settings _instance;
+
 
         public int TrackMarginLeft { get; set; }
         public int TrackHeaderWidth { get; set; }
@@ -30,7 +33,26 @@ namespace SCVE.Editor
         // ReSharper disable once EmptyConstructor
         public Settings()
         {
-            
+        }
+
+        private Settings(Settings settings)
+        {
+            TrackMarginLeft = settings.TrackMarginLeft;
+            TrackHeaderWidth = settings.TrackHeaderWidth;
+            TrackHeight = settings.TrackHeight;
+            TrackMargin = settings.TrackMargin;
+            SequenceHeaderHeight = settings.SequenceHeaderHeight;
+            TimelineFrameMarkerHeight = settings.TimelineFrameMarkerHeight;
+            TimelineSecondsMarkerHeight = settings.TimelineSecondsMarkerHeight;
+            CursorSize = settings.CursorSize;
+
+            CursorShapePoints = new Vector2[settings.CursorShapePoints.Length];
+            Array.Copy(
+                settings.CursorShapePoints,
+                0,
+                CursorShapePoints,
+                0,
+                settings.CursorShapePoints.Length);
         }
 
         public void CompleteInnerCalculations()
@@ -76,6 +98,11 @@ namespace SCVE.Editor
                 CursorSize = new(10, 20)
             };
             _instance.CompleteInnerCalculations();
+        }
+
+        public static Settings GetClone()
+        {
+            return new Settings(_instance);
         }
     }
 }

@@ -392,3 +392,6 @@ NativeTests
 OpenGLFromScratch
 OpenTKTests
 SharpAudioTests
+
+# Author decisions
+imgui.ini
