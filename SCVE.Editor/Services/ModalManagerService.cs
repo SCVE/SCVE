@@ -1,7 +1,6 @@
 ﻿using System;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.ImGuiUi;
-using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -10,12 +9,18 @@ namespace SCVE.Editor.Services
         private readonly ProjectCreationPanel _projectCreationPanel;
         private readonly SequenceCreationPanel _sequenceCreationPanel;
         private readonly FilePickerModalPanel _filePickerModalPanel;
+        private readonly SettingsModalPanel _settingsModalPanel;
 
-        public ModalManagerService(ProjectCreationPanel projectCreationPanel, SequenceCreationPanel sequenceCreationPanel, FilePickerModalPanel filePickerModalPanel)
+        public ModalManagerService(
+            ProjectCreationPanel projectCreationPanel,
+            SequenceCreationPanel sequenceCreationPanel,
+            FilePickerModalPanel filePickerModalPanel,
+            SettingsModalPanel settingsModalPanel)
         {
             _projectCreationPanel = projectCreationPanel;
             _sequenceCreationPanel = sequenceCreationPanel;
             _filePickerModalPanel = filePickerModalPanel;
+            _settingsModalPanel = settingsModalPanel;
         }
 
         public string FilePickerSelectedPath => _filePickerModalPanel.SelectedPath;
@@ -33,6 +38,12 @@ namespace SCVE.Editor.Services
         public void OpenFilePickerPanel(string location, Action closed = null, Action dismissed = null)
         {
             _filePickerModalPanel.Open(location, closed, dismissed);
+        }
+
+        public void OpenSettingsPanel(Action closed = null, Action dismissed = null)
+        {
+            _settingsModalPanel.LoadDraft();
+            _settingsModalPanel.Open(closed, dismissed);
         }
     }
 }

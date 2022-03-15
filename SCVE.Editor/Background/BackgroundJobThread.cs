@@ -52,7 +52,7 @@ namespace SCVE.Editor.Background
             catch (ThreadInterruptedException e)
             {
                 Console.WriteLine($"{_name} exited");
-                throw;
+                // throw;
             }
         }
     }

@@ -9,6 +9,7 @@ using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Effects;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi;
+using SCVE.Editor.ImGuiUi.Services;
 using SCVE.Editor.Services;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
@@ -40,6 +41,7 @@ namespace SCVE.Editor
         private List<IExitReceiver> _exitReceivers;
 
         private RecentsService _recentsService;
+        private SettingsService _settingsService;
 
         public EditorApp(IWindow window)
         {
@@ -50,6 +52,7 @@ namespace SCVE.Editor
         public void Init()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
+
 
             foreach (var type in Utils.GetAssignableTypes<IService>())
             {
@@ -71,6 +74,7 @@ namespace SCVE.Editor
             serviceCollection.AddSingleton<SequenceCreationPanel>();
             serviceCollection.AddSingleton<ProjectCreationPanel>();
             serviceCollection.AddSingleton<FilePickerModalPanel>();
+            serviceCollection.AddSingleton<SettingsModalPanel>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -93,11 +97,14 @@ namespace SCVE.Editor
             _keyPressReceivers = Utils.GetAssignableTypes<IKeyPressReceiver>()
                 .Select(t => serviceProvider.GetService(t) as IKeyPressReceiver)
                 .ToList();
-
+            
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
+            
             _recentsService = serviceProvider.GetRequiredService<RecentsService>();
-
             _recentsService.TryLoad();
+
+            _settingsService = serviceProvider.GetRequiredService<SettingsService>();
+            _settingsService.TryLoad();
         }
 
         public void OnImGuiRender()
@@ -169,6 +176,7 @@ namespace SCVE.Editor
             {
                 exitReceiver.OnExit();
             }
+
             _recentsService.TrySave();
             // TODO: Fix error with exiting
             _window.IsClosing = true;
@@ -178,7 +186,7 @@ namespace SCVE.Editor
         {
             foreach (var updateReceiver in _updateReceivers)
             {
-                updateReceiver.OnUpdate((float)delta);
+                updateReceiver.OnUpdate((float) delta);
             }
         }
 

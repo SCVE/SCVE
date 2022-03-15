@@ -2,6 +2,7 @@
 using ImGuiNET;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Imaging;
+using SCVE.Editor.ImGuiUi.Services;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi
