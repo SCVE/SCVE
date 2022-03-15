@@ -387,11 +387,8 @@ FodyWeavers.xsd
 .idea/
 *.sln.iml
 
-Engine
-NativeTests
-OpenGLFromScratch
-OpenTKTests
-SharpAudioTests
-
 # Author decisions
 imgui.ini
+recents.json
+savetest.json
+settings.json
