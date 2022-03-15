@@ -161,8 +161,6 @@ namespace SCVE.Editor
                 imGuiRenderable.OnImGuiRender();
             }
 
-            ImGui.ShowDemoWindow();
-
             ImGui.ShowMetricsWindow();
 
             ImGui.PopFont();

@@ -7,7 +7,7 @@ namespace SCVE.Editor.ImGuiUi
 {
     public class ClipImGuiRenderer
     {
-        public void Render(ref ImDrawListPtr painter, Clip clip, ref Vector2 topLeft, ref Vector2 bottomRight)
+        public void Render(ref ImDrawListPtr painter, Clip clip, Vector2 topLeft, Vector2 bottomRight)
         {
             var mousePos = ImGui.GetMousePos();
 

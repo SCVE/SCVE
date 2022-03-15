@@ -72,8 +72,8 @@ namespace SCVE.Editor.ImGuiUi
             else
             {
                 ImGui.SetNextWindowSize(new Vector2(200, 200));
-                ImGui.SetNextWindowPos(ImGui.GetWindowPos());
-                if (ImGui.BeginPopupModal("##add-effect-contextmenu", ref _addEffectExpanded, ImGuiWindowFlags.NoResize))
+                ImGui.SetNextWindowPos(ImGui.GetWindowPos() + ImGui.GetCursorPos());
+                if (ImGui.BeginPopupModal("##add-effect-contextmenu", ref _addEffectExpanded, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar))
                 {
                     for (var i = 0; i < AllKnownEffects.Count; i++)
                     {
@@ -82,10 +82,15 @@ namespace SCVE.Editor.ImGuiUi
                             _addEffectExpanded = false;
                             var effect = Activator.CreateInstance(AllKnownEffects[i]) as EffectBase;
 
-                            effect.Updated += OnEffectUpdated;
+                            effect!.Updated += OnEffectUpdated;
                             clip.Effects.Add(effect);
                             _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
                         }
+                    }
+
+                    if (ImGui.Button("Cancel"))
+                    {
+                        _addEffectExpanded = false;
                     }
 
                     ImGui.EndPopup();
