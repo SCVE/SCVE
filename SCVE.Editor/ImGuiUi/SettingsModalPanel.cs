@@ -8,7 +8,7 @@ namespace SCVE.Editor.ImGuiUi
     public class SettingsModalPanel : ImGuiModalPanel
     {
         private SettingsService _settingsService;
-        
+
         public SettingsModalPanel(SettingsService settingsService)
         {
             _settingsService = settingsService;
@@ -27,14 +27,13 @@ namespace SCVE.Editor.ImGuiUi
             {
                 if (ImGui.Button("Shorten cursor"))
                 {
-                    // TODO: Cursor does not become shorter by Y axis. Repair later, luv.
-                    _settingsService.SettingsInstance.CursorSize = new(10, 10);
+                    _settingsService.ShortenCursor(new(10, 10));
                 }
-                
+
                 if (ImGui.Button("Save"))
                 {
                     _settingsService.TrySave();
-                    
+
                     Console.WriteLine("Settings have been saved.");
                     ImGui.CloseCurrentPopup();
                     Close();

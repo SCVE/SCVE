@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Numerics;
 using SCVE.Editor.Abstractions;
 using System.IO;
@@ -9,21 +10,19 @@ namespace SCVE.Editor.Services
 {
     public class SettingsService : IService
     {
-        public Settings SettingsInstance => _settings;
-        private Settings _settings;
-
         public void TryLoad()
         {
             var path = Path.Combine(Environment.CurrentDirectory, "settings.json");
             if (File.Exists(path))
             {
-                _settings = Utils.ReadJson<Settings>(path);
+                var freshSettings = Utils.ReadJson<Settings>(path);
+                Settings.SetFrom(freshSettings);
 
                 Console.WriteLine("Loaded settings");
             }
             else
             {
-                _settings = new();
+                Settings.SetFromDefault();
 
                 Console.WriteLine("Settings not found");
             }
@@ -33,9 +32,15 @@ namespace SCVE.Editor.Services
         {
             var path = Path.Combine(Environment.CurrentDirectory, "settings.json");
 
-            Utils.WriteJson(_settings, path);
+            Utils.WriteJson(Settings.Instance, path);
 
             Console.WriteLine("Saved settings.");
+        }
+
+        public void ShortenCursor(Vector2 newCursorSize)
+        {
+            Settings.Instance.CursorSize = newCursorSize;
+            Settings.Instance.CompleteInnerCalculations();
         }
     }
 }

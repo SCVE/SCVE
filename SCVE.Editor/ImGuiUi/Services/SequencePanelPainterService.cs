@@ -57,14 +57,14 @@ namespace SCVE.Editor.ImGuiUi.Services
             //     // top-left
             //     new Vector2(),
             //     // top-right
-            //     new(_settingsService.SettingsInstance.CursorSize.X, 0),
+            //     new(Settings.Instance.CursorSize.X, 0),
             //     // right mid
-            //     new(_settingsService.SettingsInstance.CursorSize.X,
-            //         _settingsService.SettingsInstance.CursorSize.Y / 2f),
+            //     new(Settings.Instance.CursorSize.X,
+            //         Settings.Instance.CursorSize.Y / 2f),
             //     // bottom mid
-            //     new(_settingsService.SettingsInstance.CursorSize.X / 2, _settingsService.SettingsInstance.CursorSize.Y),
+            //     new(Settings.Instance.CursorSize.X / 2, Settings.Instance.CursorSize.Y),
             //     // left mid
-            //     new(0, _settingsService.SettingsInstance.CursorSize.Y / 2f),
+            //     new(0, Settings.Instance.CursorSize.Y / 2f),
             // };
             // _cursorCurrentPoints = new Vector2[_cursorShapePoints.Length];
         }
@@ -77,7 +77,7 @@ namespace SCVE.Editor.ImGuiUi.Services
             _contentRegionAvail = ImGui.GetContentRegionAvail();
             _drawOrigin = _windowPosition + _contentRegionMin;
             _windowContentWidth = _contentRegionAvail.X;
-            _trackContentWidth = _windowContentWidth - _settingsService.SettingsInstance.TrackHeaderWidth;
+            _trackContentWidth = _windowContentWidth - Settings.Instance.TrackHeaderWidth;
             _cursorDragFrames = cursorDragFrames;
 
             _widthPerFrame = _trackContentWidth / sequence.FrameLength;
@@ -90,26 +90,26 @@ namespace SCVE.Editor.ImGuiUi.Services
         public bool DrawSequenceHeader(out int newCursorTimeFrame)
         {
             _painter.AddRectFilled(
-                new Vector2(_drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth, _drawOrigin.Y),
+                new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth, _drawOrigin.Y),
                 new Vector2(_drawOrigin.X + _windowContentWidth,
-                    _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight),
+                    _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight),
                 0xFF333333
             );
 
             newCursorTimeFrame = _sequenceCursorTimeFrame;
 
-            ImGui.SetCursorPos(new Vector2(_drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth,
+            ImGui.SetCursorPos(new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth,
                 _drawOrigin.Y) - _windowPosition);
             ImGui.SetItemAllowOverlap();
             ImGui.InvisibleButton($"##timeline-header",
-                new Vector2(_windowContentWidth - _settingsService.SettingsInstance.TrackHeaderWidth,
-                    _settingsService.SettingsInstance.SequenceHeaderHeight));
+                new Vector2(_windowContentWidth - Settings.Instance.TrackHeaderWidth,
+                    Settings.Instance.SequenceHeaderHeight));
 
             if (ImGui.IsItemActive())
             {
                 int timelineClickedFrame =
                     (int) ((ImGui.GetMousePos().X - _drawOrigin.X -
-                            _settingsService.SettingsInstance.TrackHeaderWidth) / _widthPerFrame);
+                            Settings.Instance.TrackHeaderWidth) / _widthPerFrame);
                 if (_sequenceCursorTimeFrame != timelineClickedFrame)
                 {
                     newCursorTimeFrame = Math.Clamp(timelineClickedFrame, 0, _sequenceFrameLength);
@@ -127,17 +127,17 @@ namespace SCVE.Editor.ImGuiUi.Services
                 int markerStripHeight;
                 if (i % _sequenceFPS == 0)
                 {
-                    markerStripHeight = _settingsService.SettingsInstance.TimelineSecondsMarkerHeight;
+                    markerStripHeight = Settings.Instance.TimelineSecondsMarkerHeight;
                     var secondsText = $"{i / _sequenceFPS}";
                     var secondsTextSize = ImGui.CalcTextSize(secondsText);
 
                     // seconds text markers
                     _painter.AddText(
                         new Vector2(
-                            _drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth + i * _widthPerFrame -
+                            _drawOrigin.X + Settings.Instance.TrackHeaderWidth + i * _widthPerFrame -
                             secondsTextSize.X / 2,
-                            _drawOrigin.Y + ((_settingsService.SettingsInstance.SequenceHeaderHeight -
-                                              _settingsService.SettingsInstance.TimelineSecondsMarkerHeight) / 2f) -
+                            _drawOrigin.Y + ((Settings.Instance.SequenceHeaderHeight -
+                                              Settings.Instance.TimelineSecondsMarkerHeight) / 2f) -
                             secondsTextSize.Y / 2),
                         0xFFFFFFFF,
                         secondsText
@@ -145,14 +145,14 @@ namespace SCVE.Editor.ImGuiUi.Services
                 }
                 else
                 {
-                    markerStripHeight = _settingsService.SettingsInstance.TimelineFrameMarkerHeight;
+                    markerStripHeight = Settings.Instance.TimelineFrameMarkerHeight;
                 }
 
                 _painter.AddLine(
-                    new Vector2(_drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth + i * _widthPerFrame,
-                        _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight - markerStripHeight),
-                    new Vector2(_drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth + i * _widthPerFrame,
-                        _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight),
+                    new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth + i * _widthPerFrame,
+                        _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight - markerStripHeight),
+                    new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth + i * _widthPerFrame,
+                        _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight),
                     0xFFFFFFFF
                 );
 
@@ -170,12 +170,12 @@ namespace SCVE.Editor.ImGuiUi.Services
         private void DrawFrameMarker(int index, uint color)
         {
             var pMin = new Vector2(
-                _drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth + index * _widthPerFrame + 1,
-                _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight -
-                _settingsService.SettingsInstance.TimelineFrameMarkerHeight);
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth + index * _widthPerFrame + 1,
+                _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight -
+                Settings.Instance.TimelineFrameMarkerHeight);
             var pMax = new Vector2(
-                _drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth + (index + 1) * _widthPerFrame - 1,
-                _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight);
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth + (index + 1) * _widthPerFrame - 1,
+                _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight);
             _painter.AddRectFilled(
                 pMin,
                 pMax,
@@ -187,9 +187,9 @@ namespace SCVE.Editor.ImGuiUi.Services
         {
             bool isDragging = false;
             var cursorPosition = new Vector2(
-                _drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth +
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth +
                 (_sequenceCursorTimeFrame + _cursorDragFrames) * _widthPerFrame -
-                _settingsService.SettingsInstance.CursorSize.X / 2,
+                Settings.Instance.CursorSize.X / 2,
                 _drawOrigin.Y
             );
 
@@ -197,7 +197,7 @@ namespace SCVE.Editor.ImGuiUi.Services
 
             ImGui.SetCursorPos(cursorPosition - _windowPosition);
             ImGui.SetItemAllowOverlap();
-            ImGui.InvisibleButton($"##cursor", _settingsService.SettingsInstance.CursorSize);
+            ImGui.InvisibleButton($"##cursor", Settings.Instance.CursorSize);
 
             if (ImGui.IsItemActive())
             {
@@ -211,13 +211,15 @@ namespace SCVE.Editor.ImGuiUi.Services
                 isDragging = true;
             }
 
-            for (var i = 0; i < _settingsService.SettingsInstance.CursorShapePoints.Length; i++)
+            for (var i = 0; i < Settings.Instance.CursorShapePoints.Length; i++)
             {
-                _settingsService.SettingsInstance.CursorCurrentPoints[i].X = _settingsService.SettingsInstance.CursorShapePoints[i].X + cursorPosition.X;
-                _settingsService.SettingsInstance.CursorCurrentPoints[i].Y = _settingsService.SettingsInstance.CursorShapePoints[i].Y + cursorPosition.Y;
+                Settings.Instance.CursorCurrentPoints[i].X =
+                    Settings.Instance.CursorShapePoints[i].X + cursorPosition.X;
+                Settings.Instance.CursorCurrentPoints[i].Y =
+                    Settings.Instance.CursorShapePoints[i].Y + cursorPosition.Y;
             }
 
-            _painter.AddConvexPolyFilled(ref _settingsService.SettingsInstance.CursorCurrentPoints[0], 5, 0xFFAA6666);
+            _painter.AddConvexPolyFilled(ref Settings.Instance.CursorCurrentPoints[0], 5, 0xFFAA6666);
 
             return isDragging;
         }
@@ -225,17 +227,17 @@ namespace SCVE.Editor.ImGuiUi.Services
         public void DrawGhostClip(GhostClip ghostClip)
         {
             var clipTopLeft = new Vector2(
-                _drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth +
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth +
                 _trackContentWidth * ((float) (ghostClip.CurrentStartFrame) / _sequenceFrameLength),
-                _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight + (ghostClip.CurrentTrackIndex) *
-                (_settingsService.SettingsInstance.TrackHeight + _settingsService.SettingsInstance.TrackMargin)
+                _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight + (ghostClip.CurrentTrackIndex) *
+                (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin)
             );
             var clipBottomRight = new Vector2(
-                _drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth + _trackContentWidth *
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth + _trackContentWidth *
                 ((float) (ghostClip.CurrentStartFrame + ghostClip.CurrentFrameLength) / _sequenceFrameLength),
-                _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight +
-                (ghostClip.CurrentTrackIndex + 1) * _settingsService.SettingsInstance.TrackHeight +
-                (ghostClip.CurrentTrackIndex) * _settingsService.SettingsInstance.TrackMargin
+                _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight +
+                (ghostClip.CurrentTrackIndex + 1) * Settings.Instance.TrackHeight +
+                (ghostClip.CurrentTrackIndex) * Settings.Instance.TrackMargin
             );
 
             _clipRenderer.RenderGhost(ref _painter, ghostClip, ref clipTopLeft, ref clipBottomRight);
@@ -245,32 +247,32 @@ namespace SCVE.Editor.ImGuiUi.Services
         {
             _painter.AddRectFilled(
                 new Vector2(_drawOrigin.X,
-                    _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight + index *
-                    (_settingsService.SettingsInstance.TrackHeight + _settingsService.SettingsInstance.TrackMargin)),
-                new Vector2(_drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth,
-                    _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight +
-                    (index + 1) * _settingsService.SettingsInstance.TrackHeight +
-                    index * _settingsService.SettingsInstance.TrackMargin),
+                    _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight + index *
+                    (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin)),
+                new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth,
+                    _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight +
+                    (index + 1) * Settings.Instance.TrackHeight +
+                    index * Settings.Instance.TrackMargin),
                 0xFF444444
             );
 
             _painter.AddText(
-                new Vector2(_drawOrigin.X + _settingsService.SettingsInstance.TrackMarginLeft,
-                    _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight + index *
-                    (_settingsService.SettingsInstance.TrackHeight + _settingsService.SettingsInstance.TrackMargin)),
+                new Vector2(_drawOrigin.X + Settings.Instance.TrackMarginLeft,
+                    _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight + index *
+                    (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin)),
                 0xFFFFFFFF, $"TRACK {index}");
         }
 
         public void DrawTrackContentBackground(int index)
         {
             _painter.AddRectFilled(
-                new Vector2(_drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth,
-                    _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight + index *
-                    (_settingsService.SettingsInstance.TrackHeight + _settingsService.SettingsInstance.TrackMargin)),
+                new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth,
+                    _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight + index *
+                    (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin)),
                 new Vector2(_drawOrigin.X + _contentRegionAvail.X,
-                    _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight +
-                    (index + 1) * _settingsService.SettingsInstance.TrackHeight +
-                    index * _settingsService.SettingsInstance.TrackMargin),
+                    _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight +
+                    (index + 1) * Settings.Instance.TrackHeight +
+                    index * Settings.Instance.TrackMargin),
                 0xFF222222
             );
         }
@@ -279,17 +281,17 @@ namespace SCVE.Editor.ImGuiUi.Services
             out int deltaTracks)
         {
             var clipTopLeft = new Vector2(
-                _drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth +
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth +
                 _trackContentWidth * ((float) (clip.StartFrame) / _sequenceFrameLength),
-                _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight + (trackIndex) *
-                (_settingsService.SettingsInstance.TrackHeight + _settingsService.SettingsInstance.TrackMargin)
+                _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight + (trackIndex) *
+                (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin)
             );
             var clipBottomRight = new Vector2(
-                _drawOrigin.X + _settingsService.SettingsInstance.TrackHeaderWidth + _trackContentWidth *
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth + _trackContentWidth *
                 ((float) (clip.StartFrame + clip.FrameLength) / _sequenceFrameLength),
-                _drawOrigin.Y + _settingsService.SettingsInstance.SequenceHeaderHeight +
-                (trackIndex + 1) * _settingsService.SettingsInstance.TrackHeight +
-                (trackIndex) * _settingsService.SettingsInstance.TrackMargin
+                _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight +
+                (trackIndex + 1) * Settings.Instance.TrackHeight +
+                (trackIndex) * Settings.Instance.TrackMargin
             );
 
             _clipRenderer.Render(ref _painter, clip, ref clipTopLeft, ref clipBottomRight);
@@ -308,8 +310,8 @@ namespace SCVE.Editor.ImGuiUi.Services
                 var mouseDragDelta = ImGui.GetMouseDragDelta();
 
                 deltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
-                deltaTracks = (int) (mouseDragDelta.Y / (_settingsService.SettingsInstance.TrackHeight +
-                                                         _settingsService.SettingsInstance.TrackMargin));
+                deltaTracks = (int) (mouseDragDelta.Y / (Settings.Instance.TrackHeight +
+                                                         Settings.Instance.TrackMargin));
             }
             else
             {

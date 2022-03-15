@@ -1,25 +1,39 @@
+using System;
+using System.Dynamic;
 using System.Numerics;
+using Newtonsoft.Json;
 
 namespace SCVE.Editor
 {
     public class Settings
     {
-        public /*static readonly*/ int TrackMarginLeft = 10;
-        public /*static readonly*/ int TrackHeaderWidth = 70;
+        public static Settings Instance => _instance;
+        private static Settings _instance;
 
-        public /*static readonly*/ int TrackHeight = 20;
-        public /*static readonly*/ int TrackMargin = 5;
+        public int TrackMarginLeft { get; set; }
+        public int TrackHeaderWidth { get; set; }
 
-        public /*static readonly*/ int SequenceHeaderHeight = 20;
+        public int TrackHeight { get; set; }
+        public int TrackMargin { get; set; }
 
-        public /*static readonly*/ int TimelineFrameMarkerHeight = 3;
-        public /*static readonly*/ int TimelineSecondsMarkerHeight = 8;
+        public int SequenceHeaderHeight { get; set; }
 
-        public /*readonly*/ Vector2 CursorSize = new(10, 20);
-        public /*readonly*/ Vector2[] CursorShapePoints;
-        public /*readonly*/ Vector2[] CursorCurrentPoints;
+        public int TimelineFrameMarkerHeight { get; set; }
+        public int TimelineSecondsMarkerHeight { get; set; }
 
+        public Vector2 CursorSize { get; set; }
+
+        [JsonIgnore] public Vector2[] CursorShapePoints { get; set; }
+        [JsonIgnore] public Vector2[] CursorCurrentPoints { get; set; }
+
+        // Do not delete because JSON serialization.
+        // ReSharper disable once EmptyConstructor
         public Settings()
+        {
+            
+        }
+
+        public void CompleteInnerCalculations()
         {
             CursorShapePoints = new[]
             {
@@ -36,6 +50,32 @@ namespace SCVE.Editor
                 new(0, CursorSize.Y / 2f),
             };
             CursorCurrentPoints = new Vector2[CursorShapePoints.Length];
+        }
+
+        public static void SetFrom(Settings settings)
+        {
+            _instance = settings;
+            _instance.CompleteInnerCalculations();
+        }
+
+        public static void SetFromDefault()
+        {
+            _instance = new Settings()
+            {
+                TrackMarginLeft = 10,
+                TrackHeaderWidth = 70,
+
+                TrackHeight = 20,
+                TrackMargin = 5,
+
+                SequenceHeaderHeight = 20,
+
+                TimelineFrameMarkerHeight = 3,
+                TimelineSecondsMarkerHeight = 8,
+
+                CursorSize = new(10, 20)
+            };
+            _instance.CompleteInnerCalculations();
         }
     }
 }
