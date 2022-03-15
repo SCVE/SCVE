@@ -11,15 +11,12 @@ namespace SCVE.Editor.ImGuiUi
         {
             var mousePos = ImGui.GetMousePos();
 
-            var clipPadding  = 3;
-            var clipRounding = 3;
-
             // clip outer rect
             painter.AddRectFilled(
                 topLeft,
                 bottomRight,
                 0xFFAAAAAA,
-                clipRounding
+                Settings.Instance.ClipRounding
             );
 
             // clip border
@@ -27,7 +24,7 @@ namespace SCVE.Editor.ImGuiUi
                 topLeft,
                 bottomRight,
                 0xFF000000,
-                clipRounding
+                Settings.Instance.ClipRounding
             );
 
             // clip inner rect
@@ -35,26 +32,26 @@ namespace SCVE.Editor.ImGuiUi
                 topLeft.Y < mousePos.Y && bottomRight.Y > mousePos.Y)
             {
                 painter.AddRectFilled(
-                    topLeft + new Vector2(clipPadding),
-                    bottomRight - new Vector2(clipPadding),
+                    topLeft + new Vector2(Settings.Instance.ClipPadding),
+                    bottomRight - new Vector2(Settings.Instance.ClipPadding),
                     0xFFDDDDDD,
-                    clipRounding
+                    Settings.Instance.ClipRounding
                 );
             }
             else
             {
                 painter.AddRectFilled(
-                    topLeft + new Vector2(clipPadding),
-                    bottomRight - new Vector2(clipPadding),
+                    topLeft + new Vector2(Settings.Instance.ClipPadding),
+                    bottomRight - new Vector2(Settings.Instance.ClipPadding),
                     0xFFAAAAAA,
-                    clipRounding
+                    Settings.Instance.ClipRounding
                 );
             }
 
             var clipTextSize = ImGui.CalcTextSize(clip.ShortName());
             painter.AddText(
-                topLeft + new Vector2(clipPadding + clipRounding, clipPadding) +
-                new Vector2(0, ((bottomRight.Y - clipPadding) - (topLeft.Y + clipPadding)) / 2 - clipTextSize.Y / 2),
+                topLeft + new Vector2(Settings.Instance.ClipPadding + Settings.Instance.ClipRounding, Settings.Instance.ClipPadding) +
+                new Vector2(0, ((bottomRight.Y - Settings.Instance.ClipPadding) - (topLeft.Y + Settings.Instance.ClipPadding)) / 2 - clipTextSize.Y / 2),
                 0xFF000000,
                 clip.ShortName()
             );
@@ -62,14 +59,11 @@ namespace SCVE.Editor.ImGuiUi
 
         public void RenderGhost(ref ImDrawListPtr painter, GhostClip clip, ref Vector2 topLeft, ref Vector2 bottomRight)
         {
-            var clipPadding  = 3;
-            var clipRounding = 3;
-
             painter.AddRectFilled(
                 topLeft,
                 bottomRight,
                 0x88888888,
-                clipRounding
+                Settings.Instance.ClipRounding
             );
 
             // clip border
@@ -77,13 +71,13 @@ namespace SCVE.Editor.ImGuiUi
                 topLeft,
                 bottomRight,
                 0xFFAAAAAA,
-                clipRounding
+                Settings.Instance.ClipRounding
             );
 
             var clipTextSize = ImGui.CalcTextSize(clip.ShortName());
             painter.AddText(
-                topLeft + new Vector2(clipPadding + clipRounding, clipPadding) +
-                new Vector2(0, ((bottomRight.Y - clipPadding) - (topLeft.Y + clipPadding)) / 2 - clipTextSize.Y / 2),
+                topLeft + new Vector2(Settings.Instance.ClipPadding + Settings.Instance.ClipRounding, Settings.Instance.ClipPadding) +
+                new Vector2(0, ((bottomRight.Y - Settings.Instance.ClipPadding) - (topLeft.Y + Settings.Instance.ClipPadding)) / 2 - clipTextSize.Y / 2),
                 0xFF000000,
                 clip.ShortName()
             );

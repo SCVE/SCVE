@@ -2,7 +2,7 @@
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.Services;
 
-namespace SCVE.Editor.ImGuiUi
+namespace SCVE.Editor.ImGuiUi.Panels
 {
     public class ProjectCreationPanel : ImGuiModalPanel
     {

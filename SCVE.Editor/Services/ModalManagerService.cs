@@ -1,6 +1,7 @@
 ﻿using System;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.ImGuiUi;
+using SCVE.Editor.ImGuiUi.Panels;
 
 namespace SCVE.Editor.Services
 {

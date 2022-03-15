@@ -1,13 +1,11 @@
-﻿using System;
-using ImGuiNET;
-using SCVE.Editor.Editing.Editing;
-using SCVE.Editor.Imaging;
+﻿using ImGuiNET;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.ImGuiUi.Services;
 using SCVE.Editor.Services;
 
-namespace SCVE.Editor.ImGuiUi
+namespace SCVE.Editor.ImGuiUi.Panels
 {
-    public class SequencePanel : IImGuiRenderable
+    public class SequencePanel : IImGuiPanel
     {
         #region Fields
 

@@ -1,8 +1,9 @@
 ﻿using System;
+using SCVE.Editor.Abstractions;
 
-namespace SCVE.Editor.ImGuiUi
+namespace SCVE.Editor.ImGuiUi.Panels
 {
-    public abstract class ImGuiModalPanel : IImGuiRenderable
+    public abstract class ImGuiModalPanel : IImGuiPanel
     {
         protected bool IsOpen;
 

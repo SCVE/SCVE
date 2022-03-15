@@ -1,5 +1,4 @@
-using System;
-using System.Dynamic;
+using System.Linq;
 using System.Numerics;
 using Newtonsoft.Json;
 
@@ -9,9 +8,48 @@ namespace SCVE.Editor
     {
         public static Settings Instance => _instance;
 
-        // Working settings.
         private static Settings _instance;
 
+        public static Settings Default
+        {
+            get
+            {
+                if (_default is not null) return _default;
+
+                _default = new()
+                {
+                    Version = ActualVersion,
+
+                    ClipPadding = 3,
+                    ClipRounding = 3,
+
+                    TrackMarginLeft = 10,
+                    TrackHeaderWidth = 70,
+
+                    TrackHeight = 20,
+                    TrackMargin = 5,
+
+                    SequenceHeaderHeight = 20,
+
+                    TimelineFrameMarkerHeight = 3,
+                    TimelineSecondsMarkerHeight = 8,
+
+                    CursorSize = new(10, 20)
+                };
+                _default.CompleteInnerCalculations();
+
+                return _default;
+            }
+        }
+
+        private static Settings _default;
+
+        public const int ActualVersion = 1;
+
+        public int Version { get; set; }
+
+        public int ClipPadding { get; set; }
+        public int ClipRounding { get; set; }
 
         public int TrackMarginLeft { get; set; }
         public int TrackHeaderWidth { get; set; }
@@ -29,14 +67,16 @@ namespace SCVE.Editor
         [JsonIgnore] public Vector2[] CursorShapePoints { get; set; }
         [JsonIgnore] public Vector2[] CursorCurrentPoints { get; set; }
 
-        // Do not delete because JSON serialization.
-        // ReSharper disable once EmptyConstructor
-        public Settings()
+        [JsonConstructor]
+        private Settings()
         {
         }
 
         private Settings(Settings settings)
         {
+            Version = settings.Version;
+            ClipPadding = settings.ClipPadding;
+            ClipRounding = settings.ClipRounding;
             TrackMarginLeft = settings.TrackMarginLeft;
             TrackHeaderWidth = settings.TrackHeaderWidth;
             TrackHeight = settings.TrackHeight;
@@ -46,13 +86,8 @@ namespace SCVE.Editor
             TimelineSecondsMarkerHeight = settings.TimelineSecondsMarkerHeight;
             CursorSize = settings.CursorSize;
 
-            CursorShapePoints = new Vector2[settings.CursorShapePoints.Length];
-            Array.Copy(
-                settings.CursorShapePoints,
-                0,
-                CursorShapePoints,
-                0,
-                settings.CursorShapePoints.Length);
+            // ToArray implicitly duplicates all elements
+            CursorShapePoints = settings.CursorShapePoints.ToArray();
         }
 
         public void CompleteInnerCalculations()
@@ -64,8 +99,7 @@ namespace SCVE.Editor
                 // top-right
                 new(CursorSize.X, 0),
                 // right mid
-                new(CursorSize.X,
-                    CursorSize.Y / 2f),
+                new(CursorSize.X, CursorSize.Y / 2f),
                 // bottom mid
                 new(CursorSize.X / 2, CursorSize.Y),
                 // left mid
@@ -80,23 +114,9 @@ namespace SCVE.Editor
             _instance.CompleteInnerCalculations();
         }
 
-        public static void SetFromDefault()
+        public static void SetFromCopy(Settings settings)
         {
-            _instance = new Settings()
-            {
-                TrackMarginLeft = 10,
-                TrackHeaderWidth = 70,
-
-                TrackHeight = 20,
-                TrackMargin = 5,
-
-                SequenceHeaderHeight = 20,
-
-                TimelineFrameMarkerHeight = 3,
-                TimelineSecondsMarkerHeight = 8,
-
-                CursorSize = new(10, 20)
-            };
+            _instance = new Settings(settings);
             _instance.CompleteInnerCalculations();
         }
 

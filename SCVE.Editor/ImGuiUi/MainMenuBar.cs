@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Numerics;
 using ImGuiNET;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Background;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.Misc;
@@ -11,7 +12,7 @@ using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi
 {
-    public class MainMenuBar : IImGuiRenderable
+    public class MainMenuBar : IImGuiPanel
     {
         private PreviewService _previewService;
         private EditingService _editingService;

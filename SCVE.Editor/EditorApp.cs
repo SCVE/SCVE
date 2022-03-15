@@ -9,6 +9,7 @@ using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Effects;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi;
+using SCVE.Editor.ImGuiUi.Panels;
 using SCVE.Editor.ImGuiUi.Services;
 using SCVE.Editor.Services;
 using Silk.NET.Input;
@@ -34,7 +35,7 @@ namespace SCVE.Editor
 
         public ImFontPtr OpenSansFont;
 
-        private List<IImGuiRenderable> _imGuiRenderables;
+        private List<IImGuiPanel> _imGuiPanels;
         private List<IService> _services;
         private List<IUpdateReceiver> _updateReceivers;
         private List<IKeyPressReceiver> _keyPressReceivers;
@@ -78,8 +79,8 @@ namespace SCVE.Editor
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            _imGuiRenderables = Utils.GetAssignableTypes<IImGuiRenderable>()
-                .Select(t => serviceProvider.GetService(t) as IImGuiRenderable)
+            _imGuiPanels = Utils.GetAssignableTypes<IImGuiPanel>()
+                .Select(t => serviceProvider.GetService(t) as IImGuiPanel)
                 .ToList();
             
             _services = Utils.GetAssignableTypes<IService>()
@@ -156,9 +157,9 @@ namespace SCVE.Editor
 
             style.WindowMinSize.X = minWinSizeX;
 
-            foreach (var imGuiRenderable in _imGuiRenderables)
+            foreach (var imGuiPanel in _imGuiPanels)
             {
-                imGuiRenderable.OnImGuiRender();
+                imGuiPanel.OnImGuiRender();
             }
 
             ImGui.ShowMetricsWindow();
