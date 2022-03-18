@@ -46,7 +46,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                             Guid = Guid.NewGuid(),
                             Name = _name,
                             Location = _projectPanelService.CurrentLocation,
-                            Content = Sequence.CreateNew(30, new ScveVector2i(1280, 720), 150)
+                            Content = Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
                         };
 
                         _editingService.AddSequence(newSequence);

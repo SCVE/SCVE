@@ -27,7 +27,7 @@ namespace SCVE.Editor
             font = fontCollection.Get("arial").CreateFont(72);
         }
 
-        public ThreeWayImage Sample(Sequence sequence, ScveVector2i renderResolution, int timeFrame)
+        public ThreeWayImage Sample(Sequence sequence, ScveVector2I renderResolution, int timeFrame)
         {
             _pool ??= new ByteArrayPool(renderResolution.X * renderResolution.Y * 4, 2);
 

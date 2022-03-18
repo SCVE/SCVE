@@ -20,7 +20,7 @@ namespace SCVE.Editor.Caching
             Height  = height;
             Resize(length);
         }
-        public ThreeWayCache(int length, ScveVector2i size)
+        public ThreeWayCache(int length, ScveVector2I size)
         {
             _images = new List<ThreeWayImage>();
             Width   = size.X;

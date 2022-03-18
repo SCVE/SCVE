@@ -32,7 +32,7 @@ namespace SCVE.Editor.Services
             }
 
             _timeAccumulator = 0f;
-            _startFrame = _editingService.OpenedSequence.CursorTimeFrame;
+            _startFrame = _editingService.CursorFrame;
             IsPlaying = true;
         }
 
@@ -54,10 +54,10 @@ namespace SCVE.Editor.Services
 
                 if (deltaFrames != 0)
                 {
-                    _editingService.OpenedSequence.CursorTimeFrame += deltaFrames;
-                    if (_editingService.OpenedSequence.CursorTimeFrame >= _editingService.OpenedSequence.FrameLength)
+                    _editingService.CursorFrame += deltaFrames;
+                    if (_editingService.CursorFrame >= _editingService.OpenedSequence.FrameLength)
                     {
-                        _editingService.OpenedSequence.CursorTimeFrame = 0;
+                        _editingService.CursorFrame = 0;
                         Stop();
                     }
 

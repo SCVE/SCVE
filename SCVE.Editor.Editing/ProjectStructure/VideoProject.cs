@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Text.Json.Serialization;
 using SCVE.Editor.Editing.Editing;
 
 namespace SCVE.Editor.Editing.ProjectStructure

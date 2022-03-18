@@ -10,11 +10,11 @@ namespace SCVE.Editor.Background
         private Sequence _sequence;
 
         private SequenceSampler _sampler;
-        private readonly ScveVector2i _resolution;
+        private readonly ScveVector2I _resolution;
 
         private int _frame;
 
-        public RenderFrameBackgroundJob(Sequence sequence, SequenceSampler sampler, ScveVector2i resolution, int frame, Action<ThreeWayImage> onFinished) : base(onFinished)
+        public RenderFrameBackgroundJob(Sequence sequence, SequenceSampler sampler, ScveVector2I resolution, int frame, Action<ThreeWayImage> onFinished) : base(onFinished)
         {
             _sequence = sequence;
             _sampler = sampler;

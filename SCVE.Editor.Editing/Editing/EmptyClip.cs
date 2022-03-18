@@ -1,8 +1,11 @@
-﻿namespace SCVE.Editor.Editing.Editing
+﻿using System.Text.Json.Serialization;
+
+namespace SCVE.Editor.Editing.Editing
 {
     public class EmptyClip : Clip
     {
-        public EmptyClip()
+        [JsonConstructor]
+        private EmptyClip()
         {
             
         }

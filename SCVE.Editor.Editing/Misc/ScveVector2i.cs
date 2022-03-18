@@ -1,15 +1,17 @@
 ﻿namespace SCVE.Editor.Editing.Misc;
 
-public class ScveVector2i
+public struct ScveVector2I
 {
     public int X { get; set; }
     public int Y { get; set; }
 
-    public ScveVector2i()
+    public ScveVector2I()
     {
+        X = 0;
+        Y = 0;
     }
 
-    public ScveVector2i(int x, int y)
+    public ScveVector2I(int x, int y)
     {
         X = x;
         Y = y;

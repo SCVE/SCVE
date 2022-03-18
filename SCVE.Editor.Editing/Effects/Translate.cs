@@ -1,4 +1,5 @@
-﻿using SCVE.Editor.Editing.Visitors;
+﻿using System.Text.Json.Serialization;
+using SCVE.Editor.Editing.Visitors;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
@@ -12,7 +13,9 @@ namespace SCVE.Editor.Editing.Effects
 
         public int Y { get; set; }
 
-        public Translate()
+        
+        [JsonConstructor]
+        private Translate()
         {
         }
 

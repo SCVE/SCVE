@@ -1,4 +1,5 @@
-﻿using SCVE.Editor.Editing.Visitors;
+﻿using System.Text.Json.Serialization;
+using SCVE.Editor.Editing.Visitors;
 
 namespace SCVE.Editor.Editing.Effects
 {
@@ -8,7 +9,9 @@ namespace SCVE.Editor.Editing.Effects
 
         public float Y { get; set; } = 1;
 
-        public Scale()
+        
+        [JsonConstructor]
+        private Scale()
         {
         }
 

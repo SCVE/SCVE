@@ -148,7 +148,7 @@ namespace SCVE.Editor.ImGuiUi
                                 var job = new RenderFrameBackgroundJob(
                                     sequence: _editingService.OpenedSequence,
                                     sampler: new SequenceSampler(_evaluator),
-                                    resolution: new ScveVector2i(1280, 720),
+                                    resolution: new ScveVector2I(1280, 720),
                                     frame: i,
                                     onFinished: (image) =>
                                     {

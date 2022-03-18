@@ -29,14 +29,14 @@ namespace SCVE.Editor.ImGuiUi.Services
 
         public void RefreshData()
         {
-            _panelPainterService.SetRenderData(_cursorDragFrames, _editingService.OpenedSequence);
+            _panelPainterService.SetRenderData(_cursorDragFrames, _editingService.CursorFrame, _editingService.OpenedSequence);
         }
 
         public void DrawSequenceHeader()
         {
             if (_panelPainterService.DrawSequenceHeader(out var newCursorTimeFrame))
             {
-                _editingService.OpenedSequence.CursorTimeFrame = newCursorTimeFrame;
+                _editingService.CursorFrame = newCursorTimeFrame;
 
                 // no sequence data has changed, so we just need to preview new frame
                 _previewService.SyncVisiblePreview();
@@ -60,7 +60,7 @@ namespace SCVE.Editor.ImGuiUi.Services
             {
                 if (_isDraggingCursor)
                 {
-                    _editingService.OpenedSequence.CursorTimeFrame += _cursorDragFrames;
+                    _editingService.CursorFrame += _cursorDragFrames;
                     _cursorDragFrames = 0;
                     _isDraggingCursor = false;
 
