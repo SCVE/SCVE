@@ -12,6 +12,8 @@ namespace SCVE.Editor.Services
         public Sequence OpenedSequence { get; private set; }
         public Clip SelectedClip { get; private set; }
 
+        public int CursorFrame { get; set; }
+
         public string OpenedProjectPath { get; set; }
 
         public EditingService()

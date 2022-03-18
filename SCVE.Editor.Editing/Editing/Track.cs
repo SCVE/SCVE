@@ -1,4 +1,6 @@
-﻿namespace SCVE.Editor.Editing.Editing
+﻿using System.Text.Json.Serialization;
+
+namespace SCVE.Editor.Editing.Editing
 {
     /// <summary>
     /// Track is a single line, existent for the whole length of the sequence
@@ -10,7 +12,9 @@
         public IList<EmptyClip> EmptyClips { get; set; }
         public IList<AssetClip> AssetClips { get; set; }
 
-        public Track()
+        
+        [JsonConstructor]
+        private Track()
         {
         }
 

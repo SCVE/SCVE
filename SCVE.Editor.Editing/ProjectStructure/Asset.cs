@@ -1,4 +1,5 @@
-﻿using SCVE.Editor.Editing.Visitors;
+﻿using System.Text.Json.Serialization;
+using SCVE.Editor.Editing.Visitors;
 
 namespace SCVE.Editor.Editing.ProjectStructure
 {

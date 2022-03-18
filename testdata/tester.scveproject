@@ -31,7 +31,6 @@
           }
         ],
         "FPS": 30,
-        "CursorTimeFrame": 26,
         "Resolution": {
           "X": 1280,
           "Y": 720
@@ -65,7 +64,6 @@
           }
         ],
         "FPS": 30,
-        "CursorTimeFrame": 0,
         "Resolution": {
           "X": 1280,
           "Y": 720

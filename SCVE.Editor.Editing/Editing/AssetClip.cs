@@ -1,4 +1,6 @@
-﻿namespace SCVE.Editor.Editing.Editing;
+﻿using System.Text.Json.Serialization;
+
+namespace SCVE.Editor.Editing.Editing;
 
 /// <summary>
 /// Any clip, that references an asset
@@ -7,7 +9,8 @@ public class AssetClip : Clip
 {
     public Guid ReferencedAssetId { get; private set; }
 
-    public AssetClip()
+    [JsonConstructor]
+    private AssetClip()
     {
     }
 

@@ -37,7 +37,7 @@ namespace SCVE.Editor.ImGuiUi.Services
         private float _trackContentWidth;
         private float _widthPerFrame;
         private int _sequenceFPS;
-        private int _sequenceCursorTimeFrame;
+        private int _cursorFrame;
         private int _sequenceFrameLength;
         private int _tracksCount;
 
@@ -69,7 +69,7 @@ namespace SCVE.Editor.ImGuiUi.Services
             // _cursorCurrentPoints = new Vector2[_cursorShapePoints.Length];
         }
 
-        public void SetRenderData(int cursorDragFrames, Sequence sequence)
+        public void SetRenderData(int cursorDragFrames, int cursorFrame, Sequence sequence)
         {
             _painter = ImGui.GetWindowDrawList();
             _windowPosition = ImGui.GetWindowPos();
@@ -79,11 +79,11 @@ namespace SCVE.Editor.ImGuiUi.Services
             _windowContentWidth = _contentRegionAvail.X;
             _trackContentWidth = _windowContentWidth - Settings.Instance.TrackHeaderWidth;
             _cursorDragFrames = cursorDragFrames;
+            _cursorFrame = cursorFrame;
 
             _widthPerFrame = _trackContentWidth / sequence.FrameLength;
             _tracksCount = sequence.Tracks.Count;
             _sequenceFPS = sequence.FPS;
-            _sequenceCursorTimeFrame = sequence.CursorTimeFrame;
             _sequenceFrameLength = sequence.FrameLength;
         }
 
@@ -96,7 +96,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 0xFF333333
             );
 
-            newCursorTimeFrame = _sequenceCursorTimeFrame;
+            newCursorTimeFrame = _cursorFrame;
 
             ImGui.SetCursorPos(new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth,
                 _drawOrigin.Y) - _windowPosition);
@@ -110,7 +110,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 int timelineClickedFrame =
                     (int) ((ImGui.GetMousePos().X - _drawOrigin.X -
                             Settings.Instance.TrackHeaderWidth) / _widthPerFrame);
-                if (_sequenceCursorTimeFrame != timelineClickedFrame)
+                if (_cursorFrame != timelineClickedFrame)
                 {
                     newCursorTimeFrame = Math.Clamp(timelineClickedFrame, 0, _sequenceFrameLength);
                     return true;
@@ -188,7 +188,7 @@ namespace SCVE.Editor.ImGuiUi.Services
             bool isDragging = false;
             var cursorPosition = new Vector2(
                 _drawOrigin.X + Settings.Instance.TrackHeaderWidth +
-                (_sequenceCursorTimeFrame + _cursorDragFrames) * _widthPerFrame -
+                (_cursorFrame + _cursorDragFrames) * _widthPerFrame -
                 Settings.Instance.CursorSize.X / 2,
                 _drawOrigin.Y
             );
@@ -205,8 +205,8 @@ namespace SCVE.Editor.ImGuiUi.Services
                 newCursorDragFrames = (int) (mouseDragDelta.X / _widthPerFrame);
                 newCursorDragFrames = Math.Clamp(
                     newCursorDragFrames,
-                    -_sequenceCursorTimeFrame,
-                    _sequenceFrameLength - _sequenceCursorTimeFrame
+                    -_cursorFrame,
+                    _sequenceFrameLength - _cursorFrame
                 );
                 isDragging = true;
             }

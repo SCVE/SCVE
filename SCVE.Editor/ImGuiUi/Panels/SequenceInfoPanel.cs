@@ -28,7 +28,6 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
             ImGui.Text($"GUID: {_editingService.OpenedSequence.Guid}");
             ImGui.Text($"FrameLength: {_editingService.OpenedSequence.FrameLength}");
-            ImGui.Text($"CursorTimeFrame: {_editingService.OpenedSequence.CursorTimeFrame}");
             ImGui.Text($"FPS: {_editingService.OpenedSequence.FPS}");
             ImGui.Text($"Resolution: {_editingService.OpenedSequence.Resolution}");
 

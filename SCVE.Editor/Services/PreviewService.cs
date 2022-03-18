@@ -18,7 +18,7 @@ namespace SCVE.Editor.Services
         private readonly EditingService _editingService;
         private readonly SamplerService _samplerService;
 
-        private static readonly ScveVector2i PreviewResolution = new(1280, 720);
+        private static readonly ScveVector2I PreviewResolution = new(1280, 720);
 
         public PreviewService(EditingService editingService, SamplerService samplerService)
         {
@@ -46,7 +46,7 @@ namespace SCVE.Editor.Services
                 _previewCache.Invalidate(i);
             }
 
-            var cursorTimeFrame = _editingService.OpenedSequence.CursorTimeFrame;
+            var cursorTimeFrame = _editingService.CursorFrame;
 
             if (start <= cursorTimeFrame && cursorTimeFrame <= start + length)
             {
@@ -64,7 +64,7 @@ namespace SCVE.Editor.Services
             }
             else
             {
-                SetVisibleFrame(_editingService.OpenedSequence.CursorTimeFrame + offset);
+                SetVisibleFrame(_editingService.CursorFrame + offset);
             }
         }
 

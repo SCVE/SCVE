@@ -1,4 +1,6 @@
-﻿namespace SCVE.Editor.Editing.ProjectStructure
+﻿using System.Text.Json.Serialization;
+
+namespace SCVE.Editor.Editing.ProjectStructure
 {
     public class Image
     {
