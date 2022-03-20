@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.ProjectStructure;
-using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -41,14 +39,19 @@ namespace SCVE.Editor.Services
             }
             else
             {
-                Sequences = _editingService.OpenedProject.Sequences.Where(s => s.Location == location).ToList();
-                Images = _editingService.OpenedProject.Images.Where(i => i.Location == location).ToList();
-                Folders = _editingService.OpenedProject.Folders.Where(i => i.Location == location).ToList();
                 CurrentLocation = location;
                 HasSelectedLocation = true;
+                RescanCurrentLocation();
             }
 
             Console.WriteLine($"Project Panel switched to Location: \"{location}\"");
+        }
+
+        public void RescanCurrentLocation()
+        {
+            Sequences = _editingService.OpenedProject.Sequences.Where(s => s.Location == CurrentLocation).ToList();
+            Images = _editingService.OpenedProject.Images.Where(i => i.Location == CurrentLocation).ToList();
+            Folders = _editingService.OpenedProject.Folders.Where(i => i.Location == CurrentLocation).ToList();
         }
 
         public void LevelUp()

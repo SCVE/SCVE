@@ -1,8 +1,6 @@
-﻿using ImGuiNET;
-using SCVE.Editor.Abstractions;
+﻿using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.ProjectStructure;
-using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
@@ -12,6 +10,9 @@ namespace SCVE.Editor.Services
         public Sequence OpenedSequence { get; private set; }
         public Clip SelectedClip { get; private set; }
 
+        /// <summary>
+        /// Where is the cursor now
+        /// </summary>
         public int CursorFrame { get; set; }
 
         public string OpenedProjectPath { get; set; }
@@ -31,6 +32,7 @@ namespace SCVE.Editor.Services
         public void SetOpenedSequence(Sequence sequence)
         {
             OpenedSequence = sequence;
+            CursorFrame = 0;
             SelectedClip = null;
         }
 

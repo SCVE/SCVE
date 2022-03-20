@@ -54,28 +54,18 @@ namespace SCVE.Editor
         {
             IServiceCollection serviceCollection = new ServiceCollection();
 
-
             foreach (var type in Utils.GetAssignableTypes<IService>())
             {
                 serviceCollection.AddSingleton(type);
             }
-
-            serviceCollection.AddSingleton<SequencePanelService>();
+            foreach (var type in Utils.GetAssignableTypes<IImGuiPanel>())
+            {
+                serviceCollection.AddSingleton(type);
+            }
 
             serviceCollection.AddSingleton<ClipEvaluator>();
             serviceCollection.AddSingleton<SequenceSampler>();
             serviceCollection.AddSingleton<ImGuiAssetRenderer>();
-
-            serviceCollection.AddSingleton<ProjectPanel>();
-            serviceCollection.AddSingleton<SequencePanel>();
-            serviceCollection.AddSingleton<PreviewPanel>();
-            serviceCollection.AddSingleton<SequenceInfoPanel>();
-            serviceCollection.AddSingleton<ClipEffectsPanel>();
-            serviceCollection.AddSingleton<MainMenuBar>();
-            serviceCollection.AddSingleton<SequenceCreationPanel>();
-            serviceCollection.AddSingleton<ProjectCreationPanel>();
-            serviceCollection.AddSingleton<FilePickerModalPanel>();
-            serviceCollection.AddSingleton<SettingsModalPanel>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 

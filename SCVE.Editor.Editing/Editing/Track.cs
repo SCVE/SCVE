@@ -18,14 +18,11 @@ namespace SCVE.Editor.Editing.Editing
         {
         }
 
-        private Track(Guid guid)
-        {
-        }
-
         public static Track CreateNew()
         {
-            return new(Guid.NewGuid())
+            return new()
             {
+                Guid = Guid.NewGuid(),
                 EmptyClips = new List<EmptyClip>(),
                 AssetClips = new List<AssetClip>()
             };

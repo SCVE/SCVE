@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Background;
 
@@ -23,7 +22,7 @@ namespace SCVE.Editor.Services
             _threads = new List<BackgroundJobThread>(_threadCount);
             for (var i = 0; i < _threadCount; i++)
             {
-                var thread = new BackgroundJobThread(_jobs, _finished, $"{(i+1)} Background Thread");
+                var thread = new BackgroundJobThread(_jobs, _finished, $"{(i + 1)} Background Thread");
                 thread.Start();
                 _threads.Add(thread);
             }
@@ -37,7 +36,7 @@ namespace SCVE.Editor.Services
         public void OnUpdate(float delta)
         {
             int i = 0;
-            while (/*i++ < 3 && */_finished.TryDequeue(out var job))
+            while ( /*i++ < 3 && */_finished.TryDequeue(out var job))
             {
                 job.OnFinished?.Invoke();
             }

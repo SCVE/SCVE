@@ -1,6 +1,6 @@
 ﻿namespace SCVE.Editor.Editing.ProjectStructure
 {
-    public class AssetBase
+    public abstract class AssetBase
     {
         public Guid Guid { get; set; }
 

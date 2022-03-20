@@ -1,4 +1,7 @@
-﻿using ImGuiNET;
+﻿using System;
+using System.IO;
+using System.Numerics;
+using ImGuiNET;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.Services;
 
@@ -7,14 +10,23 @@ namespace SCVE.Editor.ImGuiUi.Panels
     public class ProjectCreationPanel : ImGuiModalPanel
     {
         private EditingService _editingService;
-        
-        public ProjectCreationPanel(EditingService editingService)
+        private ModalManagerService _modalManagerService;
+        private RecentsService _recentsService;
+        private ProjectPanelService _projectPanelService;
+        private DirectoryPickerModalPanel _directoryPickerModalPanel;
+
+        public ProjectCreationPanel(EditingService editingService, RecentsService recentsService, ProjectPanelService projectPanelService)
         {
             _editingService = editingService;
+            _recentsService = recentsService;
+            _projectPanelService = projectPanelService;
+            _directoryPickerModalPanel = new DirectoryPickerModalPanel();
             Name = "New Project";
         }
 
         private string _title = "";
+
+        private string _location = Environment.CurrentDirectory;
 
         public override void OnImGuiRender()
         {
@@ -22,23 +34,52 @@ namespace SCVE.Editor.ImGuiUi.Panels
             {
                 ImGui.OpenPopup(Name);
             }
-            
-            if (ImGui.BeginPopupModal(Name, ref IsOpen))
+
+            ImGui.SetNextWindowSize(new Vector2(600, 400));
+            if (ImGui.BeginPopupModal(Name, ref IsOpen, ImGuiWindowFlags.NoResize))
             {
                 ImGui.TextDisabled($"New Project");
 
-                if (ImGui.InputText("Title", ref _title, 255))
+                ImGui.InputText("Title", ref _title, 256);
+                ImGui.Separator();
+
+                ImGui.TextDisabled("Location");
+                ImGui.TextDisabled(_location);
+
+                ImGui.SameLine();
+
+                if (ImGui.Button("Choose location"))
                 {
+                    _directoryPickerModalPanel.Open(Environment.CurrentDirectory, "Choose location");
                 }
 
-                if (ImGui.Button("Create"))
+                string location = "";
+                if (_directoryPickerModalPanel.OnImGuiRender(ref location))
                 {
-                    var videoProject = VideoProject.CreateNew(_title);
-                    
-                    _editingService.SetOpenedProject(videoProject);
-                    
-                    ImGui.CloseCurrentPopup();
-                    Close();
+                    _location = location;
+                }
+
+                if (_title.Length == 0)
+                {
+                    ImGui.TextDisabled("Create");
+                }
+                else
+                {
+                    if (ImGui.Button("Create"))
+                    {
+                        var videoProject = VideoProject.CreateNew(_title);
+                        var projectPath = Path.Combine(_location, $"{_title}.scveproject");
+                        Utils.WriteJson(videoProject, projectPath);
+                        Console.WriteLine($"Created project {_title}");
+
+                        _editingService.SetOpenedProject(videoProject);
+
+                        _recentsService.NoticeOpen(projectPath);
+                        _projectPanelService.ChangeLocation("/");
+
+                        ImGui.CloseCurrentPopup();
+                        Close();
+                    }
                 }
 
                 if (ImGui.Button("Close"))

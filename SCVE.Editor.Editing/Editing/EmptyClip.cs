@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using SCVE.Editor.Editing.Effects;
 
 namespace SCVE.Editor.Editing.Editing
 {
@@ -7,16 +8,17 @@ namespace SCVE.Editor.Editing.Editing
         [JsonConstructor]
         private EmptyClip()
         {
-            
-        }
-        
-        private EmptyClip(Guid guid, int startFrame, int frameLength) : base(guid, startFrame, frameLength)
-        {
         }
 
         public static EmptyClip CreateNew(int startFrame, int frameLength)
         {
-            return new(Guid.NewGuid(), startFrame, frameLength);
+            return new EmptyClip()
+            {
+                Guid = Guid.NewGuid(),
+                Effects = new List<EffectBase>(),
+                FrameLength = frameLength,
+                StartFrame = startFrame
+            };
         }
 
         public override string ShortName()

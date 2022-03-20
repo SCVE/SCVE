@@ -41,15 +41,14 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 {
                     if (_name != string.Empty)
                     {
-                        var newSequence = new SequenceAsset()
-                        {
-                            Guid = Guid.NewGuid(),
-                            Name = _name,
-                            Location = _projectPanelService.CurrentLocation,
-                            Content = Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
-                        };
+                        var sequenceAsset = SequenceAsset.CreateNew(
+                            name: _name,
+                            location: _projectPanelService.CurrentLocation,
+                            content: Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
+                        );
 
-                        _editingService.AddSequence(newSequence);
+                        _editingService.AddSequence(sequenceAsset);
+                        _projectPanelService.RescanCurrentLocation();
 
                         ImGui.CloseCurrentPopup();
                         Close();

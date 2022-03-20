@@ -8,6 +8,7 @@ using SCVE.Editor.Background;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Editing.ProjectStructure;
+using SCVE.Editor.ImGuiUi.Panels;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi
@@ -27,6 +28,9 @@ namespace SCVE.Editor.ImGuiUi
 
         private ClipEvaluator _evaluator;
 
+        private FilePickerModalPanel _openProjectFilePickerModalPanel;
+        private FilePickerModalPanel _addImageFilePickerModalPanel;
+
         public MainMenuBar(PreviewService previewService,
             EditingService editingService,
             ModalManagerService modalManagerService,
@@ -42,44 +46,27 @@ namespace SCVE.Editor.ImGuiUi
             _projectPanelService = projectPanelService;
             _backgroundJobRunner = backgroundJobRunner;
             _evaluator = evaluator;
+            _openProjectFilePickerModalPanel = new FilePickerModalPanel();
+            _addImageFilePickerModalPanel = new FilePickerModalPanel();
         }
 
         public void OnImGuiRender()
         {
             if (ImGui.BeginMenuBar())
             {
+                bool shouldOpenOpenProjectFilePicker = false;
                 if (ImGui.BeginMenu("File"))
                 {
-                    // Disabling fullscreen would allow the window to be moved to the front of other windows, 
-                    // which we can't undo at the moment without finer window depth/z control.
-                    //ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);1
                     if (ImGui.MenuItem("New Project", "Ctrl+N"))
                     {
                         _modalManagerService.OpenProjectCreationPanel();
                     }
 
+                    // NOTE: We can't call ImGui.OpenPopup inside MenuItem, because of the ID stack.
+
                     if (ImGui.MenuItem("Open Project", "Ctrl+O"))
                     {
-                        _modalManagerService.OpenFilePickerPanel(Environment.CurrentDirectory, () =>
-                        {
-                            string path = _modalManagerService.FilePickerSelectedPath;
-
-                            if (Path.GetExtension(path) == ".scveproject")
-                            {
-                                var videoProject = Utils.ReadJson<VideoProject>(path);
-
-                                _editingService.SetOpenedProject(videoProject, path);
-                                _recentsService.NoticeOpen(path);
-                                _projectPanelService.ChangeLocation("/");
-                                _previewService.SyncVisiblePreview();
-
-                                Console.WriteLine($"Loaded project: {videoProject.Title}");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Unknown file selected: {Path.GetExtension(path)}");
-                            }
-                        }, () => { Console.WriteLine("Opening file dialog was dismissed"); });
+                        shouldOpenOpenProjectFilePicker = true;
                     }
 
                     if (_recentsService.Recents.Count != 0)
@@ -120,11 +107,6 @@ namespace SCVE.Editor.ImGuiUi
                             {
                                 Utils.WriteJson(_editingService.OpenedProject, _editingService.OpenedProjectPath);
                             }
-                            else
-                            {
-                                // TODO
-                                throw new NotImplementedException("Saving of just-created projects is not currently supported");
-                            }
                         }
                     }
 
@@ -135,6 +117,8 @@ namespace SCVE.Editor.ImGuiUi
 
                     ImGui.EndMenu();
                 }
+
+                HandleOpenProjectFilePicker(shouldOpenOpenProjectFilePicker);
 
                 if (_editingService.OpenedSequence is not null)
                 {
@@ -169,53 +153,94 @@ namespace SCVE.Editor.ImGuiUi
                     }
                 }
 
+                bool shouldOpenAddImageFilePicker = false;
                 if (ImGui.BeginMenu("Assets"))
                 {
                     if (_editingService.OpenedProject is not null)
                     {
                         if (ImGui.MenuItem("Add Image"))
                         {
-                            _modalManagerService.OpenFilePickerPanel(Environment.CurrentDirectory, () =>
-                            {
-                                string path = _modalManagerService.FilePickerSelectedPath;
-
-                                var extension = Path.GetExtension(path);
-                                if (extension is ".jpeg" or ".png")
-                                {
-                                    var fileName = Path.GetFileName(path);
-                                    var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, path);
-                                    var imageAsset = new ImageAsset()
-                                    {
-                                        Guid = Guid.NewGuid(),
-                                        Name = fileName,
-                                        Location = _projectPanelService.CurrentLocation,
-                                        Content = new Image()
-                                        {
-                                            Guid = Guid.NewGuid(),
-                                            RelativePath = relativePath
-                                        }
-                                    };
-                                    _editingService.OpenedProject.AddImage(imageAsset);
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"Unknown file selected: {extension}");
-                                }
-                            }, () => { Console.WriteLine("Opening file dialog was dismissed"); });
+                            shouldOpenAddImageFilePicker = true;
                         }
                     }
 
                     ImGui.EndMenu();
                 }
 
+                HandleAddImageFilePicker(shouldOpenAddImageFilePicker);
+
                 if (ImGui.BeginMenu("Settings"))
                 {
                     _modalManagerService.OpenSettingsPanel();
-                    
+
                     ImGui.EndMenu();
                 }
 
                 ImGui.EndMenuBar();
+            }
+        }
+
+        private void HandleAddImageFilePicker(bool shouldOpenAddImageFilePicker)
+        {
+            if (shouldOpenAddImageFilePicker)
+            {
+                Console.WriteLine("Opening AddImage FilePicker");
+                _addImageFilePickerModalPanel.Open(Environment.CurrentDirectory, "Add Image");
+            }
+
+            string filePath = "";
+            if (_addImageFilePickerModalPanel.OnImGuiRender(ref filePath))
+            {
+                var extension = Path.GetExtension(filePath);
+                if (extension is ".jpeg" or ".png")
+                {
+                    var fileName = Path.GetFileName(filePath);
+                    var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, filePath);
+
+                    var imageAsset = ImageAsset.CreateNew(
+                        name: fileName,
+                        location: _projectPanelService.CurrentLocation,
+                        content: new Image()
+                        {
+                            Guid = Guid.NewGuid(),
+                            RelativePath = relativePath
+                        });
+
+                    _editingService.OpenedProject.AddImage(imageAsset);
+                }
+                else
+                {
+                    Console.WriteLine($"Unknown file selected: {extension}");
+                }
+            }
+        }
+
+        private void HandleOpenProjectFilePicker(bool shouldOpenOpenProjectFilePicker)
+        {
+            if (shouldOpenOpenProjectFilePicker)
+            {
+                Console.WriteLine("Opening OpenProject FilePicker");
+                _openProjectFilePickerModalPanel.Open(Environment.CurrentDirectory, "Open Project");
+            }
+
+            string filePath = "";
+            if (_openProjectFilePickerModalPanel.OnImGuiRender(ref filePath))
+            {
+                if (Path.GetExtension(filePath) == ".scveproject")
+                {
+                    var videoProject = Utils.ReadJson<VideoProject>(filePath);
+
+                    _editingService.SetOpenedProject(videoProject, filePath);
+                    _recentsService.NoticeOpen(filePath);
+                    _projectPanelService.ChangeLocation("/");
+                    _previewService.SyncVisiblePreview();
+
+                    Console.WriteLine($"Loaded project: {videoProject.Title}");
+                }
+                else
+                {
+                    Console.WriteLine($"Unknown file selected: {Path.GetExtension(filePath)}");
+                }
             }
         }
 

@@ -8,12 +8,12 @@ using SCVE.Engine.ImageSharpBindings;
 
 namespace SCVE.Editor.ImGuiUi.Panels
 {
-    public class FilePickerModalPanel : ImGuiFileBrowserPanelBase, IDisposable
+    public class DirectoryPickerModalPanel : ImGuiFileBrowserPanelBase
     {
-        private string _selectedFilePath;
+        private string _selectedDirectoryPath;
 
-        private string _title = $"File Selector";
-        
+        private string _title = "Directory Selector";
+
         protected override void Initialize()
         {
             var imageSharpTextureLoader = new ImageSharpTextureLoader();
@@ -37,7 +37,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
             CurrentDirectory = new DirectoryInfo(location);
             Content = CurrentDirectory.EnumerateFileSystemInfos();
-            _selectedFilePath = location;
+            _selectedDirectoryPath = location;
             _title = title;
             ImGui.OpenPopup(_title);
         }
@@ -45,7 +45,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
         /// <summary>
         /// Returns true if the file was selected in this frame
         /// </summary>
-        public bool OnImGuiRender(ref string path)
+        public bool OnImGuiRender(ref string location)
         {
             ImGui.SetNextWindowSize(new Vector2(600, 400));
 
@@ -67,11 +67,18 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     selected = DrawTree();
                 }
 
-                path = _selectedFilePath;
+                ImGui.TextDisabled("Current location: ");
+                ImGui.SameLine();
 
-                if (selected)
+                ImGui.TextDisabled(_selectedDirectoryPath);
+
+                location = _selectedDirectoryPath;
+
+                if (ImGui.Button("Select folder"))
                 {
                     ImGui.CloseCurrentPopup();
+
+                    selected = true;
                 }
 
                 ImGui.EndPopup();
@@ -88,6 +95,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 if (ImGui.Button("<-"))
                 {
                     CurrentDirectory = CurrentDirectory.Parent;
+                    _selectedDirectoryPath = CurrentDirectory.FullName;
                     Content = CurrentDirectory.EnumerateFileSystemInfos();
                 }
 
@@ -96,7 +104,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
             ImGui.Text(CurrentDirectory.FullName);
 
-            if (ImGui.BeginChild("FilePickerTree", ImGui.GetContentRegionAvail() - new Vector2(0, 40)))
+            if (ImGui.BeginChild("DirectoryPickerTree", ImGui.GetContentRegionAvail() - new Vector2(0, 60)))
             {
                 foreach (var entry in Content)
                 {
@@ -113,15 +121,19 @@ namespace SCVE.Editor.ImGuiUi.Panels
                         {
                             if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
                             {
-                                if (!entry.IsDirectory())
-                                {
-                                    _selectedFilePath = entry.FullName;
-                                    selected = true;
-                                }
-                                else
+                                if (entry.IsDirectory())
                                 {
                                     CurrentDirectory = new DirectoryInfo(path);
                                     Content = CurrentDirectory.EnumerateFileSystemInfos();
+                                    _selectedDirectoryPath = entry.FullName;
+                                    selected = true;
+                                }
+                            }
+                            else if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+                            {
+                                if (entry.IsDirectory())
+                                {
+                                    _selectedDirectoryPath = entry.FullName;
                                 }
                             }
                         }
@@ -149,6 +161,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 if (ImGui.Button("<-"))
                 {
                     CurrentDirectory = CurrentDirectory.Parent;
+                    _selectedDirectoryPath = CurrentDirectory.FullName;
                     Content = CurrentDirectory.EnumerateFileSystemInfos();
                 }
 
@@ -157,10 +170,10 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
             ImGui.Text(CurrentDirectory.FullName);
 
-            if (ImGui.BeginChild("FilePickerCells", ImGui.GetContentRegionAvail() - new Vector2(0, 40)))
+            if (ImGui.BeginChild("DirectoryPickerCells", ImGui.GetContentRegionAvail() - new Vector2(0, 60), false, ImGuiWindowFlags.AlwaysVerticalScrollbar))
             {
                 int columnCount = 6;
-                ImGui.Columns(columnCount, "file_picker_columns", false);
+                ImGui.Columns(columnCount, "directory_picker_columns", false);
 
                 // magic 20, don't ask, it just works
                 var columnWidth = ImGui.GetColumnWidth() - 20;
@@ -175,9 +188,10 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     var icon = path.IsDirectoryPath() ? DirectoryIcon : FileIcon;
                     // ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0, 0, 0, 0));
 
-                    ImGui.ImageButton((IntPtr) icon.GpuImage.GpuId, new Vector2(columnWidth, columnWidth), new Vector2(0, 1), new Vector2(1, 0));
+                    ImGui.ImageButton((IntPtr) icon.GpuImage.GpuId, new Vector2(columnWidth, columnWidth));
 
                     ImGui.PopID();
+
                     if (ImGui.BeginDragDropSource())
                     {
                         ImGui.Text(filename);
@@ -191,15 +205,19 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     {
                         if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
                         {
-                            if (!entry.IsDirectory())
+                            if (entry.IsDirectory())
                             {
-                                _selectedFilePath = entry.FullName;
-                                selected = true;
-                            }
-                            else
-                            {
+                                _selectedDirectoryPath = entry.FullName;
                                 CurrentDirectory = new DirectoryInfo(path);
                                 Content = CurrentDirectory.EnumerateFileSystemInfos();
+                                selected = true;
+                            }
+                        }
+                        else if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+                        {
+                            if (entry.IsDirectory())
+                            {
+                                _selectedDirectoryPath = entry.FullName;
                             }
                         }
                     }

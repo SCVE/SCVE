@@ -1,5 +1,4 @@
 ﻿using SCVE.Editor.Abstractions;
-using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
