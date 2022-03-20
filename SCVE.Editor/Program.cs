@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using System;
+using ImGuiNET;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
@@ -15,12 +16,11 @@ namespace SCVE.Editor
             using var window = Window.Create(WindowOptions.Default);
 
             // Declare some variables
-            ImGuiController controller   = null;
-            GL              gl           = null;
-            IInputContext   inputContext = null;
+            ImGuiController controller = null;
+            GL gl = null;
+            IInputContext inputContext = null;
 
             var editorApp = new EditorApp(window);
-            
 
             // Our loading function
             window.Load += () =>
@@ -38,10 +38,7 @@ namespace SCVE.Editor
                 );
                 editorApp.Init();
 
-                inputContext.Keyboards[0].KeyUp += (keyboard, key, scancode) =>
-                {
-                    editorApp.OnKeyPressed(key);
-                };
+                inputContext.Keyboards[0].KeyUp += (keyboard, key, scancode) => { editorApp.OnKeyPressed(key); };
             };
 
             // Handle resizes
@@ -55,12 +52,12 @@ namespace SCVE.Editor
             window.Render += delta =>
             {
                 // Make sure ImGui is up-to-date
-                controller.Update((float)delta);
+                controller.Update((float) delta);
 
                 // This is where you'll do any rendering beneath the ImGui context
                 // Here, we just have a blank screen.
-                gl.ClearColor(Color.FromArgb(255, (int)(.45f * 255), (int)(.55f * 255), (int)(.60f * 255)));
-                gl.Clear((uint)ClearBufferMask.ColorBufferBit);
+                gl.ClearColor(Color.FromArgb(255, (int) (.45f * 255), (int) (.55f * 255), (int) (.60f * 255)));
+                gl.Clear((uint) ClearBufferMask.ColorBufferBit);
 
                 editorApp.Update(delta);
                 editorApp.OnImGuiRender();
@@ -73,7 +70,7 @@ namespace SCVE.Editor
             window.Closing += () =>
             {
                 editorApp.Exit();
-                
+
                 ImGui.SaveIniSettingsToDisk("imgui.ini");
                 // Dispose our controller first
                 controller?.Dispose();

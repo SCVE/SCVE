@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using SCVE.Editor.Editing.Effects;
 
 namespace SCVE.Editor.Editing.Editing;
 
@@ -14,14 +15,16 @@ public class AssetClip : Clip
     {
     }
 
-    private AssetClip(Guid guid, int startFrame, int frameLength, Guid referencedAssetId) : base(guid, startFrame, frameLength)
-    {
-        ReferencedAssetId = referencedAssetId;
-    }
-
     public static AssetClip CreateNew(Guid referencedAssetId, int startFrame, int frameLength)
     {
-        return new(Guid.NewGuid(), startFrame, frameLength, referencedAssetId);
+        return new AssetClip()
+        {
+            Guid = Guid.NewGuid(),
+            Effects = new List<EffectBase>(),
+            StartFrame = startFrame,
+            FrameLength = frameLength,
+            ReferencedAssetId = referencedAssetId
+        };
     }
 
     public override string ShortName()

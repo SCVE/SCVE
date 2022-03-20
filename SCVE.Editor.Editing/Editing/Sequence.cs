@@ -21,18 +21,16 @@ namespace SCVE.Editor.Editing.Editing
         {
         }
 
-        private Sequence(Guid guid, int fps, ScveVector2I resolution, int frameLength)
-        {
-            FPS = fps;
-            Guid = guid;
-            Resolution = resolution;
-            FrameLength = frameLength;
-            Tracks = new List<Track>();
-        }
-
         public static Sequence CreateNew(int fps, ScveVector2I resolution, int frameLength)
         {
-            return new(Guid.NewGuid(), fps, resolution, frameLength);
+            return new Sequence()
+            {
+                FPS = fps,
+                Guid = Guid.NewGuid(),
+                Resolution = resolution,
+                FrameLength = frameLength,
+                Tracks = new List<Track>()
+            };
         }
     }
 }

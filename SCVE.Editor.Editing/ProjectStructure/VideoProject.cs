@@ -19,7 +19,8 @@ namespace SCVE.Editor.Editing.ProjectStructure
 
         public ICollection<FolderAsset> Folders { get; set; }
 
-        public VideoProject()
+        [JsonConstructor]
+        private VideoProject()
         {
         }
 
@@ -29,7 +30,8 @@ namespace SCVE.Editor.Editing.ProjectStructure
             {
                 Title = title,
                 Sequences = new List<SequenceAsset>(),
-                Images = new List<ImageAsset>()
+                Images = new List<ImageAsset>(),
+                Folders = new List<FolderAsset>()
             };
         }
 

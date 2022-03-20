@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using SCVE.Editor.Editing.Visitors;
+﻿using SCVE.Editor.Editing.Visitors;
 
 namespace SCVE.Editor.Editing.ProjectStructure
 {
@@ -7,7 +6,7 @@ namespace SCVE.Editor.Editing.ProjectStructure
     {
         public T Content { get; set; }
 
-        public Asset()
+        protected Asset()
         {
         }
 

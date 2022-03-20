@@ -15,7 +15,6 @@ namespace SCVE.Editor.Services
             _editingService = editingService;
         }
 
-
         /// <summary>
         /// time must be in clip space
         /// </summary>
