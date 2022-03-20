@@ -6,7 +6,7 @@ using SCVE.Editor.Editing.ProjectStructure;
 
 namespace SCVE.Editor.Services
 {
-    public class ProjectPanelService : IService
+    public class ProjectPanelService : IService, IFileDropReceiver
     {
         public bool HasSelectedLocation { get; private set; }
 
@@ -57,6 +57,43 @@ namespace SCVE.Editor.Services
         public void LevelUp()
         {
             ChangeLocation(CurrentLocation.Substring(0, CurrentLocation.LastIndexOf('/') + 1));
+        }
+
+        public void OnFileDrop(string[] paths)
+        {
+            if (Path.GetExtension(paths[0]) == ".scveproject")
+            {
+                DropScveProject(paths[0]);
+            }
+
+            DropImages(paths);
+        }
+
+        private void DropScveProject(string path)
+        {
+            throw new NotImplementedException("SCVE project must be an actual Asset." +
+                                              "So that we can pass it a link to the original project.");
+            // Creating folder (sub scveproject)
+            var title = Path.GetFileName(path);
+            _editingService.OpenedProject.Folders.Add(new FolderAsset()
+            {
+                Content = new Folder(),
+                Guid = Guid.NewGuid(),
+                Location = CurrentLocation,
+                Name = title
+            });
+        }
+
+        private void DropImages(string[] paths)
+        {
+            throw new NotImplementedException();
+            foreach (var path in paths)
+            {
+                // TODO: Complete adding images to current project.
+                _editingService.OpenedProject.AddImage(new ImageAsset()
+                {
+                });
+            }
         }
     }
 }

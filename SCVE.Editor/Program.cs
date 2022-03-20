@@ -48,6 +48,12 @@ namespace SCVE.Editor
                 gl.Viewport(s);
             };
 
+            // Handles the dile drop and receives the array of paths to the files.
+            window.FileDrop += paths =>
+            {
+                editorApp.OnFileDrop(paths);
+            };
+
             // The render function
             window.Render += delta =>
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -40,6 +41,7 @@ namespace SCVE.Editor
         private List<IUpdateReceiver> _updateReceivers;
         private List<IKeyPressReceiver> _keyPressReceivers;
         private List<IExitReceiver> _exitReceivers;
+        private List<IFileDropReceiver> _fileDropReceivers;
 
         private RecentsService _recentsService;
         private SettingsService _settingsService;
@@ -72,25 +74,29 @@ namespace SCVE.Editor
             _imGuiPanels = Utils.GetAssignableTypes<IImGuiPanel>()
                 .Select(t => serviceProvider.GetService(t) as IImGuiPanel)
                 .ToList();
-            
+
             _services = Utils.GetAssignableTypes<IService>()
                 .Select(t => serviceProvider.GetService(t) as IService)
                 .ToList();
-            
+
             _updateReceivers = Utils.GetAssignableTypes<IUpdateReceiver>()
                 .Select(t => serviceProvider.GetService(t) as IUpdateReceiver)
                 .ToList();
-            
+
             _exitReceivers = Utils.GetAssignableTypes<IExitReceiver>()
                 .Select(t => serviceProvider.GetService(t) as IExitReceiver)
                 .ToList();
-            
+
             _keyPressReceivers = Utils.GetAssignableTypes<IKeyPressReceiver>()
                 .Select(t => serviceProvider.GetService(t) as IKeyPressReceiver)
                 .ToList();
-            
+
+            _fileDropReceivers = Utils.GetAssignableTypes<IFileDropReceiver>()
+                .Select(t => serviceProvider.GetService(t) as IFileDropReceiver)
+                .ToList();
+
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
-            
+
             _recentsService = serviceProvider.GetRequiredService<RecentsService>();
             _recentsService.TryLoad();
 
@@ -185,6 +191,87 @@ namespace SCVE.Editor
             {
                 keyPressReceiver.OnKeyPressed(key);
             }
+        }
+
+        /// <summary>
+        /// Validates the passed paths whether they can be parsed and triggers event OnFileDrop
+        /// on each service implementing the interface IFileDropReceiver.
+        /// </summary>
+        /// <param name="paths">to the dropping files.</param>
+        public void OnFileDrop(string[] paths)
+        {
+            if (IsValidDropFiles(paths))
+            {
+                foreach (var fileDropReceiver in _fileDropReceivers)
+                {
+                    fileDropReceiver.OnFileDrop(paths);
+                }
+
+                return;
+            }
+
+            Console.WriteLine("Invalid combination of paths:");
+            foreach (var path in paths)
+            {
+                Console.WriteLine(path);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the passed paths combination can be parsed.
+        /// </summary>
+        /// <param name="paths">All paths to the dropped files.</param>
+        /// <returns></returns>
+        private bool IsValidDropFiles(string[] paths)
+        {
+            if (paths.Length == 0) return false;
+
+
+            // var extends = new List<string>(paths.Length);
+            bool foundScve = false;
+            bool foundImage = false;
+            foreach (var path in paths)
+            {
+                var extension = Path.GetExtension(path).ToLower();
+                switch (extension)
+                {
+                    case ".scveproject":
+                    {
+                        // .scveproject + .scveproject = invalid
+                        if (foundScve)
+                        {
+                            return false;
+                        }
+
+                        // .scveproject + image = invalid
+                        if (foundImage)
+                        {
+                            return false;
+                        }
+
+                        foundScve = true;
+
+                        break;
+                    }
+                    case ".png":
+                    case ".jpeg":
+                    {
+                        // .scveproject + image = invalid
+                        if (foundScve)
+                        {
+                            return false;
+                        }
+
+                        foundImage = true;
+
+                        break;
+                    }
+                    default:
+                        return false;
+                }
+            }
+
+            return true;
         }
     }
 }
