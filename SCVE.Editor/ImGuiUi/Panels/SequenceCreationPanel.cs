@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Numerics;
+using System.Reflection;
 using ImGuiNET;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.Misc;
@@ -20,6 +23,9 @@ namespace SCVE.Editor.ImGuiUi.Panels
         }
 
         private string _name = "";
+        private int _fps = 0;
+        private int _frameLength = 0;
+        private int _resolution = 0;
 
         public override void OnImGuiRender()
         {
@@ -33,35 +39,57 @@ namespace SCVE.Editor.ImGuiUi.Panels
             {
                 ImGui.TextDisabled($"New sequence");
 
-                if (ImGui.InputText("Name", ref _name, 255))
+                DrawSettings();
+                DrawControls();
+
+                ImGui.EndPopup();
+            }
+        }
+
+        private void DrawSettings()
+        {
+            if (ImGui.InputText("Name", ref _name, 255))
+            {
+            }
+
+            if (ImGui.DragInt("FPS", ref _fps, 0.1f, 10, 120))
+            {
+            }
+            
+            if (ImGui.DragInt("Frame length", ref _frameLength, 0.1f, 10, 60))
+            {
+            }
+            
+            if (ImGui.DragInt("Resolution", ref _resolution, 0.1f, 10, 120))
+            {
+            }
+        }
+        
+
+        private void DrawControls()
+        {
+            if (ImGui.Button("Create"))
+            {
+                if (_name != string.Empty)
                 {
-                }
+                    var sequenceAsset = SequenceAsset.CreateNew(
+                        name: _name,
+                        location: _projectPanelService.CurrentLocation,
+                        content: Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
+                    );
 
-                if (ImGui.Button("Create"))
-                {
-                    if (_name != string.Empty)
-                    {
-                        var sequenceAsset = SequenceAsset.CreateNew(
-                            name: _name,
-                            location: _projectPanelService.CurrentLocation,
-                            content: Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
-                        );
+                    _editingService.AddSequence(sequenceAsset);
+                    _projectPanelService.RescanCurrentLocation();
 
-                        _editingService.AddSequence(sequenceAsset);
-                        _projectPanelService.RescanCurrentLocation();
-
-                        ImGui.CloseCurrentPopup();
-                        Close();
-                    }
-                }
-
-                if (ImGui.Button("Close"))
-                {
                     ImGui.CloseCurrentPopup();
                     Close();
                 }
+            }
 
-                ImGui.EndPopup();
+            if (ImGui.Button("Close"))
+            {
+                ImGui.CloseCurrentPopup();
+                Close();
             }
         }
     }
