@@ -39,7 +39,7 @@
       },
       "Guid": "a665087f-a4c0-4acc-9dc3-e3f0a6287d33",
       "Name": "Testing Sequence",
-      "Location": "/Test Folder"
+      "Location": "/Test Folder/"
     },
     {
       "Content": {
@@ -52,6 +52,7 @@
                 "Guid": "2541bee9-0ee7-4d98-94b9-12b3dd4c6c69",
                 "StartFrame": 10,
                 "FrameLength": 30,
+                "EndFrame": 40,
                 "Effects": []
               }
             ],
@@ -92,6 +93,18 @@
       "Guid": "d0ab7327-fcce-4179-88cb-bc0dcd7bae31",
       "Name": "Test Folder",
       "Location": "/"
+    },
+    {
+      "Content": {},
+      "Guid": "2264e574-6192-4a27-9903-d24e504bbeb6",
+      "Name": "lets_go",
+      "Location": "/"
+    },
+    {
+      "Content": {},
+      "Guid": "df28fdf3-baf8-4f6c-82aa-7be9d09a466a",
+      "Name": "lets_go_lower",
+      "Location": "/lets_go/"
     }
   ]
 }

@@ -103,12 +103,18 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
             if (ImGui.BeginMenuBar())
             {
-                if (ImGui.BeginMenu("Add"))
+                if (ImGui.BeginMenu("Create"))
                 {
                     if (ImGui.MenuItem("Sequence"))
                     {
                         _modalManagerService.OpenSequenceCreationPanel();
                     }
+                    
+                    if (ImGui.MenuItem("Folder"))
+                    {
+                        _modalManagerService.OpenFolderCreationPanel();
+                    }
+                    
                     ImGui.EndMenu();
                 }
                 ImGui.EndMenuBar();

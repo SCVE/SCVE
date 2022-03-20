@@ -76,7 +76,7 @@ namespace SCVE.Editor.ImGuiUi
 
             if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             {
-                _projectPanelService.ChangeLocation(asset.Location + asset.Name);
+                _projectPanelService.ChangeLocation(asset.Location + asset.Name + "/");
             }
 
             if (elementExpanded)

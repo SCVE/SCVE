@@ -153,21 +153,22 @@ namespace SCVE.Editor.ImGuiUi
                     }
                 }
 
-                bool shouldOpenAddImageFilePicker = false;
-                if (ImGui.BeginMenu("Assets"))
+                if (_editingService.OpenedProject is not null)
                 {
-                    if (_editingService.OpenedProject is not null)
+                    bool shouldOpenAddImageFilePicker = false;
+                    if (ImGui.BeginMenu("Assets"))
                     {
                         if (ImGui.MenuItem("Add Image"))
                         {
                             shouldOpenAddImageFilePicker = true;
                         }
+
+                        ImGui.EndMenu();
                     }
 
-                    ImGui.EndMenu();
+                    HandleAddImageFilePicker(shouldOpenAddImageFilePicker);
                 }
 
-                HandleAddImageFilePicker(shouldOpenAddImageFilePicker);
 
                 if (ImGui.BeginMenu("Settings"))
                 {

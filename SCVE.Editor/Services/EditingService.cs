@@ -45,5 +45,10 @@ namespace SCVE.Editor.Services
         {
             OpenedProject.AddSequence(sequenceAsset);
         }
+
+        public void AddFolder(FolderAsset folderAsset)
+        {
+            OpenedProject.AddFolder(folderAsset);
+        }
     }
 }

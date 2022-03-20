@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.ProjectStructure;
+using SixLabors.ImageSharp.Processing.Processors.Transforms;
 
 namespace SCVE.Editor.Services
 {
@@ -57,6 +58,8 @@ namespace SCVE.Editor.Services
 
         public void LevelUp()
         {
+            CurrentLocation = CurrentLocation.Remove(CurrentLocation.Length - 1);
+            
             ChangeLocation(CurrentLocation.Substring(0, CurrentLocation.LastIndexOf('/') + 1));
         }
 
