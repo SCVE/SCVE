@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace SCVE.Editor.Editing.ProjectStructure
 {
@@ -8,9 +9,18 @@ namespace SCVE.Editor.Editing.ProjectStructure
 
         public string RelativePath { get; set; }
         
-        public Image()
+        [JsonConstructor]
+        private Image()
         {
-               
+        }
+
+        public static Image CreateNew(string relativePath)
+        {
+            return new Image()
+            {
+                Guid = Guid.NewGuid(),
+                RelativePath = relativePath
+            };
         }
     }
 }

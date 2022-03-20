@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.ProjectStructure;
@@ -61,6 +62,11 @@ namespace SCVE.Editor.Services
 
         public void OnFileDrop(string[] paths)
         {
+            if (_editingService.OpenedProject is null)
+            {
+                return;
+            }
+            
             if (Path.GetExtension(paths[0]) == ".scveproject")
             {
                 DropScveProject(paths[0]);
@@ -73,27 +79,20 @@ namespace SCVE.Editor.Services
         {
             throw new NotImplementedException("SCVE project must be an actual Asset." +
                                               "So that we can pass it a link to the original project.");
-            // Creating folder (sub scveproject)
-            var title = Path.GetFileName(path);
-            _editingService.OpenedProject.Folders.Add(new FolderAsset()
-            {
-                Content = new Folder(),
-                Guid = Guid.NewGuid(),
-                Location = CurrentLocation,
-                Name = title
-            });
         }
 
         private void DropImages(string[] paths)
         {
-            throw new NotImplementedException();
             foreach (var path in paths)
             {
-                // TODO: Complete adding images to current project.
-                _editingService.OpenedProject.AddImage(new ImageAsset()
-                {
-                });
+                var name = Path.GetFileName(path);
+                var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, path);
+                _editingService.OpenedProject.AddImage(
+                    ImageAsset.CreateNew(name, CurrentLocation, Image.CreateNew(relativePath))
+                );
             }
+
+            RescanCurrentLocation();
         }
     }
 }

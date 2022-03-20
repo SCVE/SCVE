@@ -200,11 +200,8 @@ namespace SCVE.Editor.ImGuiUi
                     var imageAsset = ImageAsset.CreateNew(
                         name: fileName,
                         location: _projectPanelService.CurrentLocation,
-                        content: new Image()
-                        {
-                            Guid = Guid.NewGuid(),
-                            RelativePath = relativePath
-                        });
+                        content: Image.CreateNew(relativePath)
+                    );
 
                     _editingService.OpenedProject.AddImage(imageAsset);
                 }
