@@ -44,5 +44,10 @@ namespace SCVE.Editor.Editing.ProjectStructure
         {
             Images.Add(imageAsset);
         }
+
+        public void AddFolder(FolderAsset folderAsset)
+        {
+            Folders.Add(folderAsset);
+        }
     }
 }
