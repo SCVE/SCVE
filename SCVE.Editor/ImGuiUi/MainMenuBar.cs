@@ -170,9 +170,12 @@ namespace SCVE.Editor.ImGuiUi
                 }
 
 
-                if (ImGui.BeginMenu("Settings"))
+                if (ImGui.BeginMenu("Windows"))
                 {
-                    _modalManagerService.OpenSettingsPanel();
+                    if (ImGui.MenuItem("Settings"))
+                    {
+                        _modalManagerService.OpenSettingsPanel();
+                    }
 
                     ImGui.EndMenu();
                 }

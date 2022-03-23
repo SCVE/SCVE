@@ -255,6 +255,7 @@ namespace SCVE.Editor
                     }
                     case ".png":
                     case ".jpeg":
+                    case ".jpg":
                     {
                         // .scveproject + image = invalid
                         if (foundScve)
