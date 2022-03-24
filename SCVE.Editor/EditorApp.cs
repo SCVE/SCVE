@@ -60,6 +60,7 @@ namespace SCVE.Editor
             {
                 serviceCollection.AddSingleton(type);
             }
+
             foreach (var type in Utils.GetAssignableTypes<IImGuiPanel>())
             {
                 serviceCollection.AddSingleton(type);
@@ -200,79 +201,10 @@ namespace SCVE.Editor
         /// <param name="paths">to the dropping files.</param>
         public void OnFileDrop(string[] paths)
         {
-            if (IsValidDropFiles(paths))
+            foreach (var fileDropReceiver in _fileDropReceivers)
             {
-                foreach (var fileDropReceiver in _fileDropReceivers)
-                {
-                    fileDropReceiver.OnFileDrop(paths);
-                }
-
-                return;
+                fileDropReceiver.OnFileDrop(paths);
             }
-
-            Console.WriteLine("Invalid combination of paths:");
-            foreach (var path in paths)
-            {
-                Console.WriteLine(path);
-            }
-        }
-
-        /// <summary>
-        /// Checks if the passed paths combination can be parsed.
-        /// </summary>
-        /// <param name="paths">All paths to the dropped files.</param>
-        /// <returns></returns>
-        private bool IsValidDropFiles(string[] paths)
-        {
-            if (paths.Length == 0) return false;
-
-
-            // var extends = new List<string>(paths.Length);
-            bool foundScve = false;
-            bool foundImage = false;
-            foreach (var path in paths)
-            {
-                var extension = Path.GetExtension(path).ToLower();
-                switch (extension)
-                {
-                    case ".scveproject":
-                    {
-                        // .scveproject + .scveproject = invalid
-                        if (foundScve)
-                        {
-                            return false;
-                        }
-
-                        // .scveproject + image = invalid
-                        if (foundImage)
-                        {
-                            return false;
-                        }
-
-                        foundScve = true;
-
-                        break;
-                    }
-                    case ".png":
-                    case ".jpeg":
-                    case ".jpg":
-                    {
-                        // .scveproject + image = invalid
-                        if (foundScve)
-                        {
-                            return false;
-                        }
-
-                        foundImage = true;
-
-                        break;
-                    }
-                    default:
-                        return false;
-                }
-            }
-
-            return true;
         }
     }
 }

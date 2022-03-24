@@ -10,6 +10,7 @@ using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi.Panels;
 using SCVE.Editor.Services;
+using SCVE.Editor.Services.Loaders;
 
 namespace SCVE.Editor.ImGuiUi
 {
@@ -26,6 +27,9 @@ namespace SCVE.Editor.ImGuiUi
 
         private BackgroundJobRunner _backgroundJobRunner;
 
+        private ProjectLoaderService _projectLoaderService;
+        private ImageLoaderService _imageLoaderService;
+
         private ClipEvaluator _evaluator;
 
         private FilePickerModalPanel _openProjectFilePickerModalPanel;
@@ -37,7 +41,9 @@ namespace SCVE.Editor.ImGuiUi
             RecentsService recentsService,
             ProjectPanelService projectPanelService,
             BackgroundJobRunner backgroundJobRunner,
-            ClipEvaluator evaluator)
+            ClipEvaluator evaluator, 
+            ProjectLoaderService projectLoaderService, 
+            ImageLoaderService imageLoaderService)
         {
             _previewService = previewService;
             _editingService = editingService;
@@ -46,6 +52,8 @@ namespace SCVE.Editor.ImGuiUi
             _projectPanelService = projectPanelService;
             _backgroundJobRunner = backgroundJobRunner;
             _evaluator = evaluator;
+            _projectLoaderService = projectLoaderService;
+            _imageLoaderService = imageLoaderService;
             _openProjectFilePickerModalPanel = new FilePickerModalPanel();
             _addImageFilePickerModalPanel = new FilePickerModalPanel();
         }
@@ -192,26 +200,18 @@ namespace SCVE.Editor.ImGuiUi
                 _addImageFilePickerModalPanel.Open(Environment.CurrentDirectory, "Add Image");
             }
 
-            string filePath = "";
-            if (_addImageFilePickerModalPanel.OnImGuiRender(ref filePath))
+            string path = "";
+            if (_addImageFilePickerModalPanel.OnImGuiRender(ref path))
             {
-                var extension = Path.GetExtension(filePath);
-                if (extension is ".jpeg" or ".png")
+                if (_imageLoaderService.TryLoad(path, out var image))
                 {
-                    var fileName = Path.GetFileName(filePath);
-                    var relativePath = Path.GetRelativePath(Environment.CurrentDirectory, filePath);
-
+                    var fileName = Path.GetFileName(path);
                     var imageAsset = ImageAsset.CreateNew(
                         name: fileName,
                         location: _projectPanelService.CurrentLocation,
-                        content: Image.CreateNew(relativePath)
+                        content: image
                     );
-
                     _editingService.OpenedProject.AddImage(imageAsset);
-                }
-                else
-                {
-                    Console.WriteLine($"Unknown file selected: {extension}");
                 }
             }
         }
@@ -224,23 +224,19 @@ namespace SCVE.Editor.ImGuiUi
                 _openProjectFilePickerModalPanel.Open(Environment.CurrentDirectory, "Open Project");
             }
 
-            string filePath = "";
-            if (_openProjectFilePickerModalPanel.OnImGuiRender(ref filePath))
+            string path = "";
+            if (_openProjectFilePickerModalPanel.OnImGuiRender(ref path))
             {
-                if (Path.GetExtension(filePath) == ".scveproject")
+                if (_projectLoaderService.TryLoad(path, out var videoProject))
                 {
-                    var videoProject = Utils.ReadJson<VideoProject>(filePath);
-
-                    _editingService.SetOpenedProject(videoProject, filePath);
-                    _recentsService.NoticeOpen(filePath);
+                    if (_editingService.OpenedProject is not null)
+                    {
+                        Console.WriteLine("Loading new project, while there is a loaded one");
+                    }
+                    _editingService.SetOpenedProject(videoProject, path);
+                    _recentsService.NoticeOpen(path);
                     _projectPanelService.ChangeLocation("/");
                     _previewService.SyncVisiblePreview();
-
-                    Console.WriteLine($"Loaded project: {videoProject.Title}");
-                }
-                else
-                {
-                    Console.WriteLine($"Unknown file selected: {Path.GetExtension(filePath)}");
                 }
             }
         }
