@@ -15,7 +15,8 @@ namespace SCVE.Editor.Services
         public ModalManagerService(
             ProjectCreationPanel projectCreationPanel,
             SequenceCreationPanel sequenceCreationPanel,
-            SettingsModalPanel settingsModalPanel, FolderCreationPanel folderCreationPanel)
+            SettingsModalPanel settingsModalPanel, 
+            FolderCreationPanel folderCreationPanel)
         {
             _projectCreationPanel = projectCreationPanel;
             _sequenceCreationPanel = sequenceCreationPanel;
