@@ -6,6 +6,7 @@ using ImGuiNET;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Editing.ProjectStructure;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi.Panels
@@ -72,18 +73,14 @@ namespace SCVE.Editor.ImGuiUi.Panels
             {
                 if (_name != string.Empty)
                 {
-                    EditorApp.Late("create sequence asset", () =>
-                    {
-                        var sequenceAsset = SequenceAsset.CreateNew(
-                            name: _name,
-                            location: _projectPanelService.CurrentLocation,
-                            content: Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
-                        );
+                    var sequenceAsset = SequenceAsset.CreateNew(
+                        name: _name,
+                        location: _projectPanelService.CurrentLocation,
+                        content: Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
+                    );
 
-                        _editingService.AddSequence(sequenceAsset);
-                        _projectPanelService.RescanCurrentLocation();
-                    });
-                    
+                    EditorApp.Late(new AddSequenceLateTask(sequenceAsset));
+
                     ImGui.CloseCurrentPopup();
                     Close();
                 }

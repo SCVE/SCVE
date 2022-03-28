@@ -1,129 +1,138 @@
-﻿using SCVE.Editor.Abstractions;
-using SCVE.Editor.Caching;
+﻿using System;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Imaging;
-using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
-    public class PreviewService : IService
+    public enum PreviewModeType
     {
-        private ThreeWayCache _previewCache;
+        None,
+        Image,
+        Sequence
+    }
 
-        public ThreeWayImage PreviewImage { get; private set; }
+    public abstract class PreviewMode
+    {
+        public ThreeWayImage PreviewImage { get; set; }
 
+        public abstract void Sync(float delta);
+    }
+
+    public class PreviewModeNone : PreviewMode
+    {
         private ThreeWayImage _noPreviewImage;
 
-        private readonly EditingService _editingService;
+        public PreviewModeNone(ScveVector2I resolution)
+        {
+            _noPreviewImage = Utils.CreateNoPreviewImage(resolution.X, resolution.Y);
+            _noPreviewImage.ToGpu();
+        }
+
+        public override void Sync(float delta)
+        {
+            PreviewImage = _noPreviewImage;
+        }
+    }
+
+    public class PreviewModeImage : PreviewMode
+    {
+        private ThreeWayImage _image;
+
+        public void Set(ThreeWayImage image)
+        {
+            _image = image;
+        }
+
+        public override void Sync(float delta)
+        {
+            PreviewImage = _image;
+        }
+    }
+
+    public class PreviewModeSequence : PreviewMode
+    {
         private readonly SamplerService _samplerService;
+        private readonly EditingService _editingService;
+        private ScveVector2I _resolution;
+
+        private Sequence _sequence;
+
+        private ThreeWayImage _sampledFrame;
+
+        private int _frame = -1;
+        
+        public PreviewModeSequence(SamplerService samplerService, EditingService editingService)
+        {
+            _samplerService = samplerService;
+            _editingService = editingService;
+        }
+
+        public void Set(Sequence sequence, ScveVector2I resolution)
+        {
+            _sequence = sequence;
+            _resolution = resolution;
+        }
+
+        public override void Sync(float delta)
+        {
+            if (_frame != _editingService.CursorFrame)
+            {
+                _sampledFrame?.Dispose();
+                _frame = _editingService.CursorFrame;
+                _sampledFrame = _samplerService.Sampler.Sample(_sequence, _resolution, _frame);
+                _sampledFrame.ToGpu();
+                PreviewImage = _sampledFrame;
+            }
+        }
+    }
+
+    public class PreviewService : IService, IUpdateReceiver
+    {
+        public ThreeWayImage PreviewImage => _currentMode.PreviewImage;
 
         private static readonly ScveVector2I PreviewResolution = new(1280, 720);
 
+        private PreviewModeNone _modeNone;
+        private PreviewModeImage _modeImage;
+        private PreviewModeSequence _modeSequence;
+
+        private PreviewMode _currentMode;
+        private PreviewModeType _currentPreviewModeType = PreviewModeType.None;
+
         public PreviewService(EditingService editingService, SamplerService samplerService)
         {
-            _editingService = editingService;
-            _samplerService = samplerService;
+            _modeNone = new PreviewModeNone(PreviewResolution);
+            _modeImage = new PreviewModeImage();
+            _modeSequence = new PreviewModeSequence(samplerService, editingService);
+
+            SwitchToNone();
         }
 
-        public void SwitchSequence(Sequence sequence)
+        public void SwitchToNone()
         {
-            _previewCache = new ThreeWayCache(
-                sequence.FrameLength,
-                PreviewResolution
-            );
-
-            SyncVisiblePreview();
+            _currentPreviewModeType = PreviewModeType.None;
+            _currentMode = _modeNone;
         }
 
-        /// <summary>
-        /// Invalidates A range of sampled frames and performs preview sync if necessary
-        /// </summary>
-        public void InvalidateRange(int start, int length)
+        public void SwitchToImage(ThreeWayImage image)
         {
-            for (int i = start; i < start + length; i++)
-            {
-                _previewCache.Invalidate(i);
-            }
-
-            var cursorTimeFrame = _editingService.CursorFrame;
-
-            if (start <= cursorTimeFrame && cursorTimeFrame <= start + length)
-            {
-                SyncVisiblePreview();
-            }
+            _currentPreviewModeType = PreviewModeType.Image;
+            _modeImage.Set(image);
+            _currentMode = _modeImage;
         }
 
-        public void SyncVisiblePreview(int offset = 0)
+        public void SwitchToSequence(Sequence sequence)
         {
-            if (_editingService.OpenedSequence is null)
-            {
-                _noPreviewImage ??= Utils.CreateNoPreviewImage(PreviewResolution.X, PreviewResolution.Y);
-                _noPreviewImage.ToGpu();
-                PreviewImage = _noPreviewImage;
-            }
-            else
-            {
-                SetVisibleFrame(_editingService.CursorFrame + offset);
-            }
+            _currentPreviewModeType = PreviewModeType.Sequence;
+            _modeSequence.Set(sequence, PreviewResolution);
+            _currentMode = _modeSequence;
         }
 
-        private void SetVisibleFrame(int index)
+        public void OnUpdate(float delta)
         {
-            if (!HasCached(index))
-            {
-                if (_previewCache.TryMakeFromDisk(index))
-                {
-                    _previewCache[index].ToGpu();
-                }
-                else
-                {
-                    RenderFrame(index);
-                }
-            }
-
-            PreviewImage = _previewCache[index];
-        }
-
-        public void RenderFrame(int index)
-        {
-            var sampledFrame = _samplerService.Sampler.Sample(_editingService.OpenedSequence, PreviewResolution, index);
-            SetRenderedFrame(index, sampledFrame);
-        }
-
-        public void SetRenderedFrame(int index, ThreeWayImage image)
-        {
-            _previewCache.ForceReplace(index, image);
-            _previewCache[index].ToGpu();
-        }
-
-        public void RenderRange(int start, int end)
-        {
-            for (int i = start; i < end; i++)
-            {
-                RenderFrame(i);
-            }
-        }
-
-        public void RenderSequence()
-        {
-            RenderRange(0, _editingService.OpenedSequence.FrameLength);
-        }
-
-        public bool HasCached(int index)
-        {
-            return _previewCache.HasAnyPresence(index);
-        }
-
-        public bool HasCached(int index, ImagePresence presence)
-        {
-            return _previewCache[index].Presence == presence;
-        }
-
-        public void SetPreviewImage(ThreeWayImage image)
-        {
-            PreviewImage.Dispose();
-            PreviewImage = image;
+            _currentMode.Sync(delta);
         }
     }
 }

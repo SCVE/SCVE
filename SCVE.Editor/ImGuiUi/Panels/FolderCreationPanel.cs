@@ -1,5 +1,6 @@
 using ImGuiNET;
 using SCVE.Editor.Editing.ProjectStructure;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi.Panels
@@ -44,11 +45,8 @@ namespace SCVE.Editor.ImGuiUi.Panels
                             content: new Folder()
                         );
 
-                        EditorApp.Late("add folder", () =>
-                        {
-                            _editingService.AddFolder(folderAsset);
-                            _projectPanelService.RescanCurrentLocation();
-                        });
+                        
+                        EditorApp.Late(new AddFolderLateTask(folderAsset));
 
                         ImGui.CloseCurrentPopup();
                         Close();

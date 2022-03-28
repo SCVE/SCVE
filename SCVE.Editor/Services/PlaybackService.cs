@@ -4,7 +4,7 @@ using Silk.NET.Input;
 
 namespace SCVE.Editor.Services
 {
-    public class PlaybackService : IService, IUpdateReceiver, IKeyPressReceiver
+    public class PlaybackService : IService, IKeyPressReceiver
     {
         public bool IsPlaying { get; private set; }
 
@@ -43,6 +43,9 @@ namespace SCVE.Editor.Services
             IsPlaying = false;
         }
 
+        /// <summary>
+        /// Playback Update is Forcefully called before all other updates
+        /// </summary>
         public void OnUpdate(float delta)
         {
             if (IsPlaying)
@@ -63,11 +66,7 @@ namespace SCVE.Editor.Services
 
                     _timeAccumulator -= deltaFrames * msPerFrame;
 
-                    EditorApp.Late("playback sync", () =>
-                    {
-                        _editingService.CursorFrame = cursorFrame;
-                        _previewService.SyncVisiblePreview();
-                    });
+                    _editingService.CursorFrame = cursorFrame;
                 }
             }
         }
