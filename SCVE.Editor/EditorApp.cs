@@ -46,6 +46,13 @@ namespace SCVE.Editor
         private RecentsService _recentsService;
         private SettingsService _settingsService;
 
+        private static Queue<(string tag, Action action)> _late = new();
+
+        public static void Late(string tag, Action action)
+        {
+            _late.Enqueue((tag, action));
+        }
+
         public EditorApp(IWindow window)
         {
             _window = window;
@@ -95,7 +102,7 @@ namespace SCVE.Editor
             _fileDropReceivers = Utils.GetAssignableTypes<IFileDropReceiver>()
                 .Select(t => serviceProvider.GetService(t) as IFileDropReceiver)
                 .ToList();
-
+            
             serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
 
             _recentsService = serviceProvider.GetRequiredService<RecentsService>();
@@ -153,12 +160,18 @@ namespace SCVE.Editor
             }
 
             style.WindowMinSize.X = minWinSizeX;
-
+            
             foreach (var imGuiPanel in _imGuiPanels)
             {
                 imGuiPanel.OnImGuiRender();
             }
 
+            while (_late.TryDequeue(out var tuple))
+            {
+                tuple.action();
+                Console.WriteLine($"Executed late action: {tuple.tag}");
+            }
+            
             ImGui.ShowMetricsWindow();
 
             ImGui.PopFont();

@@ -15,8 +15,8 @@ namespace SCVE.Editor.ImGuiUi
         private ProjectPanelService _projectPanelService;
 
         public ImGuiAssetRenderer(
-            PreviewService previewService, 
-            EditingService editingService, 
+            PreviewService previewService,
+            EditingService editingService,
             ProjectPanelService projectPanelService)
         {
             _previewService = previewService;
@@ -41,7 +41,7 @@ namespace SCVE.Editor.ImGuiUi
                             fileIconTextureData.Height), "FileIcon");
 
                 fileIcon.ToGpu();
-                _previewService.SetPreviewImage(fileIcon);
+                EditorApp.Late("load preview image", () => { _previewService.SetPreviewImage(fileIcon); });
             }
 
             if (elementExpanded)
@@ -58,9 +58,11 @@ namespace SCVE.Editor.ImGuiUi
             if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             {
                 // _assetPreviewModalPanel.SetOpenedAsset(sequenceAsset);
-
-                _editingService.SetOpenedSequence(asset.Content);
-                _previewService.SwitchSequence(asset.Content);
+                EditorApp.Late("open sequence", () =>
+                {
+                    _editingService.SetOpenedSequence(asset.Content);
+                    _previewService.SwitchSequence(asset.Content);
+                });
             }
 
             if (elementExpanded)

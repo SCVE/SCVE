@@ -29,4 +29,11 @@
       <ProjectReference Include="..\SCVE.Engine.ImageSharpBindings\SCVE.Engine.ImageSharpBindings.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="UiActions\UiActionBase.cs" />
+      <Compile Remove="Services\UiContextService.cs" />
+      <Compile Remove="Abstractions\IBeforeFrameRenderReceiver.cs" />
+      <Compile Remove="Abstractions\IAfterFrameRenderReceiver.cs" />
+    </ItemGroup>
+
 </Project>

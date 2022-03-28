@@ -17,14 +17,14 @@ namespace SCVE.Editor.ImGuiUi.Panels
         }
 
         private string _name = "";
-        
+
         public override void OnImGuiRender()
         {
             if (IsOpen)
             {
                 ImGui.OpenPopup(Name);
             }
-            
+
             // Checks if the popup modal "New Folder" is opened.
             if (ImGui.BeginPopupModal(Name, ref IsOpen))
             {
@@ -44,8 +44,11 @@ namespace SCVE.Editor.ImGuiUi.Panels
                             content: new Folder()
                         );
 
-                        _editingService.AddFolder(folderAsset);
-                        _projectPanelService.RescanCurrentLocation();
+                        EditorApp.Late("add folder", () =>
+                        {
+                            _editingService.AddFolder(folderAsset);
+                            _projectPanelService.RescanCurrentLocation();
+                        });
 
                         ImGui.CloseCurrentPopup();
                         Close();

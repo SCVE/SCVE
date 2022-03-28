@@ -82,8 +82,11 @@ namespace SCVE.Editor.ImGuiUi.Panels
                             var effect = Activator.CreateInstance(AllKnownEffects[i]) as EffectBase;
 
                             effect!.Updated += OnEffectUpdated;
-                            clip.Effects.Add(effect);
-                            _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
+                            EditorApp.Late("add effect", () =>
+                            {
+                                clip.Effects.Add(effect);
+                                _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
+                            });
                         }
                     }
 
@@ -104,7 +107,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     // clip.Effects[_lastSelectedEffect].Updated -= OnEffectOnUpdated;
                     // clip.RemoveEffect(_lastSelectedEffect);
                     _lastSelectedEffect = -1;
-                    _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
+                    EditorApp.Late("delete effect", () => { _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength); });
                 }
             }
 

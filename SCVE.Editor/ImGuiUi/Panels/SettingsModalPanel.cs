@@ -101,8 +101,11 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
             if (ImGui.Button("Apply"))
             {
-                _settingsService.ApplySettings(_draftSettings);
-                Console.WriteLine("Settings have been applied.");
+                EditorApp.Late("apply settings", () =>
+                {
+                    _settingsService.ApplySettings(_draftSettings);
+                    Console.WriteLine("Settings have been applied.");
+                });
             }
 
             ImGui.SameLine();
