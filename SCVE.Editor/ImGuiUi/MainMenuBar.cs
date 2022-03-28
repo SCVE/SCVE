@@ -35,14 +35,15 @@ namespace SCVE.Editor.ImGuiUi
         private FilePickerModalPanel _openProjectFilePickerModalPanel;
         private FilePickerModalPanel _addImageFilePickerModalPanel;
 
-        public MainMenuBar(PreviewService previewService,
+        public MainMenuBar(
+            PreviewService previewService,
             EditingService editingService,
             ModalManagerService modalManagerService,
             RecentsService recentsService,
             ProjectPanelService projectPanelService,
             BackgroundJobRunner backgroundJobRunner,
-            ClipEvaluator evaluator, 
-            ProjectLoaderService projectLoaderService, 
+            ClipEvaluator evaluator,
+            ProjectLoaderService projectLoaderService,
             ImageLoaderService imageLoaderService)
         {
             _previewService = previewService;
@@ -87,17 +88,20 @@ namespace SCVE.Editor.ImGuiUi
 
                                 if (ImGui.MenuItem(fileName, File.Exists(recent)))
                                 {
-                                    var videoProject = Utils.ReadJson<VideoProject>(recent);
+                                    EditorApp.Late("open project", () =>
+                                    {
+                                        var videoProject = Utils.ReadJson<VideoProject>(recent);
 
-                                    _editingService.SetOpenedProject(videoProject, recent);
-                                    _recentsService.NoticeOpen(recent);
-                                    _projectPanelService.ChangeLocation("/");
-                                    _previewService.SyncVisiblePreview();
+                                        _editingService.SetOpenedProject(videoProject, recent);
+                                        _recentsService.NoticeOpen(recent);
+                                        _projectPanelService.ChangeLocation("/");
+                                        _previewService.SyncVisiblePreview();
 
-                                    Console.WriteLine($"Loaded Recent Project: {videoProject.Title}");
+                                        Console.WriteLine($"Loaded Recent Project: {videoProject.Title}");
+                                    });
 
                                     // NOTE: break is needed, because _recentsService.NoticeOpen() modifies original list
-                                    break;
+                                    // break;
                                 }
 
                                 ShowHint(recent);
@@ -211,7 +215,8 @@ namespace SCVE.Editor.ImGuiUi
                         location: _projectPanelService.CurrentLocation,
                         content: image
                     );
-                    _editingService.OpenedProject.AddImage(imageAsset);
+
+                    EditorApp.Late("add image", () => { _editingService.OpenedProject.AddImage(imageAsset); });
                 }
             }
         }
@@ -233,16 +238,22 @@ namespace SCVE.Editor.ImGuiUi
                     {
                         Console.WriteLine("Loading new project, while there is a loaded one");
                     }
-                    _editingService.SetOpenedProject(videoProject, path);
-                    _recentsService.NoticeOpen(path);
-                    _projectPanelService.ChangeLocation("/");
-                    _previewService.SyncVisiblePreview();
+
+                    EditorApp.Late("open project", () =>
+                    {
+                        _editingService.SetOpenedProject(videoProject, path);
+                        _recentsService.NoticeOpen(path);
+                        _projectPanelService.ChangeLocation("/");
+                        _previewService.SyncVisiblePreview();
+                    });
                 }
             }
         }
 
         // This is a direct port of imgui_demo.cpp HelpMarker function
+
         // https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp#L190
+
         private void ShowHint(string message)
         {
             // ImGui.TextDisabled("(?)");

@@ -109,14 +109,15 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     {
                         _modalManagerService.OpenSequenceCreationPanel();
                     }
-                    
+
                     if (ImGui.MenuItem("Folder"))
                     {
                         _modalManagerService.OpenFolderCreationPanel();
                     }
-                    
+
                     ImGui.EndMenu();
                 }
+
                 ImGui.EndMenuBar();
             }
 
@@ -130,7 +131,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
             {
                 if (ImGui.Button("<-"))
                 {
-                    _projectPanelService.LevelUp();
+                    EditorApp.Late("level up location", () => { _projectPanelService.LevelUp(); });
                 }
             }
 

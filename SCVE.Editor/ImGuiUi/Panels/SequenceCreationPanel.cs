@@ -55,16 +55,16 @@ namespace SCVE.Editor.ImGuiUi.Panels
             if (ImGui.DragInt("FPS", ref _fps, 0.1f, 10, 120))
             {
             }
-            
+
             if (ImGui.DragInt("Frame length", ref _frameLength, 0.1f, 10, 60))
             {
             }
-            
+
             if (ImGui.DragInt("Resolution", ref _resolution, 0.1f, 10, 120))
             {
             }
         }
-        
+
 
         private void DrawControls()
         {
@@ -72,15 +72,18 @@ namespace SCVE.Editor.ImGuiUi.Panels
             {
                 if (_name != string.Empty)
                 {
-                    var sequenceAsset = SequenceAsset.CreateNew(
-                        name: _name,
-                        location: _projectPanelService.CurrentLocation,
-                        content: Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
-                    );
+                    EditorApp.Late("create sequence asset", () =>
+                    {
+                        var sequenceAsset = SequenceAsset.CreateNew(
+                            name: _name,
+                            location: _projectPanelService.CurrentLocation,
+                            content: Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
+                        );
 
-                    _editingService.AddSequence(sequenceAsset);
-                    _projectPanelService.RescanCurrentLocation();
-
+                        _editingService.AddSequence(sequenceAsset);
+                        _projectPanelService.RescanCurrentLocation();
+                    });
+                    
                     ImGui.CloseCurrentPopup();
                     Close();
                 }

@@ -72,10 +72,13 @@ namespace SCVE.Editor.ImGuiUi.Panels
                         Utils.WriteJson(videoProject, projectPath);
                         Console.WriteLine($"Created project {_title}");
 
-                        _editingService.SetOpenedProject(videoProject);
+                        EditorApp.Late("open project", () =>
+                        {
+                            _editingService.SetOpenedProject(videoProject);
 
-                        _recentsService.NoticeOpen(projectPath);
-                        _projectPanelService.ChangeLocation("/");
+                            _recentsService.NoticeOpen(projectPath);
+                            _projectPanelService.ChangeLocation("/");
+                        });
 
                         ImGui.CloseCurrentPopup();
                         Close();

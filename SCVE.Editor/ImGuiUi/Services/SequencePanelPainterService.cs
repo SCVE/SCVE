@@ -52,21 +52,6 @@ namespace SCVE.Editor.ImGuiUi.Services
         {
             _settingsService = settingsService;
             _clipRenderer = new ClipImGuiRenderer();
-            // _cursorShapePoints = new[]
-            // {
-            //     // top-left
-            //     new Vector2(),
-            //     // top-right
-            //     new(Settings.Instance.CursorSize.X, 0),
-            //     // right mid
-            //     new(Settings.Instance.CursorSize.X,
-            //         Settings.Instance.CursorSize.Y / 2f),
-            //     // bottom mid
-            //     new(Settings.Instance.CursorSize.X / 2, Settings.Instance.CursorSize.Y),
-            //     // left mid
-            //     new(0, Settings.Instance.CursorSize.Y / 2f),
-            // };
-            // _cursorCurrentPoints = new Vector2[_cursorShapePoints.Length];
         }
 
         public void SetRenderData(int cursorDragFrames, int cursorFrame, Sequence sequence)

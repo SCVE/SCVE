@@ -54,15 +54,20 @@ namespace SCVE.Editor.Services
 
                 if (deltaFrames != 0)
                 {
-                    _editingService.CursorFrame += deltaFrames;
-                    if (_editingService.CursorFrame >= _editingService.OpenedSequence.FrameLength)
+                    int cursorFrame = _editingService.CursorFrame + deltaFrames;
+                    if (cursorFrame >= _editingService.OpenedSequence.FrameLength)
                     {
-                        _editingService.CursorFrame = 0;
+                        cursorFrame = 0;
                         Stop();
                     }
 
                     _timeAccumulator -= deltaFrames * msPerFrame;
-                    _previewService.SyncVisiblePreview();
+
+                    EditorApp.Late("playback sync", () =>
+                    {
+                        _editingService.CursorFrame = cursorFrame;
+                        _previewService.SyncVisiblePreview();
+                    });
                 }
             }
         }

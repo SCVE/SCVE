@@ -36,10 +36,13 @@ namespace SCVE.Editor.ImGuiUi.Services
         {
             if (_panelPainterService.DrawSequenceHeader(out var newCursorTimeFrame))
             {
-                _editingService.CursorFrame = newCursorTimeFrame;
+                EditorApp.Late("move cursor", () =>
+                {
+                    _editingService.CursorFrame = newCursorTimeFrame;
 
-                // no sequence data has changed, so we just need to preview new frame
-                _previewService.SyncVisiblePreview();
+                    // no sequence data has changed, so we just need to preview new frame
+                    _previewService.SyncVisiblePreview();
+                });
             }
 
             _panelPainterService.DrawSequenceFrameMarkers();
@@ -54,17 +57,19 @@ namespace SCVE.Editor.ImGuiUi.Services
                 _isDraggingCursor = true;
                 _cursorDragFrames = newCursorDragFrames;
 
-                _previewService.SyncVisiblePreview(_cursorDragFrames);
+                EditorApp.Late("sync preview", () => { _previewService.SyncVisiblePreview(_cursorDragFrames); });
             }
             else
             {
                 if (_isDraggingCursor)
                 {
-                    _editingService.CursorFrame += _cursorDragFrames;
-                    _cursorDragFrames = 0;
-                    _isDraggingCursor = false;
-
-                    _previewService.SyncVisiblePreview();
+                    EditorApp.Late("move cursor", () =>
+                    {
+                        _editingService.CursorFrame += _cursorDragFrames;
+                        _cursorDragFrames = 0;
+                        _isDraggingCursor = false;
+                        _previewService.SyncVisiblePreview();
+                    });
                 }
             }
         }
@@ -95,7 +100,7 @@ namespace SCVE.Editor.ImGuiUi.Services
 
                     if (_panelPainterService.DrawClip(clip, i, out var isDragging, out var deltaFrames, out var deltaTracks))
                     {
-                        _editingService.SetSelectedClip(clip);
+                        EditorApp.Late("select clip", () => { _editingService.SetSelectedClip(clip); });
                     }
 
                     if (isDragging)
@@ -167,31 +172,34 @@ namespace SCVE.Editor.ImGuiUi.Services
 
         private void ApplyGhostClipValues()
         {
-            // TODO: Check overlap with other clips in current track
-            if (_ghostClip.SourceTrackIndex != _ghostClip.CurrentTrackIndex)
+            EditorApp.Late("apply ghost clip values", () =>
             {
-                if (_ghostClip.ReferencedClip is EmptyClip empty)
+                // TODO: Check overlap with other clips in current track
+                if (_ghostClip.SourceTrackIndex != _ghostClip.CurrentTrackIndex)
                 {
-                    _editingService.OpenedSequence.Tracks[_ghostClip.SourceTrackIndex].EmptyClips.Remove(empty);
-                    _editingService.OpenedSequence.Tracks[_ghostClip.CurrentTrackIndex].EmptyClips.Add(empty);
+                    if (_ghostClip.ReferencedClip is EmptyClip empty)
+                    {
+                        _editingService.OpenedSequence.Tracks[_ghostClip.SourceTrackIndex].EmptyClips.Remove(empty);
+                        _editingService.OpenedSequence.Tracks[_ghostClip.CurrentTrackIndex].EmptyClips.Add(empty);
+                    }
+                    else if (_ghostClip.ReferencedClip is AssetClip asset)
+                    {
+                        _editingService.OpenedSequence.Tracks[_ghostClip.SourceTrackIndex].AssetClips.Remove(asset);
+                        _editingService.OpenedSequence.Tracks[_ghostClip.CurrentTrackIndex].AssetClips.Add(asset);
+                    }
                 }
-                else if (_ghostClip.ReferencedClip is AssetClip asset)
+
+                if (_ghostClip.CurrentStartFrame != _ghostClip.SourceStartFrame)
                 {
-                    _editingService.OpenedSequence.Tracks[_ghostClip.SourceTrackIndex].AssetClips.Remove(asset);
-                    _editingService.OpenedSequence.Tracks[_ghostClip.CurrentTrackIndex].AssetClips.Add(asset);
+                    _previewService.InvalidateRange(_ghostClip.SourceStartFrame, _ghostClip.SourceFrameLength);
+                    _previewService.InvalidateRange(_ghostClip.CurrentStartFrame, _ghostClip.CurrentFrameLength);
+                    _ghostClip.ReferencedClip!.StartFrame = _ghostClip.CurrentStartFrame;
                 }
-            }
 
-            if (_ghostClip.CurrentStartFrame != _ghostClip.SourceStartFrame)
-            {
-                _previewService.InvalidateRange(_ghostClip.SourceStartFrame, _ghostClip.SourceFrameLength);
-                _previewService.InvalidateRange(_ghostClip.CurrentStartFrame, _ghostClip.CurrentFrameLength);
-                _ghostClip.ReferencedClip!.StartFrame = _ghostClip.CurrentStartFrame;
-            }
-
-            _ghostClip.Visible = false;
-            _ghostClip.ReferencedClip = null;
-            Console.WriteLine("Applied new states to SourceClip");
+                _ghostClip.Visible = false;
+                _ghostClip.ReferencedClip = null;
+                // Console.WriteLine("Applied new states to SourceClip");
+            });
         }
     }
 }

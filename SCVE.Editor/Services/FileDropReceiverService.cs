@@ -47,12 +47,16 @@ namespace SCVE.Editor.Services
 
                     var project = _projectLoaderService.Load(path);
 
-                    _editingService.SetOpenedProject(project, path);
-                    _recentsService.NoticeOpen(path);
-                    _projectPanelService.ChangeLocation("/");
-                    _previewService.SyncVisiblePreview();
+                    EditorApp.Late("open project", () =>
+                    {
+                        _editingService.SetOpenedProject(project, path);
+                        _recentsService.NoticeOpen(path);
+                        _projectPanelService.ChangeLocation("/");
+                        _previewService.SyncVisiblePreview();
 
-                    Console.WriteLine($"Loaded project {project.Title}");
+                        Console.WriteLine($"Loaded project {project.Title}");
+                    });
+
                     break;
                 }
             }
@@ -76,10 +80,15 @@ namespace SCVE.Editor.Services
                             location: _projectPanelService.CurrentLocation,
                             content: image
                         );
-                        _editingService.OpenedProject.AddImage(imageAsset);
 
-                        _projectPanelService.RescanCurrentLocation();
-                        Console.WriteLine($"Loaded image {fileName}");
+                        EditorApp.Late("add image", () =>
+                        {
+                            _editingService.OpenedProject.AddImage(imageAsset);
+
+                            _projectPanelService.RescanCurrentLocation();
+
+                            Console.WriteLine($"Loaded image {fileName}");
+                        });
                     }
                 }
             }
