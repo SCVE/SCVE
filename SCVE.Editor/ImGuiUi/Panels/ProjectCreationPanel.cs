@@ -3,6 +3,7 @@ using System.IO;
 using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Editing.ProjectStructure;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi.Panels
@@ -72,13 +73,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                         Utils.WriteJson(videoProject, projectPath);
                         Console.WriteLine($"Created project {_title}");
 
-                        EditorApp.Late("open project", () =>
-                        {
-                            _editingService.SetOpenedProject(videoProject);
-
-                            _recentsService.NoticeOpen(projectPath);
-                            _projectPanelService.ChangeLocation("/");
-                        });
+                        EditorApp.Late(new OpenProjectLateTask(videoProject, projectPath));
 
                         ImGui.CloseCurrentPopup();
                         Close();

@@ -4,6 +4,7 @@ using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Effects;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 using Silk.NET.GLFW;
 
@@ -81,12 +82,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                             _addEffectExpanded = false;
                             var effect = Activator.CreateInstance(AllKnownEffects[i]) as EffectBase;
 
-                            effect!.Updated += OnEffectUpdated;
-                            EditorApp.Late("add effect", () =>
-                            {
-                                clip.Effects.Add(effect);
-                                _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength);
-                            });
+                            EditorApp.Late(new AddEffectLateTask(clip, effect));
                         }
                     }
 
@@ -104,18 +100,12 @@ namespace SCVE.Editor.ImGuiUi.Panels
             {
                 if (_lastSelectedEffect != -1)
                 {
-                    // clip.Effects[_lastSelectedEffect].Updated -= OnEffectOnUpdated;
-                    // clip.RemoveEffect(_lastSelectedEffect);
-                    _lastSelectedEffect = -1;
-                    EditorApp.Late("delete effect", () => { _previewService.InvalidateRange(clip.StartFrame, clip.FrameLength); });
+                    EditorApp.Late(new DeleteEffectLateTask(clip, _lastSelectedEffect));
                 }
             }
 
             END:
             ImGui.End();
         }
-
-
-        void OnEffectUpdated() => _previewService.InvalidateRange(_editingService.SelectedClip.StartFrame, _editingService.SelectedClip.FrameLength);
     }
 }

@@ -9,6 +9,7 @@ using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.Misc;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi.Panels;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 using SCVE.Editor.Services.Loaders;
 
@@ -88,18 +89,10 @@ namespace SCVE.Editor.ImGuiUi
 
                                 if (ImGui.MenuItem(fileName, File.Exists(recent)))
                                 {
-                                    EditorApp.Late("open project", () =>
-                                    {
-                                        var videoProject = Utils.ReadJson<VideoProject>(recent);
-
-                                        _editingService.SetOpenedProject(videoProject, recent);
-                                        _recentsService.NoticeOpen(recent);
-                                        _projectPanelService.ChangeLocation("/");
-                                        _previewService.SyncVisiblePreview();
-
-                                        Console.WriteLine($"Loaded Recent Project: {videoProject.Title}");
-                                    });
-
+                                    var videoProject = Utils.ReadJson<VideoProject>(recent);
+                                    
+                                    EditorApp.Late(new OpenProjectLateTask(videoProject, recent));
+                                    
                                     // NOTE: break is needed, because _recentsService.NoticeOpen() modifies original list
                                     // break;
                                 }
@@ -136,26 +129,6 @@ namespace SCVE.Editor.ImGuiUi
                 {
                     if (ImGui.BeginMenu("Sequence"))
                     {
-                        if (ImGui.MenuItem("Render start to end", "Ctrl+R"))
-                        {
-                            for (var i = 0; i < _editingService.OpenedSequence.FrameLength; i++)
-                            {
-                                int localI = i;
-                                var job = new RenderFrameBackgroundJob(
-                                    sequence: _editingService.OpenedSequence,
-                                    sampler: new SequenceSampler(_evaluator),
-                                    resolution: new ScveVector2I(1280, 720),
-                                    frame: i,
-                                    onFinished: (image) =>
-                                    {
-                                        Console.WriteLine($"Finished rendering frame {localI} in background");
-                                        _previewService.SetRenderedFrame(localI, image);
-                                    }
-                                );
-                                _backgroundJobRunner.PushJob(job);
-                            }
-                        }
-
                         if (ImGui.MenuItem("Add Track"))
                         {
                             _editingService.OpenedSequence.Tracks.Add(Track.CreateNew());
@@ -216,7 +189,8 @@ namespace SCVE.Editor.ImGuiUi
                         content: image
                     );
 
-                    EditorApp.Late("add image", () => { _editingService.OpenedProject.AddImage(imageAsset); });
+                    EditorApp.Late(new AddImageLateTask(imageAsset));
+                    // EditorApp.Late("add image", () => { _editingService.OpenedProject.AddImage(imageAsset); });
                 }
             }
         }
@@ -239,13 +213,7 @@ namespace SCVE.Editor.ImGuiUi
                         Console.WriteLine("Loading new project, while there is a loaded one");
                     }
 
-                    EditorApp.Late("open project", () =>
-                    {
-                        _editingService.SetOpenedProject(videoProject, path);
-                        _recentsService.NoticeOpen(path);
-                        _projectPanelService.ChangeLocation("/");
-                        _previewService.SyncVisiblePreview();
-                    });
+                    EditorApp.Late(new OpenProjectLateTask(videoProject, path));
                 }
             }
         }

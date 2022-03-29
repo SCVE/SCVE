@@ -1,6 +1,7 @@
 using System;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi.Services
@@ -36,13 +37,7 @@ namespace SCVE.Editor.ImGuiUi.Services
         {
             if (_panelPainterService.DrawSequenceHeader(out var newCursorTimeFrame))
             {
-                EditorApp.Late("move cursor", () =>
-                {
-                    _editingService.CursorFrame = newCursorTimeFrame;
-
-                    // no sequence data has changed, so we just need to preview new frame
-                    _previewService.SyncVisiblePreview();
-                });
+                EditorApp.Late(new TeleportCursorLateTask(newCursorTimeFrame));
             }
 
             _panelPainterService.DrawSequenceFrameMarkers();
@@ -57,19 +52,15 @@ namespace SCVE.Editor.ImGuiUi.Services
                 _isDraggingCursor = true;
                 _cursorDragFrames = newCursorDragFrames;
 
-                EditorApp.Late("sync preview", () => { _previewService.SyncVisiblePreview(_cursorDragFrames); });
+                // EditorApp.Late("sync preview", () => { _previewService.SyncVisiblePreview(_cursorDragFrames); });
             }
             else
             {
                 if (_isDraggingCursor)
                 {
-                    EditorApp.Late("move cursor", () =>
-                    {
-                        _editingService.CursorFrame += _cursorDragFrames;
-                        _cursorDragFrames = 0;
-                        _isDraggingCursor = false;
-                        _previewService.SyncVisiblePreview();
-                    });
+                    EditorApp.Late(new MoveCursorLateTask(_cursorDragFrames));
+                    _cursorDragFrames = 0;
+                    _isDraggingCursor = false;
                 }
             }
         }
@@ -100,7 +91,7 @@ namespace SCVE.Editor.ImGuiUi.Services
 
                     if (_panelPainterService.DrawClip(clip, i, out var isDragging, out var deltaFrames, out var deltaTracks))
                     {
-                        EditorApp.Late("select clip", () => { _editingService.SetSelectedClip(clip); });
+                        EditorApp.Late(new SelectClipLateTask(clip));
                     }
 
                     if (isDragging)
@@ -172,34 +163,7 @@ namespace SCVE.Editor.ImGuiUi.Services
 
         private void ApplyGhostClipValues()
         {
-            EditorApp.Late("apply ghost clip values", () =>
-            {
-                // TODO: Check overlap with other clips in current track
-                if (_ghostClip.SourceTrackIndex != _ghostClip.CurrentTrackIndex)
-                {
-                    if (_ghostClip.ReferencedClip is EmptyClip empty)
-                    {
-                        _editingService.OpenedSequence.Tracks[_ghostClip.SourceTrackIndex].EmptyClips.Remove(empty);
-                        _editingService.OpenedSequence.Tracks[_ghostClip.CurrentTrackIndex].EmptyClips.Add(empty);
-                    }
-                    else if (_ghostClip.ReferencedClip is AssetClip asset)
-                    {
-                        _editingService.OpenedSequence.Tracks[_ghostClip.SourceTrackIndex].AssetClips.Remove(asset);
-                        _editingService.OpenedSequence.Tracks[_ghostClip.CurrentTrackIndex].AssetClips.Add(asset);
-                    }
-                }
-
-                if (_ghostClip.CurrentStartFrame != _ghostClip.SourceStartFrame)
-                {
-                    _previewService.InvalidateRange(_ghostClip.SourceStartFrame, _ghostClip.SourceFrameLength);
-                    _previewService.InvalidateRange(_ghostClip.CurrentStartFrame, _ghostClip.CurrentFrameLength);
-                    _ghostClip.ReferencedClip!.StartFrame = _ghostClip.CurrentStartFrame;
-                }
-
-                _ghostClip.Visible = false;
-                _ghostClip.ReferencedClip = null;
-                // Console.WriteLine("Applied new states to SourceClip");
-            });
+            EditorApp.Late(new ApplyGhostClipLateTask(_ghostClip));
         }
     }
 }

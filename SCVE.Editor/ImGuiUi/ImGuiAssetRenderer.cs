@@ -2,6 +2,7 @@
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.Editing.Visitors;
 using SCVE.Editor.Imaging;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 using SCVE.Engine.ImageSharpBindings;
 
@@ -33,15 +34,17 @@ namespace SCVE.Editor.ImGuiUi
             {
                 var imageSharpTextureLoader = new ImageSharpTextureLoader();
 
-                var fileIconTextureData = imageSharpTextureLoader.Load(asset.Content.RelativePath, false);
+                var assetTextureData = imageSharpTextureLoader.Load(asset.Content.RelativePath, false);
 
-                var fileIcon =
+                var textureImage =
                     new ThreeWayImage(
-                        new CpuImage(fileIconTextureData.RgbaPixels, fileIconTextureData.Width,
-                            fileIconTextureData.Height), "FileIcon");
+                        new CpuImage(assetTextureData.RgbaPixels, assetTextureData.Width,
+                            assetTextureData.Height), "AssetTextureImage");
 
-                fileIcon.ToGpu();
-                EditorApp.Late("load preview image", () => { _previewService.SetPreviewImage(fileIcon); });
+                textureImage.ToGpu();
+                
+                
+                EditorApp.Late(new LoadPreviewImageLateTask(textureImage));
             }
 
             if (elementExpanded)
@@ -58,11 +61,7 @@ namespace SCVE.Editor.ImGuiUi
             if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             {
                 // _assetPreviewModalPanel.SetOpenedAsset(sequenceAsset);
-                EditorApp.Late("open sequence", () =>
-                {
-                    _editingService.SetOpenedSequence(asset.Content);
-                    _previewService.SwitchSequence(asset.Content);
-                });
+                EditorApp.Late(new OpenSequenceLateTask(asset.Content));
             }
 
             if (elementExpanded)

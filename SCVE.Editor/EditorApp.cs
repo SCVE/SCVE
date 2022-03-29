@@ -12,6 +12,7 @@ using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi;
 using SCVE.Editor.ImGuiUi.Panels;
 using SCVE.Editor.ImGuiUi.Services;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
@@ -45,12 +46,15 @@ namespace SCVE.Editor
 
         private RecentsService _recentsService;
         private SettingsService _settingsService;
+        private PlaybackService _playbackService;
 
-        private static Queue<(string tag, Action action)> _late = new();
+        private LateTaskVisitor _lateTaskVisitor;
 
-        public static void Late(string tag, Action action)
+        private static Queue<LateTask> _lateTasks = new();
+        
+        public static void Late(LateTask task)
         {
-            _late.Enqueue((tag, action));
+            _lateTasks.Enqueue(task);
         }
 
         public EditorApp(IWindow window)
@@ -103,7 +107,8 @@ namespace SCVE.Editor
                 .Select(t => serviceProvider.GetService(t) as IFileDropReceiver)
                 .ToList();
             
-            serviceProvider.GetRequiredService<PreviewService>().SyncVisiblePreview();
+            _lateTaskVisitor = serviceProvider.GetRequiredService<LateTaskVisitor>();
+            _playbackService = serviceProvider.GetRequiredService<PlaybackService>();
 
             _recentsService = serviceProvider.GetRequiredService<RecentsService>();
             _recentsService.TryLoad();
@@ -166,10 +171,9 @@ namespace SCVE.Editor
                 imGuiPanel.OnImGuiRender();
             }
 
-            while (_late.TryDequeue(out var tuple))
+            while (_lateTasks.TryDequeue(out var task))
             {
-                tuple.action();
-                Console.WriteLine($"Executed late action: {tuple.tag}");
+                task.AcceptVisitor(_lateTaskVisitor);
             }
             
             ImGui.ShowMetricsWindow();
@@ -193,6 +197,7 @@ namespace SCVE.Editor
 
         public void Update(double delta)
         {
+            _playbackService.OnUpdate((float)delta);
             foreach (var updateReceiver in _updateReceivers)
             {
                 updateReceiver.OnUpdate((float) delta);

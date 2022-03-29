@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.ProjectStructure;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services.Loaders;
 
 namespace SCVE.Editor.Services
@@ -47,15 +48,7 @@ namespace SCVE.Editor.Services
 
                     var project = _projectLoaderService.Load(path);
 
-                    EditorApp.Late("open project", () =>
-                    {
-                        _editingService.SetOpenedProject(project, path);
-                        _recentsService.NoticeOpen(path);
-                        _projectPanelService.ChangeLocation("/");
-                        _previewService.SyncVisiblePreview();
-
-                        Console.WriteLine($"Loaded project {project.Title}");
-                    });
+                    EditorApp.Late(new OpenProjectLateTask(project, path));
 
                     break;
                 }
@@ -81,14 +74,7 @@ namespace SCVE.Editor.Services
                             content: image
                         );
 
-                        EditorApp.Late("add image", () =>
-                        {
-                            _editingService.OpenedProject.AddImage(imageAsset);
-
-                            _projectPanelService.RescanCurrentLocation();
-
-                            Console.WriteLine($"Loaded image {fileName}");
-                        });
+                        EditorApp.Late(new AddImageLateTask(imageAsset));
                     }
                 }
             }

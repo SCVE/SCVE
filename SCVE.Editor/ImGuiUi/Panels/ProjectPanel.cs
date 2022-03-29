@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Abstractions;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi.Panels
@@ -131,7 +132,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
             {
                 if (ImGui.Button("<-"))
                 {
-                    EditorApp.Late("level up location", () => { _projectPanelService.LevelUp(); });
+                    EditorApp.Late(new LevelUpLocationLateTask());
                 }
             }
 

@@ -54,18 +54,22 @@ namespace SCVE.Editor
                 editorApp.OnFileDrop(paths);
             };
 
-            // The render function
-            window.Render += delta =>
+            window.Update += delta =>
             {
                 // Make sure ImGui is up-to-date
                 controller.Update((float) delta);
-
+                
+                editorApp.Update(delta);
+            };
+            
+            // The render function
+            window.Render += delta =>
+            {
                 // This is where you'll do any rendering beneath the ImGui context
                 // Here, we just have a blank screen.
                 gl.ClearColor(Color.FromArgb(255, (int) (.45f * 255), (int) (.55f * 255), (int) (.60f * 255)));
                 gl.Clear((uint) ClearBufferMask.ColorBufferBit);
 
-                editorApp.Update(delta);
                 editorApp.OnImGuiRender();
 
                 // Make sure ImGui renders too!

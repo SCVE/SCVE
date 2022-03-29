@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ImGuiNET;
+using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi.Panels
@@ -101,11 +102,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
             if (ImGui.Button("Apply"))
             {
-                EditorApp.Late("apply settings", () =>
-                {
-                    _settingsService.ApplySettings(_draftSettings);
-                    Console.WriteLine("Settings have been applied.");
-                });
+                EditorApp.Late(new ApplySettingsLateTask(_draftSettings));
             }
 
             ImGui.SameLine();
