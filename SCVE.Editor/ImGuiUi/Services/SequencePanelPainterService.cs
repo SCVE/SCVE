@@ -198,6 +198,7 @@ namespace SCVE.Editor.ImGuiUi.Services
 
             for (var i = 0; i < Settings.Instance.CursorShapePoints.Length; i++)
             {
+                // TODO: don't write to settings, WTF
                 Settings.Instance.CursorCurrentPoints[i].X =
                     Settings.Instance.CursorShapePoints[i].X + cursorPosition.X;
                 Settings.Instance.CursorCurrentPoints[i].Y =
