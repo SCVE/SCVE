@@ -90,9 +90,9 @@ namespace SCVE.Editor.ImGuiUi
                                 if (ImGui.MenuItem(fileName, File.Exists(recent)))
                                 {
                                     var videoProject = Utils.ReadJson<VideoProject>(recent);
-                                    
+
                                     EditorApp.Late(new OpenProjectLateTask(videoProject, recent));
-                                    
+
                                     // NOTE: break is needed, because _recentsService.NoticeOpen() modifies original list
                                     // break;
                                 }
@@ -132,6 +132,11 @@ namespace SCVE.Editor.ImGuiUi
                         if (ImGui.MenuItem("Add Track"))
                         {
                             _editingService.OpenedSequence.Tracks.Add(Track.CreateNew());
+                        }
+
+                        if (ImGui.MenuItem("Export Sequence"))
+                        {
+                            _modalManagerService.OpenExportSequencePanel(_editingService.OpenedSequence);
                         }
 
                         ImGui.EndMenu();

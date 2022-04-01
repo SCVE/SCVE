@@ -35,6 +35,19 @@ namespace SCVE.Editor
             return Directory.Exists(path);
         }
 
+        public static void ClearContent(this DirectoryInfo directoryInfo)
+        {
+            foreach (var directory in directoryInfo.EnumerateDirectories())
+            {
+                directory.Delete(true);
+            }
+
+            foreach (var file in directoryInfo.EnumerateFiles())
+            {
+                file.Delete();
+            }
+        }
+
         public static IEnumerable<Type> GetAssignableTypesFromAssembly<T>(Assembly assembly)
         {
             return assembly.ExportedTypes

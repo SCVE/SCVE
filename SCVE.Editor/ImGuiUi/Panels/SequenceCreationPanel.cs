@@ -23,7 +23,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
             Name = "New Sequence";
         }
 
-        private string _name = "";
+        private string _title = "";
         private int _fps = 0;
         private int _frameLength = 0;
         private int _resolution = 0;
@@ -49,7 +49,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
         private void DrawSettings()
         {
-            if (ImGui.InputText("Name", ref _name, 255))
+            if (ImGui.InputText("Title", ref _title, 255))
             {
             }
 
@@ -71,12 +71,12 @@ namespace SCVE.Editor.ImGuiUi.Panels
         {
             if (ImGui.Button("Create"))
             {
-                if (_name != string.Empty)
+                if (_title != string.Empty)
                 {
                     var sequenceAsset = SequenceAsset.CreateNew(
-                        name: _name,
+                        name: _title,
                         location: _projectPanelService.CurrentLocation,
-                        content: Sequence.CreateNew(30, new ScveVector2I(1280, 720), 150)
+                        content: Sequence.CreateNew(_title, 30, new ScveVector2I(1280, 720), 150)
                     );
 
                     EditorApp.Late(new AddSequenceLateTask(sequenceAsset));
