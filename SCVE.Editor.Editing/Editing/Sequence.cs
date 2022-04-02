@@ -7,6 +7,11 @@ namespace SCVE.Editor.Editing.Editing
     {
         public Guid Guid { get; set; }
 
+        /// <summary>
+        /// Title of the sequence
+        /// </summary>
+        public string Title { get; set; }
+
         public IList<Track> Tracks { get; set; }
 
         public int FPS { get; set; }
@@ -21,10 +26,11 @@ namespace SCVE.Editor.Editing.Editing
         {
         }
 
-        public static Sequence CreateNew(int fps, ScveVector2I resolution, int frameLength)
+        public static Sequence CreateNew(string title, int fps, ScveVector2I resolution, int frameLength)
         {
             return new Sequence()
             {
+                Title = title,
                 FPS = fps,
                 Guid = Guid.NewGuid(),
                 Resolution = resolution,
