@@ -5,6 +5,7 @@ using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.Misc;
 using SCVE.Engine.ImageSharpBindings;
+using SCVE.Exporters.Avi;
 using Silk.NET.SDL;
 
 namespace SCVE.Editor.Services
@@ -20,7 +21,7 @@ namespace SCVE.Editor.Services
             _samplerService = samplerService;
         }
 
-        public void Export(Sequence sequence, ScveVector2I resolution, string exportDirectoryLocation)
+        public void ExportPngSequence(Sequence sequence, ScveVector2I resolution, string exportDirectoryLocation)
         {
             var exportDirectoryPath = Path.Combine(exportDirectoryLocation, sequence.Title);
             var exportDirectoryInfo = new DirectoryInfo(exportDirectoryPath);
@@ -42,12 +43,33 @@ namespace SCVE.Editor.Services
             {
                 var frame = _samplerService.Sampler.Sample(sequence, resolution, i);
                 var framePath = Path.Combine(exportDirectoryPath, i + ".png");
-                
+
                 textureWriter.Save(frame.ToByteArray(), frame.Width, frame.Height, framePath);
 
-                Progress = (float)i / sequence.FrameLength;
+                Progress = (float) i / sequence.FrameLength;
 
                 Task.Delay(200);
+            }
+        }
+
+        public void ExportAvi(Sequence sequence, ScveVector2I resolution, string exportDirectoryLocation)
+        {
+            var exportFilePath = Path.Combine(exportDirectoryLocation, sequence.Title + ".avi");
+
+            using var aviExporter = new AviExporter(exportFilePath, resolution, sequence.FPS);
+            for (var i = 0; i < sequence.FrameLength; i++)
+            {
+                var frame = _samplerService.Sampler.Sample(sequence, resolution, i);
+
+                var rgbaPixels = frame.ToByteArray();
+
+                ImageSharpImageFlipper.FlipY(rgbaPixels, frame.Width, frame.Height);
+
+                Utils.ShuffleRgba32ToBgr32(rgbaPixels);
+
+                aviExporter.WriteFrame(rgbaPixels);
+
+                Progress = (float) i / sequence.FrameLength;
             }
         }
     }

@@ -151,5 +151,21 @@ namespace SCVE.Editor
 
             return new Vector2(newWidth, newHeight);
         }
+
+        public static void ShuffleRgba32ToBgr32(byte[] pixels)
+        {
+            for (var i = 0; i < pixels.Length; i += 4)
+            {
+                byte r = pixels[i + 0];
+                byte g = pixels[i + 1];
+                byte b = pixels[i + 2];
+                byte a = pixels[i + 3];
+
+                pixels[i + 0] = b;
+                pixels[i + 1] = g;
+                pixels[i + 2] = r;
+                pixels[i + 3] = a;
+            }
+        }
     }
 }
