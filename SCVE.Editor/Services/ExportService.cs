@@ -20,8 +20,7 @@ namespace SCVE.Editor.Services
             _samplerService = samplerService;
         }
 
-        // TODO: pass resolution
-        public void Export(Sequence sequence, string exportDirectoryLocation)
+        public void Export(Sequence sequence, ScveVector2I resolution, string exportDirectoryLocation)
         {
             var exportDirectoryPath = Path.Combine(exportDirectoryLocation, sequence.Title);
             var exportDirectoryInfo = new DirectoryInfo(exportDirectoryPath);
@@ -41,7 +40,7 @@ namespace SCVE.Editor.Services
             var textureWriter = new ImageSharpTextureWriter();
             for (var i = 0; i < sequence.FrameLength; i++)
             {
-                var frame = _samplerService.Sampler.Sample(sequence, new ScveVector2I(1280, 720), i);
+                var frame = _samplerService.Sampler.Sample(sequence, resolution, i);
                 var framePath = Path.Combine(exportDirectoryPath, i + ".png");
                 
                 textureWriter.Save(frame.ToByteArray(), frame.Width, frame.Height, framePath);

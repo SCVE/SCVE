@@ -16,10 +16,14 @@ namespace SCVE.Editor.ImGuiUi.Panels
         private readonly EditingService _editingService;
         private readonly ProjectPanelService _projectPanelService;
 
+        private ImGuiSelectableContextMenu<Resolution> _resolutionContextMenu;
+        private int _selectedResolutionIndex;
+
         public SequenceCreationPanel(EditingService editingService, ProjectPanelService projectPanelService)
         {
             _editingService = editingService;
             _projectPanelService = projectPanelService;
+            _resolutionContextMenu = new ImGuiSelectableContextMenu<Resolution>(SupportedResolutions.Resolutions, 0, "##resolution");
             Name = "New Sequence";
         }
 
@@ -61,9 +65,10 @@ namespace SCVE.Editor.ImGuiUi.Panels
             {
             }
 
-            if (ImGui.DragInt("Resolution", ref _resolution, 0.1f, 10, 120))
-            {
-            }
+                
+            ImGui.TextUnformatted("Select resolution");
+
+            _selectedResolutionIndex = _resolutionContextMenu.OnImGuiRender();
         }
 
 
@@ -76,7 +81,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     var sequenceAsset = SequenceAsset.CreateNew(
                         name: _title,
                         location: _projectPanelService.CurrentLocation,
-                        content: Sequence.CreateNew(_title, 30, new ScveVector2I(1280, 720), 150)
+                        content: Sequence.CreateNew(_title, 30, SupportedResolutions.Resolutions[_selectedResolutionIndex].Value, 150)
                     );
 
                     EditorApp.Late(new AddSequenceLateTask(sequenceAsset));

@@ -22,10 +22,14 @@ namespace SCVE.Editor.ImGuiUi.Panels
         private ExportService _exportService;
         private bool _isDone;
 
+        private ImGuiSelectableContextMenu<Resolution> _resolutionContextMenu;
+        private int _selectedResolutionIndex;
+
         public ExportSequenceModalPanel(ExportService exportService)
         {
             _exportService = exportService;
             _directoryPickerModalPanel = new DirectoryPickerModalPanel();
+            _resolutionContextMenu = new ImGuiSelectableContextMenu<Resolution>(SupportedResolutions.Resolutions, 0, "##resolution");
             Name = "Export Sequence";
         }
 
@@ -65,6 +69,10 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 {
                     _location = location;
                 }
+                
+                ImGui.TextUnformatted("Select resolution");
+
+                _selectedResolutionIndex = _resolutionContextMenu.OnImGuiRender();
 
                 ImGui.Text(_folderCreationInfoString);
 
@@ -74,7 +82,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 {
                     unsafe
                     {
-                        ImGuiNative.igProgressBar(_exportService.Progress, Vector2.Zero, (byte*) null);
+                        ImGuiNative.igProgressBar(_exportService.Progress, Vector2.Zero, null);
                     }
 
                     ImGui.TextDisabled("Export");
@@ -92,7 +100,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                         {
                             _isExporting = true;
 
-                            Task.Run(() => { _exportService.Export(_sequence, _location); })
+                            Task.Run(() => { _exportService.Export(_sequence, SupportedResolutions.Resolutions[_selectedResolutionIndex].Value, _location); })
                                 .ContinueWith(_ =>
                                 {
                                     _isExporting = false;
