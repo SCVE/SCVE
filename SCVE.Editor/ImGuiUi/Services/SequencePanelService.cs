@@ -88,13 +88,27 @@ namespace SCVE.Editor.ImGuiUi.Services
                 for (int j = 0; j < _editingService.OpenedSequence.Tracks[i].EmptyClips.Count; j++)
                 {
                     var clip = _editingService.OpenedSequence.Tracks[i].EmptyClips[j];
+                    _panelPainterService.DrawClip(
+                        clip,
+                        i,
+                        out var isLeftClicked,
+                        out var isBodyClicked,
+                        out var isRightClicked,
+                        out var isLeftActive,
+                        out var isBodyActive,
+                        out var isRightActive,
+                        out var bodyDragDeltaFrames,
+                        out var leftDragDeltaFrames,
+                        out var rightDragDeltaFrames,
+                        out var deltaTracks
+                    );
 
-                    if (_panelPainterService.DrawClip(clip, i, out var isDragging, out var deltaFrames, out var deltaTracks))
+                    if (isLeftClicked || isBodyClicked || isRightClicked)
                     {
                         EditorApp.Late(new SelectClipLateTask(clip));
                     }
 
-                    if (isDragging)
+                    if (isBodyActive)
                     {
                         if (!_ghostClip.Visible)
                         {
@@ -102,7 +116,30 @@ namespace SCVE.Editor.ImGuiUi.Services
                         }
                         else
                         {
-                            UpdateGhostClipValues(deltaTracks, deltaFrames);
+                            UpdateGhostClipValues(deltaTracks, bodyDragDeltaFrames);
+                        }
+                    }
+                    else if (isLeftActive)
+                    {
+                        if (!_ghostClip.Visible)
+                        {
+                            CreateGhostClip(clip, i);
+                        }
+                        else
+                        {
+                            _ghostClip.CurrentStartFrame = _ghostClip.SourceStartFrame + leftDragDeltaFrames;
+                            _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength - leftDragDeltaFrames;
+                        }
+                    }
+                    else if (isRightActive)
+                    {
+                        if (!_ghostClip.Visible)
+                        {
+                            CreateGhostClip(clip, i);
+                        }
+                        else
+                        {
+                            _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength + rightDragDeltaFrames;
                         }
                     }
                     else

@@ -263,7 +263,17 @@ namespace SCVE.Editor.ImGuiUi.Services
             );
         }
 
-        public bool DrawClip(EmptyClip clip, int trackIndex, out bool isActive, out int deltaFrames,
+        public void DrawClip(EmptyClip clip,
+            int trackIndex,
+            out bool isLeftClicked,
+            out bool isBodyClicked,
+            out bool isRightClicked,
+            out bool isLeftActive,
+            out bool isBodyActive,
+            out bool isRightActive,
+            out int bodyDragDeltaFrames,
+            out int leftDragDeltaFrames,
+            out int rightDragDeltaFrames,
             out int deltaTracks)
         {
             var clipTopLeft = new Vector2(
@@ -282,30 +292,86 @@ namespace SCVE.Editor.ImGuiUi.Services
 
             _clipRenderer.Render(ref _painter, clip, clipTopLeft, clipBottomRight);
 
-            ImGui.SetCursorPos(clipTopLeft - _windowPosition);
             // this messes up with click detection, making mouse a god-ray, punching through all clips
             // ImGui.SetItemAllowOverlap();
 
             var clipSize = clipBottomRight - clipTopLeft;
+            
+            Vector2 clipLeftSize;
+            Vector2 clipBodySize;
+            Vector2 clipRightSize;
+            if (clip.FrameLength > 4)
+            {
+                clipLeftSize = new Vector2(_widthPerFrame * 2, clipSize.Y);
+                clipBodySize = new Vector2(clipSize.X - _widthPerFrame * 4, clipSize.Y);
+                clipRightSize = new Vector2(_widthPerFrame * 2, clipSize.Y);
+            }
+            else if (clip.FrameLength > 2)
+            {
+                clipLeftSize = new Vector2(_widthPerFrame, clipSize.Y);
+                clipBodySize = new Vector2(clipSize.X - _widthPerFrame * 2, clipSize.Y);
+                clipRightSize = new Vector2(_widthPerFrame, clipSize.Y);
+            }
+            else if (clip.FrameLength > 1)
+            {
+                clipLeftSize = new Vector2(_widthPerFrame / 2, clipSize.Y);
+                clipBodySize = new Vector2(clipSize.X - _widthPerFrame, clipSize.Y);
+                clipRightSize = new Vector2(_widthPerFrame / 2, clipSize.Y);
+            }
+            else
+            {
+                clipLeftSize = new Vector2(_widthPerFrame / 4, clipSize.Y);
+                clipBodySize = new Vector2(clipSize.X - _widthPerFrame / 2, clipSize.Y);
+                clipRightSize = new Vector2(_widthPerFrame / 4, clipSize.Y);
+            }
 
-            var isClicked = ImGui.InvisibleButton($"##clip{clip.Guid:N}", clipSize);
-            isActive = ImGui.IsItemActive();
+            ImGui.SetCursorPos(clipTopLeft - _windowPosition);
+            isLeftClicked = ImGui.Button($"##clip-left{clip.Guid:N}", clipLeftSize);
+            isLeftActive = ImGui.IsItemActive();
 
-            if (isActive)
+            ImGui.SetCursorPos((clipTopLeft - _windowPosition) + new Vector2(clipLeftSize.X, 0));
+            isBodyClicked = ImGui.Button($"##clip-body{clip.Guid:N}", clipBodySize);
+            isBodyActive = ImGui.IsItemActive();
+
+            ImGui.SetCursorPos((clipTopLeft - _windowPosition) + new Vector2(clipLeftSize.X + clipBodySize.X, 0));
+            isRightClicked = ImGui.Button($"##clip-right{clip.Guid:N}", clipRightSize);
+            isRightActive = ImGui.IsItemActive();
+
+            if (isBodyActive)
             {
                 var mouseDragDelta = ImGui.GetMouseDragDelta();
 
-                deltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
+                bodyDragDeltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
                 deltaTracks = (int) (mouseDragDelta.Y / (Settings.Instance.TrackHeight +
                                                          Settings.Instance.TrackMargin));
             }
             else
             {
-                deltaFrames = 0;
+                bodyDragDeltaFrames = 0;
                 deltaTracks = 0;
             }
 
-            return isClicked;
+            if (isLeftActive)
+            {
+                var mouseDragDelta = ImGui.GetMouseDragDelta();
+
+                leftDragDeltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
+            }
+            else
+            {
+                leftDragDeltaFrames = 0;
+            }
+
+            if (isRightActive)
+            {
+                var mouseDragDelta = ImGui.GetMouseDragDelta();
+
+                rightDragDeltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
+            }
+            else
+            {
+                rightDragDeltaFrames = 0;
+            }
         }
     }
 }
