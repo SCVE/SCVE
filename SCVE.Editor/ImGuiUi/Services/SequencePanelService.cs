@@ -1,6 +1,7 @@
 using System;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.ImGuiUi.Models;
 using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 
@@ -19,18 +20,24 @@ namespace SCVE.Editor.ImGuiUi.Services
 
         private readonly GhostClip _ghostClip;
 
-        public SequencePanelService(EditingService editingService, PreviewService previewService, SequencePanelPainterService panelPainterService)
+        private readonly ClipManipulationData _clipManipulationData;
+
+        public SequencePanelService(EditingService editingService, PreviewService previewService,
+            SequencePanelPainterService panelPainterService)
         {
             _editingService = editingService;
             _previewService = previewService;
             _panelPainterService = panelPainterService;
+
+            _clipManipulationData = new();
 
             _ghostClip = new GhostClip();
         }
 
         public void RefreshData()
         {
-            _panelPainterService.SetRenderData(_cursorDragFrames, _editingService.CursorFrame, _editingService.OpenedSequence);
+            _panelPainterService.SetRenderData(_cursorDragFrames, _editingService.CursorFrame,
+                _editingService.OpenedSequence);
         }
 
         public void DrawSequenceHeader()
@@ -84,31 +91,18 @@ namespace SCVE.Editor.ImGuiUi.Services
 
                 // track content background
                 _panelPainterService.DrawTrackContentBackground(i);
-
+                
                 for (int j = 0; j < _editingService.OpenedSequence.Tracks[i].EmptyClips.Count; j++)
                 {
                     var clip = _editingService.OpenedSequence.Tracks[i].EmptyClips[j];
-                    _panelPainterService.DrawClip(
-                        clip,
-                        i,
-                        out var isLeftClicked,
-                        out var isBodyClicked,
-                        out var isRightClicked,
-                        out var isLeftActive,
-                        out var isBodyActive,
-                        out var isRightActive,
-                        out var bodyDragDeltaFrames,
-                        out var leftDragDeltaFrames,
-                        out var rightDragDeltaFrames,
-                        out var deltaTracks
-                    );
+                    _panelPainterService.DrawClip(clip, i, _clipManipulationData);
 
-                    if (isLeftClicked || isBodyClicked || isRightClicked)
+                    if (_clipManipulationData.IsAnyPartClicked())
                     {
                         EditorApp.Late(new SelectClipLateTask(clip));
                     }
 
-                    if (isBodyActive)
+                    if (_clipManipulationData.IsBodyActive)
                     {
                         if (!_ghostClip.Visible)
                         {
@@ -116,10 +110,11 @@ namespace SCVE.Editor.ImGuiUi.Services
                         }
                         else
                         {
-                            UpdateGhostClipValues(deltaTracks, bodyDragDeltaFrames);
+                            UpdateGhostClipValues(_clipManipulationData.DeltaTracks,
+                                _clipManipulationData.BodyDragDeltaFrames);
                         }
                     }
-                    else if (isLeftActive)
+                    else if (_clipManipulationData.IsLeftActive)
                     {
                         if (!_ghostClip.Visible)
                         {
@@ -127,11 +122,13 @@ namespace SCVE.Editor.ImGuiUi.Services
                         }
                         else
                         {
-                            _ghostClip.CurrentStartFrame = _ghostClip.SourceStartFrame + leftDragDeltaFrames;
-                            _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength - leftDragDeltaFrames;
+                            _ghostClip.CurrentStartFrame =
+                                _ghostClip.SourceStartFrame + _clipManipulationData.LeftDragDeltaFrames;
+                            _ghostClip.CurrentFrameLength =
+                                _ghostClip.SourceFrameLength - _clipManipulationData.LeftDragDeltaFrames;
                         }
                     }
-                    else if (isRightActive)
+                    else if (_clipManipulationData.IsRightActive)
                     {
                         if (!_ghostClip.Visible)
                         {
@@ -139,7 +136,8 @@ namespace SCVE.Editor.ImGuiUi.Services
                         }
                         else
                         {
-                            _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength + rightDragDeltaFrames;
+                            _ghostClip.CurrentFrameLength =
+                                _ghostClip.SourceFrameLength + _clipManipulationData.RightDragDeltaFrames;
                         }
                     }
                     else
@@ -149,6 +147,8 @@ namespace SCVE.Editor.ImGuiUi.Services
                             ApplyGhostClipValues();
                         }
                     }
+                    
+                    _clipManipulationData.Reset();
                 }
             }
         }
@@ -173,9 +173,11 @@ namespace SCVE.Editor.ImGuiUi.Services
                 {
                     _ghostClip.CurrentStartFrame = 0;
                 }
-                else if (_ghostClip.CurrentStartFrame + _ghostClip.CurrentFrameLength >= _editingService.OpenedSequence.FrameLength)
+                else if (_ghostClip.CurrentStartFrame + _ghostClip.CurrentFrameLength >=
+                         _editingService.OpenedSequence.FrameLength)
                 {
-                    _ghostClip.CurrentStartFrame = _editingService.OpenedSequence.FrameLength - _ghostClip.CurrentFrameLength;
+                    _ghostClip.CurrentStartFrame =
+                        _editingService.OpenedSequence.FrameLength - _ghostClip.CurrentFrameLength;
                 }
 
                 Console.WriteLine($"Updated GhostClip CurrentStartFrame to {_ghostClip.CurrentStartFrame}");
