@@ -65,7 +65,6 @@ namespace SCVE.Editor
         public Vector2 CursorSize { get; set; }
 
         [JsonIgnore] public Vector2[] CursorShapePoints { get; set; }
-        [JsonIgnore] public Vector2[] CursorCurrentPoints { get; set; }
 
         [JsonConstructor]
         private Settings()
@@ -105,7 +104,6 @@ namespace SCVE.Editor
                 // left mid
                 new(0, CursorSize.Y / 2f),
             };
-            CursorCurrentPoints = new Vector2[CursorShapePoints.Length];
         }
 
         public static void SetFrom(Settings settings)

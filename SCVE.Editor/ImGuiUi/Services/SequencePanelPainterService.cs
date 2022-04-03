@@ -198,16 +198,15 @@ namespace SCVE.Editor.ImGuiUi.Services
                 isDragging = true;
             }
 
+            Span<Vector2> cursorCurrentPoints = stackalloc Vector2[Settings.Instance.CursorShapePoints.Length];
+
             for (var i = 0; i < Settings.Instance.CursorShapePoints.Length; i++)
             {
-                // TODO: don't write to settings, WTF
-                Settings.Instance.CursorCurrentPoints[i].X =
-                    Settings.Instance.CursorShapePoints[i].X + cursorPosition.X;
-                Settings.Instance.CursorCurrentPoints[i].Y =
-                    Settings.Instance.CursorShapePoints[i].Y + cursorPosition.Y;
+                cursorCurrentPoints[i].X = Settings.Instance.CursorShapePoints[i].X + cursorPosition.X;
+                cursorCurrentPoints[i].Y = Settings.Instance.CursorShapePoints[i].Y + cursorPosition.Y;
             }
 
-            _painter.AddConvexPolyFilled(ref Settings.Instance.CursorCurrentPoints[0], 5, 0xFFAA6666);
+            _painter.AddConvexPolyFilled(ref cursorCurrentPoints[0], Settings.Instance.CursorShapePoints.Length, 0xFFAA6666);
 
             return isDragging;
         }
@@ -310,22 +309,20 @@ namespace SCVE.Editor.ImGuiUi.Services
 
             var clipSize = clipBottomRight - clipTopLeft;
             
-            CalcClipParts(clip.FrameLength, clipSize, out var clipLeftSize, out var clipBodySize, out var clipRightSize);
+            CalcClipParts(clip.FrameLength, clipSize, out var clipHeadSize, out var clipBodySize, out var clipTailSize);
 
-            DrawClipHead(clip, clipTopLeft, clipLeftSize, out clipManipulationData.IsHeadClicked, out clipManipulationData.IsHeadActive);
+            DrawClipHead(clip, clipTopLeft, clipHeadSize, out clipManipulationData.IsHeadClicked, out clipManipulationData.IsHeadActive);
 
-            DrawClipBody(clip, clipTopLeft, clipLeftSize.X, clipBodySize, out clipManipulationData.IsBodyClicked, out clipManipulationData.IsBodyActive);
+            DrawClipBody(clip, clipTopLeft, clipHeadSize.X, clipBodySize, out clipManipulationData.IsBodyClicked, out clipManipulationData.IsBodyActive);
 
-            DrawClipTail(clip, clipTopLeft, clipLeftSize.X + clipBodySize.X, clipRightSize,
-                out clipManipulationData.IsTailClicked, out clipManipulationData.IsTailActive);
+            DrawClipTail(clip, clipTopLeft, clipHeadSize.X + clipBodySize.X, clipTailSize, out clipManipulationData.IsTailClicked, out clipManipulationData.IsTailActive);
 
             if (clipManipulationData.IsBodyActive)
             {
                 var mouseDragDelta = ImGui.GetMouseDragDelta();
 
                 clipManipulationData.BodyDragDeltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
-                clipManipulationData.DeltaTracks = (int) (mouseDragDelta.Y / (Settings.Instance.TrackHeight +
-                                                                            Settings.Instance.TrackMargin));
+                clipManipulationData.DeltaTracks = (int) (mouseDragDelta.Y / (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin));
             }
             else
             {
@@ -356,32 +353,31 @@ namespace SCVE.Editor.ImGuiUi.Services
             }
         }
 
-        private void CalcClipParts(int clipFrameLength, Vector2 clipSize, out Vector2 clipLeftSize, out Vector2 clipBodySize,
-            out Vector2 clipRightSize)
+        private void CalcClipParts(int clipFrameLength, Vector2 clipSize, out Vector2 clipHeadSize, out Vector2 clipBodySize, out Vector2 clipTailSize)
         {
             if (clipFrameLength > 4)
             {
-                clipLeftSize = new Vector2(_widthPerFrame * 2, clipSize.Y);
+                clipHeadSize = new Vector2(_widthPerFrame * 2, clipSize.Y);
                 clipBodySize = new Vector2(clipSize.X - _widthPerFrame * 4, clipSize.Y);
-                clipRightSize = new Vector2(_widthPerFrame * 2, clipSize.Y);
+                clipTailSize = new Vector2(_widthPerFrame * 2, clipSize.Y);
             }
             else if (clipFrameLength > 2)
             {
-                clipLeftSize = new Vector2(_widthPerFrame, clipSize.Y);
+                clipHeadSize = new Vector2(_widthPerFrame, clipSize.Y);
                 clipBodySize = new Vector2(clipSize.X - _widthPerFrame * 2, clipSize.Y);
-                clipRightSize = new Vector2(_widthPerFrame, clipSize.Y);
+                clipTailSize = new Vector2(_widthPerFrame, clipSize.Y);
             }
             else if (clipFrameLength > 1)
             {
-                clipLeftSize = new Vector2(_widthPerFrame / 2, clipSize.Y);
+                clipHeadSize = new Vector2(_widthPerFrame / 2, clipSize.Y);
                 clipBodySize = new Vector2(clipSize.X - _widthPerFrame, clipSize.Y);
-                clipRightSize = new Vector2(_widthPerFrame / 2, clipSize.Y);
+                clipTailSize = new Vector2(_widthPerFrame / 2, clipSize.Y);
             }
             else
             {
-                clipLeftSize = new Vector2(_widthPerFrame / 4, clipSize.Y);
+                clipHeadSize = new Vector2(_widthPerFrame / 4, clipSize.Y);
                 clipBodySize = new Vector2(clipSize.X - _widthPerFrame / 2, clipSize.Y);
-                clipRightSize = new Vector2(_widthPerFrame / 4, clipSize.Y);
+                clipTailSize = new Vector2(_widthPerFrame / 4, clipSize.Y);
             }
         }
     }
