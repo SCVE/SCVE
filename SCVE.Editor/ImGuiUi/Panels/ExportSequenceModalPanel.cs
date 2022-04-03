@@ -15,7 +15,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
         PngSequence,
         AviUncompressed
     }
-    
+
     public class ExportSequenceModalPanel : ImGuiModalPanel
     {
         private string _exportingFramesString;
@@ -77,7 +77,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 {
                     _directoryPickerModalPanel.Open(Environment.CurrentDirectory, "Choose location");
                 }
-                
+
                 string location = "";
                 if (_directoryPickerModalPanel.OnImGuiRender(ref location))
                 {
@@ -85,7 +85,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 }
 
                 _currentExportMode = _exportModeContextMenu.OnImGuiRender();
-                
+
                 switch (_currentExportMode)
                 {
                     case ExportMode.PngSequence:
@@ -97,7 +97,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                
+
                 ImGui.TextUnformatted("Select resolution");
 
                 _selectedResolutionIndex = _resolutionContextMenu.OnImGuiRender();
@@ -116,38 +116,36 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 }
                 else
                 {
+                    if (ImGui.Button("Export"))
+                    {
+                        _isExporting = true;
+
+                        switch (_currentExportMode)
+                        {
+                            case ExportMode.PngSequence:
+                                Task.Run(() => { _exportService.ExportPngSequence(_sequence, SupportedResolutions.Resolutions[_selectedResolutionIndex].Value, _location); })
+                                    .ContinueWith(_ =>
+                                    {
+                                        _isExporting = false;
+                                        _isDone = true;
+                                    });
+                                break;
+                            case ExportMode.AviUncompressed:
+                                Task.Run(() => { _exportService.ExportAvi(_sequence, SupportedResolutions.Resolutions[_selectedResolutionIndex].Value, _location); })
+                                    .ContinueWith(_ =>
+                                    {
+                                        _isExporting = false;
+                                        _isDone = true;
+                                    });
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+
                     if (_isDone)
                     {
                         ImGui.Text("Done!");
-                    }
-                    else
-                    {
-                        if (ImGui.Button("Export"))
-                        {
-                            _isExporting = true;
-
-                            switch (_currentExportMode)
-                            {
-                                case ExportMode.PngSequence:
-                                    Task.Run(() => { _exportService.ExportPngSequence(_sequence, SupportedResolutions.Resolutions[_selectedResolutionIndex].Value, _location); })
-                                        .ContinueWith(_ =>
-                                        {
-                                            _isExporting = false;
-                                            _isDone = true;
-                                        });
-                                    break;
-                                case ExportMode.AviUncompressed:
-                                    Task.Run(() => { _exportService.ExportAvi(_sequence, SupportedResolutions.Resolutions[_selectedResolutionIndex].Value, _location); })
-                                        .ContinueWith(_ =>
-                                        {
-                                            _isExporting = false;
-                                            _isDone = true;
-                                        });
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
                     }
 
                     if (ImGui.Button("Close"))
