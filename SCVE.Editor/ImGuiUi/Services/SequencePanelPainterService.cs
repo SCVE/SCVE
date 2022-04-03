@@ -265,31 +265,29 @@ namespace SCVE.Editor.ImGuiUi.Services
             );
         }
 
-        private void DrawClipHead(EmptyClip clip, Vector2 clipTopLeftPosition, Vector2 clipSize, out bool isClicked,
-            out bool isActive)
+        private void DrawClipHead(Clip clip, Vector2 position, Vector2 size, out bool isClicked, out bool isActive)
         {
-            ImGui.SetCursorPos(clipTopLeftPosition - _windowPosition);
-            isClicked = ImGui.Button($"##clip-left{clip.Guid:N}", clipSize);
+            ImGui.SetCursorPos(position - _windowPosition);
+            isClicked = ImGui.Button($"##clip-left{clip.Guid:N}", size);
             isActive = ImGui.IsItemActive();
         }
 
-        private void DrawClipBody(EmptyClip clip, Vector2 clipTopLeftPosition, Vector2 margin, Vector2 clipSize,
-            out bool isClicked, out bool isActive)
+        private void DrawClipBody(Clip clip, Vector2 position, float marginLeft, Vector2 size, out bool isClicked, out bool isActive)
         {
-            ImGui.SetCursorPos((clipTopLeftPosition - _windowPosition) + new Vector2(margin.X, 0));
-            isClicked = ImGui.Button($"##clip-body{clip.Guid:N}", clipSize);
+            ImGui.SetCursorPos((position - _windowPosition) + new Vector2(marginLeft, 0));
+            isClicked = ImGui.Button($"##clip-body{clip.Guid:N}", size);
             isActive = ImGui.IsItemActive();
         }
 
-        private void DrawClipTail(EmptyClip clip, Vector2 clipTopLeftPosition, Vector2 margin, Vector2 clipSize,
+        private void DrawClipTail(Clip clip, Vector2 position, float marginLeft, Vector2 clipSize,
             out bool isClicked, out bool isActive)
         {
-            ImGui.SetCursorPos((clipTopLeftPosition - _windowPosition) + new Vector2(margin.X, 0));
+            ImGui.SetCursorPos((position - _windowPosition) + new Vector2(marginLeft, 0));
             isClicked = ImGui.Button($"##clip-right{clip.Guid:N}", clipSize);
             isActive = ImGui.IsItemActive();
         }
 
-        public void DrawClip(EmptyClip clip, int trackIndex, ClipManipulationData clipManipulationData)
+        public void DrawClip(Clip clip, int trackIndex, ref ClipManipulationData clipManipulationData)
         {
             var clipTopLeft = new Vector2(
                 _drawOrigin.X + Settings.Instance.TrackHeaderWidth +
@@ -310,17 +308,16 @@ namespace SCVE.Editor.ImGuiUi.Services
             // this messes up with click detection, making mouse a god-ray, punching through all clips
             // ImGui.SetItemAllowOverlap();
 
-
             var clipSize = clipBottomRight - clipTopLeft;
-            CalcClipParts(clip, clipSize, out var clipLeftSize, out var clipBodySize, out var clipRightSize);
+            
+            CalcClipParts(clip.FrameLength, clipSize, out var clipLeftSize, out var clipBodySize, out var clipRightSize);
 
+            DrawClipHead(clip, clipTopLeft, clipLeftSize, out clipManipulationData.IsHeadClicked, out clipManipulationData.IsHeadActive);
 
-            DrawClipHead(clip, clipTopLeft, clipLeftSize, out clipManipulationData.IsLeftClicked, out clipManipulationData.IsLeftActive);
+            DrawClipBody(clip, clipTopLeft, clipLeftSize.X, clipBodySize, out clipManipulationData.IsBodyClicked, out clipManipulationData.IsBodyActive);
 
-            DrawClipBody(clip, clipTopLeft, clipLeftSize, clipBodySize, out clipManipulationData.IsBodyClicked, out clipManipulationData.IsBodyActive);
-
-            DrawClipTail(clip, clipTopLeft, new Vector2(clipLeftSize.X + clipBodySize.X, 0), clipRightSize,
-                out clipManipulationData.IsRightClicked, out clipManipulationData.IsRightActive);
+            DrawClipTail(clip, clipTopLeft, clipLeftSize.X + clipBodySize.X, clipRightSize,
+                out clipManipulationData.IsTailClicked, out clipManipulationData.IsTailActive);
 
             if (clipManipulationData.IsBodyActive)
             {
@@ -336,45 +333,45 @@ namespace SCVE.Editor.ImGuiUi.Services
                 clipManipulationData.DeltaTracks = 0;
             }
 
-            if (clipManipulationData.IsLeftActive)
+            if (clipManipulationData.IsHeadActive)
             {
                 var mouseDragDelta = ImGui.GetMouseDragDelta();
 
-                clipManipulationData.LeftDragDeltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
+                clipManipulationData.HeadDragDeltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
             }
             else
             {
-                clipManipulationData.LeftDragDeltaFrames = 0;
+                clipManipulationData.HeadDragDeltaFrames = 0;
             }
 
-            if (clipManipulationData.IsRightActive)
+            if (clipManipulationData.IsTailActive)
             {
                 var mouseDragDelta = ImGui.GetMouseDragDelta();
 
-                clipManipulationData.RightDragDeltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
+                clipManipulationData.TailDragDeltaFrames = (int) (mouseDragDelta.X / _widthPerFrame);
             }
             else
             {
-                clipManipulationData.RightDragDeltaFrames = 0;
+                clipManipulationData.TailDragDeltaFrames = 0;
             }
         }
 
-        private void CalcClipParts(EmptyClip clip, Vector2 clipSize, out Vector2 clipLeftSize, out Vector2 clipBodySize,
+        private void CalcClipParts(int clipFrameLength, Vector2 clipSize, out Vector2 clipLeftSize, out Vector2 clipBodySize,
             out Vector2 clipRightSize)
         {
-            if (clip.FrameLength > 4)
+            if (clipFrameLength > 4)
             {
                 clipLeftSize = new Vector2(_widthPerFrame * 2, clipSize.Y);
                 clipBodySize = new Vector2(clipSize.X - _widthPerFrame * 4, clipSize.Y);
                 clipRightSize = new Vector2(_widthPerFrame * 2, clipSize.Y);
             }
-            else if (clip.FrameLength > 2)
+            else if (clipFrameLength > 2)
             {
                 clipLeftSize = new Vector2(_widthPerFrame, clipSize.Y);
                 clipBodySize = new Vector2(clipSize.X - _widthPerFrame * 2, clipSize.Y);
                 clipRightSize = new Vector2(_widthPerFrame, clipSize.Y);
             }
-            else if (clip.FrameLength > 1)
+            else if (clipFrameLength > 1)
             {
                 clipLeftSize = new Vector2(_widthPerFrame / 2, clipSize.Y);
                 clipBodySize = new Vector2(clipSize.X - _widthPerFrame, clipSize.Y);
