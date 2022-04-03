@@ -41,6 +41,8 @@ namespace SCVE.Editor
         private List<IService> _services;
         private List<IUpdateReceiver> _updateReceivers;
         private List<IKeyPressReceiver> _keyPressReceivers;
+        private List<IKeyDownReceiver> _keyDownReceivers;
+        private List<IKeyReleaseReceiver> _keyReleaseReceivers;
         private List<IExitReceiver> _exitReceivers;
         private List<IFileDropReceiver> _fileDropReceivers;
 
@@ -51,7 +53,7 @@ namespace SCVE.Editor
         private LateTaskVisitor _lateTaskVisitor;
 
         private static Queue<LateTask> _lateTasks = new();
-        
+
         public static void Late(LateTask task)
         {
             _lateTasks.Enqueue(task);
@@ -103,10 +105,18 @@ namespace SCVE.Editor
                 .Select(t => serviceProvider.GetService(t) as IKeyPressReceiver)
                 .ToList();
 
+            _keyDownReceivers = Utils.GetAssignableTypes<IKeyDownReceiver>()
+                .Select(t => serviceProvider.GetService(t) as IKeyDownReceiver)
+                .ToList();
+
+            _keyReleaseReceivers = Utils.GetAssignableTypes<IKeyReleaseReceiver>()
+                .Select(t => serviceProvider.GetService(t) as IKeyReleaseReceiver)
+                .ToList();
+
             _fileDropReceivers = Utils.GetAssignableTypes<IFileDropReceiver>()
                 .Select(t => serviceProvider.GetService(t) as IFileDropReceiver)
                 .ToList();
-            
+
             _lateTaskVisitor = serviceProvider.GetRequiredService<LateTaskVisitor>();
             _playbackService = serviceProvider.GetRequiredService<PlaybackService>();
 
@@ -165,7 +175,7 @@ namespace SCVE.Editor
             }
 
             style.WindowMinSize.X = minWinSizeX;
-            
+
             foreach (var imGuiPanel in _imGuiPanels)
             {
                 imGuiPanel.OnImGuiRender();
@@ -175,7 +185,7 @@ namespace SCVE.Editor
             {
                 task.AcceptVisitor(_lateTaskVisitor);
             }
-            
+
             ImGui.ShowMetricsWindow();
 
             ImGui.PopFont();
@@ -197,7 +207,7 @@ namespace SCVE.Editor
 
         public void Update(double delta)
         {
-            _playbackService.OnUpdate((float)delta);
+            _playbackService.OnUpdate((float) delta);
             foreach (var updateReceiver in _updateReceivers)
             {
                 updateReceiver.OnUpdate((float) delta);
@@ -209,6 +219,22 @@ namespace SCVE.Editor
             foreach (var keyPressReceiver in _keyPressReceivers)
             {
                 keyPressReceiver.OnKeyPressed(key);
+            }
+        }
+
+        public void OnKeyDown(Key key)
+        {
+            foreach (var keyDownReceiver in _keyDownReceivers)
+            {
+                keyDownReceiver.OnKeyDown(key);
+            }
+        }
+
+        public void OnKeyReleased(Key key)
+        {
+            foreach (var keyReleaseReceiver in _keyReleaseReceivers)
+            {
+                keyReleaseReceiver.OnKeyReleased(key);
             }
         }
 

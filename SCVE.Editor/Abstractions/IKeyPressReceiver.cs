@@ -6,4 +6,12 @@ namespace SCVE.Editor.Abstractions
     {
         void OnKeyPressed(Key key);
     }
+    public interface IKeyReleaseReceiver
+    {
+        void OnKeyReleased(Key key);
+    }
+    public interface IKeyDownReceiver
+    {
+        void OnKeyDown(Key key);
+    }
 }

@@ -16,7 +16,6 @@ namespace SCVE.Editor.Editing.ProjectStructure
 
         public ICollection<SequenceAsset> Sequences { get; set; }
         public ICollection<ImageAsset> Images { get; set; }
-
         public ICollection<FolderAsset> Folders { get; set; }
 
         [JsonConstructor]

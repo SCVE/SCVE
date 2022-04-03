@@ -21,6 +21,17 @@ namespace SCVE.Editor.Editing.Editing
             };
         }
 
+        public override Clip Duplicate()
+        {
+            return new EmptyClip()
+            {
+                Guid = Guid.NewGuid(),
+                Effects = Effects.ToList(),
+                FrameLength = FrameLength,
+                StartFrame = StartFrame
+            };
+        }
+
         public override string ShortName()
         {
             return "Empty Clip";

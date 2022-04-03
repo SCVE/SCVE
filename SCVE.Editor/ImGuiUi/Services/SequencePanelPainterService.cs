@@ -4,6 +4,7 @@ using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.ImGuiUi.Models;
 using SCVE.Editor.Services;
 
@@ -264,26 +265,31 @@ namespace SCVE.Editor.ImGuiUi.Services
             );
         }
 
-        private void DrawClipHead(Clip clip, Vector2 position, Vector2 size, out bool isClicked, out bool isActive)
+        private void DrawClipHead(Clip clip, Vector2 position, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos(position - _windowPosition);
-            isClicked = ImGui.Button($"##clip-left{clip.Guid:N}", size);
+            isClicked = ImGui.Button($"##clip-head{clip.Guid:N}", size);
             isActive = ImGui.IsItemActive();
+            isActivated = ImGui.IsItemActivated();
+            isDeactivated = ImGui.IsItemDeactivated();
         }
 
-        private void DrawClipBody(Clip clip, Vector2 position, float marginLeft, Vector2 size, out bool isClicked, out bool isActive)
+        private void DrawClipBody(Clip clip, Vector2 position, float marginLeft, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos((position - _windowPosition) + new Vector2(marginLeft, 0));
             isClicked = ImGui.Button($"##clip-body{clip.Guid:N}", size);
             isActive = ImGui.IsItemActive();
+            isActivated = ImGui.IsItemActivated();
+            isDeactivated = ImGui.IsItemDeactivated();
         }
 
-        private void DrawClipTail(Clip clip, Vector2 position, float marginLeft, Vector2 clipSize,
-            out bool isClicked, out bool isActive)
+        private void DrawClipTail(Clip clip, Vector2 position, float marginLeft, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos((position - _windowPosition) + new Vector2(marginLeft, 0));
-            isClicked = ImGui.Button($"##clip-right{clip.Guid:N}", clipSize);
+            isClicked = ImGui.Button($"##clip-tail{clip.Guid:N}", size);
             isActive = ImGui.IsItemActive();
+            isActivated = ImGui.IsItemActivated();
+            isDeactivated = ImGui.IsItemDeactivated();
         }
 
         public void DrawClip(Clip clip, int trackIndex, ref ClipManipulationData clipManipulationData)
@@ -308,14 +314,14 @@ namespace SCVE.Editor.ImGuiUi.Services
             // ImGui.SetItemAllowOverlap();
 
             var clipSize = clipBottomRight - clipTopLeft;
-            
+
             CalcClipParts(clip.FrameLength, clipSize, out var clipHeadSize, out var clipBodySize, out var clipTailSize);
 
-            DrawClipHead(clip, clipTopLeft, clipHeadSize, out clipManipulationData.IsHeadClicked, out clipManipulationData.IsHeadActive);
+            DrawClipHead(clip, clipTopLeft, clipHeadSize, out clipManipulationData.IsHeadClicked, out clipManipulationData.IsHeadActive, out clipManipulationData.IsHeadActivated, out clipManipulationData.IsHeadDeactivated);
 
-            DrawClipBody(clip, clipTopLeft, clipHeadSize.X, clipBodySize, out clipManipulationData.IsBodyClicked, out clipManipulationData.IsBodyActive);
+            DrawClipBody(clip, clipTopLeft, clipHeadSize.X, clipBodySize, out clipManipulationData.IsBodyClicked, out clipManipulationData.IsBodyActive, out clipManipulationData.IsBodyActivated, out clipManipulationData.IsBodyDeactivated);
 
-            DrawClipTail(clip, clipTopLeft, clipHeadSize.X + clipBodySize.X, clipTailSize, out clipManipulationData.IsTailClicked, out clipManipulationData.IsTailActive);
+            DrawClipTail(clip, clipTopLeft, clipHeadSize.X + clipBodySize.X, clipTailSize, out clipManipulationData.IsTailClicked, out clipManipulationData.IsTailActive, out clipManipulationData.IsTailActivated, out clipManipulationData.IsTailDeactivated);
 
             if (clipManipulationData.IsBodyActive)
             {
@@ -379,6 +385,40 @@ namespace SCVE.Editor.ImGuiUi.Services
                 clipBodySize = new Vector2(clipSize.X - _widthPerFrame / 2, clipSize.Y);
                 clipTailSize = new Vector2(_widthPerFrame / 4, clipSize.Y);
             }
+        }
+
+        public bool DrawDraggedAssetClip(out int mouseOverFrame, out int mouseOverTrackIndex, int frameLength = 20)
+        {
+            var mousePos = ImGui.GetMousePos();
+
+            mouseOverFrame = (int) ((mousePos.X - _drawOrigin.X - Settings.Instance.TrackHeaderWidth) / _widthPerFrame);
+            
+            mouseOverFrame = Math.Clamp(mouseOverFrame, 0, _sequenceFrameLength - 1);
+            
+            mouseOverTrackIndex = (int) ((mousePos.Y - _drawOrigin.Y - Settings.Instance.SequenceHeaderHeight) / (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin));
+
+            mouseOverTrackIndex = Math.Clamp(mouseOverTrackIndex, 0, _tracksCount - 1);
+
+            Console.WriteLine($"Frame: {mouseOverFrame}, Track: {mouseOverTrackIndex}");
+            
+            var clipTopLeft = new Vector2(
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth +
+                _trackContentWidth * ((float) (mouseOverFrame) / _sequenceFrameLength),
+                _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight + (mouseOverTrackIndex) *
+                (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin)
+            );
+            var clipBottomRight = new Vector2(
+                _drawOrigin.X + Settings.Instance.TrackHeaderWidth + _trackContentWidth *
+                ((float) (mouseOverFrame + frameLength) / _sequenceFrameLength),
+                _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight +
+                (mouseOverTrackIndex + 1) * Settings.Instance.TrackHeight +
+                (mouseOverTrackIndex) * Settings.Instance.TrackMargin
+            );
+            
+            ImGui.SetCursorPos(clipTopLeft - _drawOrigin + _contentRegionMin);
+            bool isClicked = ImGui.Button("##dragged-asset-clip", clipBottomRight - clipTopLeft);
+
+            return isClicked;
         }
     }
 }
