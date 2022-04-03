@@ -29,7 +29,17 @@ namespace SCVE.Editor
 
         public ThreeWayImage Sample(Sequence sequence, ScveVector2I renderResolution, int timeFrame)
         {
-            _pool ??= new ByteArrayPool(renderResolution.X * renderResolution.Y * 4, 2);
+            if (_pool is not null)
+            {
+                if (_pool.Length != renderResolution.X * renderResolution.Y * 4)
+                {
+                    _pool = new ByteArrayPool(renderResolution.X * renderResolution.Y * 4, 2);
+                }
+            }
+            else
+            {
+                _pool ??= new ByteArrayPool(renderResolution.X * renderResolution.Y * 4, 2);
+            }
 
             var previewPoolItem = _pool.GetFree();
             var clipPoolItem = _pool.GetFree();

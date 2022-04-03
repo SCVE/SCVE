@@ -4,11 +4,18 @@ using System.IO;
 using System.Numerics;
 using System.Threading.Tasks;
 using ImGuiNET;
+using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi.Panels
 {
+    public enum ExportMode
+    {
+        PngSequence,
+        AviUncompressed
+    }
+
     public class ExportSequenceModalPanel : ImGuiModalPanel
     {
         private string _exportingFramesString;
@@ -22,10 +29,18 @@ namespace SCVE.Editor.ImGuiUi.Panels
         private ExportService _exportService;
         private bool _isDone;
 
+        private ImGuiSelectableContextMenu<Resolution> _resolutionContextMenu;
+        private int _selectedResolutionIndex;
+
+        private ImGuiEnumContextMenu<ExportMode> _exportModeContextMenu;
+        private ExportMode _currentExportMode = ExportMode.PngSequence;
+
         public ExportSequenceModalPanel(ExportService exportService)
         {
             _exportService = exportService;
             _directoryPickerModalPanel = new DirectoryPickerModalPanel();
+            _resolutionContextMenu = new ImGuiSelectableContextMenu<Resolution>(SupportedResolutions.Resolutions, 0, "##resolution");
+            _exportModeContextMenu = new ImGuiEnumContextMenu<ExportMode>(0, "##export-mode");
             Name = "Export Sequence";
         }
 
@@ -35,6 +50,9 @@ namespace SCVE.Editor.ImGuiUi.Panels
             _exportingFramesString = $"Exporting Frames: 0 - {sequence.FrameLength - 1}";
             _folderCreationInfoString = $"A folder \"{sequence.Title}\" will be created";
             _location = Environment.CurrentDirectory;
+            _currentExportMode = ExportMode.PngSequence;
+            _selectedResolutionIndex = 0;
+            _isDone = false;
             IsOpen = true;
         }
 
@@ -66,7 +84,23 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     _location = location;
                 }
 
-                ImGui.Text(_folderCreationInfoString);
+                _currentExportMode = _exportModeContextMenu.OnImGuiRender();
+
+                switch (_currentExportMode)
+                {
+                    case ExportMode.PngSequence:
+                        ImGui.Text(_folderCreationInfoString);
+                        break;
+                    case ExportMode.AviUncompressed:
+                        ImGui.Text("Be aware of file size");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                ImGui.TextUnformatted("Select resolution");
+
+                _selectedResolutionIndex = _resolutionContextMenu.OnImGuiRender();
 
                 ImGui.Text(_exportingFramesString);
 
@@ -74,7 +108,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 {
                     unsafe
                     {
-                        ImGuiNative.igProgressBar(_exportService.Progress, Vector2.Zero, (byte*) null);
+                        ImGuiNative.igProgressBar(_exportService.Progress, Vector2.Zero, null);
                     }
 
                     ImGui.TextDisabled("Export");
@@ -82,23 +116,36 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 }
                 else
                 {
+                    if (ImGui.Button("Export"))
+                    {
+                        _isExporting = true;
+
+                        switch (_currentExportMode)
+                        {
+                            case ExportMode.PngSequence:
+                                Task.Run(() => { _exportService.ExportPngSequence(_sequence, SupportedResolutions.Resolutions[_selectedResolutionIndex].Value, _location); })
+                                    .ContinueWith(_ =>
+                                    {
+                                        _isExporting = false;
+                                        _isDone = true;
+                                    });
+                                break;
+                            case ExportMode.AviUncompressed:
+                                Task.Run(() => { _exportService.ExportAvi(_sequence, SupportedResolutions.Resolutions[_selectedResolutionIndex].Value, _location); })
+                                    .ContinueWith(_ =>
+                                    {
+                                        _isExporting = false;
+                                        _isDone = true;
+                                    });
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+
                     if (_isDone)
                     {
                         ImGui.Text("Done!");
-                    }
-                    else
-                    {
-                        if (ImGui.Button("Export"))
-                        {
-                            _isExporting = true;
-
-                            Task.Run(() => { _exportService.Export(_sequence, _location); })
-                                .ContinueWith(_ =>
-                                {
-                                    _isExporting = false;
-                                    _isDone = true;
-                                });
-                        }
                     }
 
                     if (ImGui.Button("Close"))

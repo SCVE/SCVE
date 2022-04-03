@@ -18,6 +18,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Editor.Editing", "SCVE.Editor.Editing\SCVE.Editor.Editing.csproj", "{E687DAEE-30FF-478F-9D5E-27C5A9796B06}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Exporters.Avi", "SCVE.Exporters.Avi\SCVE.Exporters.Avi.csproj", "{63D03B10-AE7D-4E22-A663-48B57EDB6FDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAvi", "..\SharpAvi\SharpAvi\SharpAvi.csproj", "{61688290-8701-4988-880E-871C250AABC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +64,13 @@ Global
 		{E687DAEE-30FF-478F-9D5E-27C5A9796B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E687DAEE-30FF-478F-9D5E-27C5A9796B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E687DAEE-30FF-478F-9D5E-27C5A9796B06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63D03B10-AE7D-4E22-A663-48B57EDB6FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63D03B10-AE7D-4E22-A663-48B57EDB6FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63D03B10-AE7D-4E22-A663-48B57EDB6FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63D03B10-AE7D-4E22-A663-48B57EDB6FDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61688290-8701-4988-880E-871C250AABC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61688290-8701-4988-880E-871C250AABC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61688290-8701-4988-880E-871C250AABC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61688290-8701-4988-880E-871C250AABC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
