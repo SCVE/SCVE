@@ -1,6 +1,7 @@
 using System;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
+using SCVE.Editor.ImGuiUi.Models;
 using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 
@@ -19,7 +20,8 @@ namespace SCVE.Editor.ImGuiUi.Services
 
         private readonly GhostClip _ghostClip;
 
-        public SequencePanelService(EditingService editingService, PreviewService previewService, SequencePanelPainterService panelPainterService)
+        public SequencePanelService(EditingService editingService, PreviewService previewService,
+            SequencePanelPainterService panelPainterService)
         {
             _editingService = editingService;
             _previewService = previewService;
@@ -30,7 +32,8 @@ namespace SCVE.Editor.ImGuiUi.Services
 
         public void RefreshData()
         {
-            _panelPainterService.SetRenderData(_cursorDragFrames, _editingService.CursorFrame, _editingService.OpenedSequence);
+            _panelPainterService.SetRenderData(_cursorDragFrames, _editingService.CursorFrame,
+                _editingService.OpenedSequence);
         }
 
         public void DrawSequenceHeader()
@@ -51,8 +54,6 @@ namespace SCVE.Editor.ImGuiUi.Services
             {
                 _isDraggingCursor = true;
                 _cursorDragFrames = newCursorDragFrames;
-
-                // EditorApp.Late("sync preview", () => { _previewService.SyncVisiblePreview(_cursorDragFrames); });
             }
             else
             {
@@ -89,29 +90,50 @@ namespace SCVE.Editor.ImGuiUi.Services
                 {
                     var clip = _editingService.OpenedSequence.Tracks[i].EmptyClips[j];
 
-                    if (_panelPainterService.DrawClip(clip, i, out var isDragging, out var deltaFrames, out var deltaTracks))
-                    {
-                        EditorApp.Late(new SelectClipLateTask(clip));
-                    }
+                    DrawClipProcessManipulation(clip, i);
+                }
+                for (int j = 0; j < _editingService.OpenedSequence.Tracks[i].AssetClips.Count; j++)
+                {
+                    var clip = _editingService.OpenedSequence.Tracks[i].AssetClips[j];
 
-                    if (isDragging)
-                    {
-                        if (!_ghostClip.Visible)
-                        {
-                            CreateGhostClip(clip, i);
-                        }
-                        else
-                        {
-                            UpdateGhostClipValues(deltaTracks, deltaFrames);
-                        }
-                    }
-                    else
-                    {
-                        if (_ghostClip.Visible)
-                        {
-                            ApplyGhostClipValues();
-                        }
-                    }
+                    DrawClipProcessManipulation(clip, i);
+                }
+            }
+        }
+
+        private void DrawClipProcessManipulation(Clip clip, int trackIndex)
+        {
+            var clipManipulationData = new ClipManipulationData();
+            _panelPainterService.DrawClip(clip, trackIndex, ref clipManipulationData);
+
+            if (clipManipulationData.IsAnyPartClicked())
+            {
+                EditorApp.Late(new SelectClipLateTask(clip));
+            }
+
+            if (clipManipulationData.IsAnyPartActive() && !_ghostClip.Visible)
+            {
+                CreateGhostClip(clip, trackIndex);
+            }
+
+            if (clipManipulationData.IsBodyActive)
+            {
+                UpdateGhostClipValues(clipManipulationData.DeltaTracks, clipManipulationData.BodyDragDeltaFrames);
+            }
+            else if (clipManipulationData.IsHeadActive)
+            {
+                _ghostClip.CurrentStartFrame = _ghostClip.SourceStartFrame + clipManipulationData.HeadDragDeltaFrames;
+                _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength - clipManipulationData.HeadDragDeltaFrames;
+            }
+            else if (clipManipulationData.IsTailActive)
+            {
+                _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength + clipManipulationData.TailDragDeltaFrames;
+            }
+            else
+            {
+                if (_ghostClip.Visible)
+                {
+                    ApplyGhostClipValues();
                 }
             }
         }
@@ -145,7 +167,7 @@ namespace SCVE.Editor.ImGuiUi.Services
             }
         }
 
-        private void CreateGhostClip(EmptyClip clip, int trackIndex)
+        private void CreateGhostClip(Clip clip, int trackIndex)
         {
             _ghostClip.ReferencedClip = clip;
 

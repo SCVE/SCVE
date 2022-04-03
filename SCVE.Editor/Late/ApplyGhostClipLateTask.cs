@@ -33,6 +33,11 @@ namespace SCVE.Editor.Late
                 _ghostClip.ReferencedClip!.StartFrame = _ghostClip.CurrentStartFrame;
             }
 
+            if (_ghostClip.CurrentFrameLength != _ghostClip.SourceFrameLength)
+            {
+                _ghostClip.ReferencedClip!.FrameLength = _ghostClip.CurrentFrameLength;
+            }
+
             _ghostClip.Visible = false;
             _ghostClip.ReferencedClip = null;
             // Console.WriteLine("Applied new states to SourceClip");
