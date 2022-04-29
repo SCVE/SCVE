@@ -80,7 +80,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                         if (ImGui.Selectable(AllKnownEffects[i].Name))
                         {
                             _addEffectExpanded = false;
-                            var effect = Activator.CreateInstance(AllKnownEffects[i]) as EffectBase;
+                            var effect = Activator.CreateInstance(AllKnownEffects[i], true) as EffectBase;
 
                             EditorApp.Late(new AddEffectLateTask(clip, effect));
                         }

@@ -15,6 +15,7 @@ namespace SCVE.Editor.Late
         public override void AcceptVisitor(LateTaskVisitor visitor)
         {
             visitor.EditingService.OpenedProject.AddImage(_imageAsset);
+            visitor.ProjectPanelService.RescanCurrentLocation();
             Console.WriteLine($"Executed late action: AddImage");
         }
     }

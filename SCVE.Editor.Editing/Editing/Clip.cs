@@ -31,6 +31,8 @@ namespace SCVE.Editor.Editing.Editing
             Effects = new List<EffectBase>();
         }
 
+        public abstract Clip Duplicate();
+
         public virtual string ShortName()
         {
             return "Base clip";

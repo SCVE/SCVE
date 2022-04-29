@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using System;
+using ImGuiNET;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Editor.Editing.Visitors;
 using SCVE.Editor.Imaging;
@@ -15,14 +16,18 @@ namespace SCVE.Editor.ImGuiUi
 
         private ProjectPanelService _projectPanelService;
 
+        private DragDropAssetToSequenceService _dragDropAssetToSequenceService;
+
         public ImGuiAssetRenderer(
             PreviewService previewService,
             EditingService editingService,
-            ProjectPanelService projectPanelService)
+            ProjectPanelService projectPanelService,
+            DragDropAssetToSequenceService dragDropAssetToSequenceService)
         {
             _previewService = previewService;
             _editingService = editingService;
             _projectPanelService = projectPanelService;
+            _dragDropAssetToSequenceService = dragDropAssetToSequenceService;
         }
 
         public void Visit(ImageAsset asset)
@@ -42,9 +47,23 @@ namespace SCVE.Editor.ImGuiUi
                             assetTextureData.Height), "AssetTextureImage");
 
                 textureImage.ToGpu();
-                
-                
+
+
                 EditorApp.Late(new LoadPreviewImageLateTask(textureImage));
+            }
+
+            if (ImGui.IsItemActivated())
+            {
+                _dragDropAssetToSequenceService.SetDraggedAsset(asset);
+                Console.WriteLine("Started Drag");
+            }
+
+            if (ImGui.IsItemDeactivated())
+            {
+                EditorApp.Late(new CreateImageAssetClipLateTask(asset, _dragDropAssetToSequenceService.Frame, _dragDropAssetToSequenceService.Track));
+                
+                _dragDropAssetToSequenceService.SetDraggedAsset(null);
+                Console.WriteLine("Ended Drag");
             }
 
             if (elementExpanded)
@@ -64,6 +83,20 @@ namespace SCVE.Editor.ImGuiUi
                 EditorApp.Late(new OpenSequenceLateTask(asset.Content));
             }
 
+            // if (ImGui.IsItemActivated())
+            // {
+            //     _dragDropAssetToSequenceService.SetDraggedAsset(asset);
+            //     Console.WriteLine("Started Drag");
+            // }
+            //
+            // if (ImGui.IsItemDeactivated())
+            // {
+            //     EditorApp.Late(new CreateSequenceAssetClipLateTask(asset, _dragDropAssetToSequenceService.Frame, _dragDropAssetToSequenceService.Track));
+            //     
+            //     _dragDropAssetToSequenceService.SetDraggedAsset(null);
+            //     Console.WriteLine("Ended Drag");
+            // }
+
             if (elementExpanded)
             {
                 ImGui.TreePop();
@@ -79,6 +112,18 @@ namespace SCVE.Editor.ImGuiUi
             {
                 _projectPanelService.ChangeLocation(asset.Location + asset.Name + "/");
             }
+
+            // if (ImGui.IsItemActivated())
+            // {
+            //     _dragDropAssetToSequenceService.SetDraggedAsset(asset);
+            //     Console.WriteLine("Started Drag");
+            // }
+            //
+            // if (ImGui.IsItemDeactivated())
+            // {
+            //     _dragDropAssetToSequenceService.SetDraggedAsset(null);
+            //     Console.WriteLine("Ended Drag");
+            // }
 
             if (elementExpanded)
             {

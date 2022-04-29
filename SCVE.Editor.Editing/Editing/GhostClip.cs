@@ -13,6 +13,9 @@
         public int CurrentTrackIndex { get; set; }
         public int CurrentStartFrame { get; set; }
         public int CurrentFrameLength { get; set; }
+        public bool Materialize { get; set; }
+        public bool LockTrackChange { get; set; }
+        public bool LockFrameChange { get; set; }
 
         public GhostClip()
         {

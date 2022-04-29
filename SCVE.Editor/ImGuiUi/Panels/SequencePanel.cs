@@ -2,6 +2,7 @@
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.ImGuiUi.Services;
 using SCVE.Editor.Services;
+using Silk.NET.GLFW;
 
 namespace SCVE.Editor.ImGuiUi.Panels
 {
@@ -48,6 +49,8 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 
             _sequencePanelService.DrawGhostClip();
 
+            _sequencePanelService.ProcessDragDrop();
+            
             END:
             ImGui.End();
         }

@@ -38,7 +38,9 @@ namespace SCVE.Editor
                 );
                 editorApp.Init();
 
+                inputContext.Keyboards[0].KeyDown += (keyboard, key, scancode) => { editorApp.OnKeyDown(key); };
                 inputContext.Keyboards[0].KeyUp += (keyboard, key, scancode) => { editorApp.OnKeyPressed(key); };
+                inputContext.Keyboards[0].KeyUp += (keyboard, key, scancode) => { editorApp.OnKeyReleased(key); };
             };
 
             // Handle resizes

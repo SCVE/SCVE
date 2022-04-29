@@ -1,16 +1,20 @@
 using System;
+using ImGuiNET;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.ImGuiUi.Models;
 using SCVE.Editor.Late;
 using SCVE.Editor.Services;
+using Silk.NET.Input;
 
 namespace SCVE.Editor.ImGuiUi.Services
 {
-    public class SequencePanelService : IService
+    public class SequencePanelService : IService, IKeyDownReceiver, IKeyReleaseReceiver
     {
         private readonly EditingService _editingService;
         private readonly PreviewService _previewService;
+
+        private readonly DragDropAssetToSequenceService _dragDropAssetToSequenceService;
 
         private int _cursorDragFrames;
 
@@ -19,13 +23,20 @@ namespace SCVE.Editor.ImGuiUi.Services
         private readonly SequencePanelPainterService _panelPainterService;
 
         private readonly GhostClip _ghostClip;
+        private bool isAltPressed;
+        private bool isCtrlPressed;
+        private bool isShiftPressed;
 
-        public SequencePanelService(EditingService editingService, PreviewService previewService,
-            SequencePanelPainterService panelPainterService)
+        public SequencePanelService(
+            EditingService editingService,
+            PreviewService previewService,
+            SequencePanelPainterService panelPainterService,
+            DragDropAssetToSequenceService dragDropAssetToSequenceService)
         {
             _editingService = editingService;
             _previewService = previewService;
             _panelPainterService = panelPainterService;
+            _dragDropAssetToSequenceService = dragDropAssetToSequenceService;
 
             _ghostClip = new GhostClip();
         }
@@ -92,6 +103,7 @@ namespace SCVE.Editor.ImGuiUi.Services
 
                     DrawClipProcessManipulation(clip, i);
                 }
+
                 for (int j = 0; j < _editingService.OpenedSequence.Tracks[i].AssetClips.Count; j++)
                 {
                     var clip = _editingService.OpenedSequence.Tracks[i].AssetClips[j];
@@ -111,36 +123,47 @@ namespace SCVE.Editor.ImGuiUi.Services
                 EditorApp.Late(new SelectClipLateTask(clip));
             }
 
-            if (clipManipulationData.IsAnyPartActive() && !_ghostClip.Visible)
+            if (clipManipulationData.IsAnyPartActivated())
             {
-                CreateGhostClip(clip, trackIndex);
+                var ghostReferencedClip = isAltPressed ? clip.Duplicate() : clip;
+
+                CreateGhostClip(
+                    ghostReferencedClip,
+                    trackIndex,
+                    materialize: isAltPressed,
+                    lockTrackChange: isCtrlPressed,
+                    lockFrameChange: isShiftPressed
+                );
             }
 
-            if (clipManipulationData.IsBodyActive)
+            if (clipManipulationData.IsAnyPartActive())
             {
-                UpdateGhostClipValues(clipManipulationData.DeltaTracks, clipManipulationData.BodyDragDeltaFrames);
-            }
-            else if (clipManipulationData.IsHeadActive)
-            {
-                _ghostClip.CurrentStartFrame = _ghostClip.SourceStartFrame + clipManipulationData.HeadDragDeltaFrames;
-                _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength - clipManipulationData.HeadDragDeltaFrames;
-            }
-            else if (clipManipulationData.IsTailActive)
-            {
-                _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength + clipManipulationData.TailDragDeltaFrames;
-            }
-            else
-            {
-                if (_ghostClip.Visible)
+                if (clipManipulationData.IsBodyActive)
                 {
-                    ApplyGhostClipValues();
+                    UpdateGhostClipValues(clipManipulationData.DeltaTracks, clipManipulationData.BodyDragDeltaFrames);
                 }
+
+                if (clipManipulationData.IsHeadActive)
+                {
+                    _ghostClip.CurrentStartFrame = _ghostClip.SourceStartFrame + clipManipulationData.HeadDragDeltaFrames;
+                    _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength - clipManipulationData.HeadDragDeltaFrames;
+                }
+
+                if (clipManipulationData.IsTailActive)
+                {
+                    _ghostClip.CurrentFrameLength = _ghostClip.SourceFrameLength + clipManipulationData.TailDragDeltaFrames;
+                }
+            }
+
+            if (clipManipulationData.IsAnyPartDeactivated())
+            {
+                ApplyGhostClipValues();
             }
         }
 
         private void UpdateGhostClipValues(int deltaTracks, int deltaFrames)
         {
-            if (_ghostClip.CurrentTrackIndex != _ghostClip.SourceTrackIndex + deltaTracks)
+            if (!_ghostClip.LockTrackChange && _ghostClip.CurrentTrackIndex != _ghostClip.SourceTrackIndex + deltaTracks)
             {
                 int newTrackIndex = _ghostClip.SourceTrackIndex + deltaTracks;
                 if (newTrackIndex >= 0 && newTrackIndex < _editingService.OpenedSequence.Tracks.Count)
@@ -150,7 +173,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 }
             }
 
-            if (_ghostClip.CurrentStartFrame != _ghostClip.SourceStartFrame + deltaFrames)
+            if (!_ghostClip.LockFrameChange && _ghostClip.CurrentStartFrame != _ghostClip.SourceStartFrame + deltaFrames)
             {
                 _ghostClip.CurrentStartFrame = _ghostClip.SourceStartFrame + deltaFrames;
 
@@ -167,7 +190,7 @@ namespace SCVE.Editor.ImGuiUi.Services
             }
         }
 
-        private void CreateGhostClip(Clip clip, int trackIndex)
+        private void CreateGhostClip(Clip clip, int trackIndex, bool materialize, bool lockTrackChange, bool lockFrameChange)
         {
             _ghostClip.ReferencedClip = clip;
 
@@ -179,6 +202,10 @@ namespace SCVE.Editor.ImGuiUi.Services
             _ghostClip.CurrentStartFrame = clip.StartFrame;
             _ghostClip.CurrentFrameLength = clip.FrameLength;
 
+            _ghostClip.Materialize = materialize;
+            _ghostClip.LockTrackChange = lockTrackChange;
+            _ghostClip.LockFrameChange = lockFrameChange;
+
             _ghostClip.Visible = true;
             Console.WriteLine("Created GhostClip");
         }
@@ -186,6 +213,52 @@ namespace SCVE.Editor.ImGuiUi.Services
         private void ApplyGhostClipValues()
         {
             EditorApp.Late(new ApplyGhostClipLateTask(_ghostClip));
+        }
+
+        public void ProcessDragDrop()
+        {
+            if (_dragDropAssetToSequenceService.DraggedAsset is not null)
+            {
+                _panelPainterService.DrawDraggedAssetClip(out int mouseOverFrame, out int mouseOverTrackIndex);
+
+                _dragDropAssetToSequenceService.SetDragDestination(mouseOverFrame, mouseOverTrackIndex);
+            }
+        }
+
+        public void OnKeyDown(Key key)
+        {
+            if (key is Key.AltLeft or Key.AltRight)
+            {
+                isAltPressed = true;
+            }
+
+            if (key is Key.ShiftLeft or Key.ShiftRight)
+            {
+                isShiftPressed = true;
+            }
+
+            if (key is Key.ControlLeft or Key.ControlLeft)
+            {
+                isCtrlPressed = true;
+            }
+        }
+
+        public void OnKeyReleased(Key key)
+        {
+            if (key is Key.AltLeft or Key.AltRight)
+            {
+                isAltPressed = false;
+            }
+
+            if (key is Key.ShiftLeft or Key.ShiftRight)
+            {
+                isShiftPressed = false;
+            }
+
+            if (key is Key.ControlLeft or Key.ControlLeft)
+            {
+                isCtrlPressed = false;
+            }
         }
     }
 }
