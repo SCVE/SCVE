@@ -81,7 +81,7 @@ namespace SCVE.Editor.Services
             {
                 _sampledFrame?.Dispose();
                 _frame = _editingService.CursorFrame;
-                _sampledFrame = _samplerService.Sampler.Sample(_sequence, _resolution, _frame);
+                _sampledFrame = _samplerService.Sample(_sequence, _resolution, _frame);
                 _sampledFrame.ToGpu();
                 PreviewImage = _sampledFrame;
             }

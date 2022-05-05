@@ -80,7 +80,6 @@ namespace SCVE.Editor
             }
 
             serviceCollection.AddSingleton<ClipEvaluator>();
-            serviceCollection.AddSingleton<SequenceSampler>();
             serviceCollection.AddSingleton<ImGuiAssetRenderer>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();

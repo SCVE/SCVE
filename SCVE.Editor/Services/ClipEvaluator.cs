@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using SCVE.Editor.Editing.Editing;
 using SCVE.Editor.Editing.ProjectStructure;
 using SCVE.Engine.ImageSharpBindings;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace SCVE.Editor.Services
 {
@@ -12,11 +9,13 @@ namespace SCVE.Editor.Services
     {
         private AssetCacheService _assetCacheService;
         private EditingService _editingService;
+        private RenderingService _renderingService;
 
-        public ClipEvaluator(AssetCacheService assetCacheService, EditingService editingService)
+        public ClipEvaluator(AssetCacheService assetCacheService, EditingService editingService, RenderingService renderingService)
         {
             _assetCacheService = assetCacheService;
             _editingService = editingService;
+            _renderingService = renderingService;
         }
 
         /// <summary>
@@ -28,19 +27,21 @@ namespace SCVE.Editor.Services
             {
                 case AssetType.Sequence:
                     throw new NotImplementedException("Sequence Not Supported");
-                    break;
                 case AssetType.Image:
                 {
-                    var imageAsset = _editingService.OpenedProject.Images.First(a => a.Guid == clip.ReferencedAssetId);
+                    if (!_renderingService.CachedImages.ContainsKey(clip.ReferencedAssetId))
+                    {
+                        Console.WriteLine($"Cache miss found for asset: {clip.ReferencedAssetId}");
+                        
+                        _renderingService.LoadFromAssetClip(clip);
+                    }
+                    var cachedImage = _renderingService.CachedImages[clip.ReferencedAssetId];
 
-                    var textureFileData = ImageSharpTextureLoader.Load(imageAsset.Content.RelativePath);
-
-                    ImageSharpImageManipulator.DrawOnTop(pixels, width, height, textureFileData.RgbaPixels, textureFileData.Width, textureFileData.Height);
+                    ImageSharpImageManipulator.DrawOnTop(pixels, width, height, cachedImage.RgbaPixels, cachedImage.Width, cachedImage.Height);
                 }
                     break;
                 case AssetType.Folder:
                     throw new NotImplementedException("Folder Not Supported");
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
