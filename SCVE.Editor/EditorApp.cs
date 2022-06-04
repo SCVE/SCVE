@@ -67,6 +67,8 @@ namespace SCVE.Editor
 
         public void Init()
         {
+            ImGuiThemeClassicLight.Apply();
+
             IServiceCollection serviceCollection = new ServiceCollection();
 
             foreach (var type in Utils.GetAssignableTypes<IService>())

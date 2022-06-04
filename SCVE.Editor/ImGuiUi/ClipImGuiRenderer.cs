@@ -52,7 +52,7 @@ namespace SCVE.Editor.ImGuiUi
             painter.AddText(
                 topLeft + new Vector2(Settings.Instance.ClipPadding + Settings.Instance.ClipRounding, Settings.Instance.ClipPadding) +
                 new Vector2(0, ((bottomRight.Y - Settings.Instance.ClipPadding) - (topLeft.Y + Settings.Instance.ClipPadding)) / 2 - clipTextSize.Y / 2),
-                0xFF000000,
+                0xFFFFFFFF,
                 clip.ShortName()
             );
         }

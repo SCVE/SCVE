@@ -50,6 +50,11 @@ namespace SCVE.Editor.ImGuiUi.Services
         #endregion
 
         private readonly SettingsService _settingsService;
+        private uint frameBgColor;
+        private uint frameBgActiveColor;
+        private uint frameBgHoveredColor;
+        private uint buttonColor;
+        private uint headerColor;
 
         public SequencePanelPainterService(SettingsService settingsService)
         {
@@ -60,6 +65,14 @@ namespace SCVE.Editor.ImGuiUi.Services
         public void SetRenderData(int cursorDragFrames, int cursorFrame, Sequence sequence)
         {
             _painter = ImGui.GetWindowDrawList();
+            
+            var style = ImGui.GetStyle();
+            frameBgColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int)ImGuiCol.FrameBg]);
+            frameBgActiveColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.FrameBgActive]);
+            frameBgHoveredColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.FrameBgHovered]);
+            buttonColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.Button]);
+            headerColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.Header]);
+            
             _windowPosition = ImGui.GetWindowPos();
             _contentRegionMin = ImGui.GetWindowContentRegionMin();
             _contentRegionAvail = ImGui.GetContentRegionAvail();
@@ -81,7 +94,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth, _drawOrigin.Y),
                 new Vector2(_drawOrigin.X + _windowContentWidth,
                     _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight),
-                0xFF333333
+                frameBgColor
             );
 
             newCursorTimeFrame = _cursorFrame;
@@ -136,6 +149,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                     markerStripHeight = Settings.Instance.TimelineFrameMarkerHeight;
                 }
 
+                // draw a time strip
                 _painter.AddLine(
                     new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth + i * _widthPerFrame,
                         _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight - markerStripHeight),
@@ -207,7 +221,11 @@ namespace SCVE.Editor.ImGuiUi.Services
                 cursorCurrentPoints[i].Y = Settings.Instance.CursorShapePoints[i].Y + cursorPosition.Y;
             }
 
-            _painter.AddConvexPolyFilled(ref cursorCurrentPoints[0], Settings.Instance.CursorShapePoints.Length, 0xFFAA6666);
+            _painter.AddConvexPolyFilled(
+                ref cursorCurrentPoints[0],
+                Settings.Instance.CursorShapePoints.Length,
+                buttonColor
+            );
 
             return isDragging;
         }
@@ -241,7 +259,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                     _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight +
                     (index + 1) * Settings.Instance.TrackHeight +
                     index * Settings.Instance.TrackMargin),
-                0xFF444444
+                headerColor
             );
 
             _painter.AddText(
@@ -268,7 +286,7 @@ namespace SCVE.Editor.ImGuiUi.Services
         private void DrawClipHead(Clip clip, Vector2 position, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos(position - _windowPosition);
-            isClicked = ImGui.Button($"##clip-head{clip.Guid:N}", size);
+            isClicked = ImGui.InvisibleButton($"##clip-head{clip.Guid:N}", size);
             isActive = ImGui.IsItemActive();
             isActivated = ImGui.IsItemActivated();
             isDeactivated = ImGui.IsItemDeactivated();
@@ -277,7 +295,7 @@ namespace SCVE.Editor.ImGuiUi.Services
         private void DrawClipBody(Clip clip, Vector2 position, float marginLeft, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos((position - _windowPosition) + new Vector2(marginLeft, 0));
-            isClicked = ImGui.Button($"##clip-body{clip.Guid:N}", size);
+            isClicked = ImGui.InvisibleButton($"##clip-body{clip.Guid:N}", size);
             isActive = ImGui.IsItemActive();
             isActivated = ImGui.IsItemActivated();
             isDeactivated = ImGui.IsItemDeactivated();
@@ -286,7 +304,7 @@ namespace SCVE.Editor.ImGuiUi.Services
         private void DrawClipTail(Clip clip, Vector2 position, float marginLeft, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos((position - _windowPosition) + new Vector2(marginLeft, 0));
-            isClicked = ImGui.Button($"##clip-tail{clip.Guid:N}", size);
+            isClicked = ImGui.InvisibleButton($"##clip-tail{clip.Guid:N}", size);
             isActive = ImGui.IsItemActive();
             isActivated = ImGui.IsItemActivated();
             isDeactivated = ImGui.IsItemDeactivated();

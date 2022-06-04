@@ -86,6 +86,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                         }
                     }
 
+                    // TODO: magic number (I don't even know what it means)
                     ImGui.SetCursorPos(new Vector2(8, 200 - 20 - 8 - 4));
                     if (ImGui.Button("Cancel"))
                     {
@@ -96,7 +97,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 }
             }
 
-            if (ImGui.IsKeyPressed((int) Keys.Delete))
+            if (ImGui.IsKeyPressed(ImGuiKey.Delete))
             {
                 if (_lastSelectedEffect != -1)
                 {

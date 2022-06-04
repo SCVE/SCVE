@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ImGui.NET" Version="1.86.0" />
+      <PackageReference Include="ImGui.NET" Version="1.87.3" />
       <PackageReference Include="JsonSubTypes" Version="1.8.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
       <PackageReference Include="Silk.NET" Version="2.12.0" />

@@ -100,18 +100,21 @@ namespace SCVE.Editor.ImGuiUi.Panels
         {
             ImGui.SetCursorPos(new Vector2(8, _windowSize.Y - 20 - 8 - 4));
 
-            if (ImGui.Button("Apply"))
+            using (WhiteTextContext.Instance)
             {
-                EditorApp.Late(new ApplySettingsLateTask(_draftSettings));
-            }
+                if (ImGui.Button("Apply"))
+                {
+                    EditorApp.Late(new ApplySettingsLateTask(_draftSettings));
+                }
 
-            ImGui.SameLine();
+                ImGui.SameLine();
 
-            if (ImGui.Button("Close"))
-            {
-                Console.WriteLine("Settings modal has been closed.");
-                ImGui.CloseCurrentPopup();
-                Close();
+                if (ImGui.Button("Close"))
+                {
+                    Console.WriteLine("Settings modal has been closed.");
+                    ImGui.CloseCurrentPopup();
+                    Close();
+                }
             }
         }
     }
