@@ -86,7 +86,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                         }
                     }
 
-                    // TODO: magic number (I don't even know what it means)
+                    // TODO: magic number (I believe, 200 is window height, 20 is button height, 8 is window padding, 4 is magic margin)
                     ImGui.SetCursorPos(new Vector2(8, 200 - 20 - 8 - 4));
                     if (ImGui.Button("Cancel"))
                     {
