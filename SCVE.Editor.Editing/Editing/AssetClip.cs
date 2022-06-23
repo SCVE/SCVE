@@ -9,8 +9,8 @@ namespace SCVE.Editor.Editing.Editing;
 /// </summary>
 public class AssetClip : Clip
 {
-    public AssetType AssetType { get; private set; }
-    public Guid ReferencedAssetId { get; private set; }
+    public AssetType AssetType { get; set; }
+    public Guid ReferencedAssetId { get; set; }
 
     [JsonConstructor]
     private AssetClip()

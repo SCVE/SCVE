@@ -92,9 +92,6 @@ namespace SCVE.Editor.ImGuiUi
                                     var videoProject = Utils.ReadJson<VideoProject>(recent);
 
                                     EditorApp.Late(new OpenProjectLateTask(videoProject, recent));
-
-                                    // NOTE: break is needed, because _recentsService.NoticeOpen() modifies original list
-                                    // break;
                                 }
 
                                 ShowHint(recent);
@@ -159,7 +156,6 @@ namespace SCVE.Editor.ImGuiUi
                     HandleAddImageFilePicker(shouldOpenAddImageFilePicker);
                 }
 
-
                 if (ImGui.BeginMenu("Windows"))
                 {
                     if (ImGui.MenuItem("Settings"))
@@ -195,7 +191,6 @@ namespace SCVE.Editor.ImGuiUi
                     );
 
                     EditorApp.Late(new AddImageLateTask(imageAsset));
-                    // EditorApp.Late("add image", () => { _editingService.OpenedProject.AddImage(imageAsset); });
                 }
             }
         }
@@ -233,7 +228,7 @@ namespace SCVE.Editor.ImGuiUi
             if (ImGui.IsItemHovered())
             {
                 // Change background transparency
-                ImGui.PushStyleColor(ImGuiCol.PopupBg, new Vector4(0, 0, 0, 0.3f));
+                ImGui.PushStyleColor(ImGuiCol.PopupBg, new Vector4(1, 1, 1, 0.8f));
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
                 ImGui.TextUnformatted(message);

@@ -25,7 +25,6 @@ namespace SCVE.Editor.ImGuiUi.Panels
             _sequencePanelService = sequencePanelService;
         }
 
-
         public void OnImGuiRender()
         {
             if (!ImGui.Begin("Sequence Panel"))

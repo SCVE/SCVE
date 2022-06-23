@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using SCVE.Engine.Core.Entities;
 using SCVE.Engine.Core.Loading;

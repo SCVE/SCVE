@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using ImGuiNET;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Late;
@@ -136,7 +137,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                 }
             }
 
-            ImGui.Text($"{_editingService.OpenedProject.Title} - {_projectPanelService.CurrentLocation}");
+            ImGui.Text(_editingService.OpenedProject.Title + " - " + _projectPanelService.CurrentLocation);
 
             // PushImGuiAssetTreeFolder(_editingService.OpenedProject.RootFolder.GetDirectChildFolder("assets"));
 

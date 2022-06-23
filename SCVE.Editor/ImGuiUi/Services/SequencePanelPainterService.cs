@@ -10,6 +10,9 @@ using SCVE.Editor.Services;
 
 namespace SCVE.Editor.ImGuiUi.Services
 {
+    // ABGR !!!
+    
+    
     public class SequencePanelPainterService : IService
     {
         #region Constants
@@ -65,14 +68,14 @@ namespace SCVE.Editor.ImGuiUi.Services
         public void SetRenderData(int cursorDragFrames, int cursorFrame, Sequence sequence)
         {
             _painter = ImGui.GetWindowDrawList();
-            
+
             var style = ImGui.GetStyle();
-            frameBgColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int)ImGuiCol.FrameBg]);
+            frameBgColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.FrameBg]);
             frameBgActiveColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.FrameBgActive]);
             frameBgHoveredColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.FrameBgHovered]);
             buttonColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.Button]);
             headerColor = ImGui.ColorConvertFloat4ToU32(style.Colors[(int) ImGuiCol.Header]);
-            
+
             _windowPosition = ImGui.GetWindowPos();
             _contentRegionMin = ImGui.GetWindowContentRegionMin();
             _contentRegionAvail = ImGui.GetContentRegionAvail();
@@ -94,7 +97,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth, _drawOrigin.Y),
                 new Vector2(_drawOrigin.X + _windowContentWidth,
                     _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight),
-                frameBgColor
+                0x22FFFFFF
             );
 
             newCursorTimeFrame = _cursorFrame;
@@ -102,7 +105,7 @@ namespace SCVE.Editor.ImGuiUi.Services
             ImGui.SetCursorPos(new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth,
                 _drawOrigin.Y) - _windowPosition);
             ImGui.SetItemAllowOverlap();
-            ImGui.InvisibleButton($"##timeline-header",
+            ImGui.InvisibleButton("##timeline-header",
                 new Vector2(_windowContentWidth - Settings.Instance.TrackHeaderWidth,
                     Settings.Instance.SequenceHeaderHeight));
 
@@ -129,7 +132,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 if (i % _sequenceFPS == 0)
                 {
                     markerStripHeight = Settings.Instance.TimelineSecondsMarkerHeight;
-                    var secondsText = $"{i / _sequenceFPS}";
+                    var secondsText = (i / _sequenceFPS).ToString();
                     var secondsTextSize = ImGui.CalcTextSize(secondsText);
 
                     // seconds text markers
@@ -140,7 +143,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                             _drawOrigin.Y + ((Settings.Instance.SequenceHeaderHeight -
                                               Settings.Instance.TimelineSecondsMarkerHeight) / 2f) -
                             secondsTextSize.Y / 2),
-                        0xFFFFFFFF,
+                        0xFF000000,
                         secondsText
                     );
                 }
@@ -155,7 +158,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                         _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight - markerStripHeight),
                     new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth + i * _widthPerFrame,
                         _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight),
-                    0xFFFFFFFF
+                    0xFF000000
                 );
 
                 // if (_previewService.HasCached(i, ImagePresence.GPU))
@@ -266,7 +269,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 new Vector2(_drawOrigin.X + Settings.Instance.TrackMarginLeft,
                     _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight + index *
                     (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin)),
-                0xFFFFFFFF, $"TRACK {index}");
+                0xFFFFFFFF, "TRACK " + index);
         }
 
         public void DrawTrackContentBackground(int index)
@@ -279,14 +282,14 @@ namespace SCVE.Editor.ImGuiUi.Services
                     _drawOrigin.Y + Settings.Instance.SequenceHeaderHeight +
                     (index + 1) * Settings.Instance.TrackHeight +
                     index * Settings.Instance.TrackMargin),
-                0xFF222222
+                0xFFCCCCCC
             );
         }
 
         private void DrawClipHead(Clip clip, Vector2 position, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos(position - _windowPosition);
-            isClicked = ImGui.InvisibleButton($"##clip-head{clip.Guid:N}", size);
+            isClicked = ImGui.InvisibleButton("##clip-head" + clip.Guid, size);
             isActive = ImGui.IsItemActive();
             isActivated = ImGui.IsItemActivated();
             isDeactivated = ImGui.IsItemDeactivated();
@@ -295,7 +298,7 @@ namespace SCVE.Editor.ImGuiUi.Services
         private void DrawClipBody(Clip clip, Vector2 position, float marginLeft, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos((position - _windowPosition) + new Vector2(marginLeft, 0));
-            isClicked = ImGui.InvisibleButton($"##clip-body{clip.Guid:N}", size);
+            isClicked = ImGui.InvisibleButton("##clip-body" + clip.Guid, size);
             isActive = ImGui.IsItemActive();
             isActivated = ImGui.IsItemActivated();
             isDeactivated = ImGui.IsItemDeactivated();
@@ -304,7 +307,7 @@ namespace SCVE.Editor.ImGuiUi.Services
         private void DrawClipTail(Clip clip, Vector2 position, float marginLeft, Vector2 size, out bool isClicked, out bool isActive, out bool isActivated, out bool isDeactivated)
         {
             ImGui.SetCursorPos((position - _windowPosition) + new Vector2(marginLeft, 0));
-            isClicked = ImGui.InvisibleButton($"##clip-tail{clip.Guid:N}", size);
+            isClicked = ImGui.InvisibleButton("##clip-tail" + clip.Guid, size);
             isActive = ImGui.IsItemActive();
             isActivated = ImGui.IsItemActivated();
             isDeactivated = ImGui.IsItemDeactivated();
@@ -410,15 +413,15 @@ namespace SCVE.Editor.ImGuiUi.Services
             var mousePos = ImGui.GetMousePos();
 
             mouseOverFrame = (int) ((mousePos.X - _drawOrigin.X - Settings.Instance.TrackHeaderWidth) / _widthPerFrame);
-            
+
             mouseOverFrame = Math.Clamp(mouseOverFrame, 0, _sequenceFrameLength - 1);
-            
+
             mouseOverTrackIndex = (int) ((mousePos.Y - _drawOrigin.Y - Settings.Instance.SequenceHeaderHeight) / (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin));
 
             mouseOverTrackIndex = Math.Clamp(mouseOverTrackIndex, 0, _tracksCount - 1);
 
             Console.WriteLine($"Frame: {mouseOverFrame}, Track: {mouseOverTrackIndex}");
-            
+
             var clipTopLeft = new Vector2(
                 _drawOrigin.X + Settings.Instance.TrackHeaderWidth +
                 _trackContentWidth * ((float) (mouseOverFrame) / _sequenceFrameLength),
@@ -432,7 +435,7 @@ namespace SCVE.Editor.ImGuiUi.Services
                 (mouseOverTrackIndex + 1) * Settings.Instance.TrackHeight +
                 (mouseOverTrackIndex) * Settings.Instance.TrackMargin
             );
-            
+
             ImGui.SetCursorPos(clipTopLeft - _drawOrigin + _contentRegionMin);
             bool isClicked = ImGui.Button("##dragged-asset-clip", clipBottomRight - clipTopLeft);
 

@@ -74,8 +74,8 @@ namespace SCVE.Editor.Services
                 }
             }
 
-            previewImageSharpImage.Mutate(i =>
-                i.DrawText($"DEBUG FRAME RENDER: {timeFrame}", font, Color.Red, new PointF(10, 0)));
+            // previewImageSharpImage.Mutate(i =>
+            //     i.DrawText($"DEBUG FRAME RENDER: {timeFrame}", font, Color.Red, new PointF(10, 0)));
 
             _pool.Return(previewPoolItem);
             _pool.Return(clipPoolItem);

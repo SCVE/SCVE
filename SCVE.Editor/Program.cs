@@ -33,7 +33,7 @@ namespace SCVE.Editor
                     {
                         var io = ImGui.GetIO();
                         io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-                        editorApp.OpenSansFont = io.Fonts.AddFontFromFileTTF("assets/Font/OpenSans-Regular.ttf", 18);
+                        editorApp.OpenSansFont = io.Fonts.AddFontFromFileTTF("assets/Font/OpenSans-Regular.ttf", 18, null, ImGui.GetIO().Fonts.GetGlyphRangesCyrillic());
                     }
                 );
                 editorApp.Init();

@@ -4,6 +4,7 @@
     {
       "Content": {
         "Guid": "e1ac7a3b-3a24-4d3d-abdb-135ff3910102",
+        "Title": null,
         "Tracks": [
           {
             "Guid": "906e67e9-5ff6-4c35-89c1-600b931bd3d0",
@@ -57,7 +58,23 @@
                 "Effects": []
               }
             ],
-            "AssetClips": []
+            "AssetClips": [
+              {
+                "AssetType": 1,
+                "ReferencedAssetId": "f3628fcd-d751-4c79-bd1f-afd43fe65ce5",
+                "Guid": "94d89d70-4d33-463f-9d29-1f6ff0a4680f",
+                "StartFrame": 50,
+                "FrameLength": 20,
+                "EndFrame": 70,
+                "Effects": [
+                  {
+                    "Type": "Scale",
+                    "X": 1.571,
+                    "Y": 1.0
+                  }
+                ]
+              }
+            ]
           },
           {
             "Guid": "e35a924a-d7c8-42fa-a275-8c51d8c14217",
@@ -85,6 +102,15 @@
       },
       "Guid": "6d70262b-27cb-435e-909b-5756b11c07f9",
       "Name": "Jessei.png",
+      "Location": "/"
+    },
+    {
+      "Content": {
+        "Guid": "78e2b455-87df-49b7-b4e8-31702c5996b2",
+        "RelativePath": "..\\..\\..\\Users\\Admin\\Downloads\\1000x600_21_526e9428878a6bdc1289f44b0e3a7a08@1920x1152_0xac120003_6243509021613634888.jpg"
+      },
+      "Guid": "f3628fcd-d751-4c79-bd1f-afd43fe65ce5",
+      "Name": "1000x600_21_526e9428878a6bdc1289f44b0e3a7a08@1920x1152_0xac120003_6243509021613634888.jpg",
       "Location": "/"
     }
   ],

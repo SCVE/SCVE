@@ -2,7 +2,7 @@
 
 public enum AssetType
 {
-    Sequence,
+    Sequence = 0,
     Image,
     Folder
 }

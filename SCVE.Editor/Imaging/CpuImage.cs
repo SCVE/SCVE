@@ -9,7 +9,7 @@ namespace SCVE.Editor.Imaging
         public int Width { get; set; }
 
         public int Height { get; set; }
-
+ 
         /// <summary>
         /// Constructs new empty RGBA image in memory
         /// </summary>
@@ -34,7 +34,6 @@ namespace SCVE.Editor.Imaging
             // copy the underlying memory
             Buffer.BlockCopy(image.ToByteArray(), 0, _bytes, 0, _bytes.Length);
         }
-
         /// <summary>
         /// Wraps a RGBA image from a byte array
         /// </summary>
@@ -45,12 +44,10 @@ namespace SCVE.Editor.Imaging
 
             _bytes = bytes;
         }
-
         public byte[] ToByteArray()
         {
             return _bytes;
         }
-
         public void Dispose()
         {
         }
