@@ -7,9 +7,9 @@ namespace SCVE.Editor.Services
     {
         public AssetBase DraggedAsset { get; private set; }
 
-        public int Frame { get; private set; }
+        public int Frame { get; private set; } = -1;
 
-        public int Track { get; private set; }
+        public int Track { get; private set; } = -1;
 
         public void SetDraggedAsset(AssetBase asset)
         {
@@ -20,6 +20,13 @@ namespace SCVE.Editor.Services
         {
             Frame = frame;
             Track = track;
+        }
+
+        public void Reset()
+        {
+            DraggedAsset = null;
+            Frame = -1;
+            Track = -1;
         }
     }
 }

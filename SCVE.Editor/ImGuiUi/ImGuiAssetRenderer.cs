@@ -58,11 +58,11 @@ namespace SCVE.Editor.ImGuiUi
                 Console.WriteLine("Started Drag");
             }
 
-            if (ImGui.IsItemDeactivated())
+            if (ImGui.IsItemDeactivated() && _dragDropAssetToSequenceService.Frame != -1 && _dragDropAssetToSequenceService.Track != -1)
             {
                 EditorApp.Late(new CreateImageAssetClipLateTask(asset, _dragDropAssetToSequenceService.Frame, _dragDropAssetToSequenceService.Track));
-                
-                _dragDropAssetToSequenceService.SetDraggedAsset(null);
+
+                _dragDropAssetToSequenceService.Reset();
                 Console.WriteLine("Ended Drag");
             }
 
@@ -77,7 +77,7 @@ namespace SCVE.Editor.ImGuiUi
             var elementExpanded = ImGui.TreeNodeEx(asset.Name,
                 ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanFullWidth);
 
-            if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+            if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             {
                 // _assetPreviewModalPanel.SetOpenedAsset(sequenceAsset);
                 EditorApp.Late(new OpenSequenceLateTask(asset.Content));

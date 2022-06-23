@@ -412,11 +412,38 @@ namespace SCVE.Editor.ImGuiUi.Services
         {
             var mousePos = ImGui.GetMousePos();
 
-            mouseOverFrame = (int) ((mousePos.X - _drawOrigin.X - Settings.Instance.TrackHeaderWidth) / _widthPerFrame);
+            var mouseOverFrameRaw = ((mousePos.X - _drawOrigin.X - Settings.Instance.TrackHeaderWidth) / _widthPerFrame);
+
+            // check left bound
+            if (mouseOverFrameRaw < 0)
+            {
+                mouseOverFrame = -1;
+                mouseOverTrackIndex = -1;
+                return false;
+            }
+
+            mouseOverFrame = (int) mouseOverFrameRaw;
+
+            // check right bound
+            if ((mouseOverFrame + frameLength) * _widthPerFrame > _trackContentWidth)
+            {
+                mouseOverFrame = -1;
+                mouseOverTrackIndex = -1;
+                return false;
+            }
 
             mouseOverFrame = Math.Clamp(mouseOverFrame, 0, _sequenceFrameLength - 1);
 
-            mouseOverTrackIndex = (int) ((mousePos.Y - _drawOrigin.Y - Settings.Instance.SequenceHeaderHeight) / (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin));
+            var mouseOverTrackRaw = ((mousePos.Y - _drawOrigin.Y - Settings.Instance.SequenceHeaderHeight) / (Settings.Instance.TrackHeight + Settings.Instance.TrackMargin));
+            
+            if (mouseOverTrackRaw < 0)
+            {
+                mouseOverFrame = -1;
+                mouseOverTrackIndex = -1;
+                return false;
+            }
+
+            mouseOverTrackIndex = (int) mouseOverTrackRaw;
 
             mouseOverTrackIndex = Math.Clamp(mouseOverTrackIndex, 0, _tracksCount - 1);
 

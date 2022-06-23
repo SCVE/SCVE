@@ -62,7 +62,7 @@ namespace SCVE.Editor.Services
         private ThreeWayImage _sampledFrame;
 
         private int _frame = -1;
-        
+
         public PreviewModeSequence(SamplerService samplerService, EditingService editingService)
         {
             _samplerService = samplerService;
@@ -119,6 +119,10 @@ namespace SCVE.Editor.Services
         public void SwitchToImage(ThreeWayImage image)
         {
             _currentPreviewModeType = PreviewModeType.Image;
+
+            // Delete previously opened image
+            _modeImage.PreviewImage?.Dispose();
+
             _modeImage.Set(image);
             _currentMode = _modeImage;
         }
