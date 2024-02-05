@@ -1,18 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <PackageId>SCVE.Engine.OpenTKBindings</PackageId>
-    </PropertyGroup>
-
     <ItemGroup>
       <ProjectReference Include="..\SCVE.Engine.Core\SCVE.Engine.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="OpenTK" Version="4.6.7" />
-      <PackageReference Include="OpenTK.redist.glfw" Version="3.3.4.15" />
+      <PackageReference Include="OpenTK" Version="4.8.2" />
+      <PackageReference Include="OpenTK.redist.glfw" Version="3.3.8.39" />
     </ItemGroup>
 
 </Project>

@@ -175,7 +175,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     var icon = path.IsDirectoryPath() ? DirectoryIcon : FileIcon;
                     // ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0, 0, 0, 0));
 
-                    ImGui.ImageButton((IntPtr) icon.GpuImage.GpuId, new Vector2(columnWidth, columnWidth), new Vector2(0, 1), new Vector2(1, 0));
+                    ImGui.ImageButton("filename", (IntPtr) icon.GpuImage.GpuId, new Vector2(columnWidth, columnWidth), new Vector2(0, 1), new Vector2(1, 0));
 
                     ImGui.PopID();
                     if (ImGui.BeginDragDropSource())

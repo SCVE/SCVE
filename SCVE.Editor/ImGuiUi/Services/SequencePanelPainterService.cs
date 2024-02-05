@@ -102,9 +102,8 @@ namespace SCVE.Editor.ImGuiUi.Services
 
             newCursorTimeFrame = _cursorFrame;
 
-            ImGui.SetCursorPos(new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth,
-                _drawOrigin.Y) - _windowPosition);
-            ImGui.SetItemAllowOverlap();
+            ImGui.SetCursorPos(new Vector2(_drawOrigin.X + Settings.Instance.TrackHeaderWidth, _drawOrigin.Y) - _windowPosition);
+            ImGui.SetNextItemAllowOverlap();
             ImGui.InvisibleButton("##timeline-header",
                 new Vector2(_windowContentWidth - Settings.Instance.TrackHeaderWidth,
                     Settings.Instance.SequenceHeaderHeight));
@@ -201,7 +200,7 @@ namespace SCVE.Editor.ImGuiUi.Services
             newCursorDragFrames = _cursorDragFrames;
 
             ImGui.SetCursorPos(cursorPosition - _windowPosition);
-            ImGui.SetItemAllowOverlap();
+            ImGui.SetNextItemAllowOverlap();
             ImGui.InvisibleButton($"##cursor", Settings.Instance.CursorSize);
 
             if (ImGui.IsItemActive())

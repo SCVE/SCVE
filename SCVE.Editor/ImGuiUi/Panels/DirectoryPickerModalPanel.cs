@@ -170,7 +170,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
             ImGui.Text(CurrentDirectory.FullName);
 
-            if (ImGui.BeginChild("DirectoryPickerCells", ImGui.GetContentRegionAvail() - new Vector2(0, 60), false, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+            if (ImGui.BeginChild("DirectoryPickerCells", ImGui.GetContentRegionAvail() - new Vector2(0, 60)))
             {
                 int columnCount = 6;
                 ImGui.Columns(columnCount, "directory_picker_columns", false);
@@ -188,7 +188,7 @@ namespace SCVE.Editor.ImGuiUi.Panels
                     var icon = path.IsDirectoryPath() ? DirectoryIcon : FileIcon;
                     // ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0, 0, 0, 0));
 
-                    ImGui.ImageButton((IntPtr) icon.GpuImage.GpuId, new Vector2(columnWidth, columnWidth));
+                    ImGui.ImageButton(filename, (IntPtr) icon.GpuImage.GpuId, new Vector2(columnWidth, columnWidth));
 
                     ImGui.PopID();
 

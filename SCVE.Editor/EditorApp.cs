@@ -87,35 +87,35 @@ namespace SCVE.Editor
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             _imGuiPanels = Utils.GetAssignableTypes<IImGuiPanel>()
-                .Select(t => serviceProvider.GetService(t) as IImGuiPanel)
+                .Select(t => (serviceProvider.GetService(t) as IImGuiPanel)!)
                 .ToList();
 
             _services = Utils.GetAssignableTypes<IService>()
-                .Select(t => serviceProvider.GetService(t) as IService)
+                .Select(t => (serviceProvider.GetService(t) as IService)!)
                 .ToList();
 
             _updateReceivers = Utils.GetAssignableTypes<IUpdateReceiver>()
-                .Select(t => serviceProvider.GetService(t) as IUpdateReceiver)
+                .Select(t => (serviceProvider.GetService(t) as IUpdateReceiver)!)
                 .ToList();
 
             _exitReceivers = Utils.GetAssignableTypes<IExitReceiver>()
-                .Select(t => serviceProvider.GetService(t) as IExitReceiver)
+                .Select(t => (serviceProvider.GetService(t) as IExitReceiver)!)
                 .ToList();
 
             _keyPressReceivers = Utils.GetAssignableTypes<IKeyPressReceiver>()
-                .Select(t => serviceProvider.GetService(t) as IKeyPressReceiver)
+                .Select(t => (serviceProvider.GetService(t) as IKeyPressReceiver)!)
                 .ToList();
 
             _keyDownReceivers = Utils.GetAssignableTypes<IKeyDownReceiver>()
-                .Select(t => serviceProvider.GetService(t) as IKeyDownReceiver)
+                .Select(t => (serviceProvider.GetService(t) as IKeyDownReceiver)!)
                 .ToList();
 
             _keyReleaseReceivers = Utils.GetAssignableTypes<IKeyReleaseReceiver>()
-                .Select(t => serviceProvider.GetService(t) as IKeyReleaseReceiver)
+                .Select(t => (serviceProvider.GetService(t) as IKeyReleaseReceiver)!)
                 .ToList();
 
             _fileDropReceivers = Utils.GetAssignableTypes<IFileDropReceiver>()
-                .Select(t => serviceProvider.GetService(t) as IFileDropReceiver)
+                .Select(t => (serviceProvider.GetService(t) as IFileDropReceiver)!)
                 .ToList();
 
             _lateTaskVisitor = serviceProvider.GetRequiredService<LateTaskVisitor>();
