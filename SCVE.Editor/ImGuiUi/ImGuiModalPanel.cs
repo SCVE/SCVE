@@ -28,7 +28,7 @@ public abstract class ImGuiModalPanel : IImGuiPanel
         }
 
         ImGui.SetNextWindowSize(new Vector2(600, 400));
-        bool dummy = true;
+
         if (ImGui.BeginPopup(ImGuiId, ImGuiWindowFlags.NoResize))
         {
             OnImGuiRenderContent();

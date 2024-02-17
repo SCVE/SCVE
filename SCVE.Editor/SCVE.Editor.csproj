@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\SCVE.Bootstrap\SCVE.Bootstrap.csproj" />
       <ProjectReference Include="..\SCVE.Editor.Core\SCVE.Editor.Core.csproj" />
       <ProjectReference Include="..\SCVE.Exporters.Avi\SCVE.Exporters.Avi.csproj" />
     </ItemGroup>

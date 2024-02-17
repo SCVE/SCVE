@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAvi", "..\SharpAvi\Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Editor.FileSystem", "SCVE.Editor.FileSystem\SCVE.Editor.FileSystem.csproj", "{CF7514AB-E29E-464C-A2F0-6A228D691721}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Bootstrap", "SCVE.Bootstrap\SCVE.Bootstrap.csproj", "{B38A6A47-6448-43CD-8D1D-4EFD807AB881}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{CF7514AB-E29E-464C-A2F0-6A228D691721}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF7514AB-E29E-464C-A2F0-6A228D691721}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF7514AB-E29E-464C-A2F0-6A228D691721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B38A6A47-6448-43CD-8D1D-4EFD807AB881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B38A6A47-6448-43CD-8D1D-4EFD807AB881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B38A6A47-6448-43CD-8D1D-4EFD807AB881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B38A6A47-6448-43CD-8D1D-4EFD807AB881}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

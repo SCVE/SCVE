@@ -48,7 +48,8 @@ namespace SCVE.Editor.ImGuiUi.Panels
 
                 if (canCreate)
                 {
-                    var project = new Project();
+                    var project = new Project(_title);
+
                     EditorApp.Instance.OpenProject(project);
                     
                     ImGui.CloseCurrentPopup();

@@ -1,20 +1,17 @@
 ﻿using ImGuiNET;
 using Microsoft.Extensions.DependencyInjection;
+using SCVE.Bootstrap;
 using SCVE.Editor.Abstractions;
 using SCVE.Editor.Core;
-using SCVE.Editor.ImGuiUi;
 using SCVE.Editor.Services;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
-using Silk.NET.Windowing;
 using Vector2 = System.Numerics.Vector2;
 
 namespace SCVE.Editor
 {
-    public class EditorApp
+    public class EditorApp : BootstrappedApplication
     {
-        private readonly IWindow _window;
-
         public Project? ActiveProject { get; private set; }
 
         public GL GL { get; set; }
@@ -41,14 +38,14 @@ namespace SCVE.Editor
         private RecentsService _recentsService;
         private SettingsService _settingsService;
 
-        public EditorApp(IWindow window)
+        public EditorApp()
         {
-            _window = window;
             Instance = this;
         }
 
-        public void Init()
+        public override void Init(GL openGl, ImFontPtr openSansFont)
         {
+            base.Init(openGl, openSansFont);
             ImGui.StyleColorsLight();
 
             IServiceCollection serviceCollection = new ServiceCollection();
@@ -97,29 +94,29 @@ namespace SCVE.Editor
             _settingsService.TryLoad();
         }
 
-        public void OnImGuiRender()
+        public override void OnImGuiRender()
         {
             ImGui.PushFont(OpenSansFont);
 
             // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
             // because it would be confusing to have two docking targets within each others.
-            ImGuiWindowFlags window_flags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+            var windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
             if (_optFullscreen)
             {
-                ImGuiViewportPtr viewport = ImGui.GetMainViewport();
+                var viewport = ImGui.GetMainViewport();
                 ImGui.SetNextWindowPos(viewport.Pos);
                 ImGui.SetNextWindowSize(viewport.Size);
                 ImGui.SetNextWindowViewport(viewport.ID);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-                window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+                windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
                                 ImGuiWindowFlags.NoMove;
-                window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+                windowFlags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
             }
 
             // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
             if ((_dockspaceFlags & ImGuiDockNodeFlags.PassthruCentralNode) != 0)
-                window_flags |= ImGuiWindowFlags.NoBackground;
+                windowFlags |= ImGuiWindowFlags.NoBackground;
 
             // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
             // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
@@ -127,21 +124,21 @@ namespace SCVE.Editor
             // We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
             // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0.0f, 0.0f));
-            ImGui.Begin("DockSpace Demo", ref _dockspaceOpen, window_flags);
+            ImGui.Begin("DockSpace Demo", ref _dockspaceOpen, windowFlags);
             ImGui.PopStyleVar();
 
             if (_optFullscreen)
                 ImGui.PopStyleVar(2);
 
             // DockSpace
-            ImGuiIOPtr io = ImGui.GetIO();
-            ImGuiStylePtr style = ImGui.GetStyle();
-            float minWinSizeX = style.WindowMinSize.X;
+            var io = ImGui.GetIO();
+            var style = ImGui.GetStyle();
+            var minWinSizeX = style.WindowMinSize.X;
             style.WindowMinSize.X = 370.0f;
             if ((io.ConfigFlags & ImGuiConfigFlags.DockingEnable) != 0)
             {
-                uint dockspace_id = ImGui.GetID("MyDockSpace");
-                ImGui.DockSpace(dockspace_id, new Vector2(0.0f, 0.0f), _dockspaceFlags);
+                var dockspaceId = ImGui.GetID("MyDockSpace");
+                ImGui.DockSpace(dockspaceId, new Vector2(0.0f, 0.0f), _dockspaceFlags);
             }
 
             style.WindowMinSize.X = minWinSizeX;
@@ -159,18 +156,15 @@ namespace SCVE.Editor
             ImGui.End();
         }
 
-        public void Exit()
+        public override void Exit()
         {
             foreach (var exitReceiver in _exitReceivers)
             {
                 exitReceiver.OnExit();
             }
-
-            // TODO: Fix error with exiting
-            _window.IsClosing = true;
         }
 
-        public void Update(double delta)
+        public override void Update(double delta)
         {
             foreach (var updateReceiver in _updateReceivers)
             {
@@ -178,7 +172,7 @@ namespace SCVE.Editor
             }
         }
 
-        public void OnKeyPressed(Key key)
+        public override void OnKeyPressed(Key key)
         {
             foreach (var keyPressReceiver in _keyPressReceivers)
             {
@@ -186,7 +180,7 @@ namespace SCVE.Editor
             }
         }
 
-        public void OnKeyDown(Key key)
+        public override void OnKeyDown(Key key)
         {
             foreach (var keyDownReceiver in _keyDownReceivers)
             {
@@ -194,7 +188,7 @@ namespace SCVE.Editor
             }
         }
 
-        public void OnKeyReleased(Key key)
+        public override void OnKeyReleased(Key key)
         {
             foreach (var keyReleaseReceiver in _keyReleaseReceivers)
             {

@@ -9,9 +9,14 @@ namespace SCVE.Editor.ImGuiUi.Panels
         {
             if (ImGui.Begin("Project Panel", ImGuiWindowFlags.MenuBar))
             {
-                if (EditorApp.Instance.ActiveProject is null)
+                var project = EditorApp.Instance.ActiveProject;
+                if (project is null)
                 {
                     ImGui.Text("No project is opened");
+                }
+                else
+                {
+                    ImGui.Text(project.Title);
                 }
 
                 ImGui.End();
