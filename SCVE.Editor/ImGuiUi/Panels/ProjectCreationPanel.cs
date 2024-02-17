@@ -1,92 +1,58 @@
-﻿using System;
-using System.IO;
-using System.Numerics;
+﻿using System.Runtime.InteropServices;
 using ImGuiNET;
-using SCVE.Editor.Editing.ProjectStructure;
-using SCVE.Editor.Late;
-using SCVE.Editor.Services;
+using SCVE.Editor.Core;
 
 namespace SCVE.Editor.ImGuiUi.Panels
 {
     public class ProjectCreationPanel : ImGuiModalPanel
     {
-        private EditingService _editingService;
-        private ModalManagerService _modalManagerService;
-        private RecentsService _recentsService;
-        private ProjectPanelService _projectPanelService;
-        private DirectoryPickerModalPanel _directoryPickerModalPanel;
-
-        public ProjectCreationPanel(EditingService editingService, RecentsService recentsService, ProjectPanelService projectPanelService)
-        {
-            _editingService = editingService;
-            _recentsService = recentsService;
-            _projectPanelService = projectPanelService;
-            _directoryPickerModalPanel = new DirectoryPickerModalPanel();
-            Name = "New Project";
-        }
-
+        protected override string ImGuiId => "Create project##create-project";
+        
         private string _title = "";
 
-        private string _location = Environment.CurrentDirectory;
+        private List<string> _errors = new();
 
-        public override void OnImGuiRender()
+        public override void Open()
         {
-            if (IsOpen)
+            base.Open();
+            _errors.Clear();
+        }
+
+        protected override void OnImGuiRenderContent()
+        {
+            if (ImGui.InputTextWithHint(
+                    "Project title",
+                    "specify any title for the project",
+                    ref _title,
+                    256
+                ))
             {
-                ImGui.OpenPopup(Name);
             }
-
-            ImGui.SetNextWindowSize(new Vector2(600, 400));
-            if (ImGui.BeginPopupModal(Name, ref IsOpen, ImGuiWindowFlags.NoResize))
+            
+            ImGui.PushStyleColor(ImGuiCol.Text, 0xFF0000FF);
+            foreach (var error in _errors)
             {
-                ImGui.TextDisabled($"New Project");
+                ImGui.Text(error);
+            }
+            ImGui.PopStyleColor();
 
-                ImGui.InputText("Title", ref _title, 256);
-                ImGui.Separator();
-
-                ImGui.TextDisabled("Location");
-                ImGui.TextDisabled(_location);
-
-                ImGui.SameLine();
-
-                if (ImGui.Button("Choose location"))
+            if (ImGui.Button("Create project"))
+            {
+                bool canCreate = true;
+                _errors.Clear();
+                if (_title.IsNullOrEmpty())
                 {
-                    _directoryPickerModalPanel.Open(Environment.CurrentDirectory, "Choose location");
+                    _errors.Add("Title should not be empty");
+                    canCreate = false;
                 }
 
-                string location = "";
-                if (_directoryPickerModalPanel.OnImGuiRender(ref location))
+                if (canCreate)
                 {
-                    _location = location;
-                }
-
-                if (_title.Length == 0)
-                {
-                    ImGui.TextDisabled("Create");
-                }
-                else
-                {
-                    if (ImGui.Button("Create"))
-                    {
-                        var videoProject = VideoProject.CreateNew(_title);
-                        var projectPath = Path.Combine(_location, $"{_title}.scveproject");
-                        Utils.WriteJson(videoProject, projectPath);
-                        Console.WriteLine($"Created project {_title}");
-
-                        EditorApp.Late(new OpenProjectLateTask(videoProject, projectPath));
-
-                        ImGui.CloseCurrentPopup();
-                        Close();
-                    }
-                }
-
-                if (ImGui.Button("Close"))
-                {
+                    var project = new Project();
+                    EditorApp.Instance.OpenProject(project);
+                    
                     ImGui.CloseCurrentPopup();
-                    Close();
                 }
-
-                ImGui.EndPopup();
             }
         }
     }

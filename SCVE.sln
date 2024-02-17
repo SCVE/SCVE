@@ -1,26 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Engine.Core", "SCVE.Engine.Core\SCVE.Engine.Core.csproj", "{C035B886-35DB-4795-9462-7E589189DCA6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Engine.OpenTKBindings", "SCVE.Engine.OpenTKBindings\SCVE.Engine.OpenTKBindings.csproj", "{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Engine.ImageSharpBindings", "SCVE.Engine.ImageSharpBindings\SCVE.Engine.ImageSharpBindings.csproj", "{CD6F55D9-A988-48D3-B158-E2EA2F943440}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Engine.Platform.Windows", "SCVE.Engine.Platform.Windows\SCVE.Engine.Platform.Windows.csproj", "{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Engine.Default", "SCVE.Engine.Default\SCVE.Engine.Default.csproj", "{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Editor", "SCVE.Editor\SCVE.Editor.csproj", "{B60E63C3-A9E6-4697-B197-E913E8114D79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilkTest", "SilkTest\SilkTest.csproj", "{99C73732-D1C5-4AA7-BA12-5F922489B45A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{79AD4499-1787-429C-8E70-BB6EE8566D78}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Editor.Editing", "SCVE.Editor.Editing\SCVE.Editor.Editing.csproj", "{E687DAEE-30FF-478F-9D5E-27C5A9796B06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Editor.Core", "SCVE.Editor.Core\SCVE.Editor.Core.csproj", "{E687DAEE-30FF-478F-9D5E-27C5A9796B06}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Exporters.Avi", "SCVE.Exporters.Avi\SCVE.Exporters.Avi.csproj", "{63D03B10-AE7D-4E22-A663-48B57EDB6FDA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAvi", "..\SharpAvi\SharpAvi\SharpAvi.csproj", "{61688290-8701-4988-880E-871C250AABC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCVE.Editor.FileSystem", "SCVE.Editor.FileSystem\SCVE.Editor.FileSystem.csproj", "{CF7514AB-E29E-464C-A2F0-6A228D691721}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,38 +16,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C035B886-35DB-4795-9462-7E589189DCA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C035B886-35DB-4795-9462-7E589189DCA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C035B886-35DB-4795-9462-7E589189DCA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C035B886-35DB-4795-9462-7E589189DCA6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A71FD7C-D9A1-4A95-A04F-B7D074B057E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD6F55D9-A988-48D3-B158-E2EA2F943440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD6F55D9-A988-48D3-B158-E2EA2F943440}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD6F55D9-A988-48D3-B158-E2EA2F943440}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD6F55D9-A988-48D3-B158-E2EA2F943440}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4656908D-8EAC-48F6-B5C8-32EBF344BEF6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C9884E1-45FC-4222-8BBE-AB739D6B7E34}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B60E63C3-A9E6-4697-B197-E913E8114D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B60E63C3-A9E6-4697-B197-E913E8114D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B60E63C3-A9E6-4697-B197-E913E8114D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B60E63C3-A9E6-4697-B197-E913E8114D79}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99C73732-D1C5-4AA7-BA12-5F922489B45A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99C73732-D1C5-4AA7-BA12-5F922489B45A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99C73732-D1C5-4AA7-BA12-5F922489B45A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99C73732-D1C5-4AA7-BA12-5F922489B45A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{79AD4499-1787-429C-8E70-BB6EE8566D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{79AD4499-1787-429C-8E70-BB6EE8566D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{79AD4499-1787-429C-8E70-BB6EE8566D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{79AD4499-1787-429C-8E70-BB6EE8566D78}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E687DAEE-30FF-478F-9D5E-27C5A9796B06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E687DAEE-30FF-478F-9D5E-27C5A9796B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E687DAEE-30FF-478F-9D5E-27C5A9796B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -72,5 +32,9 @@ Global
 		{61688290-8701-4988-880E-871C250AABC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61688290-8701-4988-880E-871C250AABC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61688290-8701-4988-880E-871C250AABC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF7514AB-E29E-464C-A2F0-6A228D691721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF7514AB-E29E-464C-A2F0-6A228D691721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF7514AB-E29E-464C-A2F0-6A228D691721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF7514AB-E29E-464C-A2F0-6A228D691721}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

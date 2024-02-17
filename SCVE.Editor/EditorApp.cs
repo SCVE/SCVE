@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.Json;
-using ImGuiNET;
+﻿using ImGuiNET;
 using Microsoft.Extensions.DependencyInjection;
 using SCVE.Editor.Abstractions;
-using SCVE.Editor.Editing.Effects;
-using SCVE.Editor.Editing.ProjectStructure;
+using SCVE.Editor.Core;
 using SCVE.Editor.ImGuiUi;
-using SCVE.Editor.ImGuiUi.Panels;
-using SCVE.Editor.ImGuiUi.Services;
-using SCVE.Editor.Late;
 using SCVE.Editor.Services;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
@@ -24,6 +14,9 @@ namespace SCVE.Editor
     public class EditorApp
     {
         private readonly IWindow _window;
+
+        public Project? ActiveProject { get; private set; }
+
         public GL GL { get; set; }
         public IInputContext Input { get; set; }
 
@@ -44,20 +37,9 @@ namespace SCVE.Editor
         private List<IKeyDownReceiver> _keyDownReceivers;
         private List<IKeyReleaseReceiver> _keyReleaseReceivers;
         private List<IExitReceiver> _exitReceivers;
-        private List<IFileDropReceiver> _fileDropReceivers;
 
         private RecentsService _recentsService;
         private SettingsService _settingsService;
-        private PlaybackService _playbackService;
-
-        private LateTaskVisitor _lateTaskVisitor;
-
-        private static Queue<LateTask> _lateTasks = new();
-
-        public static void Late(LateTask task)
-        {
-            _lateTasks.Enqueue(task);
-        }
 
         public EditorApp(IWindow window)
         {
@@ -67,7 +49,7 @@ namespace SCVE.Editor
 
         public void Init()
         {
-            ImGuiThemeClassicLight.Apply();
+            ImGui.StyleColorsLight();
 
             IServiceCollection serviceCollection = new ServiceCollection();
 
@@ -80,9 +62,6 @@ namespace SCVE.Editor
             {
                 serviceCollection.AddSingleton(type);
             }
-
-            serviceCollection.AddSingleton<ClipEvaluator>();
-            serviceCollection.AddSingleton<ImGuiAssetRenderer>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -113,16 +92,6 @@ namespace SCVE.Editor
             _keyReleaseReceivers = Utils.GetAssignableTypes<IKeyReleaseReceiver>()
                 .Select(t => (serviceProvider.GetService(t) as IKeyReleaseReceiver)!)
                 .ToList();
-
-            _fileDropReceivers = Utils.GetAssignableTypes<IFileDropReceiver>()
-                .Select(t => (serviceProvider.GetService(t) as IFileDropReceiver)!)
-                .ToList();
-
-            _lateTaskVisitor = serviceProvider.GetRequiredService<LateTaskVisitor>();
-            _playbackService = serviceProvider.GetRequiredService<PlaybackService>();
-
-            _recentsService = serviceProvider.GetRequiredService<RecentsService>();
-            _recentsService.TryLoad();
 
             _settingsService = serviceProvider.GetRequiredService<SettingsService>();
             _settingsService.TryLoad();
@@ -182,12 +151,8 @@ namespace SCVE.Editor
                 imGuiPanel.OnImGuiRender();
             }
 
-            while (_lateTasks.TryDequeue(out var task))
-            {
-                task.AcceptVisitor(_lateTaskVisitor);
-            }
-
             ImGui.ShowMetricsWindow();
+            ImGui.ShowDemoWindow();
 
             ImGui.PopFont();
 
@@ -201,14 +166,12 @@ namespace SCVE.Editor
                 exitReceiver.OnExit();
             }
 
-            _recentsService.TrySave();
             // TODO: Fix error with exiting
             _window.IsClosing = true;
         }
 
         public void Update(double delta)
         {
-            _playbackService.OnUpdate((float) delta);
             foreach (var updateReceiver in _updateReceivers)
             {
                 updateReceiver.OnUpdate((float) delta);
@@ -239,17 +202,9 @@ namespace SCVE.Editor
             }
         }
 
-        /// <summary>
-        /// Validates the passed paths whether they can be parsed and triggers event OnFileDrop
-        /// on each service implementing the interface IFileDropReceiver.
-        /// </summary>
-        /// <param name="paths">to the dropping files.</param>
-        public void OnFileDrop(string[] paths)
+        public void OpenProject(Project project)
         {
-            foreach (var fileDropReceiver in _fileDropReceivers)
-            {
-                fileDropReceiver.OnFileDrop(paths);
-            }
+            ActiveProject = project;
         }
     }
 }

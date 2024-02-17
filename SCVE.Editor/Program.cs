@@ -53,7 +53,6 @@ namespace SCVE.Editor
             // Handles the dile drop and receives the array of paths to the files.
             window.FileDrop += paths =>
             {
-                editorApp.OnFileDrop(paths);
             };
 
             window.Update += delta =>

@@ -1,5 +1,4 @@
 ﻿using System;
-using SCVE.Engine.ImageSharpBindings;
 
 namespace SCVE.Editor.Imaging
 {

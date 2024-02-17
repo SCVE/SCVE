@@ -8,13 +8,8 @@ namespace SCVE.Editor.ImGuiUi.Panels
 {
     public class PreviewPanel : IImGuiPanel
     {
-        private readonly EditingService _editingService;
-        private readonly PreviewService _previewService;
-
-        public PreviewPanel(EditingService editingService, PreviewService previewService)
+        public PreviewPanel()
         {
-            _editingService = editingService;
-            _previewService = previewService;
         }
 
         public void OnImGuiRender()
@@ -31,19 +26,19 @@ namespace SCVE.Editor.ImGuiUi.Panels
             var contentRegionAvail = ImGui.GetContentRegionAvail();
             var contentRegionMin = ImGui.GetWindowContentRegionMin();
 
-            var image = _previewService.PreviewImage;
-
-            var imageSize = Utils.FitRect(contentRegionAvail, new Vector2(image.Width, image.Height));
-
-            ImGui.SetCursorPos(contentRegionMin + contentRegionAvail / 2 - imageSize / 2);
-
-            image.ToGpu();
-            ImGui.Image((IntPtr) image.GpuImage.GpuId, imageSize);
-
-            painter.AddRect(
-                windowPos + contentRegionMin + contentRegionAvail / 2 - imageSize / 2,
-                windowPos + contentRegionMin + contentRegionAvail / 2 + imageSize / 2,
-                0xFFFFFFFF);
+            // var image = _previewService.PreviewImage;
+            //
+            // var imageSize = Utils.FitRect(contentRegionAvail, new Vector2(image.Width, image.Height));
+            //
+            // ImGui.SetCursorPos(contentRegionMin + contentRegionAvail / 2 - imageSize / 2);
+            //
+            // image.ToGpu();
+            // ImGui.Image((IntPtr) image.GpuImage.GpuId, imageSize);
+            //
+            // painter.AddRect(
+            //     windowPos + contentRegionMin + contentRegionAvail / 2 - imageSize / 2,
+            //     windowPos + contentRegionMin + contentRegionAvail / 2 + imageSize / 2,
+            //     0xFFFFFFFF);
 
             END:
             ImGui.End();

@@ -1,1 +1,0 @@
-﻿This folder contains classes, which should and by idea MUST live only after loading from file till upload to actual SCVE entity and vice-versa

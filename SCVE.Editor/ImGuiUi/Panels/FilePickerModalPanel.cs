@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Numerics;
+﻿using System.Numerics;
 using ImGuiNET;
-using SCVE.Editor.Imaging;
-using SCVE.Engine.ImageSharpBindings;
 
 namespace SCVE.Editor.ImGuiUi.Panels
 {
@@ -16,12 +11,12 @@ namespace SCVE.Editor.ImGuiUi.Panels
         
         protected override void Initialize()
         {
-            var imageSharpTextureLoader = new ImageSharpTextureLoader();
-            var fileIconTextureData = imageSharpTextureLoader.Load("assets/FileIcon.png");
-            var directoryIconTextureData = imageSharpTextureLoader.Load("assets/DirectoryIcon.png");
-
-            FileIcon = new ThreeWayImage(new CpuImage(fileIconTextureData.RgbaPixels, fileIconTextureData.Width, fileIconTextureData.Height), "FileIcon");
-            DirectoryIcon = new ThreeWayImage(new CpuImage(directoryIconTextureData.RgbaPixels, directoryIconTextureData.Width, directoryIconTextureData.Height), "DirectoryIcon");
+            // var imageSharpTextureLoader = new ImageSharpTextureLoader();
+            // var fileIconTextureData = imageSharpTextureLoader.Load("assets/FileIcon.png");
+            // var directoryIconTextureData = imageSharpTextureLoader.Load("assets/DirectoryIcon.png");
+            //
+            // FileIcon = new ThreeWayImage(new CpuImage(fileIconTextureData.RgbaPixels, fileIconTextureData.Width, fileIconTextureData.Height), "FileIcon");
+            // DirectoryIcon = new ThreeWayImage(new CpuImage(directoryIconTextureData.RgbaPixels, directoryIconTextureData.Width, directoryIconTextureData.Height), "DirectoryIcon");
 
             FileIcon.ToGpu();
             DirectoryIcon.ToGpu();

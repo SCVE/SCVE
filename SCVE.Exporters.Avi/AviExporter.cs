@@ -1,11 +1,6 @@
-﻿// Contains common types for AVI format like FourCC
-
-using SCVE.Editor.Editing.Misc;
+﻿using System.Numerics;
 using SharpAvi;
-// Contains types used for writing like AviWriter
 using SharpAvi.Output;
-// Contains types related to encoding like Mpeg4VcmVideoEncoder
-using SharpAvi.Codecs;
 
 namespace SCVE.Exporters.Avi;
 
@@ -14,7 +9,7 @@ public class AviExporter : IDisposable
     private AviWriter _writer;
     private IAviVideoStream _videoStream;
 
-    public AviExporter(string filePath, ScveVector2I resolution, int fps)
+    public AviExporter(string filePath, Vector2 resolution, int fps)
     {
         _writer = new AviWriter(filePath)
         {
@@ -29,8 +24,8 @@ public class AviExporter : IDisposable
         _videoStream = _writer.AddVideoStream();
 
         // set standard VGA resolution
-        _videoStream.Width = resolution.X;
-        _videoStream.Height = resolution.Y;
+        _videoStream.Width = (int)resolution.X;
+        _videoStream.Height = (int)resolution.Y;
 
         // class SharpAvi.CodecIds contains FOURCCs for several well-known codecs
         // Uncompressed is the default value, just set it for clarity
